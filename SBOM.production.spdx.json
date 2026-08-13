@@ -1,0 +1,216 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "fog-of-sea-production-dependency-sbom",
+  "documentNamespace": "https://fog-of-sea.invalid/sbom/production/ec61aca6abd1943f757898e492744891e9682311bd6eb88ab3f4ecaea179bd14",
+  "creationInfo": {
+    "created": "2026-08-10T21:17:49.749Z",
+    "creators": [
+      "Tool: scripts/generate-sbom.mjs"
+    ],
+    "comment": "Generated deterministically from package-lock.json SHA-256 ec61aca6abd1943f757898e492744891e9682311bd6eb88ab3f4ecaea179bd14."
+  },
+  "documentDescribes": [
+    "SPDXRef-Package-root"
+  ],
+  "packages": [
+    {
+      "name": "fog-of-sea",
+      "SPDXID": "SPDXRef-Package-root",
+      "versionInfo": "0.1.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "APPLICATION"
+    },
+    {
+      "name": "@fontsource-variable/jost",
+      "SPDXID": "SPDXRef-Package-7e58e7fe141d5ec59a0b",
+      "versionInfo": "5.3.0",
+      "downloadLocation": "https://registry.npmjs.org/@fontsource-variable/jost/-/jost-5.3.0.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "OFL-1.1",
+      "licenseDeclared": "OFL-1.1",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "f454bc8813099dfc8fa903a2f5d7cc8d2c1804859dd24043dff8e5f15bed6c8318da92be092a77a006932d2d55eb4ac3a0cec07f23efb93f8851f25f19e0932a"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/%40fontsource-variable/jost@5.3.0"
+        }
+      ]
+    },
+    {
+      "name": "astronomy-engine",
+      "SPDXID": "SPDXRef-Package-812568d3856ab013c196",
+      "versionInfo": "2.1.19",
+      "downloadLocation": "https://registry.npmjs.org/astronomy-engine/-/astronomy-engine-2.1.19.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "f3258a35fed478d6c7e39f21dec009e998008c4e634d7a7f98d3511680b6d23d921f06488c041e12c041d90dee08545a4c208946fdf72b65e1921650317a17eb"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/astronomy-engine@2.1.19"
+        }
+      ]
+    },
+    {
+      "name": "react",
+      "SPDXID": "SPDXRef-Package-c32755efedd6ef6b93b0",
+      "versionInfo": "19.2.6",
+      "downloadLocation": "https://registry.npmjs.org/react/-/react-19.2.6.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "b1f58619f6af8b4c6bf0f834b15b321cc00ece25582a03cb36b4bb8a0fa2bcc35bdf06c2070dcac6d7e5b06040c03de0610944fc0119b132e04e846b4828dbd1"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react@19.2.6"
+        }
+      ]
+    },
+    {
+      "name": "react-dom",
+      "SPDXID": "SPDXRef-Package-d5a4b102c030976252d3",
+      "versionInfo": "19.2.6",
+      "downloadLocation": "https://registry.npmjs.org/react-dom/-/react-dom-19.2.6.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "d29acc23e86f05b3e3b169f10cbc65086c8cf0f37a52e5a311409899984eebbc4857d5dab1afebfef0e7abe5f2ab82e8dbb83c4126cee58cc046ed03d52a6cde"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-dom@19.2.6"
+        }
+      ]
+    },
+    {
+      "name": "scheduler",
+      "SPDXID": "SPDXRef-Package-7bf6cc1c4f3ff7f1a07f",
+      "versionInfo": "0.27.0",
+      "downloadLocation": "https://registry.npmjs.org/scheduler/-/scheduler-0.27.0.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "78dbfe5ab55b2aed5fdef6d8253ff1b62179b320391cf20cb5ff48818fe72a0d2c5aacc0504bea63fc66ece71973fa9a7cbc7f88ef4580e99e480a78bf9b62fd"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/scheduler@0.27.0"
+        }
+      ]
+    },
+    {
+      "name": "three",
+      "SPDXID": "SPDXRef-Package-083d00adb2bb90ab7ac1",
+      "versionInfo": "0.179.1",
+      "downloadLocation": "https://registry.npmjs.org/three/-/three-0.179.1.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "e72fde9522106ebbca3884b1a705c2478b10a87b4688e23e30a2dcdd2b017435c0da1cf731da775f9f5a529f03cb26cc6b7e1a781c1b153a5da0b25a5031164b"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/three@0.179.1"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-root"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-root",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-7e58e7fe141d5ec59a0b"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-root",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-812568d3856ab013c196"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-root",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-c32755efedd6ef6b93b0"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-root",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-d5a4b102c030976252d3"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-root",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-083d00adb2bb90ab7ac1"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d5a4b102c030976252d3",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-7bf6cc1c4f3ff7f1a07f"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d5a4b102c030976252d3",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-c32755efedd6ef6b93b0"
+    }
+  ]
+}

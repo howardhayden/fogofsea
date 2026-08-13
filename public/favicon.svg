@@ -1,0 +1,14 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Faceted bull and pointed anchor" data-brand-symbol="bull-pointed-anchor">
+  <rect width="64" height="64" rx="13" fill="#15202b"/>
+  <g class="brand-bull">
+    <path d="M7 14 25 20 20 29Z" fill="#dac595"/>
+    <path d="M57 14 39 20 44 29Z" fill="#dac595"/>
+    <path d="m20 21 12-6 12 6-4 25-8 9-8-9Z" fill="#6ea99f"/>
+    <path d="m20 21 12 11-8 14Z" fill="#a4d5c9"/>
+    <path d="m44 21-12 11 8 14Z" fill="#39716b"/>
+    <path d="m24 44 8-5 8 5-4 9h-8Z" fill="#d7ebe6"/>
+    <circle cx="25" cy="33" r="2" fill="#15202b"/>
+    <circle cx="39" cy="33" r="2" fill="#15202b"/>
+  </g>
+  <path class="brand-anchor" d="M49 54V21m-2.3 5L49 21l2.3 5M42 31V23m-2.2 5L42 23l2.2 5M56 31V23m-2.2 5L56 23l2.2 5M42 31c0 5 2.4 8 7 8s7-3 7-8" fill="none" stroke="#dac595" stroke-width="2.6" stroke-linecap="butt" stroke-linejoin="miter"/>
+</svg>

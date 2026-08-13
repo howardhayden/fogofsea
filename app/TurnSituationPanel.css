@@ -1,0 +1,362 @@
+.turn-situation-panel,
+.turn-situation-panel * {
+  box-sizing: border-box;
+}
+
+/* All event geometry is static. Severe-weather state changes between turns;
+   it never flashes, strobes, or depends on motion to communicate meaning. */
+
+.turn-situation-panel {
+  min-width: 0;
+  margin-top: 10px;
+  padding: 12px;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--raised) 88%, var(--panel));
+  color: var(--text);
+}
+
+.turn-situation-heading {
+  min-width: 0;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--line);
+}
+
+.turn-situation-heading span,
+.situation-event header span,
+.situation-objectives h4 {
+  color: var(--faint);
+  font: 700 10px/1.35 var(--font-data);
+  letter-spacing: .075em;
+}
+
+.turn-situation-heading h3 {
+  margin: 3px 0 0;
+  color: var(--text);
+  font: 700 14px/1.3 var(--font-ui);
+}
+
+.situation-turn-track {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+  margin: 10px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.situation-turn-track li {
+  position: relative;
+  min-width: 0;
+  min-height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--muted);
+}
+
+.situation-turn-track li b {
+  font: 700 9px/1 var(--font-data);
+  letter-spacing: .04em;
+}
+
+.situation-turn-track li i {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 5px;
+  height: 5px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.situation-turn-track li[data-has-change="true"] i {
+  border-radius: 0;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+
+.situation-turn-track li[aria-current="step"] {
+  border-width: 2px;
+  border-color: var(--accent-strong);
+  color: var(--accent-strong);
+}
+
+.situation-current-events {
+  display: grid;
+  gap: 8px;
+}
+
+.situation-event {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-left: 4px double var(--line-strong);
+  border-radius: 5px;
+  background: var(--panel);
+}
+
+.situation-event[data-severity="extreme"] {
+  border-left-style: solid;
+  border-left-color: var(--danger);
+}
+
+.situation-event[data-severity="major"] {
+  border-left-style: dashed;
+  border-left-color: var(--accent-strong);
+}
+
+.situation-event > header {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 9px;
+  align-items: center;
+}
+
+.situation-event header h4 {
+  margin: 2px 0 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.situation-event header small,
+.situation-objectives small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.situation-event-glyph {
+  width: 48px;
+  height: 40px;
+  padding: 5px;
+  overflow: visible;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--accent-strong);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: square;
+  stroke-linejoin: bevel;
+}
+
+.situation-event > p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.situation-clear-state {
+  margin: 8px 0 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.situation-impact-list {
+  display: grid;
+  gap: 6px;
+  margin: 9px 0 0;
+}
+
+.situation-impact-list > div {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--raised);
+}
+
+.situation-impact-list > div[data-status="downed"],
+.situation-impact-list > div[data-status="disabled"] {
+  background-image: repeating-linear-gradient(135deg, transparent 0 7px, color-mix(in srgb, var(--danger) 10%, transparent) 7px 9px);
+}
+
+.situation-impact-list dt {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  color: var(--text);
+  font: 700 11px/1.4 var(--font-ui);
+}
+
+.situation-impact-glyph {
+  width: 34px;
+  height: 24px;
+  padding: 2px;
+  color: var(--accent-strong);
+  fill: color-mix(in srgb, currentColor 18%, transparent);
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: square;
+  stroke-linejoin: bevel;
+}
+
+.situation-impact-list > div[data-status="downed"] .situation-impact-glyph,
+.situation-impact-list > div[data-status="disabled"] .situation-impact-glyph,
+.situation-impact-list > div[data-status="unavailable"] .situation-impact-glyph {
+  color: var(--danger);
+  transform: rotate(-8deg);
+}
+
+.situation-impact-list dd {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.situation-impact-list dd > b {
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.situation-impact-list dd > small {
+  display: block;
+  margin-top: 3px;
+}
+
+.situation-objectives {
+  min-width: 0;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.situation-objectives h4 {
+  margin: 0 0 7px;
+  color: var(--accent-strong);
+}
+
+.situation-objectives ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.situation-objectives li {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(72px, auto) minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  padding: 7px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+}
+
+.situation-objectives li[data-new="true"] {
+  border-color: var(--accent-strong);
+}
+
+.situation-objectives li > span {
+  color: var(--accent-strong);
+  font: 700 9px/1.3 var(--font-data);
+  letter-spacing: .055em;
+}
+
+.situation-objectives li > b {
+  min-width: 0;
+  font-size: 11px;
+}
+
+.situation-objectives li > small {
+  margin: 0;
+  text-align: right;
+}
+
+.situation-recap {
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.situation-recap > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font: 700 10px/1.35 var(--font-data);
+  letter-spacing: .06em;
+}
+
+.situation-recap > div {
+  display: grid;
+  gap: 7px;
+}
+
+@media (max-width: 760px) {
+  .turn-situation-panel {
+    padding: 10px;
+  }
+
+  .situation-event > header {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .situation-event-glyph {
+    width: 42px;
+    height: 38px;
+  }
+
+  .situation-objectives li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .situation-objectives li > span {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 360px) {
+  .situation-turn-track {
+    gap: 2px;
+  }
+
+  .situation-objectives li {
+    display: block;
+  }
+
+  .situation-objectives li > small {
+    margin-top: 4px;
+    text-align: left;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .situation-event,
+  .situation-impact-list > div,
+  .situation-objectives li,
+  .situation-turn-track li {
+    border-color: currentColor;
+  }
+}
+
+@media (forced-colors: active) {
+  .situation-turn-track li[data-has-change="true"] i {
+    background: Highlight;
+  }
+
+  .situation-impact-list > div[data-status="downed"],
+  .situation-impact-list > div[data-status="disabled"] {
+    background-image: none;
+    border-style: double;
+  }
+}

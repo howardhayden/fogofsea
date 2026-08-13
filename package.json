@@ -1,0 +1,54 @@
+{
+  "name": "fog-of-sea",
+  "version": "0.1.0",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node scripts/serve-local.mjs",
+    "play": "node scripts/serve-local.mjs",
+    "dev": "vite --host 127.0.0.1 --port 5173 --strictPort --force",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5173 --strictPort",
+    "test": "node --test tests/*.test.mjs && node --import tsx --test tests/*.test.ts",
+    "test:browser": "playwright test",
+    "verify:browser-suite": "playwright test --list",
+    "lint": "eslint app tests scripts eslint.config.mjs vite.config.ts playwright.config.ts",
+    "typecheck": "tsc --noEmit",
+    "verify:licenses": "node scripts/verify-licenses.mjs",
+    "verify:notices": "node scripts/generate-notices.mjs --check",
+    "verify:sbom": "node scripts/generate-sbom.mjs --check",
+    "verify:content": "node scripts/verify-content.mjs",
+    "verify:artifact": "node scripts/validate-artifact.mjs",
+    "notices": "node scripts/generate-notices.mjs",
+    "sbom": "node scripts/generate-sbom.mjs",
+    "audit:dependencies": "npm audit --package-lock-only --audit-level=high",
+    "check": "npm run lint && npm run typecheck && npm run verify:licenses && npm run verify:notices && npm run verify:sbom && npm run verify:content && npm run verify:browser-suite && npm test && npm run build && npm run verify:artifact"
+  },
+  "dependencies": {
+    "@fontsource-variable/jost": "5.3.0",
+    "astronomy-engine": "2.1.19",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "three": "0.179.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.4",
+    "@playwright/test": "1.62.1",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/three": "0.179.0",
+    "@typescript-eslint/parser": "8.66.0",
+    "@vitejs/plugin-react": "5.2.0",
+    "eslint": "9.39.4",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "tsx": "4.23.5",
+    "typescript": "5.9.3",
+    "vite": "7.3.6"
+  },
+  "type": "module",
+  "displayName": "FOG OF SEA"
+}
