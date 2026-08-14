@@ -51,7 +51,7 @@ export default function PrivacyGate({
   return (
     <div className="modal-backdrop privacy-backdrop" role="presentation">
       <section className="privacy-gate" role="dialog" aria-modal="true" aria-labelledby="privacy-title" aria-describedby="privacy-description" tabIndex={-1} onKeyDown={onKeyDown}>
-        <div className="privacy-heading"><span>PRIVACY BEFORE PLAY · LOCAL BUILD 2026-08-11-VSCODIUM-13</span><h2 id="privacy-title">HOW SHOULD THIS GAME REMEMBER YOU?</h2></div>
+        <div className="privacy-heading"><span>PRIVACY BEFORE PLAY</span><h2 id="privacy-title">HOW SHOULD THIS GAME REMEMBER YOU?</h2></div>
         <p id="privacy-description">Choose before beginning. There is no account, gameplay telemetry, advertising, or server save. A restrictive security policy blocks third-party scripts, frames, images, fonts, and network connections. A hosting provider may still receive ordinary request metadata while serving the page; the app sends it no game decisions or saved data.</p>
         <fieldset className="difficulty-picker">
           <legend>CHOOSE A PLAY MODE</legend>
