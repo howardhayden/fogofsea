@@ -4,7 +4,7 @@ import test from "node:test";
 
 const read = (relative) => readFile(new URL(relative, import.meta.url), "utf8");
 
-test("static shell and host headers enforce the local-only privacy boundary", async () => {
+test("static shell and host headers enforce the browser privacy boundary", async () => {
   const [index, headers, page, entry, packageSource, privacyGate, releaseQa] = await Promise.all([
     read("../index.html"),
     read("../public/_headers"),
@@ -16,11 +16,12 @@ test("static shell and host headers enforce the local-only privacy boundary", as
   ]);
   const policy = `${index}\n${headers}`;
   const documentBuildMarker = index.match(/<meta name="fog-of-sea-build" content="([^"]+)"/i)?.[1];
-  const gateBuildMarker = privacyGate.match(/LOCAL BUILD ([\d-]+-VSCODIUM-\d+)/)?.[1].toLowerCase();
   const qaBuildMarker = releaseQa.match(/Build marker: `([^`]+)`/)?.[1];
   assert.match(documentBuildMarker ?? "", /^\d{4}-\d{2}-\d{2}-vscodium-\d+$/);
-  assert.equal(gateBuildMarker, documentBuildMarker);
   assert.equal(qaBuildMarker, documentBuildMarker);
+  assert.doesNotMatch(privacyGate, /LOCAL BUILD/i);
+  assert.doesNotMatch(index, /LOCAL START REQUIRED|FOG OF SEA has not started|Open this extracted folder|Live Server/i);
+  assert.match(index, /Loading the maritime strategy lab/i);
   assert.match(policy, /connect-src 'none'/i);
   assert.match(policy, /frame-src 'none'/i);
   assert.match(policy, /object-src 'none'/i);
@@ -33,6 +34,24 @@ test("static shell and host headers enforce the local-only privacy boundary", as
   assert.doesNotMatch(page, /className="independence-banner"/i);
   assert.doesNotMatch(page, /no account · no trackers|Session-only play · TXT export available/i);
   assert.match(page, /saveFailed \? <div className="save-indicator error" role="alert"/i);
+});
+
+test("GitHub Pages builds and deploys the optimized artifact from main", async () => {
+  const [workflow, viteConfig, deploymentGuide] = await Promise.all([
+    read("../.github/workflows/main.yml"),
+    read("../vite.config.ts"),
+    read("../DEPLOY-GITHUB-PAGES.md"),
+  ]);
+  assert.match(workflow, /push:\s*[\s\S]*branches:\s*[\s\S]*- main/);
+  assert.match(workflow, /run: npm ci/);
+  assert.match(workflow, /run: npm run check/);
+  assert.match(workflow, /actions\/upload-pages-artifact@v3[\s\S]*path: \.\/dist/);
+  assert.match(workflow, /actions\/deploy-pages@v4/);
+  assert.match(viteConfig, /base:\s*["']\.\/["']/);
+  assert.match(deploymentGuide, /Settings[^\n]*Pages/i);
+  assert.match(deploymentGuide, /fogofsea\.app/i);
+  assert.match(deploymentGuide, /public\/docs/i);
+  assert.match(deploymentGuide, /_headers/i);
 });
 
 test("first-play gate exposes privacy, saved games, and three distinct play modes", async () => {

@@ -8,6 +8,7 @@ const roots = ["app", "public", "tests", "scripts", ".vscode"];
 const files = [
   "README.md",
   "ACCESSIBILITY.md",
+  "DEPLOY-GITHUB-PAGES.md",
   "RELEASE_QA.md",
   "PLAYTEST_PROTOCOL.md",
   "SECURITY.md",

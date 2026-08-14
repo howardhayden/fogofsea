@@ -4,6 +4,8 @@ No online repository, account, or publishing step is required.
 
 Product, UX, interaction, graphics, privacy, service, research, microcopy, and evaluation documentation begins at [`docs/design/README.md`](docs/design/README.md). It distinguishes the as-built system from research hypotheses and roadmap work.
 
+To publish the game from the repository's `main` branch, follow [`DEPLOY-GITHUB-PAGES.md`](DEPLOY-GITHUB-PAGES.md). Do not copy `dist` into the repository root; the included GitHub Actions workflow builds and publishes it.
+
 Player-facing help is intentionally narrower. The in-game Field Guide links to bundled plain-language references under `public/docs/` for gameplay, security/privacy/saves, and accessibility/controls. Research artifacts such as personas, journey maps, and roadmaps are not exposed in ordinary play.
 
 ## Start the downloaded copy
@@ -36,8 +38,8 @@ VSCodium Live Server extensions do not compile this project’s TypeScript and d
 release security headers. They are not a supported way to start the source folder. Use the local
 launcher above to play.
 
-If Live Server is used accidentally, the page now shows a short local-start instruction instead
-of a partly loaded or unstyled interface.
+If Live Server is used accidentally, the source shell remains on a neutral loading state because
+Live Server cannot compile the TypeScript application. Close it and use the launcher above.
 
 ## Edit the source
 

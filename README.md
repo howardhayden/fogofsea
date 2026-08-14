@@ -67,6 +67,10 @@ The in-game Field Guide links to three release-bundled player references: **How 
 
 The academy is an original independent synthesis grounded in established primary and secondary literature. It does not provide academic credit or certification.
 
+## Publish with GitHub Pages
+
+The repository includes a GitHub Actions workflow that validates, builds, and publishes `dist/` whenever `main` changes. Keep the Vite source at the repository root; do not flatten generated `dist` files into it. The exact repository, Pages, Hover DNS, custom-domain, bundled-document, and hosting-header procedure is in [`DEPLOY-GITHUB-PAGES.md`](DEPLOY-GITHUB-PAGES.md).
+
 ## Run the downloaded copy locally
 
 No online repository, account, publishing step, package installation, or Live Server extension is
