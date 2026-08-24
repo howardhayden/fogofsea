@@ -150,3 +150,12 @@ The simulation is a teaching model, not a forecast, readiness assessment, target
 ## Technology
 
 Vite, React, Three.js, Astronomy Engine, standards-based CSS, and the self-hosted Jost variable font. Audio is generated at runtime by original Web Audio code; no recordings, samples, or remote media are bundled. See `THIRD_PARTY_NOTICES.md`, `THIRD_PARTY_LICENSES.txt`, and the SPDX files for exact attribution and license records.
+
+## Licensing
+
+FOG OF SEA is **source-available for noncommercial use** under
+**PolyForm-Noncommercial-1.0.0**; commercial use requires a separate written license. Separable original documentation and media use **CC-BY-NC-SA-4.0**.
+No current source file or function has a permissive commercial-use exception.
+See [`LICENSING.md`](LICENSING.md),
+[`WORKFLOW-BOUNDARIES.md`](WORKFLOW-BOUNDARIES.md), and
+[`LICENSE-MAP.json`](LICENSE-MAP.json) for scope and historical limits.
