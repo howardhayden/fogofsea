@@ -1,0 +1,116 @@
+name: Apply license policy
+
+on:
+  push:
+    branches:
+      - chore/license-policy-2026-08-24
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply scoped licenses and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p LICENSES
+          curl --fail --silent --show-error --location --retry 3 \
+            https://raw.githubusercontent.com/spdx/license-list-data/main/text/AGPL-3.0-or-later.txt \
+            --output LICENSE
+          curl --fail --silent --show-error --location --retry 3 \
+            https://raw.githubusercontent.com/spdx/license-list-data/main/text/CC-BY-NC-SA-4.0.txt \
+            --output LICENSES/CC-BY-NC-SA-4.0.txt
+          curl --fail --silent --show-error --location --retry 3 \
+            https://raw.githubusercontent.com/spdx/license-list-data/main/text/CC0-1.0.txt \
+            --output LICENSES/CC0-1.0.txt
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          import re
+
+          root = Path('.')
+          licensing = '''# Repository licensing
+
+FOG OF SEA combines a browser-delivered strategy simulation, embedded authored game content, standalone educational material, generated compliance metadata, original source identity, and third-party components. These categories use separate licenses.
+
+## Software and embedded application content — AGPL-3.0-or-later
+
+Unless a file carries a more specific notice, application source, simulation logic, components, tests, scripts, package manifests, build configuration, and authored text or data embedded in source files are licensed under the [GNU Affero General Public License, version 3 or later](LICENSE).
+
+This license preserves the freedom to inspect, modify, and redistribute the program. A modified version made available to users over a network must offer those users its corresponding source under the AGPL. Source for the official deployment is maintained in this repository.
+
+## Standalone educational and creative material — CC BY-NC-SA 4.0
+
+Unless a file carries a more specific notice, separately published original documentation, Academy or Field Guide handouts, diagrams, illustrations, and other non-software creative material are licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](LICENSES/CC-BY-NC-SA-4.0.txt).
+
+This Creative Commons license does not apply to software. Commercial reuse of this separately licensed material requires separate permission.
+
+## Generated compliance metadata — CC0-1.0
+
+The generated SPDX documents `SBOM.spdx.json` and `SBOM.production.spdx.json`, and other machine-readable compliance metadata explicitly marked CC0, are dedicated under [CC0 1.0 Universal](LICENSES/CC0-1.0.txt) to support unrestricted auditing and interoperability.
+
+## Marks and source identity — reserved
+
+The name **FOG OF SEA**, project domains, logos, trade dress, and other source-identifying marks are not licensed as trademarks or service marks. Accurate descriptive and nominative use permitted by law remains unaffected.
+
+## Third-party material
+
+Third-party software, fonts, quotations, images, reference material, and other incorporated works retain their own notices and terms. Their specific notices override this repository-level map. No license is granted to material for which the licensor lacks authority.
+
+## File-level priority
+
+The most specific notice controls. A notice in a file or its containing directory overrides this map. A source file combining executable code with embedded narrative or educational content is treated as AGPL-covered software. Generated output follows the license of its source unless the output carries a different notice.
+
+## Contributions
+
+By submitting a contribution, a contributor represents that they have the right to submit it and agrees to license it under the terms governing the affected material in this file. Third-party material must retain its original notices and terms.
+
+## Effective revision and earlier MIT copies
+
+This policy applies to revisions committed on or after **August 24, 2026**. It does not revoke rights already received in an earlier copy under the MIT License that accompanied that copy. Earlier MIT-licensed revisions remain available under their prior terms.
+'''
+          (root / 'LICENSING.md').write_text(licensing, encoding='utf-8')
+
+          readme_path = root / 'README.md'
+          readme = readme_path.read_text(encoding='utf-8').rstrip()
+          section = '''## License
+
+FOG OF SEA uses scoped licensing: software and embedded application content are [AGPL-3.0-or-later](LICENSE), separately published original educational and creative materials are [CC BY-NC-SA 4.0](LICENSES/CC-BY-NC-SA-4.0.txt), and generated SPDX compliance metadata is [CC0-1.0](LICENSES/CC0-1.0.txt). Project marks are reserved, and third-party materials retain their own terms. See [LICENSING.md](LICENSING.md) for the controlling file-level rules and the notice preserving rights in earlier MIT-licensed revisions.'''
+          pattern = re.compile(r'(?ms)^## License\n.*?(?=^## |\Z)')
+          if pattern.search(readme):
+              readme = pattern.sub(section + '\n\n', readme).rstrip()
+          else:
+              readme += '\n\n' + section
+          readme_path.write_text(readme + '\n', encoding='utf-8')
+
+          package_path = root / 'package.json'
+          package = json.loads(package_path.read_text(encoding='utf-8'))
+          package['license'] = 'AGPL-3.0-or-later'
+          package_path.write_text(json.dumps(package, indent=2) + '\n', encoding='utf-8')
+
+          lock_path = root / 'package-lock.json'
+          lock = json.loads(lock_path.read_text(encoding='utf-8'))
+          lock.setdefault('packages', {}).setdefault('', {})['license'] = 'AGPL-3.0-or-later'
+          lock_path.write_text(json.dumps(lock, indent=2) + '\n', encoding='utf-8')
+          PY
+
+          npm run sbom
+          npm ci
+          npm run check
+
+          rm .github/workflows/license-policy-migration.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Apply scoped FOG OF SEA licensing"
+          git push origin HEAD:${GITHUB_REF_NAME}
