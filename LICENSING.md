@@ -1,39 +1,82 @@
-# Repository licensing
+# Licensing
 
-FOG OF SEA combines executable software, authored game and educational material, generated compliance metadata, original source identity, and third-party components. Those categories are licensed separately.
+Copyright (c) 2026 Hayden Howard.
 
-## Software and mixed source files — MIT
+This repository is **source-available for noncommercial use**. It is not offered
+as open-source software because the public software license excludes commercial
+purposes.
 
-Unless a file carries a more specific notice, application source, simulation logic, components, tests, scripts, package manifests, build configuration, and other technical source files are licensed under the [MIT License](LICENSE).
+Apply terms in this order:
 
-A source file that combines executable code with embedded scenario text, interface copy, instructional material, or data is treated as software under the MIT License. The package metadata, lockfile, and SPDX software-package records therefore remain consistent with the root software license.
+1. an explicit notice in a file;
+2. a third-party or source-specific notice;
+3. this document and `LICENSE-MAP.json`;
+4. the default software license.
 
-## Standalone educational and creative material — CC BY-NC-SA 4.0
+## Original software — PolyForm-Noncommercial-1.0.0
 
-Unless a file carries a more specific notice, separately published original Academy or Field Guide material, documentation, handouts, diagrams, illustrations, and other non-software creative works are licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode).
+Unless a narrower category below applies, original source code, stylesheets,
+configuration, tests, scripts, workers, code-defined schemas, code-embedded
+content or data, and generated executable software are licensed under the
+PolyForm Noncommercial License 1.0.0. The root `LICENSE` and
+`LICENSES/PolyForm-Noncommercial-1.0.0.txt` contain the complete terms.
 
-This Creative Commons license does not apply to software. Commercial reuse of this separately licensed material requires separate permission.
+The public license grants no commercial-use permission. See
+`COMMERCIAL-LICENSE.md` for the repository policy summary.
 
-## Generated compliance metadata — CC0-1.0
+## Project-specific workflow implementation
 
-`SBOM.spdx.json`, `SBOM.production.spdx.json`, and other machine-readable compliance metadata expressly identified as such are dedicated under [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/legalcode) to support unrestricted auditing, indexing, and interoperability. This dedication does not change the licenses of the works described by those records.
+The default software license covers the copyrightable expression and
+implementation of:
 
-## Marks and source identity — reserved
+- scenario composition, validation, regeneration, mission framing, and briefing workflows
+- warfare-area, objective, platform, aircraft, armament, compatibility, and point-allocation logic
+- turn commitment, deterministic adjudication, uncertainty, scoring, undo, and debrief workflows
+- Academy sequencing, knowledge checks, strategic comparisons, and field-guide presentation
+- environment, weather, celestial, ocean, wildlife, audio, camera, and accessibility engines
+- the authored force families, scenarios, thresholds, taxonomies, labels, and test contracts
 
-The name **FOG OF SEA**, project domains, logos, trade dress, and other source-identifying marks are not licensed as trademarks or service marks. Accurate descriptive and nominative use permitted by law remains unaffected.
+This identification does not claim exclusive rights over abstract ideas,
+methods, systems, facts, or functionality that copyright law does not protect.
+
+## General-purpose coding functions
+
+No function inside a covered file becomes permissively licensed merely because
+it could be useful elsewhere. At introduction of this policy, **no original
+source file or function is licensed under MIT**.
+
+A future utility may receive a permissive exception only after extraction into
+a separate file or package, removal of project-specific workflow expression, an
+explicit `SPDX-License-Identifier: MIT` notice, independent tests, and an exact
+entry in `LICENSE-MAP.json`. See `PERMISSIVE-EXCEPTIONS.md`.
+
+## Separable original documentation and media — CC-BY-NC-SA-4.0
+
+Original prose, explanatory diagrams, and non-code figures in the paths listed
+in `LICENSE-MAP.json` are licensed under Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International. Software code,
+substantive code excerpts, code-embedded data, and executable definitions in a
+mixed file remain under `PolyForm-Noncommercial-1.0.0`. Third-party material retains its own terms.
+
+## Generated artifacts
+
+Generation does not erase source licenses. Executable bundles remain governed
+by the software terms for covered code; embedded documentation, media, fonts,
+and third-party components retain their source terms.
 
 ## Third-party material
 
-Third-party software, fonts, quotations, images, reference material, and other incorporated works retain their own notices and terms. Their specific notices override this repository-level map. No license is granted to material for which the licensor lacks authority.
+Third-party packages, fonts, algorithms, icons, photographs, audio, datasets,
+and other materials are not relicensed. Their own notices control.
 
-## File-level priority
+## Earlier snapshots
 
-The most specific notice controls. A notice in a file or its containing directory overrides this map. Generated output follows the license of its source unless the output carries a different notice.
+This policy is prospective. It does not withdraw permissions already attached
+to earlier copies distributed under MIT or another license. It governs files as
+offered from the commit introducing this policy forward, subject to ownership,
+file history, and source-specific notices.
 
-## Contributions
+## Names and marks
 
-Unless agreed otherwise in writing, a contribution is offered under the license governing the affected material above. A contributor represents that they have the right to submit the contribution. Third-party material must retain its original notices and terms.
-
-## Effective revision and earlier copies
-
-This map applies to revisions committed on or after **August 24, 2026**. It does not revoke rights already received in an earlier copy under the MIT License that accompanied that copy. Earlier MIT-licensed revisions remain available under their prior terms.
+No copyright license grants trademark, likeness, endorsement, or official-status
+rights. See `TRADEMARKS.md`.
