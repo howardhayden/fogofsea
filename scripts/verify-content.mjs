@@ -4,11 +4,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const roots = ["app", "public", "tests", "scripts", ".vscode"];
+const roots = ["app", "public", "tests", "scripts", ".vscode", ".github"];
 const files = [
   "README.md",
   "ACCESSIBILITY.md",
-  "DEPLOY-GITHUB-PAGES.md",
+  "DEPLOY-CLOUDFLARE.md",
   "RELEASE_QA.md",
   "PLAYTEST_PROTOCOL.md",
   "SECURITY.md",
@@ -22,6 +22,7 @@ const files = [
   "vite.config.ts",
   "playwright.config.ts",
   "eslint.config.mjs",
+  "wrangler.jsonc",
 ];
 
 async function collect(relative) {
@@ -29,7 +30,7 @@ async function collect(relative) {
   for (const entry of await readdir(absolute, { withFileTypes: true })) {
     const child = path.join(relative, entry.name);
     if (entry.isDirectory()) await collect(child);
-    else if (/\.(?:css|html|json|md|mjs|mts|svg|ts|tsx|txt)$/i.test(entry.name)) files.push(child);
+    else if (/\.(?:css|html|json|md|mjs|mts|svg|ts|tsx|txt|ya?ml)$/i.test(entry.name)) files.push(child);
   }
 }
 

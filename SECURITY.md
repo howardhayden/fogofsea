@@ -1,6 +1,6 @@
 # Security model
 
-FOG OF SEA is a local static application. It has no account, application server, database, telemetry endpoint, advertising code, or third-party runtime asset. The bundled launcher binds only to `127.0.0.1`, rejects an unexpected Host header and unsupported methods, disables caching, and applies a restrictive response policy that blocks external connections, scripts, frames, media, objects, and form submission.
+FOG OF SEA is a local-first static application. It has no account, application server, database, telemetry endpoint, advertising code, or third-party runtime asset. The deployed build is served as Cloudflare Workers static assets; Cloudflare can receive ordinary HTTP request metadata but the application sends it no decisions, saves, Academy progress, or telemetry. The bundled launcher binds only to `127.0.0.1`, rejects an unexpected Host header and unsupported methods, disables caching, and applies the same restrictive response policy that blocks external connections, scripts, frames, media, objects, and form submission.
 
 ## Input trust boundary
 

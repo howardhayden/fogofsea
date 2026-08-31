@@ -1,3 +1,8 @@
 
 # macOS Finder metadata
 .DS_Store
+
+# Generated verification and browser artifacts
+.wrangler/
+playwright-report/
+test-results/

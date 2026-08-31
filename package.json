@@ -22,11 +22,15 @@
     "verify:notices": "node scripts/generate-notices.mjs --check",
     "verify:sbom": "node scripts/generate-sbom.mjs --check",
     "verify:content": "node scripts/verify-content.mjs",
+    "verify:hosting": "node scripts/verify-cloudflare-config.mjs",
     "verify:artifact": "node scripts/validate-artifact.mjs",
     "notices": "node scripts/generate-notices.mjs",
     "sbom": "node scripts/generate-sbom.mjs",
     "audit:dependencies": "npm audit --package-lock-only --audit-level=high",
-    "check": "npm run lint && npm run typecheck && npm run verify:licenses && npm run verify:notices && npm run verify:sbom && npm run verify:content && npm run verify:browser-suite && npm test && npm run build && npm run verify:artifact"
+    "check": "npm run lint && npm run typecheck && npm run verify:licenses && npm run verify:notices && npm run verify:sbom && npm run verify:content && npm run verify:hosting && npm run verify:browser-suite && npm test && npm run build && npm run verify:artifact",
+    "release:check": "npm run check && npm run audit:dependencies",
+    "deploy:cloudflare": "npx --yes wrangler@4.127.1 deploy",
+    "preview:cloudflare": "npx --yes wrangler@4.127.1 versions upload"
   },
   "dependencies": {
     "@fontsource-variable/jost": "5.3.0",

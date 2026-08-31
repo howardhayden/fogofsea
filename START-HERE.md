@@ -6,7 +6,7 @@ Product, UX, interaction, graphics, privacy, service, research, microcopy, and e
 
 The current adversarial release decision and open strategic-validity blockers are recorded in [`docs/red-team/2026-08-30-initial-pass.md`](docs/red-team/2026-08-30-initial-pass.md). A green conventional test run is not a substitute for closing that red-team gate.
 
-To publish the game from the repository's `main` branch, follow [`DEPLOY-GITHUB-PAGES.md`](DEPLOY-GITHUB-PAGES.md). Do not copy `dist` into the repository root; the included GitHub Actions workflow builds and publishes it.
+To publish the game from the repository's protected `main` branch, follow [`DEPLOY-CLOUDFLARE.md`](DEPLOY-CLOUDFLARE.md). GitHub validates and preserves release evidence; Cloudflare Workers Builds publishes the static `dist/`; Hover remains the registrar. Do not copy `dist` into the repository root.
 
 Player-facing help is intentionally narrower. The in-game Field Guide links to bundled plain-language references under `public/docs/` for gameplay, security/privacy/saves, and accessibility/controls. Research artifacts such as personas, journey maps, and roadmaps are not exposed in ordinary play.
 

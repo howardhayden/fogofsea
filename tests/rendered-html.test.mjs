@@ -36,22 +36,32 @@ test("static shell and host headers enforce the browser privacy boundary", async
   assert.match(page, /saveFailed \? <div className="save-indicator error" role="alert"/i);
 });
 
-test("GitHub Pages builds and deploys the optimized artifact from main", async () => {
-  const [workflow, viteConfig, deploymentGuide] = await Promise.all([
+test("GitHub gates and Cloudflare configuration preserve the optimized static artifact", async () => {
+  const [workflow, viteConfig, deploymentGuide, wrangler, packageSource] = await Promise.all([
     read("../.github/workflows/main.yml"),
     read("../vite.config.ts"),
-    read("../DEPLOY-GITHUB-PAGES.md"),
+    read("../DEPLOY-CLOUDFLARE.md"),
+    read("../wrangler.jsonc"),
+    read("../package.json"),
   ]);
+  assert.match(workflow, /pull_request:\s*[\s\S]*branches:\s*[\s\S]*- main/);
   assert.match(workflow, /push:\s*[\s\S]*branches:\s*[\s\S]*- main/);
   assert.match(workflow, /run: npm ci/);
-  assert.match(workflow, /run: npm run check/);
-  assert.match(workflow, /actions\/upload-pages-artifact@v3[\s\S]*path: \.\/dist/);
-  assert.match(workflow, /actions\/deploy-pages@v4/);
+  assert.match(workflow, /run: npm run release:check/);
+  assert.match(workflow, /run: npm run test:browser/);
+  assert.match(workflow, /actions\/upload-artifact@v4[\s\S]*path: \.\/dist/);
+  assert.doesNotMatch(workflow, /deploy-pages|upload-pages-artifact|pages:\s*write/i);
   assert.match(viteConfig, /base:\s*["']\.\/["']/);
-  assert.match(deploymentGuide, /Settings[^\n]*Pages/i);
+  assert.match(wrangler, /"directory"\s*:\s*"\.\/dist"/);
+  assert.match(wrangler, /"not_found_handling"\s*:\s*"single-page-application"/);
+  assert.match(packageSource, /"deploy:cloudflare"\s*:\s*"npx --yes wrangler@4\.127\.1 deploy"/);
+  assert.match(deploymentGuide, /Workers Builds/i);
+  assert.match(deploymentGuide, /Hover/i);
   assert.match(deploymentGuide, /fogofsea\.app/i);
   assert.match(deploymentGuide, /public\/docs/i);
   assert.match(deploymentGuide, /_headers/i);
+  assert.match(deploymentGuide, /release-gate/i);
+  assert.match(deploymentGuide, /browser-gate/i);
 });
 
 test("first-play gate exposes privacy, saved games, and three distinct play modes", async () => {

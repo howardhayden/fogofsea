@@ -4,7 +4,7 @@ Release candidate date: 2026-08-11
 
 Build marker: `2026-08-11-vscodium-13`
 
-This record covers the downloadable source, static browser build, and deployment-ready GitHub Pages workflow. Preparing this archive did not itself publish the site.
+This historical record covers the downloadable source, static browser build, and the GitHub Pages workflow present in the 2026-08-11 candidate. That hosting workflow was superseded on 2026-08-31 by the GitHub-gated Cloudflare Workers configuration documented in `DEPLOY-CLOUDFLARE.md`; the evidence statements below remain bounded to their recorded candidate.
 
 ## Acceptance evidence
 
@@ -26,7 +26,7 @@ This record covers the downloadable source, static browser build, and deployment
 - Strategic-diversity regressions prove two materially different legal winning builds for every open-water, restricted-water, heavy-weather, and specialist lane-opening profile; opposing-profile forces miss each other’s adaptation threshold; and small sensible substitutions remain viable.
 - The select-all classification regression proves that unsupported warfare-area guesses cannot share the correct readiness path.
 - The optimized production build passed static artifact validation across 18 emitted files, including the three Field Guide references: all referenced assets exist, required security and credit files are present, no source maps are emitted, and the release HTML requests no remote assets.
-- The included `Deploy GitHub Pages` workflow triggers on `main`, installs the exact lockfile, blocks publication on the complete release gate, uploads only `dist/`, and publishes through the official Pages artifact action. The Vite source shell remains at repository root and is never treated as the release artifact.
+- At the time of this record, the included `Deploy GitHub Pages` workflow triggered on `main`, installed the exact lockfile, blocked publication on its then-current release gate, uploaded only `dist/`, and published through the official Pages artifact action. This is historical evidence, not a description of the current Cloudflare Workers pipeline.
 - The zero-dependency local launcher served the bundled release only on `127.0.0.1:5173`, returned correct HTML, script, stylesheet, font, and security headers, disabled caching, rejected a mismatched Host header, rejected unsupported methods, and failed rather than selecting another port when a second process attempted to bind the same address.
 
 ## Key release changes

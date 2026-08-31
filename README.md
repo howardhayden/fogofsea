@@ -67,9 +67,9 @@ The in-game Field Guide links to three release-bundled player references: **How 
 
 The academy is an original independent synthesis grounded in established primary and secondary literature. It does not provide academic credit or certification.
 
-## Publish with GitHub Pages
+## Publish with Cloudflare Workers
 
-The repository includes a GitHub Actions workflow that validates, builds, and publishes `dist/` whenever `main` changes. Keep the Vite source at the repository root; do not flatten generated `dist` files into it. The exact repository, Pages, Hover DNS, custom-domain, bundled-document, and hosting-header procedure is in [`DEPLOY-GITHUB-PAGES.md`](DEPLOY-GITHUB-PAGES.md).
+GitHub is the authoritative source and release-evidence surface. The repository's `release-gate` and `browser-gate` jobs validate pull requests and `main`; they do not publish. Cloudflare Workers Builds compiles and deploys the verified `dist/` as static SPA assets using `wrangler.jsonc`, while Hover remains the registrar for `fogofsea.app`. Keep the Vite source at the repository root and never flatten generated `dist` files into it. The exact repository settings, Workers Builds commands, preview boundary, Hover nameserver cutover, DNSSEC sequence, custom-domain procedure, rollback path, and externally pending actions are in [`DEPLOY-CLOUDFLARE.md`](DEPLOY-CLOUDFLARE.md).
 
 ## Run the downloaded copy locally
 
