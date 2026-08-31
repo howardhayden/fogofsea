@@ -337,4 +337,1297 @@ test("compact Academy and Field Guide remain one-column, non-overlapping glass d
       }));
       expect(guideGeometry.overflowX).toBeLessThanOrEqual(1);
       expect(guideGeometry.nestedRoundedPanes).toBe(0);
-      await testInfo.attach(`${theme}-${viewport.width}x${viewport.height}-field-guuón»¶‰ËkºwµçE¹‘•ˆ°€‰™…±Í”ˆ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆ¹Í­äµÉ•…‘½ÕĞµÑ½±”ˆ¤¤¹Ñ½	•½ÕÍ• ¤ì(€€€…İ…¥Ğ•áÁ•ÑY¥•İÁ½ÉÑ	½Õ¹‘½Õµ•¹Ğ¡Á…”¤ì(€ô)ô¤ì()Ñ•ÍĞ ‰Ù¥•Üµ…À…¹MÕ¸½È5½½¸É•…ÀÉ•µ…¥¸Á•É•ÁÑ¥‰±”‘¥É•Ñ¥½¹…°±…ÍÌ¥¸‰½Ñ Ñ¡•µ•Ìˆ°…Íå¹Œ€¡ìÁ…”ô°Ñ•ÍÑ%¹™¼¤€ôøì(€‘•Í­Ñ½Á=¹±ä¡Ñ•ÍÑ%¹™¼¹ÁÉ½©•Ğ¹¹…µ”¤ì(€Ñ•ÍĞ¹Í•ÑQ¥µ•½ÕĞ ÄÈÁ|ÀÀÀ¤ì((€™½È€¡½¹ÍĞÙ¥•İÁ½ÉĞ½˜mÍÉ••¹Í¡½ÑY¥•İÁ½ÉÑÌ¹‘•Í­Ñ½À°ìİ¥‘Ñ è€ÌÈÀ°¡•¥¡Ğè€àÀÀô°ÍÉ••¹Í¡½ÑY¥•İÁ½ÉÑÌ¹Á½ÉÑÉ…¥Ñt¤ì(€€€…İ…¥ĞÁ…”¹Í•ÑY¥•İÁ½ÉÑM¥é”¡Ù¥•İÁ½ÉĞ¤ì(€€€…İ…¥Ğ½Á•¹M•ÍÍ¥½¸¡Á…”¤ì(€€€¥˜€¡Ù¥•İÁ½ÉĞ¹İ¥‘Ñ €ğô€ÜØÀ¤…İ…¥Ğ¡½½Í•5½‰¥±•Y¥•Ü¡Á…”°€‰Y%MU1%iQ%=8ˆ¤ì(€€€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰¹¥¡Ğˆ°•á…ĞèÑÉÕ”ô¤¹±¥¬ ¤ì((€€€™½È€¡½¹ÍĞÑ¡•µ”½˜l‰‘…É¬ˆ°€‰±¥¡Ğ‰t…Ì½¹ÍĞ¤ì(€€€€€½¹ÍĞÕÉÉ•¹ÑQ¡•µ”€ô…İ…¥ĞÁ…”¹±½…Ñ½È ˆ¹…ÁÀˆ¤¹•Ù…±Õ…Ñ” ¡•±•µ•¹Ğ¤€ôø•±•µ•¹Ğ¹±…ÍÍ1¥ÍĞ¹½¹Ñ…¥¹Ì ‰Ñ¡•µ”µ±¥¡Ğˆ¤€ü€‰±¥¡Ğˆ€è€‰‘…É¬ˆ¤ì(€€€€€¥˜€¡ÕÉÉ•¹ÑQ¡•µ”€„ôôÑ¡•µ”¤…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”èMİ¥Ñ Ñ¼€‘íÑ¡•µ•ô¥¹Ñ•É™…•€ô¤¹±¥¬ ¤ì((€€€€€½¹ÍĞÙ¥•İ5…À€ôÁ…”¹±½…Ñ½È ˆ¹‘•ÁÑ µ½¹ÑÉ½°ˆ¤ì(€€€€€½¹ÍĞ•±•ÍÑ¥…°€ôÁ…”¹±½…Ñ½È ˆ¹Í­äµÉ•…‘½ÕĞˆ¤ì(€€€€€½¹ÍĞÑ½±”€ôÁ…”¹±½…Ñ½È ˆ¹Í­äµÉ•…‘½ÕĞµÑ½±”ˆ¤ì(€€€€€…İ…¥Ğ•áÁ•Ğ¡Ù¥•İ5…À¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€€€€€…İ…¥Ğ•áÁ•Ğ¡•±•ÍÑ¥…°¤¹Ñ½!…Ù•ÑÑÉ¥‰ÕÑ” ‰‘…Ñ„µ•áÁ…¹‘•ˆ°€‰™…±Í”ˆ¤ì(€€€€€…İ…¥Ğ•áÁ•Ğ¡Ñ½±”¤¹Ñ½½¹Ñ…¥¹Q•áĞ ‰5==8	1=\ˆ¤ì((€€€€€½¹ÍĞ½±±…ÁÍ•‘Ù¥‘•¹”€ôì(€€€€€€€Ù¥•İ5…Àè…İ…¥Ğ±…ÍÍMÕÉ™…•5•ÑÉ¥Ì¡Ù¥•İ5…À¤°(€€€€€€€•±•ÍÑ¥…±Q½±”è…İ…¥Ğ±…ÍÍMÕÉ™…•5•ÑÉ¥Ì¡Ñ½±”¤°(€€€€€€€Ù¥•İ5…ÁA¥á•±Ìè…İ…¥Ğ±…ÍÍA¥á•±M¥¹…ÑÕÉ”¡Á…”°Ù¥•İ5…À¤°(€€€€€€€•±•ÍÑ¥…±Q½±•A¥á•±Ìè…İ…¥Ğ±…ÍÍA¥á•±M¥¹…ÑÕÉ”¡Á…”°Ñ½±”¤°(€€€€€ôì(€€€€€•áÁ•Ñ¥É•Ñ¥½¹…±±…ÍÌ¡½±±…ÁÍ•‘Ù¥‘•¹”¹Ù¥•İ5…À°€‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡õà‘íÙ¥•İÁ½ÉĞ¹¡•¥¡Ñô´‘íÑ¡•µ•ôÙ¥•Üµ…Á€¤ì(€€€€€•áÁ•Ñ¥É•Ñ¥½¹…±±…ÍÌ¡½±±…ÁÍ•‘Ù¥‘•¹”¹•±•ÍÑ¥…±Q½±”°€‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡õà‘íÙ¥•İÁ½ÉĞ¹¡•¥¡Ñô´‘íÑ¡•µ•ô5½½¸	•±½ÜÑ½±•€¤ì(€€€€€•áÁ•Ğ¡½±±…ÁÍ•‘Ù¥‘•¹”¹Ù¥•İ5…ÁA¥á•±Ì¹Ù…É¥…¹”°€‰Ù¥•Üµµ…À±…ÍÌ¥ÌÁ•É•ÁÑ¥‰±ä¹½¸µ™±…Ğˆ¤¹Ñ½	•É•…Ñ•ÉQ¡…¸ È¤ì(€€€€€•áÁ•Ğ¡½±±…ÁÍ•‘Ù¥‘•¹”¹•±•ÍÑ¥…±Q½±•A¥á•±Ì¹Ù…É¥…¹”°€‰•±•ÍÑ¥…°Ñ½±”±…ÍÌ¥ÌÁ•É•ÁÑ¥‰±ä¹½¸µ™±…Ğˆ¤¹Ñ½	•É•…Ñ•ÉQ¡…¸ È¤ì(€€€€€•áÁ•Ğ¡½±±…ÁÍ•‘Ù¥‘•¹”¹Ù¥•İ5…ÁA¥á•±Ì¹‘¥É•Ñ¥½¹…±•±Ñ„°€‰Ù¥•Üµµ…À‘¥É•Ñ¥½¹…°¡¥¡±¥¡ĞÉ•…¡•Ì…ÑÕ…°Á¥á•±Ìˆ¤¹Ñ½	•É•…Ñ•ÉQ¡…¸ ¸ÈÔ¤ì(€€€€€•áÁ•Ğ¡½±±…ÁÍ•‘Ù¥‘•¹”¹•±•ÍÑ¥…±Q½±•A¥á•±Ì¹‘¥É•Ñ¥½¹…±•±Ñ„°€‰•±•ÍÑ¥…°‘¥É•Ñ¥½¹…°¡¥¡±¥¡ĞÉ•…¡•Ì…ÑÕ…°Á¥á•±Ìˆ¤¹Ñ½	•É•…Ñ•ÉQ¡…¸ ¸ÈÔ¤ì(€€€€€…İ…¥ĞÑ•ÍÑ%¹™¼¹…ÑÑ… ¡¡Õµ±…ÍÌ´‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡õà‘íÙ¥•İÁ½ÉĞ¹¡•¥¡Ñô´‘íÑ¡•µ•ôµ½±±…ÁÍ•¹©Í½¹€°ì(€€€€€€€‰½‘äè)M=8¹ÍÑÉ¥¹¥™ä¡½±±…ÁÍ•‘Ù¥‘•¹”°¹Õ±°°€È¤°(€€€€€€€½¹Ñ•¹ÑQåÁ”è€‰…ÁÁ±¥…Ñ¥½¸½©Í½¸ˆ°(€€€€€ô¤ì(€€€€€…İ…¥ĞÁ…”¹±½…Ñ½È ˆ¹Ñ…Ñ¥…°µÁ…¹•°ˆ¤¹ÍÉ••¹Í¡½Ğ¡ì(€€€€€€€Á…Ñ èÑ•ÍÑ%¹™¼¹½ÕÑÁÕÑA…Ñ ¡¡Õµ±…ÍÌ´‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡õà‘íÙ¥•İÁ½ÉĞ¹¡•¥¡Ñô´‘íÑ¡•µ•ôµ½±±…ÁÍ•¹Á¹€¤°(€€€€€ô¤ì((€€€€€…İ…¥ĞÑ½±”¹±¥¬ ¤ì(€€€€€…İ…¥Ğ•áÁ•Ğ¡•±•ÍÑ¥…°¤¹Ñ½!…Ù•ÑÑÉ¥‰ÕÑ” ‰‘…Ñ„µ•áÁ…¹‘•ˆ°€‰ÑÉÕ”ˆ¤ì(€€€€€½¹ÍĞ‘•Ñ…¥±Ì€ôÁ…”¹±½…Ñ½È ˆ¹Í­äµÉ•…‘½ÕĞµ‘•Ñ…¥±Ìˆ¤ì(€€€€€…İ…¥Ğ•áÁ•Ğ¡‘•Ñ…¥±Ì¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€€€€€½¹ÍĞ•áÁ…¹‘•‘Ù¥‘•¹”€ôì(€€€€€€€Ñ½±”è…İ…¥Ğ±…ÍÍMÕÉ™…•5•ÑÉ¥Ì¡Ñ½±”¤°(€€€€€€€‘•Ñ…¥±Ìè…İ…¥Ğ±…ÍÍMÕÉ™…•5•ÑÉ¥Ì¡‘•Ñ…¥±Ì¤°(€€€€€€€Ñ½±•A¥á•±Ìè…İ…¥Ğ±…ÍÍA¥á•±M¥¹…ÑÕÉ”¡Á…”°Ñ½±”¤°(€€€€€€€‘•Ñ…¥±A¥á•±Ìè…İ…¥Ğ±…ÍÍA¥á•±M¥¹…ÑÕÉ”¡Á…”°‘•Ñ…¥±Ì¤°(€€€€€ôì(€€€€€•áÁ•Ñ¥É•Ñ¥½¹…±±…ÍÌ¡•áÁ…¹‘•‘Ù¥‘•¹”¹Ñ½±”°€‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡õà‘íÙ¥•İÁ½ÉĞ¹¡•¥¡Ñô´‘íÑ¡•µ•ô•áÁ…¹‘••±•ÍÑ¥…°Ñ½±•€¤ì(€€€€€•áÁ•Ñ¥É•Ñ¥½¹…±±…ÍÌ¡•áÁ…¹‘•‘Ù¥‘•¹”¹‘•Ñ…¥±Ì°€‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡õà‘íÙ¥•İÁ½ÉĞ¹¡•¥¡Ñô´‘íÑ¡•µ•ô•±•ÍÑ¥…°‘•Ñ…¥±€¤ì(€€€€€•áÁ•Ğ¡•áÁ…¹‘•‘Ù¥‘•¹”¹‘•Ñ…¥±A¥á•±Ì¹Ù…É¥…¹”°€‰•±•ÍÑ¥…°‘•Ñ…¥°±…ÍÌ¥ÌÁ•É•ÁÑ¥‰±ä¹½¸µ™±…Ğˆ¤¹Ñ½	•É•…Ñ•ÉQ¡…¸ È¤ì(€€€€€•áÁ•Ğ¡•áÁ…¹‘•‘Ù¥‘•¹”¹‘•Ñ…¥±A¥á•±Ì¹‘¥É•Ñ¥½¹…±•±Ñ„°€‰‘•Ñ…¥°‘¥É•Ñ¥½¹…°¡¥¡±¥¡ĞÉ•…¡•Ì…ÑÕ…°Á¥á•±Ìˆ¤¹Ñ½	•É•…Ñ•ÉQ¡…¸ ¸ÈÔ¤ì((€€€€€½¹ÍĞİÉ…ÁÁ•È€ô…İ…¥Ğ•±•ÍÑ¥…°¹•Ù…±Õ…Ñ” ¡•±•µ•¹Ğ¤€ôøì(€€€€€€€½¹ÍĞÍÑå±”€ô•Ñ½µÁÕÑ•‘MÑå±”¡•±•µ•¹Ğ¤ì(€€€€€€€É•ÑÕÉ¸ì(€€€€€€€€€‘¥ÍÁ±…äèÍÑå±”¹‘¥ÍÁ±…ä°(€€€€€€€€€‰½á½Õ¹Ğè•±•µ•¹Ğ¹•Ñ±¥•¹ÑI•ÑÌ ¤¹±•¹Ñ °(€€€€€€€€€‰…­É½Õ¹‘½±½ÈèÍÑå±”¹‰…­É½Õ¹‘½±½È°(€€€€€€€€€‰…­‘É½Á¥±Ñ•ÈèÍÑå±”¹‰…­‘É½Á¥±Ñ•ÈñğÍÑå±”¹•ÑAÉ½Á•ÉÑåY…±Õ” ˆµİ•‰­¥Ğµ‰…­‘É½Àµ™¥±Ñ•Èˆ¤°(€€€€€€€ôì(€€€€€ô¤ì(€€€€€¥˜€¡Ù¥•İÁ½ÉĞ¹İ¥‘Ñ €ğô€ÜØÀ¤ì(€€€€€€€•áÁ•Ğ¡İÉ…ÁÁ•È¹‘¥ÍÁ±…ä¤¹Ñ½	” ‰½¹Ñ•¹ÑÌˆ¤ì(€€€€€€€•áÁ•Ğ¡İÉ…ÁÁ•È¹‰½á½Õ¹Ğ¤¹Ñ½	” À¤ì(€€€€€ô(€€€€€•áÁ•Ğ¡l‰ÑÉ…¹ÍÁ…É•¹Ğˆ°€‰É‰„ À°€À°€À°€À¤‰t¤¹Ñ½½¹Ñ…¥¸¡İÉ…ÁÁ•È¹‰…­É½Õ¹‘½±½È¤ì(€€€€€•áÁ•Ğ¡lˆˆ°€‰¹½¹”‰t¤¹Ñ½½¹Ñ…¥¸¡İÉ…ÁÁ•È¹‰…­‘É½Á¥±Ñ•È¤ì(€€€€€…İ…¥ĞÑ•ÍÑ%¹™¼¹…ÑÑ… ¡¡Õµ±…ÍÌ´‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡õà‘íÙ¥•İÁ½ÉĞ¹¡•¥¡Ñô´‘íÑ¡•µ•ôµ•áÁ…¹‘•¹©Í½¹€°ì(€€€€€€€‰½‘äè)M=8¹ÍÑÉ¥¹¥™ä¡ì•áÁ…¹‘•‘Ù¥‘•¹”°İÉ…ÁÁ•Èô°¹Õ±°°€È¤°(€€€€€€€½¹Ñ•¹ÑQåÁ”è€‰…ÁÁ±¥…Ñ¥½¸½©Í½¸ˆ°(€€€€€ô¤ì(€€€€€…İ…¥ĞÁ…”¹±½…Ñ½È ˆ¹Ñ…Ñ¥…°µÁ…¹•°ˆ¤¹ÍÉ••¹Í¡½Ğ¡ì(€€€€€€€Á…Ñ èÑ•ÍÑ%¹™¼¹½ÕÑÁÕÑA…Ñ ¡¡Õµ±…ÍÌ´‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡õà‘íÙ¥•İÁ½ÉĞ¹¡•¥¡Ñô´‘íÑ¡•µ•ôµ•áÁ…¹‘•¹Á¹€¤°(€€€€€ô¤ì(€€€€€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰±½Í”5½½¸Á½Í¥Ñ¥½¸É•…Àˆô¤¹±¥¬ ¤ì(€€€€€…İ…¥Ğ•áÁ•Ğ¡Ù¥•İ5…À¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€€€€€…İ…¥Ğ•áÁ•ÑY¥•İÁ½ÉÑ	½Õ¹‘½Õµ•¹Ğ¡Á…”¤ì(€€€ô(€ô)ô¤ì()Ñ•ÍĞ ‰™½É”…¹½µµ…¹Á¡…Í•Ì­••À•±•ÍÑ¥…°É•…À½ÁĞµ¥¸…¹±•…È½˜ÕÉÉ•¹Ğİ½É¬ˆ°…Íå¹Œ€¡ìÁ…”ô°Ñ•ÍÑ%¹™¼¤€ôøì(€‘•Í­Ñ½Á=¹±ä¡Ñ•ÍÑ%¹™¼¹ÁÉ½©•Ğ¹¹…µ”¤ì(€…İ…¥ĞÁ…”¹Í•ÑY¥•İÁ½ÉÑM¥é”¡ÍÉ••¹Í¡½ÑY¥•İÁ½ÉÑÌ¹‘•Í­Ñ½À¤ì(€…İ…¥Ğ½Á•¹M•ÍÍ¥½¸¡Á…”¤ì(€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰¹¥¡Ğˆ°•á…ĞèÑÉÕ”ô¤¹±¥¬ ¤ì(€…İ…¥ĞÁ…”¹±½…Ñ½È ˆ¹İ…É™…É”µÉ¥ˆ¤¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€½%¹Ñ•±±¥•¹”…¹É•½¹¹…¥ÍÍ…¹”½¤ô¤¹±¥¬ ¤ì(€…İ…¥Ğ½µÁ±•Ñ•MÑÉ…Ñ•¥¡½¥•Ì¡Á…”¤ì(€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰=9Q%9UQ<=IM%8ˆô¤¹±¥¬ ¤ì((€½¹ÍĞÉ•…‘½ÕĞ€ôÁ…”¹±½…Ñ½È ˆ¹Í­äµÉ•…‘½ÕĞˆ¤ì(€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆ¹™½É”µÁ…¹•°ˆ¤¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€…İ…¥Ğ•áÁ•Ğ¡É•…‘½ÕĞ¤¹Ñ½!…Ù•ÑÑÉ¥‰ÕÑ” ‰‘…Ñ„µ•áÁ…¹‘•ˆ°€‰™…±Í”ˆ¤ì(€±•ĞÉ•ÑÌ€ô…İ…¥Ğ±…å½ÕÑI•ÑÌ¡Á…”°lˆ¹™½É”µÁ…¹•°ˆ°€ˆ¹Í­äµÉ•…‘½ÕĞ‰t¤ì(€•áÁ•Ñ9½%¹Ñ•ÉÍ•Ñ¥½¸¡É•ÑÍlˆ¹™½É”µÁ…¹•°‰t°É•ÑÍlˆ¹Í­äµÉ•…‘½ÕĞ‰t°€‰™½É”‘•Í¥¸…¹½µÁ…Ğ•±•ÍÑ¥…°É•…Àˆ¤ì((€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰‘½¹”±••Ğ…Ù¥…Ñ¥½¸Í¡¥Àˆô¤¹±¥¬ ¤ì(€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆ¹™½É”µ¡•…‘¥¹œ€ø‘¥Øé±…ÍĞµ¡¥±€øÍÑÉ½¹œˆ¤¤¹¹½Ğ¹Ñ½!…Ù•Q•áĞ ˆÀˆ¤ì(€…İ…¥ĞÁ…”¹±½…Ñ½È ˆ¹±…Õ¹ µ‰ÕÑÑ½¸ˆ¤¹±¥¬ ¤ì(€½¹ÍĞ½¹™¥Éµ…Ñ¥½¸€ôÁ…”¹•Ñ	åI½±” ‰‘¥…±½œˆ°ì¹…µ”è€‰I•…‘¥¹•ÍÌÉ•Ù¥•Ü™½Õ¹±¥­•±ä™…¥±ÕÉ”Á½¥¹ÑÌˆô¤ì(€…İ…¥Ğ•áÁ•Ğ¡½¹™¥Éµ…Ñ¥½¸¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰AI=9e]dˆô¤¹±¥¬ ¤ì((€½¹ÍĞ½µµ…¹€ôÁ…”¹±½…Ñ½È ˆ¹­É¥•ÍÍÁ¥•°µÁ…¹•°ˆ¤ì(€…İ…¥Ğ•áÁ•Ğ¡½µµ…¹¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€…İ…¥Ğ•áÁ•Ğ¡É•…‘½ÕĞ¤¹Ñ½!…Ù•ÑÑÉ¥‰ÕÑ” ‰‘…Ñ„µÕÉÉ•¹ĞµÁ¡…Í”ˆ°€‰ÑÉÕ”ˆ¤ì(€…İ…¥Ğ•áÁ•Ğ¡É•…‘½ÕĞ¤¹Ñ½!…Ù•ÑÑÉ¥‰ÕÑ” ‰‘…Ñ„µ•áÁ…¹‘•ˆ°€‰™…±Í”ˆ¤ì(€É•ÑÌ€ô…İ…¥Ğ±…å½ÕÑI•ÑÌ¡Á…”°lˆ¹­É¥•ÍÍÁ¥•°µÁ…¹•°ˆ°€ˆ¹Í­äµÉ•…‘½ÕĞ‰t¤ì(€•áÁ•Ñ9½%¹Ñ•ÉÍ•Ñ¥½¸¡É•ÑÍlˆ¹­É¥•ÍÍÁ¥•°µÁ…¹•°‰t°É•ÑÍlˆ¹Í­äµÉ•…‘½ÕĞ‰t°€‰½µµ…¹Á…¹•°…¹½µÁ…Ğ•±•ÍÑ¥…°É•…Àˆ¤ì((€½¹ÍĞÍ¡½İI•…À€ôÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰M¡½Ü5½½¸Á½Í¥Ñ¥½¸É•…Àˆô¤ì(€…İ…¥ĞÍ¡½İI•…À¹±¥¬ ¤ì(€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆÍ­äµÉ•…‘½ÕĞµ‘•Ñ…¥±Ìˆ¤¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰±½Í”5½½¸Á½Í¥Ñ¥½¸É•…Àˆô¤¹±¥¬ ¤ì((€™½È€¡½¹ÍĞÙ¥•İÁ½ÉĞ½˜mÍÉ••¹Í¡½ÑY¥•İÁ½ÉÑÌ¹Á½ÉÑÉ…¥Ğ°ìİ¥‘Ñ è€ÌÈÀ°¡•¥¡Ğè€àÀÀõt¤ì(€€€…İ…¥ĞÁ…”¹Í•ÑY¥•İÁ½ÉÑM¥é”¡Ù¥•İÁ½ÉĞ¤ì(€€€™½È€¡½¹ÍĞÍ•±•Ñ½È½˜lˆ¹‰…ÑÑ±•™¥•±µ…¹Ù…Ìˆ°€ˆ¹Á±½ĞµÑ½Á±¥¹”ˆ°€ˆ¹±••¹‰t¤ì(€€€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È¡Í•±•Ñ½È¤¤¹Ñ½	•!¥‘‘•¸ ¤ì(€€€ô(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€½IM=1YQUI8¼ô¤¤¹Ñ½	•¹…‰±• ¤ì(€€€½¹ÍĞÉ•…À€ô½µµ…¹¹±½…Ñ½È ˆ¹Á±…¹¹¥¹œµÉ•…Àˆ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡É•…À¤¹¹½Ğ¹Ñ½!…Ù•ÑÑÉ¥‰ÕÑ” ‰½Á•¸ˆ°€ˆˆ¤ì(€€€…İ…¥ĞÉ•…À¹±½…Ñ½È ‰ÍÕµµ…Éäˆ¤¹±¥¬ ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡É•…À¹•Ñ	åQ•ÍÑ% ‰Á±…¹¹¥¹œµÉ•…Àµ½¹Ñ•¹Ğˆ¤¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€€€…İ…¥ĞÉ•…À¹±½…Ñ½È ‰ÍÕµµ…Éäˆ¤¹±¥¬ ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡½µµ…¹¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€€€…İ…¥Ğ•áÁ•ÑY¥•İÁ½ÉÑ	½Õ¹‘½Õµ•¹Ğ¡Á…”¤ì(€ô)ô¤ì()Ñ•ÍĞ ‰‰•±½Üµ¡½É¥é½¸‘¥É•Ñ¥½¸¥Ì¥¹Ñ•É…Ñ•¥¹Ñ¼½¹”Ñ½±•…‰±”•±•ÍÑ¥…°ÍÕÉ™…”ˆ°…Íå¹Œ€¡ìÁ…”ô°Ñ•ÍÑ%¹™¼¤€ôøì(€‘•Í­Ñ½Á=¹±ä¡Ñ•ÍÑ%¹™¼¹ÁÉ½©•Ğ¹¹…µ”¤ì((€™½È€¡½¹ÍĞÙ¥•İÁ½ÉĞ½˜mìİ¥‘Ñ è€ÈÀĞà°¡•¥¡Ğè€ÄÀàäô°ÍÉ••¹Í¡½ÑY¥•İÁ½ÉÑÌ¹‘•Í­Ñ½À°ÍÉ••¹Í¡½ÑY¥•İÁ½ÉÑÌ¹Á½ÉÑÉ…¥Ğ°ìİ¥‘Ñ è€ÌÈÀ°¡•¥¡Ğè€àÀÀõt¤ì(€€€…İ…¥ĞÁ…”¹Í•ÑY¥•İÁ½ÉÑM¥é”¡Ù¥•İÁ½ÉĞ¤ì(€€€…İ…¥Ğ½Á•¹M•ÍÍ¥½¸¡Á…”¤ì(€€€¥˜€¡Ù¥•İÁ½ÉĞ¹İ¥‘Ñ €ğô€ÜØÀ¤…İ…¥Ğ¡½½Í•5½‰¥±•Y¥•Ü¡Á…”°€‰Y%MU1%iQ%=8ˆ¤ì(€€€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰¹¥¡Ğˆ°•á…ĞèÑÉÕ”ô¤¹±¥¬ ¤ì(€€€½¹ÍĞÉ•…‘½ÕĞ€ôÁ…”¹±½…Ñ½È ˆ¹Í­äµÉ•…‘½ÕĞˆ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡É•…‘½ÕĞ¤¹Ñ½!…Ù•ÑÑÉ¥‰ÕÑ” ‰‘…Ñ„µ•áÁ…¹‘•ˆ°€‰™…±Í”ˆ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆÍ­äµÉ•…‘½ÕĞµ‘•Ñ…¥±Ìˆ¤¤¹Ñ½!…Ù•½Õ¹Ğ À¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆ¹¡½É¥é½¸µ¹½Ñ¥”ˆ¤¤¹Ñ½!…Ù•½Õ¹Ğ À¤ì(€€€½¹ÍĞµ½½¹I•…ÁQ½±”€ôÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰M¡½Ü5½½¸Á½Í¥Ñ¥½¸É•…Àˆô¤ì(€€€…İ…¥Ğµ½½¹I•…ÁQ½±”¹ÁÉ•ÍÌ ‰¹Ñ•Èˆ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡É•…‘½ÕĞ¤¹Ñ½!…Ù•ÑÑÉ¥‰ÕÑ” ‰‘…Ñ„µ•áÁ…¹‘•ˆ°€‰ÑÉÕ”ˆ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆÍ­äµÉ•…‘½ÕĞµ‘•Ñ…¥±Ìˆ¤¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆ¹Í­äµ‘¥É•Ñ¥½¸ˆ¤¤¹Ñ½½¹Ñ…¥¹Q•áĞ ½QUI8€¡1QñI%!P¥ñ=8UII9P	I%9¼¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹•Ñ	åQ•áĞ ½5½½¸…±Ñ¥ÑÕ‘”€¸¨‰•±½Ü¡½É¥é½¸¼¤¤¹Ñ½	•Y¥Í¥‰±” ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆ¹¡½É¥é½¸µ¹½Ñ¥”ˆ¤¤¹Ñ½!…Ù•½Õ¹Ğ À¤ì((€€€¥˜€¡Ù¥•İÁ½ÉĞ¹İ¥‘Ñ €ğô€ÜØÀ¤ì(€€€€€½¹ÍĞÉ•ÑÌ€ô…İ…¥Ğ±…å½ÕÑI•ÑÌ¡Á…”°lˆ¹Ñ…Ñ¥…°µÁ…¹•°ˆ°€ˆ¹Í­äµÉ•…‘½ÕĞµÑ½±”ˆ°€ˆ¹Í­äµÉ•…‘½ÕĞµ‘•Ñ…¥±Ì‰t¤ì(€€€€€½¹ÍĞÑ…Ñ¥…°€ôÉ•ÑÍlˆ¹Ñ…Ñ¥…°µÁ…¹•°‰tì(€€€€€•áÁ•Ñ½¹Ñ…¥¹•¡É•ÑÍlˆ¹Í­äµÉ•…‘½ÕĞµÑ½±”‰t°Ñ…Ñ¥…°°•±•ÍÑ¥…°ÑÉ¥•È…Ğ€‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡ôÁ¥á•±Í€¤ì(€€€€€•áÁ•Ñ½¹Ñ…¥¹•¡É•ÑÍlˆ¹Í­äµÉ•…‘½ÕĞµ‘•Ñ…¥±Ì‰t°Ñ…Ñ¥…°°•±•ÍÑ¥…°‘•Ñ…¥±Ì…Ğ€‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡ôÁ¥á•±Í€¤ì(€€€€€•áÁ•Ñ9½%¹Ñ•ÉÍ•Ñ¥½¸¡É•ÑÍlˆ¹Í­äµÉ•…‘½ÕĞµÑ½±”‰t°É•ÑÍlˆ¹Í­äµÉ•…‘½ÕĞµ‘•Ñ…¥±Ì‰t°€‰•±•ÍÑ¥…°ÑÉ¥•È…¹‘•Ñ…¥±Ì…Éˆ¤ì(€€€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆ¹‘•ÁÑ µ½¹ÑÉ½°ˆ¤¤¹Ñ½	•!¥‘‘•¸ ¤ì(€€€ô•±Í”ì(€€€€€½¹ÍĞÉ•ÑÌ€ô…İ…¥Ğ±…å½ÕÑI•ÑÌ¡Á…”°lˆ¹Ñ…Ñ¥…°µÁ…¹•°ˆ°€ˆ¹‘•ÁÑ µ½¹ÑÉ½°ˆ°€ˆ¹Í­äµÉ•…‘½ÕĞ‰t¤ì(€€€€€½¹ÍĞÑ…Ñ¥…°€ôÉ•ÑÍlˆ¹Ñ…Ñ¥…°µÁ…¹•°‰tì(€€€€€•áÁ•Ñ½¹Ñ…¥¹•¡É•ÑÍlˆ¹Í­äµÉ•…‘½ÕĞ‰t°Ñ…Ñ¥…°°•±•ÍÑ¥…°ÍÕÉ™…”…Ğ€‘íÙ¥•İÁ½ÉĞ¹İ¥‘Ñ¡ôÁ¥á•±Í€¤ì(€€€€€•áÁ•Ñ9½%¹Ñ•ÉÍ•Ñ¥½¸¡É•ÑÍlˆ¹‘•ÁÑ µ½¹ÑÉ½°‰t°É•ÑÍlˆ¹Í­äµÉ•…‘½ÕĞ‰t°€‰Ù¥•ÜÍ•±•Ñ½È…¹½Á•¹••±•ÍÑ¥…°ÍÕÉ™…”ˆ¤ì(€€€ô(€€€•áÁ•Ğ¡…İ…¥ĞÁ…”¹±½…Ñ½È ˆ¹Í­äµÉ•…‘½ÕĞˆ¤¹½Õ¹Ğ ¤¤¹Ñ½	” Ä¤ì(€€€½¹ÍĞÁ…•Q•áĞ€ô…İ…¥ĞÁ…”¹±½…Ñ½È ‰‰½‘äˆ¤¹¥¹¹•ÉQ•áĞ ¤ì(€€€™½È€¡½¹ÍĞÉ•µ½Ù•½˜l‰Íå¹Ñ¡•Ñ¥Œ¡½É¥é½¸ˆ°€‰™¥á•Í•¹…É¥¼Í­äˆ°€‰¹¼±½…Ñ¥½¸…•ÍÌˆ°€‰™¥Ñ¥½¹…°±½…°Ñ¥µ”ˆ°€‰™¥Ñ¥½¹…°½‰Í•ÉÙ•È‰t¤ì(€€€€€•áÁ•Ğ¡Á…•Q•áĞ¹Ñ½1½İ•É…Í” ¤¤¹¹½Ğ¹Ñ½½¹Ñ…¥¸¡É•µ½Ù•¤ì(€€€ô((€€€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰±½Í”5½½¸Á½Í¥Ñ¥½¸É•…Àˆô¤¹ÁÉ•ÍÌ ‰¹Ñ•Èˆ¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆÍ­äµÉ•…‘½ÕĞµ‘•Ñ…¥±Ìˆ¤¤¹Ñ½!…Ù•½Õ¹Ğ À¤ì(€€€…İ…¥Ğ•áÁ•Ğ¡Á…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰M¡½Ü5½½¸Á½Í¥Ñ¥½¸É•…Àˆô¤¤¹Ñ½	•½ÕÍ• ¤ì(€€€…İ…¥Ğ•áÁ•ÑY¥•İÁ½ÉÑ	½Õ¹‘½Õµ•¹Ğ¡Á…”¤ì(€ô)ô¤ì()Ñ•ÍĞ ‰½Á•¸Í½Õ¹Í•ÑÑ¥¹ÌÁ…¥¹Ğ…‰½Ù”Ñ¡”…µ”ÍÕÉ™…”…¹É•µ…¥¸¥¹Í¥‘”Ñ¡”Ù¥•İÁ½ÉĞˆ°…Íå¹Œ€¡ìÁ…”ô°Ñ•ÍÑ%¹™¼¤€ôøì(€‘•Í­Ñ½Á=¹±ä¡Ñ•ÍÑ%¹™¼¹ÁÉ½©•Ğ¹¹…µ”¤ì(€…İ…¥ĞÁ…”¹Í•ÑY¥•İÁ½ÉÑM¥é”¡ÍÉ••¹Í¡½ÑY¥•İÁ½ÉÑÌ¹‘•Í­Ñ½À¤ì(€…İ…¥Ğ½Á•¹M•ÍÍ¥½¸¡Á…”¤ì(€½¹ÍĞ‘¥É•ÑM½Õ¹‘M•ÑÑ¥¹Ì€ôÁ…”¹±½…Ñ½È ˆ¹Í½Õ¹µÍ•ÑÑ¥¹Ì€øÍÕµµ…Éäˆ¤ì(€¥˜€¡…İ…¥Ğ‘¥É•ÑM½Õ¹‘M•ÑÑ¥¹Ì¹¥ÍY¥Í¥‰±” ¤¤ì(€€€…İ…¥Ğ‘¥É•ÑM½Õ¹‘M•ÑÑ¥¹Ì¹±¥¬ ¤ì(€ô•±Í”ì(€€€…İ…¥ĞÁ…”¹±½…Ñ½È ˆ¹±½‰…°µÑ½½±Ìµµ•¹Ô€øÍÕµµ…Éäˆ¤¹±¥¬ ¤ì(€€€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰M=U9MQQ%9Lˆ°•á…ĞèÑÉÕ”ô¤¹±¥¬ ¤ì(€ô(€…İ…¥Ğ•áÁ•Ğ¡Á…”¹±½…Ñ½È ˆ¹Í½Õ¹µÍ•ÑÑ¥¹Ì€øÍ•Ñ¥½¸ˆ¤¤¹Ñ½	•Y¥Í¥‰±” ¤ì((€½¹ÍĞÍÑ…Ñ”€ô…İ…¥ĞÁ…”¹•Ù…±Õ…Ñ”  ¤€ôøì(€€€½¹ÍĞÁ…¹•°€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½Èñ!Q51±•µ•¹Ğø ˆ¹Í½Õ¹µÍ•ÑÑ¥¹Ì€øÍ•Ñ¥½¸ˆ¤„ì(€€€½¹ÍĞÑ½Á‰…È€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½Èñ!Q51±•µ•¹Ğø ˆ¹Ñ½Á‰…Èˆ¤„ì(€€€½¹ÍĞÉ•Ğ€ôÁ…¹•°¹•Ñ	½Õ¹‘¥¹±¥•¹ÑI•Ğ ¤ì(€€€½¹ÍĞÍ…µÁ±•`€ô5…Ñ ¹µ¥¸¡É•Ğ¹É¥¡Ğ€´€Ğ°5…Ñ ¹µ…à¡É•Ğ¹±•™Ğ€¬€Ğ°É•Ğ¹±•™Ğ€¬É•Ğ¹İ¥‘Ñ €¼€È¤¤ì(€€€½¹ÍĞÍ…µÁ±•d€ô5…Ñ ¹µ¥¸¡É•Ğ¹‰½ÑÑ½´€´€Ğ°É•Ğ¹Ñ½À€¬€Ğ¤ì(€€€½¹ÍĞÑ½Áµ½ÍĞ€ô‘½Õµ•¹Ğ¹•±•µ•¹ÑÉ½µA½¥¹Ğ¡Í…µÁ±•`°Í…µÁ±•d¤ì(€€€É•ÑÕÉ¸ì(€€€€€Á…¹•°èìÑ½ÀèÉ•Ğ¹Ñ½À°É¥¡ĞèÉ•Ğ¹É¥¡Ğ°‰½ÑÑ½´èÉ•Ğ¹‰½ÑÑ½´°±•™ĞèÉ•Ğ¹±•™Ğ°İ¥‘Ñ èÉ•Ğ¹İ¥‘Ñ °¡•¥¡ĞèÉ•Ğ¹¡•¥¡Ğô°(€€€€€Ñ½Á‰…Éhè9Õµ‰•È¹Á…ÉÍ•%¹Ğ¡•Ñ½µÁÕÑ•‘MÑå±”¡Ñ½Á‰…È¤¹é%¹‘•à°€ÄÀ¤°(€€€€€Ñ½Áµ½ÍÑ	•±½¹ÍQ½A…¹•°è	½½±•…¸¡Ñ½Áµ½ÍĞ€˜˜Á…¹•°¹½¹Ñ…¥¹Ì¡Ñ½Áµ½ÍĞ¤¤°(€€€€€Ù¥•İÁ½ÉĞèìİ¥‘Ñ è¥¹¹•É]¥‘Ñ °¡•¥¡Ğè¥¹¹•É!•¥¡Ğô°(€€€ôì(€ô¤ì((€•áÁ•Ğ¡ÍÑ…Ñ”¹Á…¹•°¹±•™Ğ¤¹Ñ½	•É•…Ñ•ÉQ¡…¹=ÉÅÕ…° À¤ì(€•áÁ•Ğ¡ÍÑ…Ñ”¹Á…¹•°¹Ñ½À¤¹Ñ½	•É•…Ñ•ÉQ¡…¹=ÉÅÕ…° À¤ì(€•áÁ•Ğ¡ÍÑ…Ñ”¹Á…¹•°¹É¥¡Ğ¤¹Ñ½	•1•ÍÍQ¡…¹=ÉÅÕ…°¡ÍÑ…Ñ”¹Ù¥•İÁ½ÉĞ¹İ¥‘Ñ ¤ì(€•áÁ•Ğ¡ÍÑ…Ñ”¹Á…¹•°¹‰½ÑÑ½´¤¹Ñ½	•1•ÍÍQ¡…¹=ÉÅÕ…°¡ÍÑ…Ñ”¹Ù¥•İÁ½ÉĞ¹¡•¥¡Ğ¤ì(€•áÁ•Ğ¡ÍÑ…Ñ”¹Ñ½Á‰…Éh¤¹Ñ½	•É•…Ñ•ÉQ¡…¸ À¤ì(€•áÁ•Ğ¡ÍÑ…Ñ”¹Ñ½Áµ½ÍÑ	•±½¹ÍQ½A…¹•°°€‰Ñ¡”½Á•¸Í½Õ¹Á…¹•°µÕÍĞÁ…¥¹Ğ…‰½Ù”Ñ¡”…µ”ÍÕÉ™…”ˆ¤¹Ñ½	”¡ÑÉÕ”¤ì)ô¤ì()Ñ•ÍĞ ‰É•ÁÉ•Í•¹Ñ…Ñ¥Ù”±¥¡Ğ…¹‘…É¬Ñ•áĞ°½¹ÑÉ½°°…¹™½ÕÌÙ…É¥…‰±•Ìµ••Ğ½¹ÑÉ…ÍĞÑ¡É•Í¡½±‘Ìˆ°…Íå¹Œ€¡ìÁ…”ô°Ñ•ÍÑ%¹™¼¤€ôøì(€‘•Í­Ñ½Á=¹±ä¡Ñ•ÍÑ%¹™¼¹ÁÉ½©•Ğ¹¹…µ”¤ì(€…İ…¥Ğ½Á•¹M•ÍÍ¥½¸¡Á…”¤ì((€½¹ÍĞµ•…ÍÕÉ”€ô€ ¤€ôøÁ…”¹•Ù…±Õ…Ñ”  ¤€ôøì(€€€½¹ÍĞ…ÁÀ€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½Èñ!Q51±•µ•¹Ğø ˆ¹…ÁÀˆ¤„ì(€€€½¹ÍĞÍÑå±”€ô•Ñ½µÁÕÑ•‘MÑå±”¡…ÁÀ¤ì(€€€½¹ÍĞÉ•Í½±Ù”€ô€¡¹…µ”èÍÑÉ¥¹œ¤€ôøì(€€€€€½¹ÍĞÁÉ½‰”€ô‘½Õµ•¹Ğ¹É•…Ñ•±•µ•¹Ğ ‰ÍÁ…¸ˆ¤ì(€€€€€ÁÉ½‰”¹ÍÑå±”¹½±½È€ôÍÑå±”¹•ÑAÉ½Á•ÉÑåY…±Õ”¡¹…µ”¤¹ÑÉ¥´ ¤ì(€€€€€…ÁÀ¹…ÁÁ•¹‘¡¥±¡ÁÉ½‰”¤ì(€€€€€½¹ÍĞ½±½È€ô•Ñ½µÁÕÑ•‘MÑå±”¡ÁÉ½‰”¤¹½±½Èì(€€€€€ÁÉ½‰”¹É•µ½Ù” ¤ì(€€€€€½¹ÍĞÙ…±Õ•Ì€ô½±½È¹µ…Ñ  ½mq¹t¬½œ¤ü¹Í±¥” À°€Ì¤¹µ…À¡9Õµ‰•È¤ì(€€€€€¥˜€ …Ù…±Õ•ÌñğÙ…±Õ•Ì¹±•¹Ñ €„ôô€Ì¤Ñ¡É½Ü¹•ÜÉÉ½È¡½Õ±¹½ĞÉ•Í½±Ù”€‘í¹…µ•ôè€‘í½±½Éõ€¤ì(€€€€€É•ÑÕÉ¸Ù…±Õ•Ì…Ìm¹Õµ‰•È°¹Õµ‰•È°¹Õµ‰•Étì(€€€ôì(€€€½¹ÍĞ±Õµ¥¹…¹”€ô€¡mÉ•°É••¸°‰±Õ•tèm¹Õµ‰•È°¹Õµ‰•È°¹Õµ‰•Ét¤€ôøì(€€€€€½¹ÍĞ¡…¹¹•°€ô€¡Ù…±Õ”è¹Õµ‰•È¤€ôøì(€€€€€€€½¹ÍĞ¹½Éµ…±¥é•€ôÙ…±Õ”€¼€ÈÔÔì(€€€€€€€É•ÑÕÉ¸¹½Éµ…±¥é•€ğô€À¸ÀĞÀĞÔ€ü¹½Éµ…±¥é•€¼€ÄÈ¸äÈ€è€ ¡¹½Éµ…±¥é•€¬€À¸ÀÔÔ¤€¼€Ä¸ÀÔÔ¤€¨¨€È¸Ğì(€€€€€ôì(€€€€€É•ÑÕÉ¸€À¸ÈÄÈØ€¨¡…¹¹•°¡É•¤€¬€À¸ÜÄÔÈ€¨¡…¹¹•°¡É••¸¤€¬€À¸ÀÜÈÈ€¨¡…¹¹•°¡‰±Õ”¤ì(€€€ôì(€€€½¹ÍĞÉ…Ñ¥¼€ô€¡±•™Ğèm¹Õµ‰•È°¹Õµ‰•È°¹Õµ‰•Ét°É¥¡Ğèm¹Õµ‰•È°¹Õµ‰•È°¹Õµ‰•Ét¤€ôøì(€€€€€½¹ÍĞ±¥¡Ñ•È€ô5…Ñ ¹µ…à¡±Õµ¥¹…¹”¡±•™Ğ¤°±Õµ¥¹…¹”¡É¥¡Ğ¤¤ì(€€€€€½¹ÍĞ‘…É­•È€ô5…Ñ ¹µ¥¸¡±Õµ¥¹…¹”¡±•™Ğ¤°±Õµ¥¹…¹”¡É¥¡Ğ¤¤ì(€€€€€É•ÑÕÉ¸€¡±¥¡Ñ•È€¬€À¸ÀÔ¤€¼€¡‘…É­•È€¬€À¸ÀÔ¤ì(€€€ôì(€€€½¹ÍĞ½±½ÉÌ€ôì(€€€€€‰œèÉ•Í½±Ù” ˆ´µ‰œˆ¤°(€€€€€Á…¹•°èÉ•Í½±Ù” ˆ´µÁ…¹•°ˆ¤°(€€€€€É…¥Í•èÉ•Í½±Ù” ˆ´µÉ…¥Í•ˆ¤°(€€€€€Ñ•áĞèÉ•Í½±Ù” ˆ´µÑ•áĞˆ¤°(€€€€€µÕÑ•èÉ•Í½±Ù” ˆ´µµÕÑ•ˆ¤°(€€€€€…•¹ĞèÉ•Í½±Ù” ˆ´µ…•¹Ğˆ¤°(€€€€€…•¹ÑMÑÉ½¹œèÉ•Í½±Ù” ˆ´µ…•¹ĞµÍÑÉ½¹œˆ¤°(€€€€€…•¹Ñ%¹¬èÉ•Í½±Ù” ˆ´µ…•¹Ğµ¥¹¬ˆ¤°(€€€ôì(€€€É•ÑÕÉ¸ì(€€€€€Ñ¡•µ”è…ÁÀ¹±…ÍÍ1¥ÍĞ¹½¹Ñ…¥¹Ì ‰Ñ¡•µ”µ±¥¡Ğˆ¤€ü€‰±¥¡Ğˆ€è€‰‘…É¬ˆ°(€€€€€Ñ•áÑ=¹A…¹•°èÉ…Ñ¥¼¡½±½ÉÌ¹Ñ•áĞ°½±½ÉÌ¹Á…¹•°¤°(€€€€€µÕÑ•‘=¹A…¹•°èÉ…Ñ¥¼¡½±½ÉÌ¹µÕÑ•°½±½ÉÌ¹Á…¹•°¤°(€€€€€½¹ÑÉ½±%¹­=¹•¹ĞèÉ…Ñ¥¼¡½±½ÉÌ¹…•¹Ñ%¹¬°½±½ÉÌ¹…•¹Ğ¤°(€€€€€™½ÕÍ=¹	œèÉ…Ñ¥¼¡½±½ÉÌ¹…•¹ÑMÑÉ½¹œ°½±½ÉÌ¹‰œ¤°(€€€€€™½ÕÍ=¹A…¹•°èÉ…Ñ¥¼¡½±½ÉÌ¹…•¹ÑMÑÉ½¹œ°½±½ÉÌ¹Á…¹•°¤°(€€€€€™½ÕÍ=¹I…¥Í•èÉ…Ñ¥¼¡½±½ÉÌ¹…•¹ÑMÑÉ½¹œ°½±½ÉÌ¹É…¥Í•¤°(€€€ôì(€ô¤ì((€½¹ÍĞ‘…É¬€ô…İ…¥Ğµ•…ÍÕÉ” ¤ì(€…İ…¥ĞÁ…”¹•Ñ	åI½±” ‰‰ÕÑÑ½¸ˆ°ì¹…µ”è€‰Mİ¥Ñ Ñ¼±¥¡Ğ¥¹Ñ•É™…”ˆô¤¹±¥¬ ¤ì(€½¹ÍĞ±¥¡Ğ€ô…İ…¥Ğµ•…ÍÕÉ” ¤ì(€…İ…¥ĞÑ•ÍÑ%¹™¼¹…ÑÑ…  ‰Ñ¡•µ”µ½¹ÑÉ…ÍĞµµ•ÑÉ¥Ì¹©Í½¸ˆ°ì(€€€‰½‘äè)M=8¹ÍÑÉ¥¹¥™ä¡ì‘…É¬°±¥¡Ğô°¹Õ±°°€È¤°(€€€½¹Ñ•¹ÑQåÁ”è€‰…ÁÁ±¥…Ñ¥½¸½©Í½¸ˆ°(€ô¤ì((€•áÁ•Ğ¡‘…É¬¹Ñ¡•µ”¤¹Ñ½	” ‰‘…É¬ˆ¤ì(€•áÁ•Ğ¡±¥¡Ğ¹Ñ¡•µ”¤¹Ñ½	” ‰±¥¡Ğˆ¤ì(€™½È€¡½¹ÍĞÉ•ÍÕ±Ğ½˜m‘…É¬°±¥¡Ñt¤ì(€€€•áÁ•Ğ¡É•ÍÕ±Ğ¹Ñ•áÑ=¹A…¹•°°€‘íÉ•ÍÕ±Ğ¹Ñ¡•µ•ôÁÉ¥µ…ÉäÑ•áÑ€¤¹Ñ½	•É•…Ñ•ÉQ¡…¹=ÉÅÕ…° Ğ¸Ô¤ì(€€€•áÁ•Ğ¡É•ÍÕ±Ğ¹µÕÑ•‘=¹A…¹•°°€‘íÉ•ÍÕ±Ğ¹Ñ¡•µ•ôÍ•½¹‘…ÉäÑ•áÑ€¤¹Ñ½	•É•…Ñ•ÉQ¡…¹=ÉÅÕ…° Ğ¸Ô¤ì(€€€•áÁ•Ğ¡É•ÍÕ±Ğ¹½¹ÑÉ½±%¹­=¹•¹Ğ°€‘íÉ•ÍÕ±Ğ¹Ñ¡•µ•ôÁÉ¥µ…Éä½¹ÑÉ½±€¤¹Ñ½	•É•…Ñ•ÉQ¡…¹=ÉÅÕ…° Ğ¸Ô¤ì(€€€•áÁ•Ğ¡É•ÍÕ±Ğ¹™½ÕÍ=¹	œ°€‘íÉ•ÍÕ±Ğ¹Ñ¡•µ•ô™½ÕÌ……¥¹ÍĞ‰…­É½Õ¹‘€¤¹Ñ½	•É•…Ñ•ÉQ¡…¹=ÉÅÕ…° Ì¤ì(€€€•áÁ•Ğ¡É•ÍÕ±Ğ¹™½ÕÍ=¹A…¹•°°€‘íÉ•ÍÕ±Ğ¹Ñ¡•µ•ô™½ÕÌ……¥¹ÍĞÁ…¹•±€¤¹Ñ½	•É•…Ñ•ÉQ¡…¹=ÉÅÕ…° Ì¤ì(€€€•áÁ•Ğ¡É•ÍÕ±Ğ¹™½ÕÍ=¹I…¥Í•°€‘íÉ•ÍÕ±Ğ¹Ñ¡•µ•ô™½ÕÌ……¥¹ÍĞÉ…¥Í•½¹ÑÉ½°ÍÕÉ™…•Í€¤¹Ñ½	•É•…Ñ•ÉQ¡…¹=ÉÅÕ…° Ì¤ì(€ô)ô¤ì(
+      await testInfo.attach(`${theme}-${viewport.width}x${viewport.height}-field-guide.png`, { body: await guide.screenshot(), contentType: "image/png" });
+      await page.getByRole("button", { name: "Close field guide" }).click();
+
+      await page.locator(".global-tools-menu > summary").click();
+      await page.locator(".global-tools-menu").getByRole("button", { name: "SOUND SETTINGS", exact: true }).click();
+      await expect(page.locator(".global-tools-menu")).not.toHaveAttribute("open", "");
+      const soundSettings = page.getByRole("dialog", { name: "Sound settings" });
+      await expect(soundSettings).toBeVisible();
+      await expect(soundSettings.getByRole("slider")).toHaveCount(3);
+      for (const control of await soundSettings.locator("button, input").all()) {
+        const box = await control.boundingBox();
+        if (box) expect(Math.max(box.width, box.height)).toBeGreaterThanOrEqual(44);
+      }
+      await soundSettings.getByRole("button", { name: "Close audio controls" }).click();
+      await expect(soundSettings).toBeHidden();
+      await expect(page.locator(".global-tools-menu > summary")).toBeFocused();
+    }
+  }
+});
+
+test("compact command navigation closes atomically and reveals Visualization", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile-chromium", "Compact command navigation contract");
+  test.setTimeout(180_000);
+
+  for (const theme of ["dark", "light"] as const) {
+    for (const viewport of [{ width: 320, height: 800 }, { width: 567, height: 760 }, { width: 760, height: 900 }]) {
+      await page.setViewportSize(viewport);
+      await openSession(page);
+      const current = await page.locator(".app").evaluate((element) => element.classList.contains("theme-light") ? "light" : "dark");
+      if (current !== theme) await page.getByRole("button", { name: `Switch to ${theme} interface` }).click();
+      await beginCompactCommand(page);
+      await expect(page.locator(".workspace")).toHaveClass(/phase-command/);
+      await expect(page.locator(".workspace")).toHaveClass(/mobile-view-command/);
+      await expect(page.locator(".kriegsspiel-panel")).toBeVisible();
+
+      const disclosure = page.locator(".mobile-disclosure");
+      await disclosure.locator(":scope > summary").click();
+      await expect(disclosure).toHaveAttribute("open", "");
+      const sheet = disclosure.locator(":scope > div");
+      const geometry = await sheet.evaluate((element) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        return {
+          left: rect.left,
+          right: rect.right,
+          width: rect.width,
+          height: rect.height,
+          viewportWidth: innerWidth,
+          viewportHeight: innerHeight,
+          overflowY: style.overflowY,
+          backdropFilter: style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter"),
+        };
+      });
+      expect(Math.abs(geometry.left)).toBeLessThanOrEqual(1);
+      expect(Math.abs(geometry.right - geometry.viewportWidth)).toBeLessThanOrEqual(1);
+      expect(Math.abs(geometry.width - viewport.width)).toBeLessThanOrEqual(1);
+      expect(geometry.height).toBeLessThanOrEqual(Math.min(360, viewport.height - 132) + 1);
+      expect(geometry.overflowY).toBe("auto");
+      expect(geometry.backdropFilter).toContain("blur(22px)");
+      const sharedGlass = await page.locator(".topbar").evaluate((reference, panel) => {
+        const referenceStyle = getComputedStyle(reference);
+        const panelStyle = getComputedStyle(panel as Element);
+        const material = (style: CSSStyleDeclaration) => ({
+          backgroundColor: style.backgroundColor,
+          backgroundImage: style.backgroundImage,
+          boxShadow: style.boxShadow,
+          backdropFilter: style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter"),
+        });
+        return { reference: material(referenceStyle), panel: material(panelStyle) };
+      }, await sheet.elementHandle());
+      expect(sharedGlass.panel).toEqual(sharedGlass.reference);
+      for (const button of await sheet.getByRole("button").all()) {
+        const presentation = await button.evaluate((element) => {
+          const rect = element.getBoundingClientRect();
+          const style = getComputedStyle(element);
+          return { height: rect.height, fontSize: parseFloat(style.fontSize), backgroundColor: style.backgroundColor };
+        });
+        expect(presentation.height).toBeGreaterThanOrEqual(58);
+        expect(presentation.fontSize).toBeGreaterThanOrEqual(12);
+        expect(presentation.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+      }
+      for (const label of ["ACADEMY", "SAVE / LOAD", "FIELD GUIDE", "CREDITS", "SOUND SETTINGS"]) {
+        const tool = sheet.getByRole("button", { name: label, exact: true });
+        await expect(tool).toHaveCount(1);
+        await tool.scrollIntoViewIfNeeded();
+        await expect(tool).toBeVisible();
+      }
+
+      await page.keyboard.press("Escape");
+      await expect(disclosure).not.toHaveAttribute("open", "");
+      await expect(disclosure.locator(":scope > summary")).toBeFocused();
+      await disclosure.locator(":scope > summary").click();
+      await expect(disclosure).toHaveAttribute("open", "");
+
+      const scrim = disclosure.getByRole("button", { name: "Close game navigation" });
+      const scrimGeometry = await scrim.evaluate((element) => {
+        const rect = element.getBoundingClientRect();
+        const workspace = document.querySelector<HTMLElement>(".workspace")!.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        return {
+          left: rect.left,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          workspaceTop: workspace.top,
+          workspaceBottom: workspace.bottom,
+          pointerEvents: style.pointerEvents,
+        };
+      });
+      expect(scrimGeometry.left).toBe(0);
+      expect(scrimGeometry.top).toBeLessThanOrEqual(scrimGeometry.workspaceTop);
+      expect(scrimGeometry.right).toBe(viewport.width);
+      expect(scrimGeometry.bottom).toBeGreaterThanOrEqual(viewport.height - 1);
+      expect(scrimGeometry.workspaceTop).toBeLessThan(scrimGeometry.bottom);
+      expect(scrimGeometry.workspaceBottom).toBeGreaterThan(scrimGeometry.workspaceTop);
+      expect(scrimGeometry.pointerEvents).not.toBe("none");
+      expect(await page.evaluate(() => document.elementFromPoint(innerWidth - 2, innerHeight - 2)?.getAttribute("aria-label"))).toBe("Close game navigation");
+      await scrim.click({ position: { x: viewport.width - 2, y: viewport.height - 2 } });
+      await expect(disclosure).not.toHaveAttribute("open", "");
+      await expect(disclosure.locator(":scope > summary")).toBeFocused();
+
+      await disclosure.locator(":scope > summary").click();
+      await expect(disclosure).toHaveAttribute("open", "");
+
+      await sheet.getByRole("button", { name: "VISUALIZATION", exact: true }).click();
+      await expect(disclosure).not.toHaveAttribute("open", "");
+      await expect(sheet).toBeHidden();
+      await expect(disclosure.locator(":scope > summary")).toHaveText("Visualization");
+      await expect(page.locator(".workspace")).toHaveClass(/mobile-view-visualization/);
+      await expect(page.locator(".workspace")).not.toHaveClass(/mobile-view-command/);
+      await expect(page.locator(".mission-panel, .force-panel")).toBeHidden();
+      await expect(page.locator(".tactical-panel")).toBeVisible();
+      await expect(page.locator(".battlefield-canvas")).toBeVisible();
+      const closedHitTest = await disclosure.evaluate((element) => {
+        const panel = element.querySelector<HTMLElement>(":scope > div")!;
+        const rect = panel.getBoundingClientRect();
+        return { display: getComputedStyle(panel).display, width: rect.width, height: rect.height };
+      });
+      expect(closedHitTest).toEqual({ display: "none", width: 0, height: 0 });
+    }
+  }
+});
+
+test("compact drawer opens Academy and Field Guide without relying on desktop navigation", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile-chromium", "Compact global-tool destinations");
+  test.setTimeout(120_000);
+
+  for (const theme of ["dark", "light"] as const) {
+    for (const viewport of [{ width: 320, height: 800 }, { width: 567, height: 760 }]) {
+      await page.setViewportSize(viewport);
+      await openSession(page);
+      const current = await page.locator(".app").evaluate((element) => element.classList.contains("theme-light") ? "light" : "dark");
+      if (current !== theme) await page.getByRole("button", { name: `Switch to ${theme} interface` }).click();
+      await beginCompactCommand(page);
+      const disclosure = page.locator(".mobile-disclosure");
+
+      await disclosure.locator(":scope > summary").click();
+      await disclosure.locator(":scope > div").getByRole("button", { name: "ACADEMY", exact: true }).click();
+      await expect(page.getByRole("dialog", { name: "THE ACADEMY" })).toBeVisible();
+      await page.getByRole("button", { name: "Close academy" }).click();
+      await expect(page.getByRole("dialog", { name: "THE ACADEMY" })).toBeHidden();
+
+      await disclosure.locator(":scope > summary").click();
+      await disclosure.locator(":scope > div").getByRole("button", { name: "FIELD GUIDE", exact: true }).click();
+      await expect(page.getByRole("dialog", { name: "FIELD GUIDE" })).toBeVisible();
+      await page.getByRole("button", { name: "Close field guide" }).click();
+      await expect(page.getByRole("dialog", { name: "FIELD GUIDE" })).toBeHidden();
+    }
+  }
+});
+
+test("desktop workspace is viewport-bounded with a substantial clipped tactical plot", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await openSession(page);
+
+  const metrics = await page.evaluate(() => {
+    const box = (selector: string) => {
+      const rect = document.querySelector<HTMLElement>(selector)!.getBoundingClientRect();
+      return { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left, width: rect.width, height: rect.height };
+    };
+    const workspace = box(".workspace");
+    const tactical = box(".tactical-panel");
+    const battlefield = box(".battlefield-canvas");
+    const scene = box(".fallback-scene");
+    const sky = box(".sky-readout");
+    const workspaceStyle = getComputedStyle(document.querySelector<HTMLElement>(".workspace")!);
+    const tacticalStyle = getComputedStyle(document.querySelector<HTMLElement>(".tactical-panel")!);
+    return {
+      viewport: { width: innerWidth, height: innerHeight },
+      documentScrollRange: document.documentElement.scrollHeight - document.documentElement.clientHeight,
+      bodyViewportOverflow: document.body.scrollHeight - innerHeight,
+      workspace,
+      tactical,
+      battlefield,
+      scene,
+      sky,
+      workspaceOverflow: workspaceStyle.overflow,
+      tacticalOverflow: tacticalStyle.overflow,
+    };
+  });
+  await testInfo.attach("desktop-layout-metrics.json", {
+    body: JSON.stringify(metrics, null, 2),
+    contentType: "application/json",
+  });
+
+  expect(metrics.documentScrollRange, "the application shell must not create document-level vertical travel").toBeLessThanOrEqual(1);
+  expect(metrics.bodyViewportOverflow, "the body must remain viewport-bounded after the privacy choice").toBeLessThanOrEqual(1);
+  expect(metrics.workspace.height).toBeGreaterThanOrEqual(metrics.viewport.height * 0.68);
+  expect(metrics.workspace.bottom).toBeLessThanOrEqual(metrics.viewport.height + 1);
+  expect(metrics.workspaceOverflow).toBe("hidden");
+  expect(metrics.tacticalOverflow).toBe("hidden");
+  expect(metrics.tactical.height).toBeGreaterThanOrEqual(metrics.viewport.height * 0.68);
+  expect(metrics.battlefield.height).toBeGreaterThanOrEqual(metrics.viewport.height * 0.68);
+  expect(metrics.battlefield).toEqual(metrics.tactical);
+  expect(metrics.scene).toEqual(metrics.battlefield);
+  expect(metrics.sky.top).toBeGreaterThanOrEqual(metrics.tactical.top);
+  expect(metrics.sky.right).toBeLessThanOrEqual(metrics.tactical.right + 1);
+  expect(metrics.sky.bottom).toBeLessThanOrEqual(metrics.tactical.bottom + 1);
+});
+
+test("desktop tactical information stays beside the current strategy panel", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await openSession(page);
+
+  const metrics = await page.evaluate(() => {
+    const box = (selector: string) => {
+      const rect = document.querySelector<HTMLElement>(selector)!.getBoundingClientRect();
+      return { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left, width: rect.width, height: rect.height };
+    };
+    return {
+      mission: box(".mission-panel"),
+      tactical: box(".tactical-panel"),
+      plotData: box(".plot-data-readout"),
+      timeControl: box(".time-control"),
+      depthControl: box(".depth-control"),
+      sky: box(".sky-readout"),
+      legend: box(".legend"),
+    };
+  });
+  await testInfo.attach("desktop-hud-safe-corridor.json", {
+    body: JSON.stringify(metrics, null, 2),
+    contentType: "application/json",
+  });
+
+  const leftEdge = metrics.mission.right;
+  const rightEdge = metrics.tactical.right - 12;
+  for (const [name, item] of Object.entries({
+    plotData: metrics.plotData,
+    timeControl: metrics.timeControl,
+    depthControl: metrics.depthControl,
+    sky: metrics.sky,
+    legend: metrics.legend,
+  })) {
+    expect(item.left, `${name} must not be covered by the mission panel`).toBeGreaterThanOrEqual(leftEdge);
+    expect(item.right, `${name} must remain inside the current-phase plot lane`).toBeLessThanOrEqual(rightEdge);
+  }
+
+  expect(metrics.depthControl.top, "the view selector must follow the compact plot-data toggle").toBeGreaterThanOrEqual(metrics.plotData.bottom + 4);
+  await expect(page.locator(".plot-instruction, .view-telemetry, .coordinate")).toHaveCount(0);
+  await expect(page.locator(".plot-data-details")).toBeHidden();
+  await expect(page.locator(".legend-items")).toBeHidden();
+  const glassHierarchy = await page.evaluate(() => {
+    const filter = (selector: string) => {
+      const style = getComputedStyle(document.querySelector<HTMLElement>(selector)!);
+      return style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter");
+    };
+    return { rail: filter(".plot-topline"), time: filter(".time-control"), popup: filter(".plot-data-readout > summary") };
+  });
+  expect(["", "none"]).toContain(glassHierarchy.rail);
+  expect(glassHierarchy.time).not.toBe("none");
+  expect(glassHierarchy.popup).not.toBe("none");
+});
+
+test("desktop renders only the current planning panel and advances explicitly to force design", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await openSession(page);
+
+  const metrics = await page.evaluate(() => {
+    const workspace = document.querySelector<HTMLElement>(".workspace")!;
+    const mission = document.querySelector<HTMLElement>(".mission-panel")!;
+    const tactical = document.querySelector<HTMLElement>(".tactical-panel")!;
+    const workspaceRect = workspace.getBoundingClientRect();
+    const missionRect = mission.getBoundingClientRect();
+    const tacticalRect = tactical.getBoundingClientRect();
+    const missionStyle = getComputedStyle(mission);
+    const tacticalStyle = getComputedStyle(tactical);
+    const beforeDocumentY = scrollY;
+    mission.scrollTop = 140;
+    const missionAfter = mission.scrollTop;
+    return {
+      gridColumns: getComputedStyle(workspace).gridTemplateColumns.split(/\s+/).filter(Boolean),
+      workspace: { left: workspaceRect.left, right: workspaceRect.right, height: workspaceRect.height },
+      mission: {
+        left: missionRect.left,
+        right: missionRect.right,
+        width: missionRect.width,
+        height: missionRect.height,
+        clientHeight: mission.clientHeight,
+        scrollHeight: mission.scrollHeight,
+        overflowY: missionStyle.overflowY,
+        backdropFilter: missionStyle.backdropFilter,
+        zIndex: Number(missionStyle.zIndex),
+        scrollTop: missionAfter,
+      },
+      tactical: {
+        left: tacticalRect.left,
+        right: tacticalRect.right,
+        width: tacticalRect.width,
+        zIndex: Number(tacticalStyle.zIndex),
+      },
+      forcePanelCount: document.querySelectorAll(".force-panel").length,
+      documentYBefore: beforeDocumentY,
+      documentYAfter: scrollY,
+    };
+  });
+  await testInfo.attach("desktop-glass-panel-metrics.json", {
+    body: JSON.stringify(metrics, null, 2),
+    contentType: "application/json",
+  });
+
+  expect(metrics.gridColumns).toHaveLength(3);
+  expect(metrics.tactical.left).toBeCloseTo(metrics.workspace.left, 0);
+  expect(metrics.tactical.right).toBeCloseTo(metrics.workspace.right, 0);
+  expect(metrics.mission.width).toBeGreaterThanOrEqual(260);
+  expect(metrics.mission.zIndex).toBeGreaterThan(metrics.tactical.zIndex);
+  expect(metrics.mission.backdropFilter).toContain("blur");
+  expect(metrics.mission.overflowY).toMatch(/auto|scroll/);
+  expect(metrics.mission.scrollHeight).toBeGreaterThan(metrics.mission.clientHeight);
+  expect(metrics.mission.scrollTop).toBeGreaterThan(0);
+  expect(metrics.forcePanelCount).toBe(0);
+  expect(metrics.documentYAfter).toBe(metrics.documentYBefore);
+
+  await completeStrategicChoices(page);
+  await page.getByRole("button", { name: "CONTINUE TO FORCE DESIGN" }).click();
+  await expect(page.locator(".mission-panel")).toHaveCount(0);
+  const force = page.locator(".force-panel");
+  await expect(force).toBeVisible();
+  await expect(page.locator(".warfare-grid, .decision-steps")).toHaveCount(0);
+  await force.evaluate((element) => { element.scrollTop = 180; });
+  expect(await force.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+});
+
+function stepByText(steps: Locator, text: RegExp) {
+  return steps.filter({ hasText: text });
+}
+
+async function expectSingleExpandedStep(page: Page, activeLabel: RegExp) {
+  const steps = page.locator(".decision-steps > li");
+  await expect(steps).toHaveCount(4);
+  const active = stepByText(steps, activeLabel);
+  await expect(active).toHaveAttribute("aria-current", "step");
+  await expect(active.locator("select:enabled")).toHaveCount(1);
+  await expect(steps.locator("select:enabled")).toHaveCount(1);
+  return { steps, active };
+}
+
+test("strategic progressive disclosure keeps one expanded active step and compact completed or locked steps", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await openSession(page);
+  await page.locator(".warfare-grid button").first().click();
+
+  let flow = await expectSingleExpandedStep(page, /1 Â· MISSION OBJECTIVE/);
+  for (const label of [/2 Â· PRIMARY THEORY/, /3 Â· COMPLEMENT OR CHALLENGE/, /4 Â· CONTROLLING GUARDRAIL/]) {
+    const locked = stepByText(flow.steps, label);
+    await expect(locked.locator("button:not([disabled]), select:not([disabled]), input:not([disabled])")).toHaveCount(0);
+  }
+  await flow.active.locator("select").selectOption("access");
+
+  flow = await expectSingleExpandedStep(page, /2 Â· PRIMARY THEORY/);
+  const objective = stepByText(flow.steps, /1 Â· MISSION OBJECTIVE/);
+  const partner = stepByText(flow.steps, /3 Â· COMPLEMENT OR CHALLENGE/);
+  const guardrail = stepByText(flow.steps, /4 Â· CONTROLLING GUARDRAIL/);
+  await expect(objective).toContainText("Preserve reliable access");
+  await expect(partner.locator("button:not([disabled]), select:not([disabled]), input:not([disabled])")).toHaveCount(0);
+  await expect(guardrail.locator("button:not([disabled]), select:not([disabled]), input:not([disabled])")).toHaveCount(0);
+
+  const firstHeights = await Promise.all([
+    flow.active.evaluate((element) => element.getBoundingClientRect().height),
+    objective.evaluate((element) => element.getBoundingClientRect().height),
+    partner.evaluate((element) => element.getBoundingClientRect().height),
+    guardrail.evaluate((element) => element.getBoundingClientRect().height),
+  ]);
+  const [activeHeight, ...compactHeights] = firstHeights;
+  expect(activeHeight).toBeGreaterThan(Math.max(...compactHeights) + 6);
+
+  await flow.active.locator("select").selectOption("sun-tzu");
+  flow = await expectSingleExpandedStep(page, /3 Â· COMPLEMENT OR CHALLENGE/);
+  const completedObjective = stepByText(flow.steps, /1 Â· MISSION OBJECTIVE/);
+  const completedPrimary = stepByText(flow.steps, /2 Â· PRIMARY THEORY/);
+  const lockedGuardrail = stepByText(flow.steps, /4 Â· CONTROLLING GUARDRAIL/);
+  const secondHeights = await Promise.all([
+    flow.active.evaluate((element) => element.getBoundingClientRect().height),
+    completedObjective.evaluate((element) => element.getBoundingClientRect().height),
+    completedPrimary.evaluate((element) => element.getBoundingClientRect().height),
+    lockedGuardrail.evaluate((element) => element.getBoundingClientRect().height),
+  ]);
+  expect(secondHeights[0]).toBeGreaterThan(Math.max(...secondHeights.slice(1)) + 6);
+});
+
+async function chooseMobileView(page: Page, name: string) {
+  await page.locator(".mobile-disclosure summary").click();
+  await page.getByRole("button", { name, exact: true }).click();
+}
+
+async function expectOnlyMobileRegion(page: Page, expectedSelector: string) {
+  const selectors = [".mission-overview", ".decision-workflow", ".force-panel", ".tactical-panel"];
+  const visibility = await page.evaluate((items) => Object.fromEntries(items.map((selector) => {
+    const element = document.querySelector<HTMLElement>(selector);
+    if (!element) return [selector, { visible: false, visibleControls: 0 }];
+    const style = getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    const visible = style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
+    const visibleControls = [...element.querySelectorAll<HTMLElement>("button, select, input, textarea, a[href], [tabindex]")]
+      .filter((control) => {
+        const controlStyle = getComputedStyle(control);
+        const controlRect = control.getBoundingClientRect();
+        return controlStyle.display !== "none" && controlStyle.visibility !== "hidden" && controlRect.width > 0 && controlRect.height > 0;
+      }).length;
+    return [selector, { visible, visibleControls }];
+  })), selectors) as Record<string, { visible: boolean; visibleControls: number }>;
+  expect(Object.entries(visibility).filter(([, state]) => state.visible).map(([selector]) => selector)).toEqual([expectedSelector]);
+  for (const [selector, state] of Object.entries(visibility)) {
+    if (selector !== expectedSelector) expect(state.visibleControls, `${selector} must not remain operable behind the chosen mobile view`).toBe(0);
+  }
+}
+
+type LayoutRect = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+  width: number;
+  height: number;
+};
+
+const screenshotViewports = {
+  // The supplied macOS captures are 2Ã— Retina images. Layout is therefore
+  // resolved at these CSS-pixel sizes: 2048Ã—1090 and 1134Ã—1606 physical px.
+  desktop: { width: 1024, height: 545 },
+  portrait: { width: 567, height: 803 },
+} as const;
+
+function intersectionArea(left: LayoutRect, right: LayoutRect) {
+  return Math.max(0, Math.min(left.right, right.right) - Math.max(left.left, right.left))
+    * Math.max(0, Math.min(left.bottom, right.bottom) - Math.max(left.top, right.top));
+}
+
+function expectNoIntersection(left: LayoutRect, right: LayoutRect, label: string) {
+  expect(intersectionArea(left, right), `${label} must not cover another information surface`).toBeLessThanOrEqual(1);
+}
+
+function expectContained(child: LayoutRect, parent: LayoutRect, label: string) {
+  expect(child.left, `${label} left edge`).toBeGreaterThanOrEqual(parent.left - 1);
+  expect(child.top, `${label} top edge`).toBeGreaterThanOrEqual(parent.top - 1);
+  expect(child.right, `${label} right edge`).toBeLessThanOrEqual(parent.right + 1);
+  expect(child.bottom, `${label} bottom edge`).toBeLessThanOrEqual(parent.bottom + 1);
+  expect(child.width, `${label} width`).toBeGreaterThan(0);
+  expect(child.height, `${label} height`).toBeGreaterThan(0);
+}
+
+async function layoutRects(page: Page, selectors: readonly string[]) {
+  await page.evaluate(() => document.fonts.ready);
+  return page.evaluate((items) => {
+    const rects: Record<string, LayoutRect> = {};
+    for (const selector of items) {
+      const element = document.querySelector<HTMLElement>(selector);
+      if (!element) throw new Error(`Missing layout target: ${selector}`);
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      if (style.display === "none" || style.visibility === "hidden" || rect.width <= 0 || rect.height <= 0) {
+        throw new Error(`Layout target is not visible: ${selector}`);
+      }
+      rects[selector] = {
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      };
+    }
+    return rects;
+  }, [...selectors]);
+}
+
+async function expectViewportBoundDocument(page: Page) {
+  const dimensions = await page.evaluate(() => ({
+    viewportWidth: innerWidth,
+    viewportHeight: innerHeight,
+    documentWidth: document.documentElement.scrollWidth,
+    documentHeight: document.documentElement.scrollHeight,
+    bodyWidth: document.body.scrollWidth,
+    bodyHeight: document.body.scrollHeight,
+  }));
+  expect(dimensions.documentWidth).toBeLessThanOrEqual(dimensions.viewportWidth + 1);
+  expect(dimensions.bodyWidth).toBeLessThanOrEqual(dimensions.viewportWidth + 1);
+  expect(dimensions.documentHeight).toBeLessThanOrEqual(dimensions.viewportHeight + 1);
+  expect(dimensions.bodyHeight).toBeLessThanOrEqual(dimensions.viewportHeight + 1);
+}
+
+type GlassSurfaceMetrics = {
+  supported: boolean;
+  backgroundAlpha: number;
+  backgroundImage: string;
+  gradientCount: number;
+  backdropFilter: string;
+  boxShadow: string;
+  borderStyle: string;
+  boxCount: number;
+};
+
+async function glassSurfaceMetrics(surface: Locator): Promise<GlassSurfaceMetrics> {
+  return surface.evaluate((element) => {
+    const style = getComputedStyle(element);
+    const alphaMatch = style.backgroundColor.match(/[\d.]+(?=\))/g);
+    const backgroundImage = style.backgroundImage;
+    return {
+      supported: CSS.supports("backdrop-filter", "blur(1px)") || CSS.supports("-webkit-backdrop-filter", "blur(1px)"),
+      backgroundAlpha: alphaMatch ? Number(alphaMatch.at(-1)) : 1,
+      backgroundImage,
+      gradientCount: backgroundImage.match(/linear-gradient/g)?.length ?? 0,
+      backdropFilter: style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter"),
+      boxShadow: style.boxShadow,
+      borderStyle: style.borderStyle,
+      boxCount: element.getClientRects().length,
+    };
+  });
+}
+
+async function glassPixelSignature(page: Page, surface: Locator) {
+  const capture = await surface.screenshot();
+  return page.evaluate(async (base64) => {
+    const image = new Image();
+    image.src = `data:image/png;base64,${base64}`;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext("2d", { willReadFrequently: true })!;
+    context.drawImage(image, 0, 0);
+    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    const patchSize = Math.max(3, Math.min(9, Math.floor(Math.min(canvas.width, canvas.height) / 5)));
+    const meanPatch = (startX: number, startY: number) => {
+      const sum = [0, 0, 0];
+      let count = 0;
+      for (let y = startY; y < Math.min(canvas.height - 1, startY + patchSize); y += 1) {
+        for (let x = startX; x < Math.min(canvas.width - 1, startX + patchSize); x += 1) {
+          const index = (y * canvas.width + x) * 4;
+          sum[0] += pixels[index];
+          sum[1] += pixels[index + 1];
+          sum[2] += pixels[index + 2];
+          count += 1;
+        }
+      }
+      return sum.map((channel) => channel / Math.max(1, count));
+    };
+    const topLeft = meanPatch(2, 2);
+    const bottomRight = meanPatch(Math.max(2, canvas.width - patchSize - 2), Math.max(2, canvas.height - patchSize - 2));
+    const directionalDelta = Math.max(...topLeft.map((channel, index) => Math.abs(channel - bottomRight[index])));
+    const luminances: number[] = [];
+    for (let y = 2; y < canvas.height - 2; y += 3) {
+      for (let x = 2; x < canvas.width - 2; x += 3) {
+        const index = (y * canvas.width + x) * 4;
+        luminances.push(.2126 * pixels[index] + .7152 * pixels[index + 1] + .0722 * pixels[index + 2]);
+      }
+    }
+    const mean = luminances.reduce((sum, value) => sum + value, 0) / Math.max(1, luminances.length);
+    const variance = luminances.reduce((sum, value) => sum + (value - mean) ** 2, 0) / Math.max(1, luminances.length);
+    return { width: canvas.width, height: canvas.height, topLeft, bottomRight, directionalDelta, variance };
+  }, capture.toString("base64"));
+}
+
+function expectDirectionalGlass(metrics: GlassSurfaceMetrics, state: string) {
+  expect(metrics.boxCount, `${state} generates one occupied box`).toBe(1);
+  expect(metrics.borderStyle, `${state} retains a crisp boundary`).toBe("solid");
+  if (!metrics.supported) return;
+  expect(metrics.backgroundAlpha, `${state} retains readable tint`).toBeGreaterThan(.5);
+  expect(metrics.backgroundAlpha, `${state} remains translucent`).toBeLessThan(.82);
+  expect(metrics.gradientCount, `${state} has a directional highlight gradient`).toBeGreaterThanOrEqual(1);
+  expect(metrics.backdropFilter, `${state} filters only its occupied bounds`).toContain("blur");
+  expect(metrics.backdropFilter, `${state} preserves glass color depth`).toContain("saturate");
+  expect(metrics.boxShadow, `${state} has an inset glass rim`).toContain("inset");
+}
+
+test("mobile workspace renders only the chosen view instead of stacking every panel", async ({ page }, testInfo) => {
+  mobileOnly(testInfo.project.name);
+  await openSession(page);
+
+  await expectOnlyMobileRegion(page, ".mission-overview");
+  await chooseMobileView(page, "DECISIONS");
+  await expectOnlyMobileRegion(page, ".decision-workflow");
+  await completeStrategicChoices(page);
+  await page.getByRole("button", { name: "CONTINUE TO FORCE DESIGN" }).click();
+  await expectOnlyMobileRegion(page, ".force-panel");
+  await chooseMobileView(page, "VISUALIZATION");
+  await expectOnlyMobileRegion(page, ".tactical-panel");
+  await chooseMobileView(page, "REVISE MISSION & DECISIONS");
+  await expectOnlyMobileRegion(page, ".decision-workflow");
+  await chooseMobileView(page, "MISSION BRIEF");
+  await expectOnlyMobileRegion(page, ".mission-overview");
+});
+
+test("320 pixel visualization keeps the compact information rail and plot controls distinct", async ({ page }, testInfo) => {
+  mobileOnly(testInfo.project.name);
+  await openSession(page);
+  await chooseMobileView(page, "VISUALIZATION");
+  await page.getByRole("button", { name: "stars", exact: true }).click();
+
+  const selectors = [
+    ".tactical-panel",
+    ".time-control",
+    ".plot-data-readout",
+    ".depth-control",
+    ".environment-readout",
+    ".sky-readout",
+    ".legend",
+  ] as const;
+  const rects = await layoutRects(page, selectors);
+  const tactical = rects[".tactical-panel"];
+
+  for (const selector of selectors.slice(1)) expectContained(rects[selector], tactical, selector);
+  expect(rects[".plot-data-readout"].top - rects[".time-control"].bottom).toBeGreaterThanOrEqual(8);
+  expect(tactical.bottom - rects[".depth-control"].bottom).toBeLessThanOrEqual(13);
+  expect(rects[".depth-control"].top - rects[".plot-data-readout"].bottom).toBeGreaterThanOrEqual(24);
+  for (const selector of [".sky-readout", ".environment-readout", ".legend"] as const) {
+    expect(Math.abs(rects[selector].top - rects[".plot-data-readout"].top), `${selector} aligns with the compact HUD rail`).toBeLessThanOrEqual(1);
+  }
+  expectNoIntersection(rects[".plot-data-readout"], rects[".sky-readout"], "plot and celestial disclosures");
+  expectNoIntersection(rects[".sky-readout"], rects[".environment-readout"], "celestial and environment disclosures");
+  expectNoIntersection(rects[".environment-readout"], rects[".legend"], "environment and contact disclosures");
+  expectNoIntersection(rects[".depth-control"], rects[".environment-readout"], "view selector and environment readout");
+  await expectViewportBoundDocument(page);
+});
+
+test("normal play chrome omits persistent privacy and session disclaimers", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+
+  for (const viewport of [screenshotViewports.desktop, screenshotViewports.portrait]) {
+    await page.setViewportSize(viewport);
+    await openSession(page);
+    await expect(page.locator(".independence-banner, .save-indicator")).toHaveCount(0);
+    const chromeText = await page.locator(".game-shell").innerText();
+    expect(chromeText).not.toMatch(/no trackers|browser saving (?:on|off)|session-only play|no operational use/i);
+    await expectViewportBoundDocument(page);
+  }
+});
+
+test("2048 by 1090 Retina-equivalent desktop keeps tactical information in the unobscured center", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await page.setViewportSize(screenshotViewports.desktop);
+  await openSession(page);
+
+  const selectors = [
+    ".tactical-panel",
+    ".mission-panel",
+    ".plot-data-readout",
+    ".time-control",
+    ".depth-control",
+    ".sky-readout",
+    ".legend",
+  ] as const;
+  const rects = await layoutRects(page, selectors);
+  const tactical = rects[".tactical-panel"];
+  const center: LayoutRect = {
+    top: tactical.top,
+    right: tactical.right,
+    bottom: tactical.bottom,
+    left: rects[".mission-panel"].right,
+    width: tactical.right - rects[".mission-panel"].right,
+    height: tactical.height,
+  };
+
+  for (const selector of selectors.slice(2)) {
+    expectContained(rects[selector], center, selector);
+  }
+
+  expectNoIntersection(rects[".plot-data-readout"], rects[".time-control"], "plot data and time selector");
+  expectNoIntersection(rects[".depth-control"], rects[".sky-readout"], "view selector and celestial readout");
+  expectNoIntersection(rects[".depth-control"], rects[".legend"], "view selector and plot legend");
+  expectNoIntersection(rects[".sky-readout"], rects[".legend"], "celestial and contact disclosures");
+
+  const viewButtons = await page.locator(".depth-control button").evaluateAll((buttons) => buttons.map((button) => {
+    const rect = button.getBoundingClientRect();
+    return { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left, width: rect.width, height: rect.height };
+  }));
+  expect(viewButtons).toHaveLength(5);
+  for (const [index, button] of viewButtons.entries()) expectContained(button, rects[".depth-control"], `view selector option ${index + 1}`);
+  await expectViewportBoundDocument(page);
+});
+
+test("1134 by 1606 Retina-equivalent portrait keeps visualization controls and readouts distinct", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await page.setViewportSize(screenshotViewports.portrait);
+  await openSession(page);
+  await chooseMobileView(page, "VISUALIZATION");
+  await expectOnlyMobileRegion(page, ".tactical-panel");
+  await page.getByRole("button", { name: "stars", exact: true }).click();
+
+  const selectors = [
+    ".tactical-panel",
+    ".time-control",
+    ".plot-data-readout",
+    ".depth-control",
+    ".environment-readout",
+    ".sky-readout",
+    ".legend",
+  ] as const;
+  const rects = await layoutRects(page, selectors);
+  const tactical = rects[".tactical-panel"];
+
+  for (const selector of selectors.slice(1)) expectContained(rects[selector], tactical, selector);
+  expectNoIntersection(rects[".plot-data-readout"], rects[".time-control"], "plot data and time selector");
+  expectNoIntersection(rects[".depth-control"], rects[".environment-readout"], "view selector and environment readout");
+  expectNoIntersection(rects[".sky-readout"], rects[".legend"], "celestial and contact disclosures");
+  expect(rects[".plot-data-readout"].top - rects[".time-control"].bottom).toBeGreaterThanOrEqual(8);
+  expect(tactical.bottom - rects[".depth-control"].bottom).toBeLessThanOrEqual(13);
+  expect(rects[".depth-control"].top - rects[".plot-data-readout"].bottom).toBeGreaterThanOrEqual(24);
+  for (const selector of [".sky-readout", ".environment-readout", ".legend"] as const) {
+    expect(Math.abs(rects[selector].top - rects[".plot-data-readout"].top), `${selector} aligns with the compact HUD rail`).toBeLessThanOrEqual(1);
+  }
+  expectNoIntersection(rects[".plot-data-readout"], rects[".sky-readout"], "plot and celestial disclosures");
+  expectNoIntersection(rects[".sky-readout"], rects[".environment-readout"], "celestial and environment disclosures");
+  expectNoIntersection(rects[".environment-readout"], rects[".legend"], "environment and contact disclosures");
+
+  const viewportRect: LayoutRect = {
+    top: 0,
+    left: 0,
+    right: screenshotViewports.portrait.width,
+    bottom: screenshotViewports.portrait.height,
+    width: screenshotViewports.portrait.width,
+    height: screenshotViewports.portrait.height,
+  };
+  for (const selector of selectors) expectContained(rects[selector], viewportRect, selector);
+  await expectViewportBoundDocument(page);
+});
+
+test("tactical disclosures are closed by default, keyboard operable, and single-surface", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await page.setViewportSize(screenshotViewports.desktop);
+  await openSession(page);
+
+  const plotData = page.locator(".plot-data-readout");
+  const contactKey = page.locator(".legend");
+  for (const disclosure of [plotData, contactKey]) await expect(disclosure).not.toHaveAttribute("open", "");
+  await expect(page.locator(".plot-instruction, .view-telemetry, .coordinate")).toHaveCount(0);
+
+  const plotSummary = plotData.locator(":scope > summary");
+  const contactSummary = contactKey.locator(":scope > summary");
+  for (const summary of [plotSummary, contactSummary]) {
+    const box = await summary.boundingBox();
+    expect(box?.height).toBeGreaterThanOrEqual(44);
+  }
+
+  await plotSummary.focus();
+  await plotSummary.press("Enter");
+  await expect(plotData).toHaveAttribute("open", "");
+  await expect(page.locator(".plot-data-details")).toBeVisible();
+  await expect(page.locator(".plot-data-details")).toContainText("SIMULATION GRID N-04");
+  await expect(page.locator(".plot-data-details")).toContainText("VIEW Â· SURFACE");
+  await plotSummary.press("Enter");
+  await expect(plotData).not.toHaveAttribute("open", "");
+
+  await contactSummary.press("Enter");
+  await expect(contactKey).toHaveAttribute("open", "");
+  await expect(page.locator(".legend-items")).toBeVisible();
+  await expect(page.locator(".legend-items")).toContainText("FRIENDLY");
+  await contactSummary.press("Enter");
+
+  const battlefield = page.locator(".battlefield-canvas");
+  await battlefield.focus();
+  await battlefield.press("PageDown");
+  await expect(page.getByRole("button", { name: "subsurface", exact: true })).toHaveAttribute("aria-pressed", "true");
+  const subsurfaceData = page.locator(".life-environment-readout");
+  await expect(subsurfaceData).not.toHaveAttribute("open", "");
+  const subsurfaceSummary = subsurfaceData.locator(":scope > summary");
+  expect((await subsurfaceSummary.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+  await subsurfaceSummary.press("Enter");
+  await expect(page.locator(".environment-readout-details")).toBeVisible();
+  await expect(page.locator(".environment-readout-details")).toContainText(/VAGUE FORMS/);
+  await expect(page.locator("body")).not.toContainText("climate and fictional region generated");
+  await expect(page.locator("body")).not.toContainText("decorative silhouettes are not classified tactical contacts");
+
+  await page.getByRole("button", { name: "stars", exact: true }).click();
+  const starData = page.locator(".star-environment-readout");
+  await expect(starData).not.toHaveAttribute("open", "");
+  await starData.locator(":scope > summary").press("Enter");
+  await expect(page.locator(".environment-readout-details")).toContainText(/VISIBLE LIGHTS/);
+  await expect(page.locator(".environment-readout-details")).toHaveCount(1);
+  await expect(page.locator("body")).not.toContainText(/DRAG OR ARROW KEYS ROTATE|DRAG \/ ARROWS ROTATE/);
+});
+
+test("compact HUD accordion presents one closable information surface at a time", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  // Freeze the independently animated sky/water before comparing the clear
+  // corridor. Any remaining pixel change then comes from the HUD itself.
+  await page.emulateMedia({ reducedMotion: "reduce" });
+
+  for (const viewport of [{ width: 320, height: 800 }, { width: 567, height: 803 }, { width: 640, height: 450 }]) {
+    await page.setViewportSize(viewport);
+    await openSession(page);
+    await chooseMobileView(page, "VISUALIZATION");
+    const environmentLayer = viewport.height <= 560 ? "subsurface" : "stars";
+    await page.getByRole("button", { name: environmentLayer, exact: true }).click();
+    await expect(page.locator(environmentLayer === "stars" ? ".star-environment-readout" : ".life-environment-readout")).toBeVisible();
+    await expect(page.locator(".battlefield-canvas > .legend")).toHaveCount(1);
+
+    const collapsedGlass = await page.evaluate(() => {
+      const read = (selector: string) => {
+        const element = document.querySelector<HTMLElement>(selector)!;
+        const style = getComputedStyle(element);
+        const alphaMatch = style.backgroundColor.match(/[\d.]+(?=\))/g);
+        return {
+          backgroundAlpha: alphaMatch ? Number(alphaMatch.at(-1)) : 1,
+          backdropFilter: style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter"),
+          boxCount: element.getClientRects().length,
+        };
+      };
+      return {
+        supported: CSS.supports("backdrop-filter", "blur(1px)") || CSS.supports("-webkit-backdrop-filter", "blur(1px)"),
+        plot: read(".battlefield-canvas .plot-data-readout > summary"),
+        time: read(".tactical-panel .time-control"),
+      };
+    });
+    for (const [surface, style] of [["PLOT DATA", collapsedGlass.plot], ["time selector", collapsedGlass.time]] as const) {
+      expect(style.boxCount, `${surface} is a real occupied surface at ${viewport.width}Ã—${viewport.height}`).toBe(1);
+      if (collapsedGlass.supported) {
+        expect(style.backgroundAlpha, `${surface} has a translucent background at ${viewport.width}Ã—${viewport.height}`).toBeGreaterThan(.35);
+        expect(style.backgroundAlpha, `${surface} does not become opaque at ${viewport.width}Ã—${viewport.height}`).toBeLessThan(.9);
+        expect(style.backdropFilter, `${surface} visibly uses backdrop glass at ${viewport.width}Ã—${viewport.height}`).not.toBe("none");
+      }
+    }
+
+    const triggers = [
+      page.locator(".plot-data-readout > summary"),
+      page.locator(".sky-readout-toggle"),
+      page.locator(".environment-readout > summary"),
+      page.locator(".legend > summary"),
+    ];
+    const expanded = page.locator(".plot-data-readout[open], .environment-readout[open], .legend[open], .sky-readout[data-expanded='true']");
+
+    for (const [triggerIndex, trigger] of triggers.entries()) {
+      const triggerBox = await trigger.boundingBox();
+      expect(triggerBox?.height, `44-pixel HUD trigger at ${viewport.width}Ã—${viewport.height}`).toBeGreaterThanOrEqual(44);
+      const visibleHeight = await trigger.evaluate((element) => {
+        const triggerRect = element.getBoundingClientRect();
+        const tacticalRect = element.closest(".tactical-panel")!.getBoundingClientRect();
+        return Math.max(0, Math.min(triggerRect.bottom, tacticalRect.bottom, window.innerHeight)
+          - Math.max(triggerRect.top, tacticalRect.top, 0));
+      });
+      expect(visibleHeight, `fully visible HUD trigger at ${viewport.width}Ã—${viewport.height}`).toBeGreaterThanOrEqual(44);
+      expect(await page.locator(".battlefield-canvas").evaluate((element) => element.scrollTop), `stable plot offset at ${viewport.width}Ã—${viewport.height}`).toBe(0);
+      await trigger.focus();
+      await trigger.press("Enter");
+      await expect(trigger).toBeFocused();
+      await expect(expanded).toHaveCount(1);
+      await expect(page.locator(".depth-control")).toBeHidden();
+
+      const geometry = await page.evaluate(() => {
+        const visible = (element: HTMLElement) => {
+          const style = getComputedStyle(element);
+          const box = element.getBoundingClientRect();
+          return style.display !== "none" && style.visibility !== "hidden" && box.width > 0 && box.height > 0;
+        };
+        const rect = (element: HTMLElement) => {
+          const box = element.getBoundingClientRect();
+          return { top: box.top, right: box.right, bottom: box.bottom, left: box.left, width: box.width, height: box.height };
+        };
+        const panels = [...document.querySelectorAll<HTMLElement>(".plot-data-details, .sky-readout-details, .environment-readout-details, .legend-items")].filter(visible);
+        const toggles = [...document.querySelectorAll<HTMLElement>(".plot-data-readout > summary, .sky-readout-toggle, .environment-readout > summary, .legend > summary")].filter(visible);
+        const wrapper = document.querySelector<HTMLElement>(".battlefield-canvas > .plot-data-readout[open], .battlefield-canvas > .environment-readout[open], .battlefield-canvas > .legend[open], .battlefield-canvas > .sky-readout[data-expanded='true']")!;
+        const wrapperStyle = getComputedStyle(wrapper);
+        const tactical = rect(document.querySelector<HTMLElement>(".tactical-panel")!);
+        const depthControl = rect(document.querySelector<HTMLElement>(".depth-control")!);
+        const panel = panels[0] ? rect(panels[0]) : null;
+        const toggle = toggles[0] ? rect(toggles[0]) : null;
+        const probe = panel && toggle
+          ? document.elementFromPoint(tactical.left + tactical.width / 2, toggle.bottom + (panel.top - toggle.bottom) / 2)
+          : null;
+        return {
+          panels: panels.map(rect),
+          toggles: toggles.map(rect),
+          tactical,
+          depthControl,
+          wrapperStyle: {
+            display: wrapperStyle.display,
+            backgroundColor: wrapperStyle.backgroundColor,
+            backdropFilter: wrapperStyle.backdropFilter,
+            webkitBackdropFilter: wrapperStyle.getPropertyValue("-webkit-backdrop-filter"),
+            filter: wrapperStyle.filter,
+            boxShadow: wrapperStyle.boxShadow,
+            pointerEvents: wrapperStyle.pointerEvents,
+            generatedBoxCount: wrapper.getClientRects().length,
+          },
+          occupiedSurfaceStyles: [...panels, ...toggles].map((surface) => {
+            const style = getComputedStyle(surface);
+            const alphaMatch = style.backgroundColor.match(/[\d.]+(?=\))/g);
+            return {
+              backgroundAlpha: alphaMatch ? Number(alphaMatch.at(-1)) : 1,
+              backdropFilter: style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter"),
+              boxCount: surface.getClientRects().length,
+            };
+          }),
+          corridorInterceptedByHud: Boolean(probe?.closest(".plot-data-details, .sky-readout-details, .environment-readout-details, .legend-items, .plot-data-readout > summary, .sky-readout-toggle, .environment-readout > summary, .legend > summary")),
+        };
+      });
+      expect(geometry.panels, `one expanded information panel at ${viewport.width}Ã—${viewport.height}`).toHaveLength(1);
+      expect(geometry.toggles, `only the active close trigger remains visible at ${viewport.width}Ã—${viewport.height}`).toHaveLength(1);
+      expect(intersectionArea(geometry.panels[0], geometry.toggles[0]), `expanded panel and its close trigger at ${viewport.width}Ã—${viewport.height}: ${JSON.stringify(geometry)}`).toBeLessThanOrEqual(1);
+      expect(geometry.tactical.bottom - geometry.panels[0].bottom, `expanded information stays edge-anchored at ${viewport.width}Ã—${viewport.height}`).toBeLessThanOrEqual(13);
+      expect(geometry.panels[0].height, `expanded information has a hard height budget at ${viewport.width}Ã—${viewport.height}`).toBeLessThanOrEqual(Math.min(geometry.tactical.height * .22 + 1, 151));
+      expect(geometry.panels[0].top - geometry.toggles[0].bottom, `the scene retains a clear central corridor at ${viewport.width}Ã—${viewport.height}`).toBeGreaterThanOrEqual(Math.min(112, geometry.tactical.height * .28));
+      expect((geometry.panels[0].width * geometry.panels[0].height) / (geometry.tactical.width * geometry.tactical.height), `expanded information coverage at ${viewport.width}Ã—${viewport.height}`).toBeLessThanOrEqual(.22);
+      expect(geometry.wrapperStyle.display, `expanded semantic wrapper generates no CSS box at ${viewport.width}Ã—${viewport.height}`).toBe("contents");
+      expect(geometry.wrapperStyle.generatedBoxCount, `expanded semantic wrapper has no paintable rectangle at ${viewport.width}Ã—${viewport.height}`).toBe(0);
+      expect(["transparent", "rgba(0, 0, 0, 0)"], `expanded positioning wrapper background at ${viewport.width}Ã—${viewport.height}`).toContain(geometry.wrapperStyle.backgroundColor);
+      expect(["", "none"], `expanded positioning wrapper backdrop filter at ${viewport.width}Ã—${viewport.height}`).toContain(geometry.wrapperStyle.backdropFilter);
+      expect(["", "none"], `expanded positioning wrapper prefixed backdrop filter at ${viewport.width}Ã—${viewport.height}`).toContain(geometry.wrapperStyle.webkitBackdropFilter);
+      expect(geometry.wrapperStyle.filter).toBe("none");
+      expect(geometry.wrapperStyle.boxShadow).toBe("none");
+      expect(geometry.wrapperStyle.pointerEvents).toBe("none");
+      for (const style of geometry.occupiedSurfaceStyles) {
+        expect(style.boxCount, `only occupied disclosure surfaces generate boxes at ${viewport.width}Ã—${viewport.height}`).toBe(1);
+        if (collapsedGlass.supported) {
+          expect(style.backgroundAlpha, `occupied disclosure surface remains translucent at ${viewport.width}Ã—${viewport.height}`).toBeGreaterThan(.35);
+          expect(style.backgroundAlpha, `occupied disclosure surface remains visibly glass at ${viewport.width}Ã—${viewport.height}`).toBeLessThan(.9);
+          expect(style.backdropFilter, `occupied disclosure surface has backdrop glass at ${viewport.width}Ã—${viewport.height}`).not.toBe("none");
+        }
+      }
+      expect(geometry.corridorInterceptedByHud, `middle of expanded wrapper remains a real plot corridor at ${viewport.width}Ã—${viewport.height}`).toBe(false);
+      await expectViewportBoundDocument(page);
+
+      const corridorClip = {
+        x: Math.max(0, Math.ceil(geometry.tactical.left + 2)),
+        // Exclude the occupied trigger's deliberately soft 18px shadow. The
+        // sampled region begins in the true empty middle of the visualization.
+        y: Math.max(0, Math.ceil(geometry.toggles[0].bottom + 28)),
+        width: Math.max(1, Math.floor(geometry.tactical.width - 4)),
+        height: Math.max(1, Math.floor(Math.min(geometry.panels[0].top, geometry.depthControl.top) - geometry.toggles[0].bottom - 30)),
+      };
+      await trigger.press("Enter");
+      await expect(expanded).toHaveCount(0);
+      await trigger.press("Enter");
+      await expect(expanded).toHaveCount(1);
+      const openCorridor = await page.screenshot({ clip: corridorClip, animations: "disabled" });
+      await testInfo.attach(`hud-${viewport.width}x${viewport.height}-${triggerIndex + 1}-clear-corridor.png`, { body: openCorridor, contentType: "image/png" });
+      await testInfo.attach(`hud-${viewport.width}x${viewport.height}-${triggerIndex + 1}-disclosure.png`, {
+        body: await page.locator(".tactical-panel").screenshot(),
+        contentType: "image/png",
+      });
+      const corridorHit = await page.evaluate(({ x, y, width, height }) => {
+        const probes = [
+          [x + width * .25, y + height * .3],
+          [x + width * .5, y + height * .5],
+          [x + width * .75, y + height * .7],
+        ];
+        return probes.map(([probeX, probeY]) => Boolean(document.elementFromPoint(probeX, probeY)?.closest(
+          ".plot-data-details, .sky-readout-details, .environment-readout-details, .legend-items, .plot-data-readout > summary, .sky-readout-toggle, .environment-readout > summary, .legend > summary",
+        )));
+      }, corridorClip);
+      expect(corridorHit, `opening the HUD must leave the safe corridor unoccupied at ${viewport.width}Ã—${viewport.height}`).toEqual([false, false, false]);
+
+      await trigger.press("Enter");
+      await expect(trigger).toBeFocused();
+      await expect(expanded).toHaveCount(0);
+      await expect(page.locator(".depth-control")).toBeVisible();
+      for (const railTrigger of triggers) await expect(railTrigger).toBeVisible();
+    }
+  }
+});
+
+test("celestial recap is compact by default and remains user-toggleable at supplied viewports", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+
+  for (const viewport of [{ width: 2048, height: 1089 }, screenshotViewports.desktop, screenshotViewports.portrait, { width: 320, height: 800 }]) {
+    await page.setViewportSize(viewport);
+    await openSession(page);
+    if (viewport.width <= 760) await chooseMobileView(page, "VISUALIZATION");
+
+    const readout = page.locator(".sky-readout");
+    const toggle = page.getByRole("button", { name: "Show Sun position recap" });
+    await expect(readout).toHaveAttribute("data-expanded", "false");
+    await expect(page.locator("#sky-readout-details")).toHaveCount(0);
+    const collapsedBox = await readout.boundingBox();
+    const toggleBox = await toggle.boundingBox();
+    expect(collapsedBox?.height).toBeLessThanOrEqual(48);
+    expect(toggleBox?.height).toBeGreaterThanOrEqual(44);
+
+    await toggle.click();
+    await expect(readout).toHaveAttribute("data-expanded", "true");
+    await expect(page.locator("#sky-readout-details")).toBeVisible();
+    if (viewport.width <= 760) {
+      await expect(readout).toHaveCSS("display", "contents");
+      expect(await readout.evaluate((element) => element.getClientRects().length)).toBe(0);
+      await expect(page.locator(".depth-control")).toBeHidden();
+      await layoutRects(page, [".sky-readout-toggle", ".sky-readout-details"]);
+    } else {
+      const expandedRects = await layoutRects(page, [".depth-control", ".sky-readout"]);
+      expectNoIntersection(expandedRects[".depth-control"], expandedRects[".sky-readout"], "view selector and opened celestial recap");
+    }
+    const close = page.getByRole("button", { name: "Close Sun position recap" });
+    await expect(close).toBeFocused();
+    await close.press("Enter");
+    await expect(readout).toHaveAttribute("data-expanded", "false");
+    await expect(page.locator(".sky-readout-toggle")).toBeFocused();
+    await expectViewportBoundDocument(page);
+  }
+});
+
+test("view map and Sun or Moon recap remain perceptible directional glass in both themes", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  test.setTimeout(120_000);
+
+  for (const viewport of [screenshotViewports.desktop, { width: 320, height: 800 }, screenshotViewports.portrait]) {
+    await page.setViewportSize(viewport);
+    await openSession(page);
+    if (viewport.width <= 760) await chooseMobileView(page, "VISUALIZATION");
+    await page.getByRole("button", { name: "night", exact: true }).click();
+
+    for (const theme of ["dark", "light"] as const) {
+      const currentTheme = await page.locator(".app").evaluate((element) => element.classList.contains("theme-light") ? "light" : "dark");
+      if (currentTheme !== theme) await page.getByRole("button", { name: `Switch to ${theme} interface` }).click();
+
+      const viewMap = page.locator(".depth-control");
+      const celestial = page.locator(".sky-readout");
+      const toggle = page.locator(".sky-readout-toggle");
+      await expect(viewMap).toBeVisible();
+      await expect(celestial).toHaveAttribute("data-expanded", "false");
+      await expect(toggle).toContainText("MOON BELOW");
+
+      const collapsedEvidence = {
+        viewMap: await glassSurfaceMetrics(viewMap),
+        celestialToggle: await glassSurfaceMetrics(toggle),
+        viewMapPixels: await glassPixelSignature(page, viewMap),
+        celestialTogglePixels: await glassPixelSignature(page, toggle),
+      };
+      expectDirectionalGlass(collapsedEvidence.viewMap, `${viewport.width}x${viewport.height}-${theme} view map`);
+      expectDirectionalGlass(collapsedEvidence.celestialToggle, `${viewport.width}x${viewport.height}-${theme} Moon Below toggle`);
+      expect(collapsedEvidence.viewMapPixels.variance, "view-map glass is perceptibly non-flat").toBeGreaterThan(2);
+      expect(collapsedEvidence.celestialTogglePixels.variance, "celestial toggle glass is perceptibly non-flat").toBeGreaterThan(2);
+      expect(collapsedEvidence.viewMapPixels.directionalDelta, "view-map directional highlight reaches actual pixels").toBeGreaterThan(.25);
+      expect(collapsedEvidence.celestialTogglePixels.directionalDelta, "celestial directional highlight reaches actual pixels").toBeGreaterThan(.25);
+      await testInfo.attach(`hud-glass-${viewport.width}x${viewport.height}-${theme}-collapsed.json`, {
+        body: JSON.stringify(collapsedEvidence, null, 2),
+        contentType: "application/json",
+      });
+      await page.locator(".tactical-panel").screenshot({
+        path: testInfo.outputPath(`hud-glass-${viewport.width}x${viewport.height}-${theme}-collapsed.png`),
+      });
+
+      await toggle.click();
+      await expect(celestial).toHaveAttribute("data-expanded", "true");
+      const details = page.locator(".sky-readout-details");
+      await expect(details).toBeVisible();
+      const expandedEvidence = {
+        toggle: await glassSurfaceMetrics(toggle),
+        details: await glassSurfaceMetrics(details),
+        togglePixels: await glassPixelSignature(page, toggle),
+        detailPixels: await glassPixelSignature(page, details),
+      };
+      expectDirectionalGlass(expandedEvidence.toggle, `${viewport.width}x${viewport.height}-${theme} expanded celestial toggle`);
+      expectDirectionalGlass(expandedEvidence.details, `${viewport.width}x${viewport.height}-${theme} celestial detail`);
+      expect(expandedEvidence.detailPixels.variance, "celestial detail glass is perceptibly non-flat").toBeGreaterThan(2);
+      expect(expandedEvidence.detailPixels.directionalDelta, "detail directional highlight reaches actual pixels").toBeGreaterThan(.25);
+
+      const wrapper = await celestial.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          display: style.display,
+          boxCount: element.getClientRects().length,
+          backgroundColor: style.backgroundColor,
+          backdropFilter: style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter"),
+        };
+      });
+      if (viewport.width <= 760) {
+        expect(wrapper.display).toBe("contents");
+        expect(wrapper.boxCount).toBe(0);
+      }
+      expect(["transparent", "rgba(0, 0, 0, 0)"]).toContain(wrapper.backgroundColor);
+      expect(["", "none"]).toContain(wrapper.backdropFilter);
+      await testInfo.attach(`hud-glass-${viewport.width}x${viewport.height}-${theme}-expanded.json`, {
+        body: JSON.stringify({ expandedEvidence, wrapper }, null, 2),
+        contentType: "application/json",
+      });
+      await page.locator(".tactical-panel").screenshot({
+        path: testInfo.outputPath(`hud-glass-${viewport.width}x${viewport.height}-${theme}-expanded.png`),
+      });
+      await page.getByRole("button", { name: "Close Moon position recap" }).click();
+      await expect(viewMap).toBeVisible();
+      await expectViewportBoundDocument(page);
+    }
+  }
+});
+
+test("force and command phases keep celestial recap opt-in and clear of current work", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await page.setViewportSize(screenshotViewports.desktop);
+  await openSession(page);
+  await page.getByRole("button", { name: "night", exact: true }).click();
+  await page.locator(".warfare-grid").getByRole("button", { name: /Intelligence and reconnaissance/i }).click();
+  await completeStrategicChoices(page);
+  await page.getByRole("button", { name: "CONTINUE TO FORCE DESIGN" }).click();
+
+  const readout = page.locator(".sky-readout");
+  await expect(page.locator(".force-panel")).toBeVisible();
+  await expect(readout).toHaveAttribute("data-expanded", "false");
+  let rects = await layoutRects(page, [".force-panel", ".sky-readout"]);
+  expectNoIntersection(rects[".force-panel"], rects[".sky-readout"], "force design and compact celestial recap");
+
+  await page.getByRole("button", { name: "Add one Fleet aviation ship" }).click();
+  await expect(page.locator(".force-heading > div:last-child > strong")).not.toHaveText("0");
+  await page.locator(".launch-button").click();
+  const confirmation = page.getByRole("dialog", { name: "Readiness review found likely failure points" });
+  await expect(confirmation).toBeVisible();
+  await page.getByRole("button", { name: "PROCEED ANYWAY" }).click();
+
+  const command = page.locator(".kriegsspiel-panel");
+  await expect(command).toBeVisible();
+  await expect(readout).toHaveAttribute("data-current-phase", "true");
+  await expect(readout).toHaveAttribute("data-expanded", "false");
+  rects = await layoutRects(page, [".kriegsspiel-panel", ".sky-readout"]);
+  expectNoIntersection(rects[".kriegsspiel-panel"], rects[".sky-readout"], "command panel and compact celestial recap");
+
+  const showRecap = page.getByRole("button", { name: "Show Moon position recap" });
+  await showRecap.click();
+  await expect(page.locator("#sky-readout-details")).toBeVisible();
+  await page.getByRole("button", { name: "Close Moon position recap" }).click();
+
+  for (const viewport of [screenshotViewports.portrait, { width: 320, height: 800 }]) {
+    await page.setViewportSize(viewport);
+    for (const selector of [".battlefield-canvas", ".plot-topline", ".legend"]) {
+      await expect(page.locator(selector)).toBeHidden();
+    }
+    await expect(page.getByRole("button", { name: /RESOLVE TURN/ })).toBeEnabled();
+    const recap = command.locator(".planning-recap");
+    await expect(recap).not.toHaveAttribute("open", "");
+    await recap.locator("summary").click();
+    await expect(recap.getByTestId("planning-recap-content")).toBeVisible();
+    await recap.locator("summary").click();
+    await expect(command).toBeVisible();
+    await expectViewportBoundDocument(page);
+  }
+});
+
+test("below-horizon direction is integrated into one toggleable celestial surface", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+
+  for (const viewport of [{ width: 2048, height: 1089 }, screenshotViewports.desktop, screenshotViewports.portrait, { width: 320, height: 800 }]) {
+    await page.setViewportSize(viewport);
+    await openSession(page);
+    if (viewport.width <= 760) await chooseMobileView(page, "VISUALIZATION");
+    await page.getByRole("button", { name: "night", exact: true }).click();
+    const readout = page.locator(".sky-readout");
+    await expect(readout).toHaveAttribute("data-expanded", "false");
+    await expect(page.locator("#sky-readout-details")).toHaveCount(0);
+    await expect(page.locator(".horizon-notice")).toHaveCount(0);
+    const moonRecapToggle = page.getByRole("button", { name: "Show Moon position recap" });
+    await moonRecapToggle.press("Enter");
+    await expect(readout).toHaveAttribute("data-expanded", "true");
+    await expect(page.locator("#sky-readout-details")).toBeVisible();
+    await expect(page.locator(".sky-direction")).toContainText(/TURN (LEFT|RIGHT)|ON CURRENT BEARING/);
+    await expect(page.getByText(/Moon altitude .* below horizon/)).toBeVisible();
+    await expect(page.locator(".horizon-notice")).toHaveCount(0);
+
+    if (viewport.width <= 760) {
+      const rects = await layoutRects(page, [".tactical-panel", ".sky-readout-toggle", ".sky-readout-details"]);
+      const tactical = rects[".tactical-panel"];
+      expectContained(rects[".sky-readout-toggle"], tactical, `celestial trigger at ${viewport.width} pixels`);
+      expectContained(rects[".sky-readout-details"], tactical, `celestial details at ${viewport.width} pixels`);
+      expectNoIntersection(rects[".sky-readout-toggle"], rects[".sky-readout-details"], "celestial trigger and details card");
+      await expect(page.locator(".depth-control")).toBeHidden();
+    } else {
+      const rects = await layoutRects(page, [".tactical-panel", ".depth-control", ".sky-readout"]);
+      const tactical = rects[".tactical-panel"];
+      expectContained(rects[".sky-readout"], tactical, `celestial surface at ${viewport.width} pixels`);
+      expectNoIntersection(rects[".depth-control"], rects[".sky-readout"], "view selector and opened celestial surface");
+    }
+    expect(await page.locator(".sky-readout").count()).toBe(1);
+    const pageText = await page.locator("body").innerText();
+    for (const removed of ["synthetic horizon", "fixed scenario sky", "no location access", "fictional local time", "fictional observer"]) {
+      expect(pageText.toLowerCase()).not.toContain(removed);
+    }
+
+    await page.getByRole("button", { name: "Close Moon position recap" }).press("Enter");
+    await expect(page.locator("#sky-readout-details")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Show Moon position recap" })).toBeFocused();
+    await expectViewportBoundDocument(page);
+  }
+});
+
+test("open sound settings paint above the game surface and remain inside the viewport", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await page.setViewportSize(screenshotViewports.desktop);
+  await openSession(page);
+  const directSoundSettings = page.locator(".sound-settings > summary");
+  if (await directSoundSettings.isVisible()) {
+    await directSoundSettings.click();
+  } else {
+    await page.locator(".global-tools-menu > summary").click();
+    await page.getByRole("button", { name: "SOUND SETTINGS", exact: true }).click();
+  }
+  await expect(page.locator(".sound-settings > section")).toBeVisible();
+
+  const state = await page.evaluate(() => {
+    const panel = document.querySelector<HTMLElement>(".sound-settings > section")!;
+    const topbar = document.querySelector<HTMLElement>(".topbar")!;
+    const rect = panel.getBoundingClientRect();
+    const sampleX = Math.min(rect.right - 4, Math.max(rect.left + 4, rect.left + rect.width / 2));
+    const sampleY = Math.min(rect.bottom - 4, rect.top + 4);
+    const topmost = document.elementFromPoint(sampleX, sampleY);
+    return {
+      panel: { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left, width: rect.width, height: rect.height },
+      topbarZ: Number.parseInt(getComputedStyle(topbar).zIndex, 10),
+      topmostBelongsToPanel: Boolean(topmost && panel.contains(topmost)),
+      viewport: { width: innerWidth, height: innerHeight },
+    };
+  });
+
+  expect(state.panel.left).toBeGreaterThanOrEqual(0);
+  expect(state.panel.top).toBeGreaterThanOrEqual(0);
+  expect(state.panel.right).toBeLessThanOrEqual(state.viewport.width);
+  expect(state.panel.bottom).toBeLessThanOrEqual(state.viewport.height);
+  expect(state.topbarZ).toBeGreaterThan(0);
+  expect(state.topmostBelongsToPanel, "the open sound panel must paint above the game surface").toBe(true);
+});
+
+test("representative light and dark text, control, and focus variables meet contrast thresholds", async ({ page }, testInfo) => {
+  desktopOnly(testInfo.project.name);
+  await openSession(page);
+
+  const measure = () => page.evaluate(() => {
+    const app = document.querySelector<HTMLElement>(".app")!;
+    const style = getComputedStyle(app);
+    const resolve = (name: string) => {
+      const probe = document.createElement("span");
+      probe.style.color = style.getPropertyValue(name).trim();
+      app.appendChild(probe);
+      const color = getComputedStyle(probe).color;
+      probe.remove();
+      const values = color.match(/[\d.]+/g)?.slice(0, 3).map(Number);
+      if (!values || values.length !== 3) throw new Error(`Could not resolve ${name}: ${color}`);
+      return values as [number, number, number];
+    };
+    const luminance = ([red, green, blue]: [number, number, number]) => {
+      const channel = (value: number) => {
+        const normalized = value / 255;
+        return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+      };
+      return 0.2126 * channel(red) + 0.7152 * channel(green) + 0.0722 * channel(blue);
+    };
+    const ratio = (left: [number, number, number], right: [number, number, number]) => {
+      const lighter = Math.max(luminance(left), luminance(right));
+      const darker = Math.min(luminance(left), luminance(right));
+      return (lighter + 0.05) / (darker + 0.05);
+    };
+    const colors = {
+      bg: resolve("--bg"),
+      panel: resolve("--panel"),
+      raised: resolve("--raised"),
+      text: resolve("--text"),
+      muted: resolve("--muted"),
+      accent: resolve("--accent"),
+      accentStrong: resolve("--accent-strong"),
+      accentInk: resolve("--accent-ink"),
+    };
+    return {
+      theme: app.classList.contains("theme-light") ? "light" : "dark",
+      textOnPanel: ratio(colors.text, colors.panel),
+      mutedOnPanel: ratio(colors.muted, colors.panel),
+      controlInkOnAccent: ratio(colors.accentInk, colors.accent),
+      focusOnBg: ratio(colors.accentStrong, colors.bg),
+      focusOnPanel: ratio(colors.accentStrong, colors.panel),
+      focusOnRaised: ratio(colors.accentStrong, colors.raised),
+    };
+  });
+
+  const dark = await measure();
+  await page.getByRole("button", { name: "Switch to light interface" }).click();
+  const light = await measure();
+  await testInfo.attach("theme-contrast-metrics.json", {
+    body: JSON.stringify({ dark, light }, null, 2),
+    contentType: "application/json",
+  });
+
+  expect(dark.theme).toBe("dark");
+  expect(light.theme).toBe("light");
+  for (const result of [dark, light]) {
+    expect(result.textOnPanel, `${result.theme} primary text`).toBeGreaterThanOrEqual(4.5);
+    expect(result.mutedOnPanel, `${result.theme} secondary text`).toBeGreaterThanOrEqual(4.5);
+    expect(result.controlInkOnAccent, `${result.theme} primary control`).toBeGreaterThanOrEqual(4.5);
+    expect(result.focusOnBg, `${result.theme} focus against background`).toBeGreaterThanOrEqual(3);
+    expect(result.focusOnPanel, `${result.theme} focus against panel`).toBeGreaterThanOrEqual(3);
+    expect(result.focusOnRaised, `${result.theme} focus against raised control surfaces`).toBeGreaterThanOrEqual(3);
+  }
+});
