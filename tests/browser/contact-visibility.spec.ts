@@ -34,7 +34,7 @@ async function expectNoContacts(page: Page, layer: "sky" | "air" | "surface" | "
 
 test("unknown contacts require compatible mission credit and stay within the sensed domain", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "Desktop force-to-plot integration contract");
-  test.setTimeout(90_000);
+  test.setTimeout(180_000);
 
   await openSession(page);
   await expectNoContacts(page, "surface", "surface");
@@ -59,7 +59,7 @@ test("unknown contacts require compatible mission credit and stay within the sen
   await expect(filler).toContainText("MISSION CREDIT · 0/44");
 
   await page.getByRole("button", { name: "Add one Shipborne rescue rotorcraft" }).click();
-  const unsupportedSensor = page.getByRole("listitem", { name: "RESCUE ROTORCRAFT" });
+  const unsupportedSensor = page.locator('[role="listitem"][aria-labelledby="roster-title-shipborne-rescue-rotorcraft"]');
   await expect(unsupportedSensor).toContainText("COMPATIBILITY · 0/1");
   await expect(unsupportedSensor).toContainText("MISSION CREDIT · 0/1");
 

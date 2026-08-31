@@ -4,14 +4,14 @@ Evidence date: 2026-08-31
 
 GitHub is the authoritative source and release-evidence surface. Cloudflare Workers Builds is the production build and static-asset host. Hover remains the registrar for `fogofsea.app`; after cutover, Cloudflare becomes the authoritative DNS provider. FOG OF SEA remains a static, local-first SPA with no application server, account system, database, runtime secret, analytics dependency, or telemetry endpoint.
 
-Do not treat this document as proof that account-side steps are complete. The repository changes are implemented; GitHub ruleset activation follows the first green run, while the Cloudflare and Hover changes below require the owner's authenticated service sessions.
+Do not treat this document as proof that every account-side step is complete. The repository changes and GitHub release ruleset are implemented; the Cloudflare and Hover changes below still require the owner's authenticated service sessions.
 
 ## Atomic hosting requirements
 
 | ID | Requirement and provenance | Evidence or acceptance condition | Current status |
 | --- | --- | --- | --- |
-| HOST-001 | GitHub remains the authoritative source. | Production builds resolve from `howardhayden/fogofsea` and protected `main`. | Repository implemented; ruleset pending account access. |
-| HOST-002 | Publication must follow positive conventional and browser evidence. | Pull requests cannot merge until `release-gate` and `browser-gate` pass. | Workflow implemented; required-check ruleset pending. |
+| HOST-001 | GitHub remains the authoritative source. | Production builds resolve from `howardhayden/fogofsea` and protected `main`. | Implemented; active `main release gate` ruleset targets the default branch. |
+| HOST-002 | Publication must follow positive conventional and browser evidence. | Pull requests cannot merge until `release-gate` and `browser-gate` pass. | Implemented; both GitHub Actions checks are required and branches must be current before merge. |
 | HOST-003 | Cloudflare serves only the compiled static artifact. | `wrangler.jsonc` points to `./dist`; no Worker script, API, storage binding, or runtime secret exists. | Implemented and tested. |
 | HOST-004 | Direct SPA navigation must recover to the application shell. | Unknown navigation requests receive `index.html` through `single-page-application` handling. | Implemented and tested. |
 | HOST-005 | Security headers and immutable hashed-asset caching must survive hosting. | Cloudflare consumes `dist/_headers`; `/assets/*` is immutable for one year and the shell retains revalidation. | Implemented; verify on the deployed hostname. |
@@ -42,17 +42,21 @@ Do not treat this document as proof that account-side steps are complete. The re
 3. Confirm both jobs finish successfully: **release-gate** and **browser-gate**.
 4. Open **Artifacts** and confirm `fog-of-sea-dist-<commit SHA>` exists. Do not deploy if either job is red, cancelled, or absent.
 
-The required checks cannot be selected in a ruleset until GitHub has observed them successfully at least once.
+GitHub first had to observe the required check names successfully before they could be selected in the ruleset.
 
 ### First-run correction evidence
 
-GitHub run `33344735391` on migration commit `cdf04b5` proved that `release-gate` passes and preserves the static artifact, but correctly blocked release when `browser-gate` reported four failures across 160 scheduled tests: 98 passed and 58 were skipped after failure. Review showed two assertions naming text that the current interface no longer contains, one 30-second test budget that expired under hosted-runner load after its behavior checks had progressed, and one rare exact-hue pixel floor that is not stable at a 320-pixel headless-GPU projection despite the exact generated model and broader rendered-chroma checks remaining intact. The correction updates the assertions to current accessible names, retains the same behavioral checks with a bounded 90-second budget, and separates exact compact model evidence from larger-viewport rare-hue rendering evidence. A later run must turn both jobs green before the ruleset is activated.
+GitHub run `33344735391` on migration commit `cdf04b5` proved that `release-gate` passes and preserves the static artifact, but correctly blocked release when `browser-gate` reported four failures across 160 scheduled tests: 98 passed and 58 were skipped after failure. Review showed two assertions naming text that the current interface no longer contains, one 30-second test budget that expired under hosted-runner load after its behavior checks had progressed, and one rare exact-hue pixel floor that is not stable at a 320-pixel headless-GPU projection despite the exact generated model and broader rendered-chroma checks remaining intact. The correction updates the assertions to current accessible names, retains the same behavioral checks with a bounded 90-second budget, and separates exact compact model evidence from larger-viewport rare-hue rendering evidence.
 
 Correction run `33345328073` on exact-tree commit `90624df` reduced the browser result to two failures, 100 passes, and the same 58 intentional project skips. It exposed the remaining stale `COMPATIBLE … aircraft` variants in that roster test—the interface consistently uses `COMPATIBILITY · credited/selected`—and a second full motion-contract test whose two complete reduced-motion and animated setup paths exceed 30 seconds under hosted-runner load. The follow-up corrects the whole label family and assigns that test the same bounded 90-second budget without removing an assertion.
 
+Verification run `33345872836` on commit `585df3a` then passed both jobs. `browser-gate` recorded 102 passes, 58 intentional project-specific skips, and zero failures in 6.7 minutes. Only after that positive evidence was the active GitHub ruleset `main release gate` (ruleset `21889558`) created for the default branch.
+
+The first pull-request run under that ruleset, `33346530879`, demonstrated that protection was active: `release-gate` passed, while `browser-gate` stopped the merge with 101 passes, 58 intentional project skips, and one failure. The remaining assertion located a newly selected aircraft row through a computed accessible name; the interaction and state update succeeded, but the hosted browser did not resolve that row name before the test-wide timeout. The first correction addressed the same semantic row through its stable `aria-labelledby` contract. Run `33347224377` then proved that the row, compatibility, mission-credit, and first hidden-contact checks passed before the same 90-second whole-test budget closed the Chromium session during the next plot-layer check. The follow-up assigns this unusually state-heavy integration contract a bounded 180-second budget and retains every assertion. The pull request must remain blocked until both required checks verify this correction.
+
 ## 2. Protect `main` in GitHub
 
-An authenticated repository-settings session is available. After GitHub records the first green run and exposes both check names:
+The active configuration was created after the green run above. Use these steps to inspect it or reproduce it if it is ever removed:
 
 1. Open **Repository → Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
 2. Name it `main release gate`; set **Enforcement status** to **Active**.
@@ -62,7 +66,7 @@ An authenticated repository-settings session is available. After GitHub records 
 6. Enable **Require branches to be up to date before merging**. Do not add a routine bypass actor.
 7. Save, then open the ruleset in **Evaluate** or its rule-insights view and confirm `main` is targeted.
 
-Until this ruleset is active, a direct push to `main` can cause Cloudflare to build without waiting for the pull-request checks. Treat that as a release blocker.
+The ruleset is active with no bypass actors. If it is ever disabled or loses either required check, treat direct publication from `main` as a release blocker until protection is restored.
 
 ## 3. Import the repository into Cloudflare Workers Builds
 
@@ -162,7 +166,6 @@ For every correction, preserve: failed deployment/version ID → observed sympto
 
 The repository, workflow, static-host configuration, caching policy, tests, and runbook are complete in source. The following were not completed from this workspace and must not be represented as complete until verified in their respective accounts:
 
-- GitHub `main` ruleset and required checks.
 - GitHub Pages unpublication.
 - Cloudflare Worker creation, GitHub App installation, Build settings, first deployment, preview protection, custom domains, redirect rule, TLS settings, and telemetry-product review.
 - Cloudflare zone onboarding, DNS-record reconciliation, nameserver activation, and DNSSEC enablement.
