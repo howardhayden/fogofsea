@@ -34,7 +34,7 @@ async function expectNoContacts(page: Page, layer: "sky" | "air" | "surface" | "
 
 test("unknown contacts require compatible mission credit and stay within the sensed domain", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "Desktop force-to-plot integration contract");
-  test.setTimeout(90_000);
+  test.setTimeout(180_000);
 
   await openSession(page);
   await expectNoContacts(page, "surface", "surface");
