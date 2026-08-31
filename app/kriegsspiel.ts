@@ -36,6 +36,7 @@ import {
   type SecondaryObjective,
 } from "./scenarioMatrix";
 import { isBoundedCleanText, isSafeIdentifier } from "./inputSecurity";
+import { jsonSemanticEqual } from "./jsonSemantic";
 
 export type { Difficulty } from "./gameModel";
 
@@ -538,6 +539,15 @@ function sensorGain(orders: RigidOrders, readiness: RigidReadiness, scenario: Ri
   return rounded(base + tracking + methodBonus + signatureBonus + doctrineSensor + difficultyRules(scenario).sensorAdjustment - environmentalFriction(scenario) * 0.55 - visibilityPenalty);
 }
 
+function creditedTrackingMethodCount(readiness: RigidReadiness) {
+  return new Set(readiness.trackingMethods.map((method) => method.trim().toLowerCase()).filter(Boolean)).size;
+}
+
+function contactCapabilityCeiling(readiness: RigidReadiness) {
+  if (readiness.trackCapacity <= 0) return 19;
+  return creditedTrackingMethodCount(readiness) === 0 ? 19 : creditedTrackingMethodCount(readiness) === 1 ? 64 : 100;
+}
+
 function defensivePower(readiness: RigidReadiness, scenario: RigidScenario, orders: RigidOrders, contactQuality: number) {
   let value = readiness.escortValue * 3;
   if (scenario.required.some((area) => area === "air-defense" || area === "missile-defense")) value += readiness.airDefenseValue * 5;
@@ -576,12 +586,24 @@ function escalationLimit(scenario: RigidScenario) {
   return clamp(base + difficultyRules(scenario).escalationLimitAdjustment);
 }
 
+function transcriptPeakEscalation(state: RigidGameState) {
+  const initial = clamp(state.escalation - state.reports.reduce((sum, report) => sum + report.delta.escalation, 0));
+  let current = initial;
+  let peak = initial;
+  for (const report of state.reports) {
+    current = clamp(current + report.delta.escalation);
+    peak = Math.max(peak, current);
+  }
+  return rounded(peak);
+}
+
 function diagnosticFindings(
   state: RigidGameState,
   readiness: RigidReadiness,
   scenario: RigidScenario,
   rules: DifficultyRules,
   limit: number,
+  peakEscalation: number,
 ): RigidDiagnosticFinding[] {
   const findings: RigidDiagnosticFinding[] = [];
   const initialRange = state.rangeNm - state.reports.reduce((sum, report) => sum + report.delta.rangeNm, 0);
@@ -678,11 +700,11 @@ function diagnosticFindings(
       moduleId: "global-seapower",
     });
   }
-  if (state.escalation > limit) {
+  if (peakEscalation > limit) {
     findings.push({
       code: "guardrail-breach",
       cause: "The controlling escalation boundary was exceeded.",
-      evidence: `Escalation closed at ${state.escalation}/100 against a ${limit}/100 ${scenarioDifficulty(scenario)} limit.`,
+      evidence: `Escalation peaked at ${peakEscalation}/100 and closed at ${state.escalation}/100 against a ${limit}/100 ${scenarioDifficulty(scenario)} limit.`,
       adjustment: "Use restraint, withdrawal, emission control, or a more relevant assigned task before pressure exceeds the political guardrail.",
       moduleId: "clausewitz",
     });
@@ -716,10 +738,11 @@ function finalOutcome(state: RigidGameState, readiness: RigidReadiness, scenario
   const supply = state.supply * 0.1;
   const contact = state.contactQuality * 0.1;
   const limit = escalationLimit(scenario);
-  const escalation = clamp(100 - Math.max(0, state.escalation - limit) * 4) * 0.05;
+  const peakEscalation = transcriptPeakEscalation(state);
+  const escalation = clamp(100 - Math.max(0, peakEscalation - limit) * 4) * 0.05;
   const planning = clamp(readiness.planningScore) * 0.05;
   const score = rounded(clamp(objective + opposition + integrity + commandReadiness + supply + contact + escalation + planning));
-  const guardrailHeld = state.escalation <= limit;
+  const guardrailHeld = peakEscalation <= limit;
   const won = state.objectiveProgress >= rules.objectiveThreshold
     && (!secondaryRequired || secondaryProgress >= secondaryThreshold)
     && state.integrity >= rules.integrityThreshold
@@ -750,12 +773,14 @@ function finalOutcome(state: RigidGameState, readiness: RigidReadiness, scenario
     supplyThreshold: rules.supplyThreshold,
     escalationLimit: limit,
   };
-  const findings = diagnosticFindings(state, readiness, scenario, rules, limit);
+  const findings = diagnosticFindings(state, readiness, scenario, rules, limit, peakEscalation);
   const notes = [
     `Objective progress closed at ${state.objectiveProgress}/100; force integrity at ${state.integrity}/100; supply at ${state.supply}/100.`,
     secondaryRequired ? `The revealed secondary objective closed at ${secondaryProgress}/100 against a ${secondaryThreshold}/100 threshold.` : "No secondary objective was activated for this play mode.",
     `The final contact picture reached ${state.contactQuality}/100 while assessed opposing cohesion closed at ${state.opposingCohesion}/100.`,
-    guardrailHeld ? "The controlling escalation boundary held." : "The controlling escalation boundary was exceeded.",
+    guardrailHeld
+      ? `The controlling escalation boundary held; escalation peaked at ${peakEscalation}/100 and closed at ${state.escalation}/100.`
+      : `The controlling escalation boundary was exceeded at a ${peakEscalation}/100 peak before closing at ${state.escalation}/100.`,
     readiness.missionReady ? "The force entered play with complete mission-area coverage and compatible pairings." : "Planning gaps constrained every turn of execution.",
     `${readiness.adaptationLabel || "Environment fit"} scored ${forceAdaptationScore(readiness)}/100 against a ${rules.adaptationThreshold}/100 threshold.`,
     `${difficulty[0].toUpperCase()}${difficulty.slice(1)} play required a score of ${rules.victoryThreshold}, objective progress of ${rules.objectiveThreshold}, integrity of ${rules.integrityThreshold}, and supply of ${rules.supplyThreshold}.`,
@@ -788,11 +813,7 @@ export function turnLearningNote(report: RigidTurnReport): RigidLearningAssessme
 export function outcomeLearningAssessment(state: RigidGameState): RigidLearningAssessment {
   const outcome = state.outcome;
   if (!outcome) return { kind: "clear", heading: "REVIEW PENDING", summary: "Complete the scenario to receive an after-action review." };
-  const explicitFindingCodes: ReadonlySet<RigidFindingCode> = new Set([
-    "planning-gap", "force-mismatch", "operational-mismatch", "task-mismatch",
-    "reach-gap", "contact-gap", "guardrail-breach",
-  ]);
-  const hasExplicitProblem = outcome.findings.some((finding) => explicitFindingCodes.has(finding.code))
+  const hasExplicitProblem = outcome.findings.length > 0
     || state.reports.some((report) => report.umpireNotes.some((note) => EXPLICIT_TURN_PROBLEM.test(note)));
   const adverseUncertainty = state.reports.some((report) => report.matrixResolution?.ultimate.result === "failure");
   if (!outcome.won && !hasExplicitProblem && adverseUncertainty) {
@@ -813,6 +834,17 @@ export function outcomeLearningAssessment(state: RigidGameState): RigidLearningA
     kind: "clear",
     heading: "NO BLOCKING PROBLEM FOUND",
     summary: "The completed play met the model's requirements without a blocking diagnostic finding.",
+  };
+}
+
+function normalizedRigidOrders(orders: RigidOrders): Required<RigidOrders> {
+  return {
+    ...orders,
+    uncrewed: orders.uncrewed ?? DEFAULT_RIGID_ORDERS.uncrewed!,
+    undersea: orders.undersea ?? DEFAULT_RIGID_ORDERS.undersea!,
+    riskTreatment: orders.riskTreatment ?? DEFAULT_RIGID_ORDERS.riskTreatment!,
+    coordination: orders.coordination ?? DEFAULT_RIGID_ORDERS.coordination!,
+    strategicPolicy: orders.strategicPolicy ?? DEFAULT_RIGID_ORDERS.strategicPolicy!,
   };
 }
 
@@ -846,7 +878,11 @@ function rigidTurnMatrixInput(
     - Math.max(0, (scenario.adversaryCount ?? 1) - 1) * 5);
   return {
     turn,
-    contactQuality: clamp(current.contactQuality + sensorGain(orders, capability.readiness, scenario)),
+    contactQuality: clamp(
+      current.contactQuality + sensorGain(orders, capability.readiness, scenario),
+      0,
+      Math.max(current.contactQuality, contactCapabilityCeiling(capability.readiness)),
+    ),
     taskFit,
     environmentFit: environmentalFit,
     coordinationFit,
@@ -858,7 +894,11 @@ export function createInitialRigidState(readiness: RigidReadiness, scenario: Rig
   const rules = difficultyRules(scenario);
   const matrix = scenario.matrix ? activateMatrixForDifficulty(scenario.matrix, scenarioDifficulty(scenario)) : undefined;
   const coverageRatio = readiness.requiredCount > 0 ? readiness.requiredCoverage / readiness.requiredCount : 0;
-  const initialContact = rounded(clamp(8 + coverageRatio * 12 + Math.min(12, readiness.trackCapacity / 30) + rules.initialContactAdjustment - environmentalFriction(scenario) * 0.45));
+  const initialContact = rounded(clamp(
+    8 + coverageRatio * 12 + Math.min(12, readiness.trackCapacity / 30) + rules.initialContactAdjustment - environmentalFriction(scenario) * 0.45,
+    0,
+    contactCapabilityCeiling(readiness),
+  ));
   return {
     version: 1,
     phase: "active",
@@ -885,6 +925,7 @@ export function createInitialRigidState(readiness: RigidReadiness, scenario: Rig
 export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, readiness: RigidReadiness, scenario: RigidScenario): RigidGameState {
   if (current.phase !== "active") return current;
 
+  const normalizedOrders = normalizedRigidOrders(orders);
   const rules = difficultyRules(scenario);
   const operational = deriveOperationalStrategy(scenario);
   const turn = current.turn + 1;
@@ -902,8 +943,7 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const riskTreatment = orders.riskTreatment ?? "prepare";
   const coordination = orders.coordination ?? "federated";
   const strategicPolicy = orders.strategicPolicy ?? "conventional-restraint";
-  const explicitRiskOrders = orders.riskTreatment !== undefined || orders.coordination !== undefined || orders.strategicPolicy !== undefined;
-  const riskEffects = explicitRiskOrders ? assessRiskEffects({
+  const riskEffects = assessRiskEffects({
     treatment: riskTreatment,
     coordination,
     strategicPolicy,
@@ -913,7 +953,7 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
     guardrail: scenario.guardrail,
     currentIntegrity: current.integrity,
     currentSupply: current.supply,
-  }) : { contact: 0, integrity: 0, readiness: 0, supply: 0, objective: 0, cohesion: 0, escalation: 0, pressure: 0, note: "No explicit risk-treatment order was recorded in this legacy turn." };
+  });
   const taskRequired = scenario.required.includes(orders.task);
   const taskRelevant = taskRequired || scenario.recommended.includes(orders.task);
   const sensor = sensorGain(orders, turnReadiness, scenario);
@@ -922,7 +962,11 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const nextRange = rounded(clamp(current.rangeNm + tempoRange + formationRange, 18, 280));
   const highTempoSensorPenalty = orders.tempo === "high-speed-dash" ? 7 : 0;
   const engagementContact = orders.engagement === "shadow" ? 5 : orders.engagement === "avoid" ? -2 : 0;
-  const nextContact = rounded(clamp(current.contactQuality + sensor + engagementContact + riskEffects.contact - highTempoSensorPenalty));
+  const nextContact = rounded(clamp(
+    current.contactQuality + sensor + engagementContact + riskEffects.contact - highTempoSensorPenalty,
+    0,
+    Math.max(current.contactQuality, contactCapabilityCeiling(turnReadiness)),
+  ));
 
   const disruptionPressureMultiplier = capabilityState.activeDisruptions.reduce((product, event) => product * event.opposingPressureMultiplier, 1);
   const pressure = (13 + turn * 2 + scenario.required.length * 1.5 + environmentalFriction(scenario) * 0.65 + riskEffects.pressure * 2.5)
@@ -943,10 +987,26 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
 
   const withinReach = turnReadiness.maxReachNm >= nextRange || nextRange <= 45;
   const contactThreshold = engagementContactThreshold(orders.engagement, scenario);
-  const canApplyPressure = taskRelevant && withinReach && nextContact >= contactThreshold && turnReadiness.missionReady;
+  const hasCreditedMissionEffect = turnReadiness.selectedUnitCount > 0 && (orders.engagement === "shadow"
+    ? turnReadiness.trackCapacity > 0 && creditedTrackingMethodCount(turnReadiness) > 0
+    : turnReadiness.compatibleArmamentCount > 0
+      || turnReadiness.supportedAircraftCount > 0
+      || turnReadiness.escortValue > 0
+      || turnReadiness.airDefenseValue > 0
+      || turnReadiness.underseaValue > 0
+      || turnReadiness.uncrewedCount > 0);
+  const canApplyPressure = orders.engagement !== "avoid"
+    && orders.tempo !== "withdraw"
+    && taskRelevant
+    && withinReach
+    && nextContact >= contactThreshold
+    && turnReadiness.missionReady
+    && hasCreditedMissionEffect;
   const effectBase = orders.engagement === "bounded-effects" ? 13 : orders.engagement === "contain" ? 9 : orders.engagement === "shadow" ? 4 : 0;
   const effectSupport = Math.min(15, turnReadiness.compatibleArmamentCount * 0.9 + turnReadiness.supportedAircraftCount * 0.18 + turnReadiness.trackCapacity / 90 + Math.max(-4, doctrineFit * 0.55));
-  const cohesionLoss = rounded(((canApplyPressure ? effectBase + effectSupport + (taskRequired ? 4 : 0) : taskRelevant && nextContact >= 30 ? 2 : 0) + riskEffects.cohesion) * rules.effectMultiplier * matrixMultiplier);
+  const cohesionLoss = canApplyPressure
+    ? rounded((effectBase + effectSupport + (taskRequired ? 4 : 0) + riskEffects.cohesion) * rules.effectMultiplier * matrixMultiplier)
+    : 0;
 
   const advanceContribution = orders.tempo === "measured-advance" ? 9 : orders.tempo === "high-speed-dash" ? 12 : orders.tempo === "hold" ? 3 : -4;
   const engagementContribution = orders.engagement === "bounded-effects" ? 8 : orders.engagement === "contain" ? 10 : orders.engagement === "shadow" ? 5 : -3;
@@ -958,9 +1018,9 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const postureFit = operational.friendlyPosture === "offensive"
     ? (orders.tempo === "measured-advance" || orders.tempo === "high-speed-dash" ? 2 : 0)
     : (orders.engagement === "contain" || orders.tempo === "hold" ? 2 : 0);
-  const objectiveGain = rounded(((canApplyPressure
-    ? Math.max(0, advanceContribution + engagementContribution + formationContribution + methodFit + postureFit + Math.max(-5, doctrineFit * 0.55) + (taskRequired ? 4 : 0))
-    : taskRelevant && nextContact >= 30 && orders.engagement !== "avoid" ? Math.max(0, Math.floor((advanceContribution + engagementContribution) / 3)) : 0) + riskEffects.objective) * rules.objectiveMultiplier * adaptationEffect * matrixMultiplier);
+  const objectiveGain = canApplyPressure
+    ? rounded((Math.max(0, advanceContribution + engagementContribution + formationContribution + methodFit + postureFit + Math.max(-5, doctrineFit * 0.55) + (taskRequired ? 4 : 0)) + riskEffects.objective) * rules.objectiveMultiplier * adaptationEffect * matrixMultiplier)
+    : 0;
 
   const secondaryObjective = current.matrix?.activeSecondaryObjective;
   const secondaryActive = Boolean(secondaryObjective && turn >= secondaryObjective.revealTurn);
@@ -1010,7 +1070,7 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
 
   const report: RigidTurnReport = {
     turn,
-    orders: { ...orders },
+    orders: normalizedOrders,
     phase: turn <= 2 ? "Approach and classification" : turn <= 4 ? "Contest and manoeuvre" : "Decision and transition",
     contactReport: contactDescription(nextWithoutOutcome.contactQuality, nextWithoutOutcome.opposingCohesion),
     umpireNotes: [
@@ -1216,17 +1276,22 @@ export function isCanonicalRigidState(
     if (replay.phase !== "active") return false;
     replay = resolveRigidTurn(replay, report.orders, readiness, scenario);
     const replayedReport = replay.reports.at(-1);
-    if (!replayedReport || JSON.stringify(replayedReport) !== JSON.stringify(report)) return false;
+    if (!replayedReport || !jsonSemanticEqual(replayedReport, report)) return false;
   }
-  // This exact comparison binds readiness to the initial state, every report
+  // This semantic comparison binds readiness to the initial state, every report
   // and matrix draw, the disruption ledger, and any completed outcome.
-  return JSON.stringify(replay) === JSON.stringify(state);
+  return jsonSemanticEqual(replay, state);
 }
 
 export function isRigidOrders(value: unknown): value is RigidOrders {
   if (!value || typeof value !== "object") return false;
   const orders = value as Record<string, unknown>;
-  return ["concentrated-screen", "distributed-barrier", "protected-column"].includes(String(orders.formation))
+  const allowedKeys = new Set([
+    "formation", "sensors", "tempo", "engagement", "task", "uncrewed", "undersea",
+    "riskTreatment", "coordination", "strategicPolicy",
+  ]);
+  return Object.keys(orders).every((key) => allowedKeys.has(key))
+    && ["concentrated-screen", "distributed-barrier", "protected-column"].includes(String(orders.formation))
     && ["emission-control", "passive-search", "cooperative-fusion", "active-sweep"].includes(String(orders.sensors))
     && ["hold", "measured-advance", "high-speed-dash", "withdraw"].includes(String(orders.tempo))
     && ["avoid", "shadow", "contain", "bounded-effects"].includes(String(orders.engagement))

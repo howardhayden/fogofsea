@@ -45,7 +45,7 @@ export const PATHS: { id: AcademyPath; label: string; short: string; description
   },
 ];
 
-export const ACADEMY_MODULES: AcademyModule[] = [
+const ACADEMY_MODULE_DEFINITIONS: AcademyModule[] = [
   {
     id: "strategy-grammar",
     number: "01",
@@ -930,6 +930,24 @@ export const ACADEMY_MODULES: AcademyModule[] = [
     readings: ["Peter Paret, ed., Makers of Modern Strategy", "Michael I. Handel, Masters of War", "Colin S. Gray, The Strategy Bridge"],
   },
 ];
+
+// Keep answer placement from becoming a substitute for reading. The sequence
+// is fixed for reproducibility, uses every position, and stays balanced to one.
+const QUIZ_ANSWER_POSITIONS = [
+  2, 0, 3, 1, 0, 3, 1, 2, 3, 1, 2, 0, 1,
+  2, 0, 3, 2, 3, 0, 1, 0, 1, 3, 2, 1,
+] as const;
+
+export const ACADEMY_MODULES: AcademyModule[] = ACADEMY_MODULE_DEFINITIONS.map((module, index) => {
+  const target = QUIZ_ANSWER_POSITIONS[index];
+  const options = [...module.quiz.options];
+  const [correctOption] = options.splice(module.quiz.correct, 1);
+  options.splice(target, 0, correctOption);
+  return {
+    ...module,
+    quiz: { ...module.quiz, options, correct: target },
+  };
+});
 
 export const THINKER_COMPARISON = [
   { thinker: "Sun Tzu", period: "Warring States period", contemporary: "Read beside other traditions of the era and, cautiously, Thucydides", contrast: "Shaping and preserving advantage rather than explaining reciprocal escalation", contribution: "Information, deception, position, and economy", tension: "Indirectness cannot substitute for a political end or material capacity" },

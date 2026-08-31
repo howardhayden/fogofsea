@@ -109,7 +109,7 @@ export type PlanningAssessmentInput = {
 
 export type PlanningReadinessInput = PlanningAssessmentInput & {
   difficulty: Difficulty;
-  forceAdaptation: Pick<ForceAdaptation, "score" | "label" | "gaps">;
+  forceAdaptation: Pick<ForceAdaptation, "score" | "label" | "gaps" | "criticalGaps">;
 };
 
 export function adaptationThresholdForDifficulty(difficulty: Difficulty) {
@@ -244,7 +244,7 @@ export function deriveReadinessGaps({
 }: {
   assessment: PlanningAssessment;
   metrics: PlanningAssessmentMetrics;
-  forceAdaptation: Pick<ForceAdaptation, "score" | "label" | "gaps">;
+  forceAdaptation: Pick<ForceAdaptation, "score" | "label" | "gaps" | "criticalGaps">;
   adaptationThreshold: number;
 }) {
   const gaps: string[] = [];
@@ -265,8 +265,14 @@ export function deriveReadinessGaps({
   if (!assessment.partnerLensValid) gaps.push("Choose a distinct complementary or challenging theory.");
   if (!assessment.includesNavalTheory) gaps.push("Include one maritime theory in the comparison.");
   if (!assessment.guardrailAligned) gaps.push("Choose the guardrail implied by the political aim.");
+  for (const criticalGap of forceAdaptation.criticalGaps) {
+    gaps.push(`${forceAdaptation.label}: ${criticalGap}`);
+  }
   if (forceAdaptation.score < adaptationThreshold) {
-    gaps.push(`${forceAdaptation.label}: ${forceAdaptation.gaps[0] || "Improve the force's fit to this operating environment."}`);
+    const weightedGap = forceAdaptation.gaps.find((gap) => !forceAdaptation.criticalGaps.includes(gap))
+      || "Improve the force's fit to this operating environment.";
+    const message = `${forceAdaptation.label}: ${weightedGap}`;
+    if (!gaps.includes(message)) gaps.push(message);
   }
   return gaps;
 }
@@ -284,6 +290,8 @@ export function evaluatePlanningReadiness(input: PlanningReadinessInput): Planni
     assessment,
     readinessGaps,
     adaptationThreshold,
-    fullyReady: assessment.hardValid && input.forceAdaptation.score >= adaptationThreshold,
+    fullyReady: assessment.hardValid
+      && input.forceAdaptation.score >= adaptationThreshold
+      && input.forceAdaptation.criticalGaps.length === 0,
   };
 }

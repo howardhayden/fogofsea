@@ -73,5 +73,8 @@ test("Academy connects coastal strategy, maritime security, trafficking networks
   }
   assert.ok(THINKER_COMPARISON.some((item) => item.thinker === "Christian Bueger"));
   assert.ok(THINKER_COMPARISON.some((item) => item.thinker === "Louise Shelley"));
-  assert.equal(module.quiz.correct, 2);
+  assert.match(
+    module.quiz.options[module.quiz.correct],
+    /corroborate observations.*protect people and evidence.*lawful handoff.*monitor displacement/i,
+  );
 });

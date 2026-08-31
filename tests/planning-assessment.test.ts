@@ -102,6 +102,7 @@ test("readiness gaps retain their instructional order and exact domain language"
       score: 10,
       label: "Open-water reach force",
       gaps: ["Increase the share of ocean-endurance platforms."],
+      criticalGaps: [],
     },
   });
 
@@ -137,11 +138,33 @@ test("difficulty thresholds alone decide whether an otherwise valid plan is full
     scenario: scenario(),
     selections: alignedSelections(),
     metrics: completeMetrics(),
-    forceAdaptation: { score: 65, label: "Open-water reach force", gaps: [] },
+    forceAdaptation: { score: 65, label: "Open-water reach force", gaps: [], criticalGaps: [] },
   };
   assert.equal(evaluatePlanningReadiness({ ...input, difficulty: "guided" }).fullyReady, true);
   assert.equal(evaluatePlanningReadiness({ ...input, difficulty: "standard" }).fullyReady, true);
   assert.equal(evaluatePlanningReadiness({ ...input, difficulty: "challenge" }).fullyReady, false);
+});
+
+test("a mission-specific zero-capability gap cannot be offset by the weighted adaptation score", () => {
+  const input = {
+    scenario: scenario(),
+    selections: alignedSelections(),
+    metrics: completeMetrics(),
+    difficulty: "standard" as const,
+    forceAdaptation: {
+      score: 100,
+      label: "Open-water reach force",
+      gaps: [],
+      criticalGaps: ["Add at least one credited mission effect."],
+    },
+  };
+  const result = evaluatePlanningReadiness(input);
+
+  assert.equal(result.assessment.hardValid, true);
+  assert.equal(result.fullyReady, false);
+  assert.deepEqual(result.readinessGaps, [
+    "Open-water reach force: Add at least one credited mission effect.",
+  ]);
 });
 
 test("one maritime lens is required even when both selected theories otherwise fit", () => {

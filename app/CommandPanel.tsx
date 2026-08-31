@@ -19,7 +19,11 @@ import TurnSituationPanel, {
   type SituationObjective,
   type TurnSituationEvent,
 } from "./TurnSituationPanel";
-import { canDiscloseOpposingImpact, type ContactVisibility } from "./contactVisualization";
+import {
+  canDiscloseOpposingImpact,
+  publicKnowledgeForDisruption,
+  type ContactVisibility,
+} from "./contactVisualization";
 
 type CommandPanelProps = {
   state: RigidGameState;
@@ -84,7 +88,7 @@ export default function CommandPanel({
     description: event.description,
     startsTurn: event.startsTurn,
     endsTurn: event.endsTurn,
-    knowledge: "confirmed",
+    knowledge: publicKnowledgeForDisruption(event, state.contactQuality, contactVisibility),
     impacts: (state.disruptionImpacts ?? []).filter((impact) => impact.disruptionId === event.id).map((impact) => ({
       id: impact.id,
       side: impact.side,

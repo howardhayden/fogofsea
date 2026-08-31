@@ -7,6 +7,7 @@ export type ForceAdaptation = {
   label: string;
   evidence: string;
   gaps: string[];
+  criticalGaps: string[];
 };
 
 const BLUE_WATER = new Set([
@@ -55,6 +56,10 @@ export function evaluateForceAdaptation(
     .reduce((sum, item) => sum + (creditedArmaments[item.id] || 0), 0)
     + (creditedAircraft["shipborne-rescue-rotorcraft"] || 0)
     + (creditedAircraft["maritime-mission-helicopter"] || 0);
+  const underseaMissionPacks = armaments.filter((item) => item.warfare.includes("undersea-operations"))
+    .reduce((sum, item) => sum + (creditedArmaments[item.id] || 0), 0);
+  const landAttackEffects = armaments.filter((item) => item.warfare.includes("land-attack"))
+    .reduce((sum, item) => sum + (creditedArmaments[item.id] || 0), 0);
   const longRangeAircraft = aircraft.filter((item) => largestInventedDistance(item.missionReach) >= 450)
     .reduce((sum, item) => sum + (creditedAircraft[item.id] || 0), 0);
   const longRangeEffects = armaments.filter((item) => largestInventedDistance(item.reach) >= 450)
@@ -83,14 +88,26 @@ export function evaluateForceAdaptation(
   let earned = 0;
   let possible = 0;
   const gaps: string[] = [];
-  const criterion = (weight: number, ratio: number, gap: string) => {
+  const criticalGaps: string[] = [];
+  const criterion = (
+    weight: number,
+    ratio: number,
+    gap: string,
+    missionCapability?: { available: number; absentGap: string },
+  ) => {
     possible += weight;
     earned += weight * Math.max(0, Math.min(1, ratio));
     if (ratio < 1) gaps.push(gap);
+    if (missionCapability && missionCapability.available <= 0) criticalGaps.push(missionCapability.absentGap);
   };
 
   if (profile === "mine-lane") {
-    criterion(45, mineSpecialists / 3, `Add ${Math.max(0, 3 - mineSpecialists)} credited mine-search, marking, or neutralization specialist${mineSpecialists === 2 ? "" : "s"}.`);
+    criterion(
+      45,
+      mineSpecialists / 3,
+      `Add ${Math.max(0, 3 - mineSpecialists)} credited mine-search, marking, or neutralization specialist${mineSpecialists === 2 ? "" : "s"}.`,
+      { available: mineSpecialists, absentGap: "Add at least one credited mine-search, marking, or neutralization specialist." },
+    );
     criterion(20, surfaceCount ? littoral / Math.max(1, surfaceCount * 0.45) : 0, "Shift more of the force toward shallow-water and remote-systems hosts.");
   } else if (profile === "heavy-weather") {
     criterion(45, surfaceCount ? blueWater / Math.max(1, surfaceCount * 0.65) : 0, "Replace part of the small-craft concentration with ocean-endurance platforms.");
@@ -104,13 +121,34 @@ export function evaluateForceAdaptation(
   }
 
   if (scenario.required.includes("undersea-operations")) {
-    criterion(15, underseaSpecialists / 2, "Add dedicated undersea-search platforms or aircraft rather than relying only on general escorts.");
+    criterion(
+      15,
+      underseaSpecialists / 2,
+      "Add dedicated undersea-search platforms or aircraft rather than relying only on general escorts.",
+      {
+        available: underseaSpecialists + underseaMissionPacks,
+        absentGap: "Add at least one dedicated undersea-search platform, aircraft, or mission pack.",
+      },
+    );
   }
   if (scenario.required.includes("land-attack")) {
-    criterion(15, (longRangeAircraft + longRangeEffects) / 2, "Add two credited long-range aircraft or land-effect pairings.");
+    criterion(
+      15,
+      (longRangeAircraft + longRangeEffects) / 2,
+      "Add two credited long-range aircraft or land-effect pairings.",
+      { available: landAttackEffects, absentGap: "Add at least one credited land-effect mission pack." },
+    );
   }
   if (scenario.required.includes("maritime-interdiction")) {
-    criterion(20, safeguardingAssets / 2, "Add two credited safeguarding, rescue, documentation, or protected-handoff assets.");
+    criterion(
+      20,
+      safeguardingAssets / 2,
+      "Add two credited safeguarding, rescue, documentation, or protected-handoff assets.",
+      {
+        available: safeguardingAssets,
+        absentGap: "Add at least one credited safeguarding, rescue, documentation, or protected-handoff asset.",
+      },
+    );
     criterion(10, littoral / 2, "Add two credited littoral or support platforms suited to shallow, congested coastal water.");
   }
   criterion(10, trackingMethods.size / 4, "Use at least four distinct tracking methods to reduce dependence on one sensing path.");
@@ -123,5 +161,6 @@ export function evaluateForceAdaptation(
     label: labels[profile],
     evidence: `${blueWater} ocean-endurance · ${littoral} littoral/support · ${mineSpecialists} mine specialists · ${underseaSpecialists} undersea specialists · ${safeguardingAssets} safeguarding assets · ${longRangeAircraft + longRangeEffects} long-range pairings · ${trackingMethods.size} tracking methods`,
     gaps,
+    criticalGaps,
   };
 }

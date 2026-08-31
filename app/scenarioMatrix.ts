@@ -1,5 +1,6 @@
 import type { Climate, Difficulty, Season } from "./gameModel";
 import { isBoundedCleanText, isSafeIdentifier } from "./inputSecurity";
+import { jsonSemanticEqual } from "./jsonSemantic";
 
 export type ForceScale = "tiny" | "small" | "medium" | "large" | "massive";
 export type IllicitNetworkType =
@@ -516,8 +517,8 @@ export function isActivatedScenarioMatrix(value: unknown): value is ActivatedSce
   const expected = activateMatrixForDifficulty(value, activated.difficulty as Difficulty);
   return activated.activeCoordination === expected.activeCoordination
     && activated.adverseBias === expected.adverseBias
-    && JSON.stringify(activated.activeDisruptions) === JSON.stringify(expected.activeDisruptions)
-    && JSON.stringify(activated.activeSecondaryObjective) === JSON.stringify(expected.activeSecondaryObjective);
+    && jsonSemanticEqual(activated.activeDisruptions, expected.activeDisruptions)
+    && jsonSemanticEqual(activated.activeSecondaryObjective, expected.activeSecondaryObjective);
 }
 
 function isMatrixResolutionComponent(value: unknown, ultimate = false) {
@@ -565,7 +566,7 @@ export function isCanonicalResolutionMatrix(
   input?: ResolutionMatrixInput,
 ): value is ResolutionMatrix {
   if (!isResolutionMatrix(value)) return false;
-  if (input) return JSON.stringify(value) === JSON.stringify(estimateResolutionMatrix(matrix, input));
+  if (input) return jsonSemanticEqual(value, estimateResolutionMatrix(matrix, input));
 
   const canonicalLabels: Readonly<Record<MatrixComponentKey | "ultimate", string>> = {
     contact: "Contact and classification",

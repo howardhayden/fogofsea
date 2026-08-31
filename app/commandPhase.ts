@@ -10,6 +10,18 @@ import {
 } from "./kriegsspiel";
 import type { DecisionRecord, SavedResult } from "./saveGame";
 
+const CANONICAL_COMMAND_TASK_ORDER: readonly Warfare[] = [
+  "air-defense",
+  "surface-operations",
+  "undersea-operations",
+  "land-attack",
+  "electromagnetic-operations",
+  "reconnaissance",
+  "mine-countermeasures",
+  "missile-defense",
+  "maritime-interdiction",
+];
+
 /**
  * The strategic and force-design snapshot committed when a command run ends.
  * The scenario is deliberately supplied separately to adjudication so that
@@ -93,10 +105,11 @@ export function beginCommandTransition(input: {
   selectedWarfare: readonly Warfare[];
   selectedLens?: TheoryLens | "";
 }): BeginCommandAction {
+  const selected = new Set(input.selectedWarfare);
   const task = input.selectedWarfare.includes(input.orders.task)
     ? input.orders.task
-    : input.scenario.required.find((area) => input.selectedWarfare.includes(area))
-      || input.selectedWarfare[0]
+    : input.scenario.required.find((area) => selected.has(area))
+      || CANONICAL_COMMAND_TASK_ORDER.find((area) => selected.has(area))
       || "reconnaissance";
   const orders = { ...input.orders, task };
   return {

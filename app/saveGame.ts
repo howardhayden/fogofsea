@@ -2,6 +2,7 @@ import {
   ARMAMENTS as ARMAMENT_CATALOG,
   combinedWaveHeading,
   deriveScenarioEnvironment,
+  validateScenarioCoexistence,
   type Climate,
   type Difficulty,
   type EndState,
@@ -37,6 +38,7 @@ import {
 import { deriveOperationalStrategy, FLEET_METHOD_LABELS, POSTURE_LABELS } from "./operationalStrategy";
 import { deriveForceReadiness } from "./forceReadiness";
 import { cloudCoverPhrase } from "./weatherPresentation";
+import { jsonSemanticEqual } from "./jsonSemantic";
 import {
   activateMatrixForDifficulty,
   createScenarioMatrix,
@@ -270,12 +272,17 @@ function compoundStateLines(state: RigidGameState | null) {
   const secondary = state.matrix.activeSecondaryObjective && state.matrix.activeSecondaryObjective.revealTurn <= disclosureTurn
     ? state.matrix.activeSecondaryObjective
     : null;
-  const disclosedEvents = state.matrix.activeDisruptions.filter((event) => event.startsTurn <= disclosureTurn);
+  const disclosedEvents = state.matrix.activeDisruptions.filter((event) => event.startsTurn <= disclosureTurn
+    && (state.phase === "complete"
+      || event.kind === "severe-weather"
+      || (event.kind === "command-interference" && event.affectedSide === "selected-force")));
   const disclosedEventIds = new Set(disclosedEvents.map((event) => event.id));
   const disclosedImpacts = (state.disruptionImpacts ?? []).filter((impact) => disclosedEventIds.has(impact.disruptionId)
     && (impact.side === "selected-force" || impact.knowledge === "confirmed"));
   return [
-    `Force scale: ${state.matrix.forceScaleLabel}; estimated opposing elements ${state.matrix.estimatedOpposingElements[0]}–${state.matrix.estimatedOpposingElements[1]}; active coordination ${state.matrix.activeCoordination}; play mode ${state.matrix.difficulty}.`,
+    state.phase === "complete"
+      ? `Force scale: ${state.matrix.forceScaleLabel}; estimated opposing elements ${state.matrix.estimatedOpposingElements[0]}–${state.matrix.estimatedOpposingElements[1]}; active coordination ${state.matrix.activeCoordination}; play mode ${state.matrix.difficulty}.`
+      : `Compound uncertainty is active for ${state.matrix.difficulty} play. Undisclosed opposing details and future commitments are omitted from this readable record.`,
     secondary
       ? `Secondary objective: ${secondary.label}; reveals turn ${secondary.revealTurn}; method ${secondary.method}; progress ${state.secondaryObjectiveProgress ?? 0}/100; ${secondary.description}`
       : "No secondary objective has been disclosed at the current turn.",
@@ -343,7 +350,11 @@ function writeRecord(record: DecisionRecord, index: number) {
 
 export function formatPortableSave(save: PortableSave) {
   const current = save.game;
-  const concealCommittedFuture = current.rigidState?.phase === "active" && Boolean(current.rigidState.matrix);
+  const concealCommittedFuture = Boolean(current.scenario.matrix) && current.rigidState?.phase !== "complete";
+  const completedCompoundFrame = current.rigidState?.phase === "complete" && current.scenario.matrix;
+  const secondaryDisclosed = current.rigidState?.matrix?.activeSecondaryObjective
+    && (current.rigidState.phase === "complete"
+      || current.rigidState.matrix.activeSecondaryObjective.revealTurn <= Math.min(current.rigidState.maxTurns, current.rigidState.turn + 1));
   const machineJson = JSON.stringify(save, null, 2);
   const machinePayload = concealCommittedFuture
     ? `${ENCODED_MACHINE_PREFIX}${encodeUtf8Base64(machineJson)}`
@@ -353,7 +364,7 @@ export function formatPortableSave(save: PortableSave) {
     "FOG OF SEA — INDEPENDENT FICTIONAL EDUCATIONAL SIMULATION",
     "Human-readable decision record with an embedded machine-readable save.",
     "This file remains on the user's device unless the user chooses to move it.",
-    concealCommittedFuture ? "The resume payload is encoded to avoid casually disclosing committed future turns. Encoding is not encryption." : "",
+    concealCommittedFuture ? "The resume payload is encoded for casual spoiler resistance. Encoding is not encryption, and this local-only app cannot protect state from a source-inspecting player." : "",
     "",
     `Saved: ${save.savedAt}`,
     `Current exercise: ${scenarioLabel(current.scenario, "id")} — ${scenarioLabel(current.scenario, "operation")}`,
@@ -362,9 +373,11 @@ export function formatPortableSave(save: PortableSave) {
     `Planning stage: ${save.preferences.planningStage}`,
     `Environment: ${scenarioLabel(current.scenario, "climate")}; ${scenarioLabel(current.scenario, "season")}; ${scenarioLabel(current.scenario, "scenarioDate")}; ${scenarioLabel(current.scenario, "time")}; ${scenarioLabel(current.scenario, "precipitation")}; clouds ${scenarioLabel(current.scenario, "clouds")}; sea state ${scenarioLabel(current.scenario, "seaState")}; visibility ${scenarioLabel(current.scenario, "visibility")} nm`,
     `Environmental motion: wind toward ${scenarioLabel(current.scenario, "windHeading")}° at ${scenarioLabel(current.scenario, "windSpeed")} knots; current toward ${scenarioLabel(current.scenario, "currentHeading")}° at ${scenarioLabel(current.scenario, "currentSpeed")} knots; waves toward ${scenarioLabel(current.scenario, "waveHeading")}°; storm ${scenarioLabel(current.scenario, "storming", "false")}; static lightning geometry with localized eased non-flashing cloud light available ${scenarioLabel(current.scenario, "lightningCapable", "false")}; sound profile ${scenarioLabel(current.scenario, "soundProfile")}.`,
-    ...(current.scenario.matrix ? [
-      `Compound frame: ${current.scenario.matrix.forceScaleLabel}; estimated opposing elements ${current.scenario.matrix.estimatedOpposingElements[0]}–${current.scenario.matrix.estimatedOpposingElements[1]}; assessed coordination ${current.scenario.matrix.opponentCoordination}; institutional constraint ${current.scenario.matrix.institutionalConstraint}${current.scenario.illicitNetworkType ? `; illicit-network category ${current.scenario.illicitNetworkType}` : ""}.`,
-      `Committed scenario seed: ${current.scenario.matrix.seed}. Turn draws remain embedded in machine data and are disclosed in the turn record only after resolution.`,
+    ...(completedCompoundFrame ? [
+      `Compound frame: ${completedCompoundFrame.forceScaleLabel}; estimated opposing elements ${completedCompoundFrame.estimatedOpposingElements[0]}–${completedCompoundFrame.estimatedOpposingElements[1]}; assessed coordination ${completedCompoundFrame.opponentCoordination}; institutional constraint ${completedCompoundFrame.institutionalConstraint}${current.scenario.illicitNetworkType ? `; illicit-network category ${current.scenario.illicitNetworkType}` : ""}.`,
+      "The completed turn record discloses the committed outcomes used during play.",
+    ] : current.scenario.matrix ? [
+      "Compound uncertainty is precommitted. Undisclosed opposing details, future events, and future draws are omitted from this readable record.",
     ] : []),
     `Budget: ${scenarioLabel(current.scenario, "budget")} points`,
     `Political aim: ${scenarioLabel(current.scenario, "politicalAim")}`,
@@ -397,7 +410,7 @@ export function formatPortableSave(save: PortableSave) {
     "",
     "CURRENT RIGID UMPIRE STATE",
     current.rigidState
-      ? `Turn ${current.rigidState.turn}/${current.rigidState.maxTurns}; ${current.rigidState.phase}; range ${current.rigidState.rangeNm} nm; contact ${current.rigidState.contactQuality}; readiness ${current.rigidState.readiness}; integrity ${current.rigidState.integrity}; supply ${current.rigidState.supply}; escalation ${current.rigidState.escalation}; primary objective ${current.rigidState.objectiveProgress}${current.rigidState.secondaryObjectiveProgress !== undefined ? `; secondary objective ${current.rigidState.secondaryObjectiveProgress}` : ""}.`
+      ? `Turn ${current.rigidState.turn}/${current.rigidState.maxTurns}; ${current.rigidState.phase}; range ${current.rigidState.rangeNm} nm; contact ${current.rigidState.contactQuality}; readiness ${current.rigidState.readiness}; integrity ${current.rigidState.integrity}; supply ${current.rigidState.supply}; escalation ${current.rigidState.escalation}; primary objective ${current.rigidState.objectiveProgress}${secondaryDisclosed ? `; secondary objective ${current.rigidState.secondaryObjectiveProgress ?? 0}` : ""}.`
       : "Not started.",
     ...compoundStateLines(current.rigidState),
     ...rigidTurnLines(current.rigidState?.reports || [], current.rigidState?.matrix),
@@ -473,6 +486,19 @@ const SCENARIO_TEXT_KEYS = [
 ] as const;
 const LEGACY_OPTIONAL_SCENARIO_TEXT_KEYS = ["geography", "friendlySituation", "opposingSituation", "civilianContext", "constraints", "timing", "successConditions", "navalProblem"] as const;
 const MAX_DECISION_HISTORY = 200;
+const SCENARIO_KEYS = new Set([
+  "id", "operation", "region", "climate", "time", "clouds", "precipitation", "seaState", "visibility",
+  "regionId", "hemisphere", "observerLatitude", "observerLongitude", "scenarioDate", "season", "storming",
+  "lightningCapable", "windHeading", "windSpeed", "currentHeading", "currentSpeed", "waveHeading", "soundProfile",
+  "budget", "brief", "geography", "friendlySituation", "opposingSituation", "adversaryCount", "matrix",
+  "illicitNetworkType", "civilianContext", "constraints", "timing", "successConditions", "navalProblem",
+  "objective", "intelligence", "history", "required", "recommended", "minimumEscort", "minimumAirDefense",
+  "minimumAsw", "minimumUncrewed", "politicalAim", "endState", "lenses", "guardrail",
+]);
+
+function hasOnlyKeys(value: Record<string, unknown>, allowed: ReadonlySet<string>) {
+  return Object.keys(value).every((key) => allowed.has(key));
+}
 
 function isWarfareArea(value: unknown): value is Warfare {
   return isListedValue(value, WARFARE_AREAS);
@@ -653,7 +679,7 @@ function hasScenarioCore(value: unknown, strictText: boolean): value is Record<s
 }
 
 function isScenarioV3(value: unknown): value is Scenario {
-  if (!hasScenarioCore(value, true) || value.budget !== 100) return false;
+  if (!hasScenarioCore(value, true) || value.budget !== 100 || !hasOnlyKeys(value, SCENARIO_KEYS)) return false;
   const climate = value.climate as Climate;
   if (!hasStrictEnvironmentFields(value, value.id as number, value.region as string, climate)) return false;
   if (value.matrix !== undefined) {
@@ -664,10 +690,10 @@ function isScenarioV3(value: unknown): value is Scenario {
       season: value.season as Season,
       adversaryCount: value.adversaryCount as number | undefined,
     });
-    if (JSON.stringify(value.matrix) !== JSON.stringify(expected)) return false;
+    if (!jsonSemanticEqual(value.matrix, expected)) return false;
     if (value.illicitNetworkType !== undefined && value.illicitNetworkType !== expected.illicitNetworkType) return false;
   }
-  return true;
+  return validateScenarioCoexistence(value as Scenario).valid;
 }
 
 function usableHeading(value: unknown, fallback: number) {
@@ -1072,8 +1098,11 @@ export function parsePortableSave(text: string): PortableSave {
     : raw;
   const value = parseUntrustedJson(machineJson);
   if (!isRecord(value)) throw new Error("Save data is not an object.");
-  const incomingVersion = Number(value.version);
-  if ((value.format !== "fog-of-the-sea-save" && value.format !== "fog-of-sea-save") || ![1, 2, 3].includes(incomingVersion)) throw new Error("Unsupported save format or version.");
+  const incomingVersion = value.version;
+  if ((value.format !== "fog-of-the-sea-save" && value.format !== "fog-of-sea-save")
+    || typeof incomingVersion !== "number"
+    || !Number.isInteger(incomingVersion)
+    || ![1, 2, 3].includes(incomingVersion)) throw new Error("Unsupported save format or version.");
   if (!isRecord(value.game)) throw new Error("The scenario is missing or invalid.");
   const game = value.game;
   const scenario = incomingVersion === 3
@@ -1153,7 +1182,7 @@ export function parsePortableSave(text: string): PortableSave {
   }
   if (incomingVersion === 3 && rigidState) {
     const expectedMatrix = scenario.matrix ? activateMatrixForDifficulty(scenario.matrix, difficulty) : undefined;
-    if (JSON.stringify(rigidState.matrix) !== JSON.stringify(expectedMatrix)) throw new Error("Umpire matrix does not match the saved scenario and difficulty.");
+    if (!jsonSemanticEqual(rigidState.matrix, expectedMatrix)) throw new Error("Umpire matrix does not match the saved scenario and difficulty.");
     const { rigidReadiness } = deriveForceReadiness({
       scenario,
       difficulty,
@@ -1174,7 +1203,7 @@ export function parsePortableSave(text: string): PortableSave {
       throw new Error("Umpire report chain or committed matrix result is invalid.");
     }
     if (rigidState.phase === "active" && result !== null) throw new Error("An active umpire state cannot contain a completed result.");
-    if (rigidState.phase === "complete" && JSON.stringify(rigidState.outcome) !== JSON.stringify(result)) {
+    if (rigidState.phase === "complete" && !jsonSemanticEqual(rigidState.outcome, result)) {
       throw new Error("The completed result does not match the canonical umpire outcome.");
     }
   }

@@ -1,8 +1,10 @@
 import type { Aircraft, Armament, Platform, TrackingMethod } from "./gameModel";
+import type { ScenarioDisruption } from "./scenarioMatrix";
 import { seededRandom, type ViewLayer } from "./viewModel";
 
 export type ContactDomain = "air" | "surface" | "subsurface";
 export type ContactVisibility = Readonly<Record<ContactDomain, boolean>>;
+export type PublicSituationKnowledge = "confirmed" | "assessed" | "concealed";
 
 export type AssessedImpactDomain = ContactDomain | "mission-pack" | "communications";
 
@@ -124,6 +126,27 @@ export function canDiscloseOpposingImpact(
     return visibility.air || visibility.surface || visibility.subsurface;
   }
   return visibility[domain];
+}
+
+/**
+ * Reduces a committed disruption to what the selected force can actually know.
+ * Environmental effects and interference with the player's own command are
+ * directly observable. Opposing behavior remains concealed until both the
+ * contact threshold and relevant credited sensing support an assessment; it
+ * is never promoted to confirmed merely because the matrix committed it.
+ */
+export function publicKnowledgeForDisruption(
+  disruption: Pick<ScenarioDisruption, "kind" | "affectedSide" | "affectedDomains">,
+  contactQuality: number,
+  visibility: ContactVisibility,
+): PublicSituationKnowledge {
+  if (disruption.kind === "severe-weather" || disruption.kind === "objective-change") return "confirmed";
+  if (disruption.kind === "command-interference" && disruption.affectedSide !== "opposing-force") return "confirmed";
+
+  const assessed = disruption.affectedDomains.some((domain) => (
+    canDiscloseOpposingImpact(domain, contactQuality, visibility)
+  ));
+  return assessed ? "assessed" : "concealed";
 }
 
 function contactPosition(domain: ContactDomain, random: () => number): UnknownContact {

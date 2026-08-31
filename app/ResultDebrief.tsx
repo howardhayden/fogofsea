@@ -2,9 +2,12 @@
 
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode, RefObject } from "react";
 import {
+  COORDINATION_OPTIONS,
   ENGAGEMENT_OPTIONS,
   FORMATION_OPTIONS,
+  RISK_TREATMENT_OPTIONS,
   SENSOR_OPTIONS,
+  STRATEGIC_FORCE_OPTIONS,
   TEMPO_OPTIONS,
   UNDERSEA_DOCTRINE_OPTIONS,
   UNCREWED_DOCTRINE_OPTIONS,
@@ -26,6 +29,10 @@ type ResultDebriefProps = {
   onReturn: () => void;
   onNewScenario: () => void;
 };
+
+const optionLabel = (options: ReadonlyArray<{ value: string; label: string }>, value: string) => (
+  options.find((option) => option.value === value)?.label ?? value
+);
 
 export default function ResultDebrief({
   result,
@@ -60,10 +67,10 @@ export default function ResultDebrief({
   };
 
   return (
-    <section ref={headingRef} className={`result-card ${result.won ? "victory" : "loss"}`} role="region" aria-labelledby="result-heading" aria-describedby="result-threshold-summary" aria-keyshortcuts="PageUp PageDown Home End" tabIndex={0} onKeyDown={scrollReview}>
+    <section ref={headingRef} className={`result-card ${result.won ? "victory" : "loss"}`} role="region" aria-labelledby="result-heading" aria-describedby="result-threshold-summary result-index-caveat" aria-keyshortcuts="PageUp PageDown Home End" tabIndex={0} onKeyDown={scrollReview}>
       <header className="result-summary">
         <div className="result-score"><span>{result.score}<b>/100</b></span><small>FINAL<br />SCORE</small></div>
-        <div><small>{result.difficulty.toUpperCase()} REVIEW</small><h2 id="result-heading" tabIndex={-1}>{result.title}</h2><p id="result-threshold-summary">Final state: objective {state.objectiveProgress}{state.matrix?.activeSecondaryObjective ? `; secondary objective ${state.secondaryObjectiveProgress ?? 0}` : ""}; integrity {state.integrity}; supply {state.supply}; escalation {state.escalation}.</p></div>
+        <div><small>{result.difficulty.toUpperCase()} REVIEW</small><h2 id="result-heading" tabIndex={-1}>{result.title}</h2><p id="result-threshold-summary">Final state: objective {state.objectiveProgress}{state.matrix?.activeSecondaryObjective ? `; secondary objective ${state.secondaryObjectiveProgress ?? 0}` : ""}; integrity {state.integrity}; supply {state.supply}; escalation {state.escalation}.</p><p id="result-index-caveat" className="result-index-caveat">All /100 values are invented game indices—not probabilities, forecasts, or real operational assessments.</p></div>
       </header>
       <div className="result-actions" role="group" aria-label="Debrief actions"><button type="button" onClick={onUndo}>UNDO FINAL TURN</button><button type="button" onClick={onRetry}>RETRY SAME SCENARIO</button><button type="button" onClick={onReturn}>RETURN TO PLANNING</button><button type="button" onClick={onNewScenario}>NEW SCENARIO</button></div>
       <section className={`result-learning ${learning.kind}`} aria-labelledby="result-learning-title">
@@ -101,7 +108,9 @@ export default function ResultDebrief({
             <h4>TURN {report.turn} · {report.phase}</h4>
             <p>{report.contactReport}</p>
             <p><b>ORDERS</b>{FORMATION_OPTIONS.find((item) => item.value === report.orders.formation)?.label}; {SENSOR_OPTIONS.find((item) => item.value === report.orders.sensors)?.label}; {TEMPO_OPTIONS.find((item) => item.value === report.orders.tempo)?.label}; {ENGAGEMENT_OPTIONS.find((item) => item.value === report.orders.engagement)?.label}; {UNCREWED_DOCTRINE_OPTIONS.find((item) => item.value === (report.orders.uncrewed ?? "distributed-scouting"))?.label}; {UNDERSEA_DOCTRINE_OPTIONS.find((item) => item.value === (report.orders.undersea ?? "independent-patrol"))?.label}; {warfareLabel(report.orders.task)}.</p>
+            <p><b>COMMAND POLICIES</b>Risk treatment: {optionLabel(RISK_TREATMENT_OPTIONS, report.orders.riskTreatment ?? "prepare")}; coordination: {optionLabel(COORDINATION_OPTIONS, report.orders.coordination ?? "federated")}; strategic force policy: {optionLabel(STRATEGIC_FORCE_OPTIONS, report.orders.strategicPolicy ?? "conventional-restraint")}.</p>
             <p><b>DELTA</b>range {report.delta.rangeNm > 0 ? "+" : ""}{report.delta.rangeNm}; contact {report.delta.contactQuality > 0 ? "+" : ""}{report.delta.contactQuality}; integrity {report.delta.integrity}; supply {report.delta.supply}; escalation {report.delta.escalation > 0 ? "+" : ""}{report.delta.escalation}; primary objective {report.delta.objectiveProgress > 0 ? "+" : ""}{report.delta.objectiveProgress}{report.delta.secondaryObjectiveProgress !== undefined ? `; secondary objective ${report.delta.secondaryObjectiveProgress > 0 ? "+" : ""}${report.delta.secondaryObjectiveProgress}` : ""}.</p>
+            <div className="timeline-umpire-notes"><b>UMPIRE NOTES</b><ul>{report.umpireNotes.map((note, index) => <li key={`${report.turn}-${index}`}>{note}</li>)}</ul></div>
             {report.activeDisruptionIds?.length ? <p><b>ACTIVE DISRUPTIONS</b>{report.activeDisruptionIds.map((id) => state.matrix?.activeDisruptions.find((event) => event.id === id)?.headline ?? id).join("; ")}.</p> : null}
           </article>
         ))}

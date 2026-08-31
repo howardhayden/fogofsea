@@ -33,46 +33,22 @@ function deterministicScenario(previousId: number) {
   });
 }
 
+// Portable JSON cannot preserve own properties whose value is undefined.
+// Keep the canonical current-format fixture in its actual wire shape so exact
+// round-trip assertions compare serializable state with serializable state.
+const sampleScenario = JSON.parse(JSON.stringify(deterministicScenario(3))) as ReturnType<typeof deterministicScenario>;
+const sampleScenarioEnvironment = deriveScenarioEnvironment({
+  id: sampleScenario.id,
+  region: sampleScenario.region,
+  climate: sampleScenario.climate,
+});
+
 const sample: PortableSave = {
   format: "fog-of-sea-save",
   version: 3,
   savedAt: "2026-08-04T12:00:00.000Z",
   game: {
-    scenario: {
-      id: 4,
-      operation: "TEST MERIDIAN",
-      region: "Test Sector",
-      climate: "ocean",
-      time: "dawn",
-      clouds: "overcast",
-      precipitation: "rain",
-      seaState: 6,
-      visibility: 3,
-      ...sampleEnvironment,
-      budget: 100,
-      brief: "Test brief",
-      geography: "A narrow strait constrains manoeuvre.",
-      friendlySituation: "A convoy requires escort.",
-      opposingSituation: "Ambiguous contacts contest the route.",
-      civilianContext: "Neutral traffic remains in the corridor.",
-      objective: "Test objective",
-      intelligence: "Test intelligence",
-      constraints: "Preserve identification confidence.",
-      timing: "The transit begins in ninety minutes.",
-      successConditions: "The convoy exits intact without escalation.",
-      navalProblem: "Combine limited control with geographic access.",
-      history: "Historical analogy",
-      required: ["air-defense"],
-      recommended: ["reconnaissance"],
-      minimumEscort: 2,
-      minimumAirDefense: 1,
-      minimumAsw: 1,
-      minimumUncrewed: 2,
-      politicalAim: "Preserve access.",
-      endState: "access",
-      lenses: ["corbett", "wegener"],
-      guardrail: "escalation",
-    },
+    scenario: sampleScenario,
     fleet: { "fleet-aviation-ship": 1, "multirole-frigate": 2 },
     airWing: { "deck-multirole-aircraft": 12, "fixed-wing-surveillance-aircraft": 2, "uncrewed-surveillance-rotorcraft": 4 },
     selectedArmaments: { "air-to-air-mission-pack": 8, "airborne-acoustic-pack": 4 },
@@ -196,7 +172,7 @@ test("portable TXT is readable and round-trips", () => {
   const text = formatPortableSave(sample);
   assert.match(text, /CURRENT COMMANDER'S LOGIC/);
   assert.match(text, /Secure only the degree of control/);
-  assert.match(text, /Political aim: Preserve access/);
+  assert.match(text, new RegExp(`Political aim: ${sample.game.scenario.politicalAim.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
   assert.match(text, /Budget: 100 points/);
   assert.match(text, /Difficulty: standard/);
   assert.match(text, /sound profile island-arc/);
@@ -471,9 +447,9 @@ test("v3 rejects invalid environmental ranges and cross-field combinations", () 
   corrupt((scenario) => { scenario.observerLatitude = -24; });
   corrupt((scenario) => { scenario.scenarioDate = "2032-08-10"; });
   corrupt((scenario) => { scenario.precipitation = "none"; });
-  corrupt((scenario) => { scenario.clouds = "broken"; });
-  corrupt((scenario) => { scenario.lightningCapable = true; });
-  corrupt((scenario) => { scenario.storming = false; });
+  corrupt((scenario) => { scenario.clouds = scenario.clouds === "clear" ? "overcast" : "clear"; });
+  corrupt((scenario) => { scenario.lightningCapable = !scenario.lightningCapable; });
+  corrupt((scenario) => { scenario.storming = !scenario.storming; });
   corrupt((scenario) => { scenario.budget = 102; });
 });
 
@@ -834,7 +810,8 @@ test("human-readable export explains compound events without inventing an illici
   relevant.game.scenario = deterministicScenario(47);
   while (!relevant.game.scenario.illicitNetworkType) relevant.game.scenario = deterministicScenario(relevant.game.scenario.id);
   const relevantText = formatPortableSave(relevant);
-  assert.match(relevantText, /illicit-network category/i);
+  assert.doesNotMatch(relevantText, /illicit-network category/i, "planning export conceals latent matrix categories");
+  assert.match(formatPortableSave(completedSave(relevant)), /illicit-network category/i, "completed export discloses the resolved compound frame");
 
   relevant.preferences.difficulty = "challenge";
   const readiness = savedReadiness(relevant);
@@ -986,17 +963,17 @@ test("legacy saves are normalized to the 100-point model", () => {
       soundProfile: parsed.game.scenario.soundProfile,
     },
     {
-      regionId: sampleEnvironment.regionId,
-      hemisphere: sampleEnvironment.hemisphere,
-      observerLatitude: sampleEnvironment.observerLatitude,
-      observerLongitude: sampleEnvironment.observerLongitude,
-      scenarioDate: sampleEnvironment.scenarioDate,
-      season: sampleEnvironment.season,
-      soundProfile: sampleEnvironment.soundProfile,
+      regionId: sampleScenarioEnvironment.regionId,
+      hemisphere: sampleScenarioEnvironment.hemisphere,
+      observerLatitude: sampleScenarioEnvironment.observerLatitude,
+      observerLongitude: sampleScenarioEnvironment.observerLongitude,
+      scenarioDate: sampleScenarioEnvironment.scenarioDate,
+      season: sampleScenarioEnvironment.season,
+      soundProfile: sampleScenarioEnvironment.soundProfile,
     },
   );
-  assert.equal(parsed.game.history[0].context.regionId, parsed.game.scenario.regionId);
-  assert.equal(parsed.game.history[0].context.waveHeading, parsed.game.scenario.waveHeading);
+  assert.equal(parsed.game.history[0].context.regionId, sampleEnvironment.regionId);
+  assert.equal(parsed.game.history[0].context.waveHeading, sampleEnvironment.waveHeading);
 
   (legacy as { version: number }).version = 2;
   const parsedV2 = parsePortableSave(JSON.stringify(legacy));

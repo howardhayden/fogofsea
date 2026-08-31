@@ -201,7 +201,7 @@ export function deriveForceReadiness(input: ForceReadinessInput) {
   ];
   const rigidReadiness: RigidReadiness = {
     planningScore: planning.assessment.score,
-    missionReady: planning.assessment.hardValid,
+    missionReady: planning.fullyReady,
     requiredCoverage: scenario.required.filter((area) => allCoverage.has(area)).length,
     requiredCount: scenario.required.length,
     forcePoints,
@@ -223,7 +223,10 @@ export function deriveForceReadiness(input: ForceReadinessInput) {
     adaptationScore: forceAdaptation.score,
     adaptationLabel: forceAdaptation.label,
     adaptationEvidence: forceAdaptation.evidence,
-    adaptationGaps: forceAdaptation.gaps,
+    adaptationGaps: [
+      ...forceAdaptation.criticalGaps,
+      ...forceAdaptation.gaps.filter((gap) => !forceAdaptation.criticalGaps.includes(gap)),
+    ],
     forceManifest,
   };
 

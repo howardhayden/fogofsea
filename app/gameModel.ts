@@ -1,5 +1,6 @@
 import { createScenarioMatrix, isScenarioMatrix, type IllicitNetworkType, type ScenarioMatrix } from "./scenarioMatrix";
 import { cloudCoverPhrase } from "./weatherPresentation";
+import { jsonSemanticEqual } from "./jsonSemantic";
 
 export type Warfare = "air-defense" | "surface-operations" | "undersea-operations" | "land-attack" | "electromagnetic-operations" | "reconnaissance" | "mine-countermeasures" | "missile-defense" | "maritime-interdiction";
 export type TimeOfDay = "dawn" | "day" | "dusk" | "night";
@@ -589,6 +590,25 @@ export function evaluateAviationFit(platforms: Platform[], aircraft: Aircraft[],
   };
 }
 
+type ArmamentFlowEdge = {
+  to: number;
+  reverse: number;
+  remaining: number;
+  capacity: number;
+};
+
+function addArmamentFlowEdge(graph: ArmamentFlowEdge[][], from: number, to: number, capacity: number) {
+  const forward: ArmamentFlowEdge = { to, reverse: graph[to].length, remaining: capacity, capacity };
+  const reverse: ArmamentFlowEdge = { to: from, reverse: graph[from].length, remaining: 0, capacity: 0 };
+  graph[from].push(forward);
+  graph[to].push(reverse);
+  return forward;
+}
+
+function nonNegativeWholeCount(value: number | undefined) {
+  return typeof value === "number" && Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+}
+
 export function evaluateArmamentFit(
   platforms: Platform[],
   aircraft: Aircraft[],
@@ -598,34 +618,95 @@ export function evaluateArmamentFit(
   selectedArmaments: Record<string, number>,
 ) {
   const hostSlots = new Map<string, number>();
-  for (const platform of platforms) hostSlots.set(platform.id, (fleet[platform.id] || 0) * platform.armamentSlots);
-  for (const item of aircraft) hostSlots.set(item.id, (supportedAircraft[item.id] || 0) * item.armamentSlots);
+  for (const platform of platforms) {
+    hostSlots.set(platform.id, nonNegativeWholeCount(fleet[platform.id]) * platform.armamentSlots);
+  }
+  for (const item of aircraft) {
+    hostSlots.set(item.id, nonNegativeWholeCount(supportedAircraft[item.id]) * item.armamentSlots);
+  }
+
+  const orderedArmaments = [...armaments].sort((a, b) => a.id.localeCompare(b.id));
+  const orderedHosts = [...hostSlots.entries()]
+    .filter(([, slots]) => slots > 0)
+    .sort(([a], [b]) => a.localeCompare(b));
+  const source = 0;
+  const firstArmamentNode = 1;
+  const firstHostNode = firstArmamentNode + orderedArmaments.length;
+  const sink = firstHostNode + orderedHosts.length;
+  const graph: ArmamentFlowEdge[][] = Array.from({ length: sink + 1 }, () => []);
+  const armamentNodes = new Map<string, number>();
+  const hostNodes = new Map<string, number>();
+  const assignmentEdges = new Map<string, Map<string, ArmamentFlowEdge>>();
+
+  orderedArmaments.forEach((armament, index) => {
+    const node = firstArmamentNode + index;
+    const requested = nonNegativeWholeCount(selectedArmaments[armament.id]);
+    armamentNodes.set(armament.id, node);
+    addArmamentFlowEdge(graph, source, node, requested);
+  });
+  orderedHosts.forEach(([hostId, slots], index) => {
+    const node = firstHostNode + index;
+    hostNodes.set(hostId, node);
+    addArmamentFlowEdge(graph, node, sink, slots);
+  });
+  for (const armament of orderedArmaments) {
+    const requested = nonNegativeWholeCount(selectedArmaments[armament.id]);
+    const edges = new Map<string, ArmamentFlowEdge>();
+    for (const hostId of [...new Set(armament.hostIds)].sort((a, b) => a.localeCompare(b))) {
+      const hostNode = hostNodes.get(hostId);
+      if (hostNode === undefined || requested === 0) continue;
+      const edge = addArmamentFlowEdge(graph, armamentNodes.get(armament.id)!, hostNode, requested);
+      edges.set(hostId, edge);
+    }
+    assignmentEdges.set(armament.id, edges);
+  }
+
+  while (true) {
+    const parentNodes = Array<number>(graph.length).fill(-1);
+    const parentEdges = Array<number>(graph.length).fill(-1);
+    const queue = [source];
+    parentNodes[source] = source;
+    for (let cursor = 0; cursor < queue.length && parentNodes[sink] === -1; cursor += 1) {
+      const node = queue[cursor];
+      for (let edgeIndex = 0; edgeIndex < graph[node].length; edgeIndex += 1) {
+        const edge = graph[node][edgeIndex];
+        if (edge.remaining <= 0 || parentNodes[edge.to] !== -1) continue;
+        parentNodes[edge.to] = node;
+        parentEdges[edge.to] = edgeIndex;
+        queue.push(edge.to);
+        if (edge.to === sink) break;
+      }
+    }
+    if (parentNodes[sink] === -1) break;
+
+    let added = Number.POSITIVE_INFINITY;
+    for (let node = sink; node !== source; node = parentNodes[node]) {
+      added = Math.min(added, graph[parentNodes[node]][parentEdges[node]].remaining);
+    }
+    for (let node = sink; node !== source; node = parentNodes[node]) {
+      const edge = graph[parentNodes[node]][parentEdges[node]];
+      edge.remaining -= added;
+      graph[edge.to][edge.reverse].remaining += added;
+    }
+  }
 
   const creditedByArmament: Record<string, number> = {};
   const deficitsByArmament: Record<string, number> = {};
   const assignmentsByArmament: Record<string, Record<string, number>> = {};
-  const ordered = [...armaments].sort((a, b) => a.hostIds.length - b.hostIds.length);
-  for (const armament of ordered) {
-    let needed = selectedArmaments[armament.id] || 0;
-    const requested = needed;
-    const candidates = armament.hostIds
-      .filter((id) => (hostSlots.get(id) || 0) > 0)
-      .sort((a, b) => (hostSlots.get(b) || 0) - (hostSlots.get(a) || 0) || a.localeCompare(b));
+  for (const armament of orderedArmaments) {
+    const requested = nonNegativeWholeCount(selectedArmaments[armament.id]);
     const assignments: Record<string, number> = {};
-    for (const hostId of candidates) {
-      const available = hostSlots.get(hostId) || 0;
-      const assigned = Math.min(needed, available);
-      hostSlots.set(hostId, available - assigned);
-      needed -= assigned;
-      if (assigned) assignments[hostId] = (assignments[hostId] || 0) + assigned;
-      if (!needed) break;
+    for (const [hostId, edge] of assignmentEdges.get(armament.id) || []) {
+      const assigned = edge.capacity - edge.remaining;
+      if (assigned > 0) assignments[hostId] = assigned;
     }
-    creditedByArmament[armament.id] = requested - needed;
-    deficitsByArmament[armament.id] = needed;
+    const credited = Object.values(assignments).reduce((sum, value) => sum + value, 0);
+    creditedByArmament[armament.id] = credited;
+    deficitsByArmament[armament.id] = requested - credited;
     assignmentsByArmament[armament.id] = assignments;
   }
 
-  const totalSelected = armaments.reduce((sum, item) => sum + (selectedArmaments[item.id] || 0), 0);
+  const totalSelected = orderedArmaments.reduce((sum, item) => sum + nonNegativeWholeCount(selectedArmaments[item.id]), 0);
   const totalCredited = Object.values(creditedByArmament).reduce((sum, value) => sum + value, 0);
   return {
     creditedByArmament,
@@ -2080,7 +2161,7 @@ export function validateScenarioCoexistence(scenario: Scenario): ScenarioCoexist
       season: scenario.season,
       adversaryCount,
     });
-    if (JSON.stringify(scenario.matrix) !== JSON.stringify(canonicalMatrix)) issue("difficulty-matrix", "matrix-replay", "Difficulty branches and committed draws must replay exactly from the accepted scenario identity.");
+    if (!jsonSemanticEqual(scenario.matrix, canonicalMatrix)) issue("difficulty-matrix", "matrix-replay", "Difficulty branches and committed draws must replay exactly from the accepted scenario identity.");
     if (adversaryCount === 1 && scenario.matrix.opponentCoordination !== "none") issue("difficulty-matrix", "single-actor-coordination", "One opposing actor cannot create an inter-actor cooperation frame.");
     if (scenario.illicitNetworkType !== undefined && scenario.illicitNetworkType !== scenario.matrix.illicitNetworkType) issue("difficulty-matrix", "illicit-matrix", "Mission and matrix must name the same illicit-network category.");
   }

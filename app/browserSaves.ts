@@ -76,7 +76,9 @@ export function writeBrowserSave(input: BrowserSaveWrite, storage?: Storage) {
   if (!isSafeIdentifier(input.slotId)) throw new Error("This browser save identifier is invalid.");
   const target = storageOrThrow(storage);
   const persistedSave = input.includeWrittenAnalysis ? input.save : minimizePortableSaveForBrowser(input.save);
-  target.setItem(`${SAVE_SLOT_PREFIX}${input.slotId}`, JSON.stringify(persistedSave));
+  const slotKey = `${SAVE_SLOT_PREFIX}${input.slotId}`;
+  const previousSlot = target.getItem(slotKey);
+  const serializedSave = JSON.stringify(persistedSave);
   const meta: SaveSlotMeta = {
     id: input.slotId,
     name: sanitizeSaveName(input.name).trim() || "Untitled game",
@@ -86,8 +88,21 @@ export function writeBrowserSave(input: BrowserSaveWrite, storage?: Storage) {
     includeWrittenAnalysis: input.includeWrittenAnalysis,
   };
   const next = [meta, ...readSaveIndex(target).filter((item) => item.id !== input.slotId)]
-    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-  target.setItem(SAVE_INDEX_KEY, JSON.stringify(next));
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+    .slice(0, 100);
+  target.setItem(slotKey, serializedSave);
+  try {
+    target.setItem(SAVE_INDEX_KEY, JSON.stringify(next));
+  } catch (error) {
+    try {
+      if (previousSlot === null) target.removeItem(slotKey);
+      else target.setItem(slotKey, previousSlot);
+    } catch {
+      // The original storage error remains authoritative; recovery is best-effort
+      // because Web Storage does not provide transactions.
+    }
+    throw error;
+  }
   return { save: persistedSave, meta, index: next };
 }
 

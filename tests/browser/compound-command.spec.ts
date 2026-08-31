@@ -67,20 +67,19 @@ test("challenge command discloses actionable events and concise outcomes without
   await expect(firstReport).not.toContainText(/nested matrix|committed chance|draw \d+\/100|fixed by the scenario/i);
 
   // Resolving turn one moves the current situation to the seeded turn-two
-  // weather, cooperation, and independent-opportunist windows, before those
-  // windows are adjudicated.
+  // windows. Weather is directly observable; opposing coordination and the
+  // independent actor remain concealed without an earned contact picture.
   await expect(page.getByRole("heading", { name: "TURN 2 OF 6" })).toBeVisible();
-  await expect(situation.getByRole("heading", { name: "3 ACTIVE DISRUPTIONS" })).toBeVisible();
+  await expect(situation.getByRole("heading", { name: "1 ACTIVE DISRUPTION" })).toBeVisible();
 
   const weather = situation.locator('.situation-event[data-kind="severe-weather"]');
   const coordination = situation.locator('.situation-event[data-kind="opposing-coordination"]');
   const opportunist = situation.locator('.situation-event[data-kind="opportunistic-actor"]');
   await expect(weather).toBeVisible();
   await expect(weather).toContainText("Starts turn 2 · active through turn 4");
-  await expect(coordination).toBeVisible();
-  await expect(coordination).toContainText("Starts turn 2 · active through turn 3");
-  await expect(opportunist).toBeVisible();
-  await expect(opportunist).toContainText(/independent|no shared command/i);
+  await expect(coordination).toHaveCount(0);
+  await expect(opportunist).toHaveCount(0);
+  await expect(situation).not.toContainText(/Opposing cooperation window|Independent .*?(?:network|group|spoiler|broker)/i);
 
   // Selected-force effects identify a real selected asset, the unavailable
   // capability, and the recovery turn. Opposing effects stay concealed while
@@ -91,7 +90,6 @@ test("challenge command discloses actionable events and concise outcomes without
   await expect(disclosedImpacts).toContainText("unavailable through turn 4");
   await expect(disclosedImpacts).toContainText("Unavailable:");
   await expect(situation).not.toContainText(/assessed opposing (?:surface|air|undersea|command)/i);
-  await expect(coordination.locator(".situation-impact-list")).toHaveCount(0);
   await expect(situation.locator('.situation-objectives li[data-new="true"]')).toContainText("SECONDARY · NEW");
   await expect(situation.locator('.situation-objectives li[data-new="true"]')).toContainText(/\d+% · active/);
 
