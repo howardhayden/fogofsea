@@ -59,7 +59,7 @@ test("unknown contacts require compatible mission credit and stay within the sen
   await expect(filler).toContainText("MISSION CREDIT · 0/44");
 
   await page.getByRole("button", { name: "Add one Shipborne rescue rotorcraft" }).click();
-  const unsupportedSensor = page.getByRole("listitem", { name: "RESCUE ROTORCRAFT" });
+  const unsupportedSensor = page.locator('[role="listitem"][aria-labelledby="roster-title-shipborne-rescue-rotorcraft"]');
   await expect(unsupportedSensor).toContainText("COMPATIBILITY · 0/1");
   await expect(unsupportedSensor).toContainText("MISSION CREDIT · 0/1");
 

@@ -52,6 +52,8 @@ Correction run `33345328073` on exact-tree commit `90624df` reduced the browser 
 
 Verification run `33345872836` on commit `585df3a` then passed both jobs. `browser-gate` recorded 102 passes, 58 intentional project-specific skips, and zero failures in 6.7 minutes. Only after that positive evidence was the active GitHub ruleset `main release gate` (ruleset `21889558`) created for the default branch.
 
+The first pull-request run under that ruleset, `33346530879`, demonstrated that protection was active: `release-gate` passed, while `browser-gate` stopped the merge with 101 passes, 58 intentional project skips, and one failure. The remaining assertion located a newly selected aircraft row through a computed accessible name; the interaction and state update succeeded, but the hosted browser did not resolve that row name before the test-wide timeout. The correction addresses the same semantic row through its stable `aria-labelledby` contract and retains every compatibility, mission-credit, and hidden-contact assertion. The pull request must remain blocked until both required checks verify this correction.
+
 ## 2. Protect `main` in GitHub
 
 The active configuration was created after the green run above. Use these steps to inspect it or reproduce it if it is ever removed:
