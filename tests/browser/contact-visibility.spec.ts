@@ -44,7 +44,7 @@ test("unknown contacts require compatible mission credit and stay within the sen
   // embarked capabilities, but it earns no mission credit by itself.
   await page.getByRole("button", { name: "Add one Short-deck aviation ship" }).click();
   const aviationShip = page.getByRole("listitem", { name: "SHORT-DECK AVIATION" });
-  await expect(aviationShip).toContainText("MISSION CREDIT · 0/1 vessels");
+  await expect(aviationShip).toContainText("MISSION CREDIT · 0/1");
 
   await page.getByRole("button", { name: "EMBARKED AVIATION", exact: true }).click();
 
@@ -71,7 +71,7 @@ test("unknown contacts require compatible mission credit and stay within the sen
   // credit now unlocks only the surface picture its sensors can establish.
   await page.getByRole("button", { name: "FLEET", exact: true }).click();
   await page.getByRole("button", { name: "Add one Short-deck aviation ship" }).click();
-  await expect(aviationShip).toContainText("MISSION CREDIT · 1/2 vessels");
+  await expect(aviationShip).toContainText("MISSION CREDIT · 1/2");
 
   await page.getByRole("button", { name: "EMBARKED AVIATION", exact: true }).click();
   await expect(unsupportedSensor).toContainText("COMPATIBLE · 1/1 aircraft");

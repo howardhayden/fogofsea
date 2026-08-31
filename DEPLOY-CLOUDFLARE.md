@@ -44,6 +44,10 @@ Do not treat this document as proof that account-side steps are complete. The re
 
 The required checks cannot be selected in a ruleset until GitHub has observed them successfully at least once.
 
+### First-run correction evidence
+
+GitHub run `33344735391` on migration commit `cdf04b5` proved that `release-gate` passes and preserves the static artifact, but correctly blocked release when `browser-gate` reported four failures across 160 scheduled tests: 98 passed and 58 were skipped after failure. Review showed two assertions naming text that the current interface no longer contains, one 30-second test budget that expired under hosted-runner load after its behavior checks had progressed, and one rare exact-hue pixel floor that is not stable at a 320-pixel headless-GPU projection despite the exact generated model and broader rendered-chroma checks remaining intact. The correction updates the assertions to current accessible names, retains the same behavioral checks with a bounded 90-second budget, and separates exact compact model evidence from larger-viewport rare-hue rendering evidence. A later run must turn both jobs green before the ruleset is activated.
+
 ## 2. Protect `main` in GitHub
 
 An authenticated repository-settings session is available. After GitHub records the first green run and exposes both check names:
