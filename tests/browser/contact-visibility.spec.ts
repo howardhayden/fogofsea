@@ -55,13 +55,13 @@ test("unknown contacts require compatible mission credit and stay within the sen
   await addFiller.focus();
   for (let count = 0; count < 44; count += 1) await page.keyboard.press("Enter");
   const filler = page.getByRole("listitem", { name: "SHORT-TAKEOFF MULTIROLE" });
-  await expect(filler).toContainText("COMPATIBLE · 44/44 aircraft");
-  await expect(filler).toContainText("MISSION CREDIT · 0/44 aircraft");
+  await expect(filler).toContainText("COMPATIBILITY · 44/44");
+  await expect(filler).toContainText("MISSION CREDIT · 0/44");
 
   await page.getByRole("button", { name: "Add one Shipborne rescue rotorcraft" }).click();
   const unsupportedSensor = page.getByRole("listitem", { name: "RESCUE ROTORCRAFT" });
-  await expect(unsupportedSensor).toContainText("COMPATIBLE · 0/1 aircraft");
-  await expect(unsupportedSensor).toContainText("MISSION CREDIT · 0/1 aircraft");
+  await expect(unsupportedSensor).toContainText("COMPATIBILITY · 0/1");
+  await expect(unsupportedSensor).toContainText("MISSION CREDIT · 0/1");
 
   await expectNoContacts(page, "surface", "surface");
   await expectNoContacts(page, "air", "air");
@@ -74,8 +74,8 @@ test("unknown contacts require compatible mission credit and stay within the sen
   await expect(aviationShip).toContainText("MISSION CREDIT · 1/2");
 
   await page.getByRole("button", { name: "EMBARKED AVIATION", exact: true }).click();
-  await expect(unsupportedSensor).toContainText("COMPATIBLE · 1/1 aircraft");
-  await expect(unsupportedSensor).toContainText("MISSION CREDIT · 1/1 aircraft");
+  await expect(unsupportedSensor).toContainText("COMPATIBILITY · 1/1");
+  await expect(unsupportedSensor).toContainText("MISSION CREDIT · 1/1");
 
   const surfacePlot = await selectPlotLayer(page, "surface");
   const surfaceCount = Number(await surfacePlot.getAttribute("data-visible-unknown-contacts"));

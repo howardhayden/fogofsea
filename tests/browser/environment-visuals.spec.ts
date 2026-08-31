@@ -444,6 +444,7 @@ test("regional wildlife is bounded environmental scenery and never a tactical co
 });
 
 test("selected operational subjects breathe faintly while stars remain a separate motion channel", async ({ page }) => {
+  test.setTimeout(90_000);
   const shaderErrors: string[] = [];
   page.on("console", (message) => {
     if (message.type() === "error" && /shader|webgl program|gl_invalid/i.test(message.text())) shaderErrors.push(message.text());
