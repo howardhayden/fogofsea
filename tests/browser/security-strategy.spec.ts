@@ -56,7 +56,8 @@ test("command exposes environment-sensitive uncrewed and undersea methods withou
   await page.locator("#strategic-primary-theory").selectOption({ index: 1 });
   await page.locator("#strategic-partner-theory").selectOption({ index: 2 });
   await page.locator("#strategic-guardrail").selectOption({ index: 1 });
-  await expect(page.locator(".operational-guidance")).toContainText("Assessed opposing method");
+  await expect(page.locator(".operational-guidance")).toContainText("Opposing method");
+  await expect(page.locator(".operational-guidance")).toContainText("Not confirmed; test reasonable alternatives during command.");
   await page.getByRole("button", { name: "CONTINUE TO FORCE DESIGN" }).click();
   await page.getByRole("button", { name: /Add one Fleet aviation ship/ }).click();
   await page.getByRole("button", { name: /BEGIN COMMAND PHASE/ }).click();
@@ -74,8 +75,9 @@ test("command exposes environment-sensitive uncrewed and undersea methods withou
   await page.locator("#rigid-coordination").selectOption("mutual-support");
   await page.locator("#rigid-strategic-policy").selectOption("nuclear-deterrent");
   await expect(page.locator("#rigid-undersea-note")).toContainText("coordination improves pressure");
-  await expect(page.locator(".operational-frame")).toContainText("Assessed opposing posture");
-  await expect(page.locator(".operational-frame")).toContainText("Distinct opposing actors");
+  await expect(page.locator(".operational-frame")).toContainText("Friendly posture");
+  await expect(page.locator(".operational-frame")).not.toContainText("Assessed opposing posture");
+  await expect(page.locator(".operational-frame")).not.toContainText("Distinct opposing actors");
   await expect(page.locator("#rigid-strategic-policy-note")).toContainText("deterrence may fail");
   await expect(page.locator(".operational-frame")).not.toContainText(/destroyer|submarine count|aircraft type/i);
 });

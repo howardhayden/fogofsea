@@ -1,0 +1,585 @@
+{
+  "format": "fog-of-sea-lattice-adoption-requirements-v1",
+  "registerId": "FOS-LAT",
+  "version": "1.0.0",
+  "scope": {
+    "authorized": [
+      "Selected in-game Field Guide explanations",
+      "Post-resolution turn and outcome learning copy",
+      "Selected Academy comparison and Sources & Scope copy",
+      "Advisory lint of Academy curriculum data"
+    ],
+    "excluded": [
+      "Safety, privacy, persistence, accessibility, contact-disclosure, score, and control instructions whose exact operative meaning must remain primary",
+      "Player-authored text",
+      "Runtime execution of the Lattice engine or profile",
+      "Product-wide copy conversion while prose still participates in game logic"
+    ],
+    "broadAdoptionStatus": "blocked",
+    "statement": "This register authorizes one bounded, owner-compiled static-copy slice. It does not establish full-product Lattice adoption or semantic, domain, accessibility, or human approval."
+  },
+  "provenance": [
+    {
+      "id": "PROV-001",
+      "kind": "user-directive",
+      "locator": "Conversation directive: Update FOG OF SEA to utilize Lattice in in-game and Academy copy",
+      "revision": "2026-09-01",
+      "role": "Authorizes the bounded adoption objective"
+    },
+    {
+      "id": "PROV-002",
+      "kind": "repository",
+      "locator": "howardhayden/lattice commit d6cc85b275e3f14163a5a547f626832fd21b27b0",
+      "revision": "engine 0.1.1; relational-systems profile v1.0.0; profile digest 379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a; derived owner-package digest 58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0",
+      "role": "Pins the owner-side compiler inputs"
+    },
+    {
+      "id": "PROV-003",
+      "kind": "repository",
+      "locator": "howardhayden/fogofsea commit 70907a77cba735c151e52929dd5a56d795c3d04f",
+      "revision": "bounded-adoption baseline",
+      "role": "Identifies the implementation state from which the copy inventory was derived"
+    },
+    {
+      "id": "PROV-004",
+      "kind": "implementation-audit",
+      "locator": "docs/red-team/2026-09-01-lattice-copy-pass.md",
+      "revision": "2.0.0",
+      "role": "Records adversarial findings, corrections, and evidence limits"
+    },
+    {
+      "id": "PROV-005",
+      "kind": "project-policy",
+      "locator": "ACCESSIBILITY.md; SECURITY.md; docs/design/11-TRACEABILITY.md",
+      "revision": "current bounded-adoption worktree",
+      "role": "Supplies accessibility, trust-boundary, and evidence constraints"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "FOS-LAT-ARC-001",
+      "title": "Pinned owner-side compilation",
+      "statement": "Lattice copy must be compiled only in the owner workflow with engine 0.1.1, relational-systems profile v1.0.0, profile digest 379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a, and derived owner-package digest 58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0.",
+      "provenanceIds": ["PROV-001", "PROV-002"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": [],
+      "conflicts": ["Runtime or unpinned Lattice transformation"],
+      "owners": ["scripts/compile-lattice-copy.mjs", "authoring/lattice-copy.requests.json"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-ARC-001-AC-01", "assertion": "Compilation derives the owner-package digest from the pinned clean checkout's closed execution manifest before and after realization, and fails when any engine, profile, commit, file digest, or derived pin differs."}],
+      "tests": [
+        {"id": "FOS-LAT-ARC-001-T-P01", "kind": "positive", "assertion": "The exact pins compile in the owner workflow.", "evidence": "Owner-side compiler test"},
+        {"id": "FOS-LAT-ARC-001-T-N01", "kind": "negative", "assertion": "A mutated profile or owner digest is rejected.", "evidence": "Red-team pin mutation"},
+        {"id": "FOS-LAT-ARC-001-T-B01", "kind": "boundary", "assertion": "A semantically equivalent but differently versioned profile is not silently accepted.", "evidence": "Exact-version assertion"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-SEM-001",
+      "title": "Invariant meaning",
+      "statement": "Every adopted output must preserve its declared facts, actions, states, causal relationships, limits, uncertainty, consequences, and recovery path without adding unsupported claims.",
+      "provenanceIds": ["PROV-001", "PROV-002", "PROV-005"],
+      "priority": "mandatory",
+      "precedence": 2,
+      "dependencies": ["FOS-LAT-ARC-001"],
+      "conflicts": ["Register fit or ornament overriding semantic fidelity"],
+      "owners": ["authoring/lattice-copy.requests.json", "scripts/verify-lattice-copy.mts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-SEM-001-AC-01", "assertion": "Each output satisfies every required semantic assertion and no prohibited assertion."}],
+      "tests": [
+        {"id": "FOS-LAT-SEM-001-T-P01", "kind": "positive", "assertion": "Required atoms remain present in selected copy.", "evidence": "Generated-output assertion test"},
+        {"id": "FOS-LAT-SEM-001-T-N01", "kind": "negative", "assertion": "Mechanics, causality, or uncertainty drift is rejected.", "evidence": "Forbidden-claim mutation"},
+        {"id": "FOS-LAT-SEM-001-T-B01", "kind": "boundary", "assertion": "A stylistically strong candidate missing one invariant is rejected.", "evidence": "Single-atom deletion test"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-LAY-001",
+      "title": "Explicit route and layer",
+      "statement": "Every transformed surface must declare an independently testable layer, form, register, and pressure route; a mixed surface may not inherit one route for all meanings.",
+      "provenanceIds": ["PROV-001", "PROV-002", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 3,
+      "dependencies": ["FOS-LAT-SEM-001"],
+      "conflicts": ["One undifferentiated voice pass over mixed operative and interpretive copy"],
+      "owners": ["requirements/lattice-copy-inventory.json", "authoring/lattice-copy.requests.json"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-LAY-001-AC-01", "assertion": "The copy inventory contains the exact debrief, Field Guide, and Academy route splits."}],
+      "tests": [
+        {"id": "FOS-LAT-LAY-001-T-P01", "kind": "positive", "assertion": "All adopted outputs resolve to declared inventory routes.", "evidence": "Bidirectional inventory test"},
+        {"id": "FOS-LAT-LAY-001-T-N01", "kind": "negative", "assertion": "A request referencing an unknown or incompatible route fails.", "evidence": "Route-reference mutation"},
+        {"id": "FOS-LAT-LAY-001-T-B01", "kind": "boundary", "assertion": "A two-layer Field Guide request retains both independently declared routes.", "evidence": "Paired-target assertion"}
+      ],
+      "evidenceMethods": ["schema-validation", "unit-test", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-SEM-002",
+      "title": "Operative clarity has priority",
+      "statement": "Operative text must state the exact action, state, consequence, scope, or recovery without relying on imagery, implication, color, sound, or spatial inference.",
+      "provenanceIds": ["PROV-002", "PROV-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-SEM-001", "FOS-LAT-LAY-001"],
+      "conflicts": ["Atmosphere obscuring action or trust-boundary meaning"],
+      "owners": ["app/latticeCopy.ts", "app/page.tsx", "app/Academy.tsx", "app/kriegsspiel.ts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-SEM-002-AC-01", "assertion": "Operative outputs remain immediately understandable when read without surrounding visual context."}],
+      "tests": [
+        {"id": "FOS-LAT-SEM-002-T-P01", "kind": "positive", "assertion": "Actions and model boundaries are stated directly.", "evidence": "Required-phrase assertions"},
+        {"id": "FOS-LAT-SEM-002-T-N01", "kind": "negative", "assertion": "An implication-only instruction is prohibited.", "evidence": "Adversarial candidate test"},
+        {"id": "FOS-LAT-SEM-002-T-B01", "kind": "boundary", "assertion": "Interpretive companion text cannot weaken the paired operative statement.", "evidence": "Paired-route comparison"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "manual-review-not-claimed"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-DOM-001",
+      "title": "Evidence-bounded learning",
+      "statement": "Turn and outcome learning copy must distinguish recorded diagnostic evidence, committed matrix failure, absence of a tracked finding, and absence of causal proof; score alone must not manufacture blame or exoneration.",
+      "provenanceIds": ["PROV-003", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-SEM-001"],
+      "conflicts": ["No clear mistake claims based on incomplete diagnostics", "Strongest-cause ranking without a ranking rule"],
+      "owners": ["app/kriegsspiel.ts", "app/ResultDebrief.tsx"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-DOM-001-AC-01", "assertion": "Learning text names only tracked mismatches, findings, matrix results, and limits supported by the record."}],
+      "tests": [
+        {"id": "FOS-LAT-DOM-001-T-P01", "kind": "positive", "assertion": "A typed mismatch produces the corresponding bounded adjustment copy.", "evidence": "Kriegsspiel learning tests"},
+        {"id": "FOS-LAT-DOM-001-T-N01", "kind": "negative", "assertion": "A low score without a tracked finding does not produce a causal mistake claim.", "evidence": "Score-only loss regression"},
+        {"id": "FOS-LAT-DOM-001-T-B01", "kind": "boundary", "assertion": "Committed matrix failure and no tracked finding can be stated together without implying full compliance.", "evidence": "Uncertainty boundary test"}
+      ],
+      "evidenceMethods": ["unit-test", "red-team-mutation", "static-analysis"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-ACC-001",
+      "title": "Accessibility equivalence is preserved",
+      "statement": "Lattice adoption must not remove, contradict, or replace semantic names, state descriptions, recovery instructions, or nonvisual equivalents; automated checks do not establish human accessibility approval.",
+      "provenanceIds": ["PROV-001", "PROV-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-SEM-001", "FOS-LAT-SEM-002"],
+      "conflicts": ["Meaning available only through figurative, visual, spatial, or tonal inference"],
+      "owners": ["ACCESSIBILITY.md", "app/page.tsx", "app/Academy.tsx", "app/ResultDebrief.tsx"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-ACC-001-AC-01", "assertion": "Adopted copy preserves the same operational meaning in semantic DOM and text-only use."}],
+      "tests": [
+        {"id": "FOS-LAT-ACC-001-T-P01", "kind": "positive", "assertion": "Accessible names and descriptions retain required state and consequence.", "evidence": "Static and browser-test inventory"},
+        {"id": "FOS-LAT-ACC-001-T-N01", "kind": "negative", "assertion": "Copy dependent on color, sound, or placement is rejected.", "evidence": "Accessibility-prohibited assertions"},
+        {"id": "FOS-LAT-ACC-001-T-B01", "kind": "boundary", "assertion": "Automated coverage is reported separately from unperformed assistive-technology testing.", "evidence": "Documentation assertion"}
+      ],
+      "evidenceMethods": ["static-analysis", "browser-inventory-only", "manual-review-not-claimed"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-ARC-002",
+      "title": "Presentation copy cannot decide mechanics",
+      "statement": "Adopted Lattice output must be downstream of typed game state and diagnostic codes and must never be parsed to determine scoring, contact disclosure, catalog credit, scenario validity, or adjudication.",
+      "provenanceIds": ["PROV-003", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-SEM-001"],
+      "conflicts": ["Regular expressions or substring checks over player-facing prose controlling state"],
+      "owners": ["app/kriegsspiel.ts", "app/latticeCopy.ts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-ARC-002-AC-01", "assertion": "Changing adopted presentation text cannot change any game-state result."}],
+      "tests": [
+        {"id": "FOS-LAT-ARC-002-T-P01", "kind": "positive", "assertion": "Typed diagnostic codes select learning copy.", "evidence": "Source and unit tests"},
+        {"id": "FOS-LAT-ARC-002-T-N01", "kind": "negative", "assertion": "Prose-regex classification in the adopted learning path is prohibited.", "evidence": "Static regression test"},
+        {"id": "FOS-LAT-ARC-002-T-B01", "kind": "boundary", "assertion": "Unresolved prose-to-logic couplings outside the slice keep broad adoption blocked.", "evidence": "Blocker inventory"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-ARC-003",
+      "title": "Runtime payload is text-only",
+      "statement": "The browser runtime may receive only the compact generated text map and its four-field release envelope; it may not contain the Lattice engine, profile, requests, atoms, assertions, receipts, source catalog, or review metadata.",
+      "provenanceIds": ["PROV-002", "PROV-004", "PROV-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-ARC-001"],
+      "conflicts": ["Shipping owner-only Lattice material to the browser"],
+      "owners": ["app/generated/lattice-copy.runtime.json", "scripts/validate-artifact.mjs"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-ARC-003-AC-01", "assertion": "Built assets contain all 26 selected strings and none of the owner-only Lattice materials."}],
+      "tests": [
+        {"id": "FOS-LAT-ARC-003-T-P01", "kind": "positive", "assertion": "The runtime payload has exactly the allowed envelope and text map.", "evidence": "Runtime schema test"},
+        {"id": "FOS-LAT-ARC-003-T-N01", "kind": "negative", "assertion": "Owner request IDs, digests, receipts, atoms, or traceability fields in any textual asset fail validation.", "evidence": "Artifact scanner"},
+        {"id": "FOS-LAT-ARC-003-T-B01", "kind": "boundary", "assertion": "Non-JavaScript textual assets are scanned as well as bundles.", "evidence": "Whole-artifact textual scan"}
+      ],
+      "evidenceMethods": ["schema-validation", "build-artifact-inspection", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-EVI-001",
+      "title": "Owner evidence is content-addressed and separate",
+      "statement": "Owner-side generated output, evidence snapshot, and index must bind the pinned inputs, implementation authorities, requests, outputs, assertion results, and traceability digest without relying on runtime artifacts to validate themselves. Identical compilation bytes are a no-op; changed files are replaced individually without a cross-file transaction claim.",
+      "provenanceIds": ["PROV-002", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 2,
+      "dependencies": ["FOS-LAT-ARC-001", "FOS-LAT-ARC-003"],
+      "conflicts": ["Generated output serving as its own authority"],
+      "owners": ["app/generated/lattice-copy.json", "evidence/lattice/current.json", "evidence/lattice/index.json"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-EVI-001-AC-01", "assertion": "Independent verification recomputes every bound digest from declared inputs."}],
+      "tests": [
+        {"id": "FOS-LAT-EVI-001-T-P01", "kind": "positive", "assertion": "A current snapshot verifies from its pinned owner inputs.", "evidence": "Offline verifier"},
+        {"id": "FOS-LAT-EVI-001-T-N01", "kind": "negative", "assertion": "Mutation of generated or evidence content is detected.", "evidence": "Digest mutation tests"},
+        {"id": "FOS-LAT-EVI-001-T-B01", "kind": "boundary", "assertion": "An unchanged content-addressed snapshot is not rewritten as new evidence.", "evidence": "Idempotence assertion"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-TRC-001",
+      "title": "Bidirectional requirement and inventory traceability",
+      "statement": "Each request must reference existing active FOS-LAT semantic requirement IDs and FOS-COPY inventory IDs, and every adopted inventory target must be owned by the expected request and generated output.",
+      "provenanceIds": ["PROV-001", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 2,
+      "dependencies": ["FOS-LAT-LAY-001", "FOS-LAT-GOV-002"],
+      "conflicts": ["Dangling, duplicated, exempt, or superseded traceability references"],
+      "owners": ["requirements/lattice-adoption.json", "requirements/lattice-copy-inventory.json", "scripts/verify-lattice-copy.mts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-TRC-001-AC-01", "assertion": "Traceability closes in both request-to-register and inventory-to-request directions."}],
+      "tests": [
+        {"id": "FOS-LAT-TRC-001-T-P01", "kind": "positive", "assertion": "All 19 requests resolve their requirement, inventory, and source references.", "evidence": "Traceability verifier"},
+        {"id": "FOS-LAT-TRC-001-T-N01", "kind": "negative", "assertion": "An unknown or exempt adopted reference fails.", "evidence": "Reference mutation"},
+        {"id": "FOS-LAT-TRC-001-T-B01", "kind": "boundary", "assertion": "Shared route inventory units accept only their declared request set.", "evidence": "Exact owner-set comparison"}
+      ],
+      "evidenceMethods": ["schema-validation", "unit-test", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-EVI-002",
+      "title": "Provided-candidate identity",
+      "statement": "Every output marked as provided must equal the exact text of its selected declared candidate, identified by candidate ID, layer, and representation.",
+      "provenanceIds": ["PROV-002", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-SEM-001", "FOS-LAT-EVI-001"],
+      "conflicts": ["Receipt-valid substituted prose"],
+      "owners": ["scripts/compile-lattice-copy.mjs", "scripts/verify-lattice-copy.mts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-EVI-002-AC-01", "assertion": "Candidate identity is checked before operative-content assertions and again offline."}],
+      "tests": [
+        {"id": "FOS-LAT-EVI-002-T-P01", "kind": "positive", "assertion": "Every provided output matches its candidate byte-for-byte.", "evidence": "Selected-candidate test"},
+        {"id": "FOS-LAT-EVI-002-T-N01", "kind": "negative", "assertion": "Substituting any of the 26 texts while retaining metadata fails.", "evidence": "All-output substitution mutation"},
+        {"id": "FOS-LAT-EVI-002-T-B01", "kind": "boundary", "assertion": "A literal fallback is governed by its distinct source type rather than treated as provided.", "evidence": "Source-kind branch test"}
+      ],
+      "evidenceMethods": ["unit-test", "red-team-mutation", "static-analysis"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-GOV-001",
+      "title": "No human-review claim",
+      "statement": "Every request review record must state humanStatus not-claimed, and product documentation must not describe the Lattice copy as human-, accessibility-, or domain-approved.",
+      "provenanceIds": ["PROV-004", "PROV-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": [],
+      "conflicts": ["Approved, reviewed, certified, or validated language without corresponding human evidence"],
+      "owners": ["authoring/lattice-copy.requests.json", "README.md", "ACCESSIBILITY.md", "docs/design/16-LATTICE-COPY-ARCHITECTURE.md"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-GOV-001-AC-01", "assertion": "Human review is consistently recorded as not claimed."}],
+      "tests": [
+        {"id": "FOS-LAT-GOV-001-T-P01", "kind": "positive", "assertion": "All 19 request review objects carry humanStatus not-claimed.", "evidence": "Exact-shape request test"},
+        {"id": "FOS-LAT-GOV-001-T-N01", "kind": "negative", "assertion": "Changing any review status to approved fails.", "evidence": "Review-status mutation"},
+        {"id": "FOS-LAT-GOV-001-T-B01", "kind": "boundary", "assertion": "Automated checks are described as automated evidence, not human review.", "evidence": "Documentation scan"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "manual-review-not-claimed"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-ACA-001",
+      "title": "Academy curriculum lint is advisory",
+      "statement": "Academy curriculum-data lint may report required and prohibited patterns in bounded batches but may not rewrite lessons, quizzes, citations, or answers or claim comprehensive educational review.",
+      "provenanceIds": ["PROV-001", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-SEM-001"],
+      "conflicts": ["Automated lint represented as full Academy adoption or sourcing"],
+      "owners": ["scripts/lattice-copy-corpus.mjs", "app/academyData.ts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-ACA-001-AC-01", "assertion": "Lint is read-only, advisory, and limited to Academy curriculum data."}],
+      "tests": [
+        {"id": "FOS-LAT-ACA-001-T-P01", "kind": "positive", "assertion": "The corpus is enumerated deterministically in bounded batches.", "evidence": "Corpus lint test"},
+        {"id": "FOS-LAT-ACA-001-T-N01", "kind": "negative", "assertion": "Lint cannot modify academyData or mark it approved.", "evidence": "Read-only/source-diff assertion"},
+        {"id": "FOS-LAT-ACA-001-T-B01", "kind": "boundary", "assertion": "Selected Academy chrome copy remains separate from curriculum-data lint.", "evidence": "Inventory separation"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "manual-review-not-claimed"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-BLK-001",
+      "title": "Broad adoption remains blocked",
+      "statement": "Product-wide Lattice transformation must remain blocked until prose-to-logic couplings in gameModel.ts, catalogMath.ts, and contactVisualization.ts are replaced by typed state and separately verified.",
+      "provenanceIds": ["PROV-003", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-ARC-002"],
+      "conflicts": ["Claiming product-wide adoption from the bounded slice"],
+      "owners": ["app/gameModel.ts", "app/catalogMath.ts", "app/contactVisualization.ts", "requirements/lattice-copy-inventory.json"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-BLK-001-AC-01", "assertion": "All three couplings remain explicit blockers until code and tests prove their removal."}],
+      "tests": [
+        {"id": "FOS-LAT-BLK-001-T-P01", "kind": "positive", "assertion": "The inventory names each blocker and excludes it from adoption.", "evidence": "Inventory assertion"},
+        {"id": "FOS-LAT-BLK-001-T-N01", "kind": "negative", "assertion": "Changing broad status to adopted while a coupling remains fails.", "evidence": "Governance mutation"},
+        {"id": "FOS-LAT-BLK-001-T-B01", "kind": "boundary", "assertion": "Completing one coupling does not clear the other two.", "evidence": "All-blockers gate"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "red-team-mutation"],
+      "status": "blocked",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-SEC-001",
+      "title": "Owner material is absent from release artifacts",
+      "statement": "No request, candidate, atom, receipt, source catalog, traceability, review, profile, engine, or owner-package material may be emitted in any release textual asset.",
+      "provenanceIds": ["PROV-002", "PROV-004", "PROV-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-ARC-003"],
+      "conflicts": ["Development evidence bundled as public runtime data"],
+      "owners": ["scripts/validate-artifact.mjs", "vite.config.ts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-SEC-001-AC-01", "assertion": "Every non-binary emitted file is scanned for owner-only markers."}],
+      "tests": [
+        {"id": "FOS-LAT-SEC-001-T-P01", "kind": "positive", "assertion": "A normal build contains only the allowed text map.", "evidence": "Artifact validation"},
+        {"id": "FOS-LAT-SEC-001-T-N01", "kind": "negative", "assertion": "Injecting owner metadata into JSON, text, HTML, or JavaScript fails.", "evidence": "Artifact mutation"},
+        {"id": "FOS-LAT-SEC-001-T-B01", "kind": "boundary", "assertion": "Known binary assets are explicitly allowlisted rather than decoded as text.", "evidence": "Extension boundary test"}
+      ],
+      "evidenceMethods": ["build-artifact-inspection", "red-team-mutation", "static-analysis"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-SAV-001",
+      "title": "Replay regenerates presentation copy",
+      "statement": "Save import and canonical replay must validate adjudication fields and regenerate Lattice presentation prose from typed state rather than trusting serialized display strings.",
+      "provenanceIds": ["PROV-003", "PROV-004", "PROV-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-ARC-002", "FOS-LAT-ARC-003"],
+      "conflicts": ["Persisted prose becoming adjudication authority"],
+      "owners": ["app/saveGame.ts", "app/kriegsspiel.ts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-SAV-001-AC-01", "assertion": "Display prose can change between builds without changing or invalidating a mechanically identical canonical replay."}],
+      "tests": [
+        {"id": "FOS-LAT-SAV-001-T-P01", "kind": "positive", "assertion": "A canonical save replays and regenerates current presentation prose.", "evidence": "Save replay test"},
+        {"id": "FOS-LAT-SAV-001-T-N01", "kind": "negative", "assertion": "Altered adjudication fields remain rejected even with plausible prose.", "evidence": "Tamper regression"},
+        {"id": "FOS-LAT-SAV-001-T-B01", "kind": "boundary", "assertion": "Legacy non-authoritative history remains bounded without becoming current rule evidence.", "evidence": "Migration boundary test"}
+      ],
+      "evidenceMethods": ["unit-test", "red-team-mutation", "static-analysis"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-DOM-002",
+      "title": "Unscored-writing claim is exact",
+      "statement": "Outcome copy must state that written responses were not evaluated and must attribute the result to the model's invented rules, recorded game state, and selected orders without claiming numeric rules are the only inputs.",
+      "provenanceIds": ["PROV-003", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-SEM-001", "FOS-LAT-SEM-002"],
+      "conflicts": ["Only numeric rules and selected orders determined the result"],
+      "owners": ["app/kriegsspiel.ts", "authoring/lattice-copy.requests.json"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-DOM-002-AC-01", "assertion": "The unscored-writing note preserves both non-evaluation and the full bounded input attribution."}],
+      "tests": [
+        {"id": "FOS-LAT-DOM-002-T-P01", "kind": "positive", "assertion": "The exact non-evaluation claim appears in outcomes.", "evidence": "Outcome test"},
+        {"id": "FOS-LAT-DOM-002-T-N01", "kind": "negative", "assertion": "The old numeric-rules-only overclaim is prohibited.", "evidence": "Forbidden-phrase test"},
+        {"id": "FOS-LAT-DOM-002-T-B01", "kind": "boundary", "assertion": "Exporting player writing does not imply that adjudication reads it.", "evidence": "Save and outcome boundary assertion"}
+      ],
+      "evidenceMethods": ["unit-test", "static-analysis", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-SCP-001",
+      "title": "Scenario validation claims are bounded",
+      "statement": "Copy may claim validation of the implemented structured coexistence checks but may not call a scenario fully feasible, completely validated, winnable, nontrivial, doctrinally sound, or politically coherent without separate evidence.",
+      "provenanceIds": ["PROV-003", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-SEM-001"],
+      "conflicts": ["Structured coexistence represented as complete feasibility"],
+      "owners": ["README.md", "ACCESSIBILITY.md", "public/docs/HOW-THE-GAME-WORKS.md", "docs/design"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-SCP-001-AC-01", "assertion": "Player and design copy names the bounded structured checks and their unresolved semantic limits."}],
+      "tests": [
+        {"id": "FOS-LAT-SCP-001-T-P01", "kind": "positive", "assertion": "Coexistence validation is described accurately.", "evidence": "Documentation scan"},
+        {"id": "FOS-LAT-SCP-001-T-N01", "kind": "negative", "assertion": "Fully validated or impossible-combinations language is absent from current claims.", "evidence": "Prohibited-claim scan"},
+        {"id": "FOS-LAT-SCP-001-T-B01", "kind": "boundary", "assertion": "Historical red-team evidence remains unaltered and explicitly historical.", "evidence": "History-preservation diff"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "manual-review-not-claimed"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-GUI-001",
+      "title": "Field Guide bounded adoption",
+      "statement": "Seven Field Guide subjects must consume paired operative and interpretive outputs routed across technical, action, analysis, public-notice, and aftermath registers while retaining exact mechanics in the operative layer.",
+      "provenanceIds": ["PROV-001", "PROV-002"],
+      "priority": "mandatory",
+      "precedence": 2,
+      "dependencies": ["FOS-LAT-SEM-001", "FOS-LAT-LAY-001", "FOS-LAT-SEM-002"],
+      "conflicts": ["Calling the Field Guide a complete scoring specification"],
+      "owners": ["app/page.tsx", "app/latticeCopy.ts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-GUI-001-AC-01", "assertion": "missionCredit, scenarioAcceptance, uncrewedUndersea, commandTurns, strategicFit, modelBoundary, and missionLearning each render two generated layers."}],
+      "tests": [
+        {"id": "FOS-LAT-GUI-001-T-P01", "kind": "positive", "assertion": "All fourteen Field Guide output targets are used.", "evidence": "Source integration test"},
+        {"id": "FOS-LAT-GUI-001-T-N01", "kind": "negative", "assertion": "Hard-coded duplicate prose for an adopted section is rejected.", "evidence": "Source invariant"},
+        {"id": "FOS-LAT-GUI-001-T-B01", "kind": "boundary", "assertion": "Catalog tables and exact pairings remain outside the interpretive rewrite.", "evidence": "Inventory exemption assertion"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "browser-inventory-only"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-ACA-002",
+      "title": "Academy selected-surface adoption",
+      "statement": "Lattice output may replace only the Academy compare introduction, sources introduction, model boundary, independence status, and language-system explanation in this slice.",
+      "provenanceIds": ["PROV-001", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 2,
+      "dependencies": ["FOS-LAT-SEM-001", "FOS-LAT-LAY-001", "FOS-LAT-ACA-001"],
+      "conflicts": ["Representing the full Academy curriculum as transformed or reviewed"],
+      "owners": ["app/Academy.tsx", "app/latticeCopy.ts", "requirements/lattice-copy-inventory.json"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-ACA-002-AC-01", "assertion": "Exactly five selected Academy chrome outputs are consumed and curriculum content remains unchanged by compilation."}],
+      "tests": [
+        {"id": "FOS-LAT-ACA-002-T-P01", "kind": "positive", "assertion": "All five exact Academy keys render from generated copy.", "evidence": "Academy source test"},
+        {"id": "FOS-LAT-ACA-002-T-N01", "kind": "negative", "assertion": "No request owns a lesson answer or citation claim.", "evidence": "Inventory and request scan"},
+        {"id": "FOS-LAT-ACA-002-T-B01", "kind": "boundary", "assertion": "Compare user notes remain user-authored and untransformed.", "evidence": "Input boundary test"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "manual-review-not-claimed"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-DEB-001",
+      "title": "Debrief selected-surface adoption",
+      "statement": "Seven turn and outcome learning outputs must be routed through the three independent debrief units: consequential after-action interpretation, ambient pending status, and technical report copy.",
+      "provenanceIds": ["PROV-001", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 2,
+      "dependencies": ["FOS-LAT-LAY-001", "FOS-LAT-DOM-001", "FOS-LAT-DOM-002"],
+      "conflicts": ["One route shared across pending, report, and after-action meanings"],
+      "owners": ["app/kriegsspiel.ts", "app/CommandPanel.tsx", "app/ResultDebrief.tsx"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-DEB-001-AC-01", "assertion": "The seven exact learning keys are generated and selected by typed state."}],
+      "tests": [
+        {"id": "FOS-LAT-DEB-001-T-P01", "kind": "positive", "assertion": "Every supported learning state resolves a generated heading and summary.", "evidence": "Kriegsspiel test"},
+        {"id": "FOS-LAT-DEB-001-T-N01", "kind": "negative", "assertion": "Unknown or prose-inferred state cannot select a learning message.", "evidence": "Typed-code regression"},
+        {"id": "FOS-LAT-DEB-001-T-B01", "kind": "boundary", "assertion": "No-final-finding fallback avoids both blame and success claims.", "evidence": "Debrief fallback test"}
+      ],
+      "evidenceMethods": ["unit-test", "static-analysis", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-TRC-002",
+      "title": "Hashed source-symbol identity",
+      "statement": "The request source catalog must identify exactly 12 TypeScript declarations by contained repository path, declaration kind and name, and source digest; a digest proves identity only, not truth or approval.",
+      "provenanceIds": ["PROV-003", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 2,
+      "dependencies": ["FOS-LAT-EVI-001", "FOS-LAT-TRC-001"],
+      "conflicts": ["Path-only provenance", "Hash represented as semantic validation"],
+      "owners": ["authoring/lattice-copy.requests.json", "scripts/compile-lattice-copy.mjs", "scripts/verify-lattice-copy.mts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-TRC-002-AC-01", "assertion": "All referenced declarations exist in TypeScript AST and match their declared digests."}],
+      "tests": [
+        {"id": "FOS-LAT-TRC-002-T-P01", "kind": "positive", "assertion": "Exactly 12 catalog symbols resolve and hash correctly.", "evidence": "Source-catalog verifier"},
+        {"id": "FOS-LAT-TRC-002-T-N01", "kind": "negative", "assertion": "Path escape, symlink escape, missing declaration, or hash drift fails.", "evidence": "Source provenance mutations"},
+        {"id": "FOS-LAT-TRC-002-T-B01", "kind": "boundary", "assertion": "Two declarations in one file remain separately identified while sharing file containment.", "evidence": "AST declaration boundary test"}
+      ],
+      "evidenceMethods": ["static-analysis", "unit-test", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-GOV-002",
+      "title": "Closed governance schemas",
+      "statement": "The requirement register, copy inventory, authoring request, generated owner output, runtime output, evidence snapshot, and evidence index must use versioned closed schemas that reject unknown fields.",
+      "provenanceIds": ["PROV-004", "PROV-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": [],
+      "conflicts": ["Permissive metadata that bypasses verification"],
+      "owners": ["requirements", "authoring", "scripts"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-GOV-002-AC-01", "assertion": "Every governed object has additionalProperties false or an equivalent exact-key check."}],
+      "tests": [
+        {"id": "FOS-LAT-GOV-002-T-P01", "kind": "positive", "assertion": "Canonical governance and output documents validate.", "evidence": "Schema validation"},
+        {"id": "FOS-LAT-GOV-002-T-N01", "kind": "negative", "assertion": "Representative undeclared fields at owner and runtime object levels fail.", "evidence": "Representative unknown-field mutations"},
+        {"id": "FOS-LAT-GOV-002-T-B01", "kind": "boundary", "assertion": "Runtime v1 remains its explicitly bounded four-field schema while owner documents use v2.", "evidence": "Version-boundary assertion"}
+      ],
+      "evidenceMethods": ["schema-validation", "unit-test", "red-team-mutation"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-EVI-003",
+      "title": "Browser evidence is not overstated",
+      "statement": "Listing or compiling browser tests must not be described as executing browser assertions; documentation must state when compatible Chromium is unavailable.",
+      "provenanceIds": ["PROV-004", "PROV-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": [],
+      "conflicts": ["Browser inventory represented as live browser execution"],
+      "owners": ["README.md", "ACCESSIBILITY.md", "docs/red-team/2026-09-01-lattice-copy-pass.md"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-EVI-003-AC-01", "assertion": "Static/browser inventory evidence and executed-browser evidence remain separate."}],
+      "tests": [
+        {"id": "FOS-LAT-EVI-003-T-P01", "kind": "positive", "assertion": "Documentation labels the browser suite as listed when not executed.", "evidence": "Evidence-language scan"},
+        {"id": "FOS-LAT-EVI-003-T-N01", "kind": "negative", "assertion": "A passed-browser claim without an executed result is prohibited.", "evidence": "Completion-claim review"},
+        {"id": "FOS-LAT-EVI-003-T-B01", "kind": "boundary", "assertion": "Unit and build success may be reported independently of browser execution.", "evidence": "Evidence-category assertion"}
+      ],
+      "evidenceMethods": ["static-analysis", "browser-inventory-only", "manual-review-not-claimed"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-LAT-ACA-003",
+      "title": "Academy sourcing remains bounded",
+      "statement": "Selected Academy interface copy and curriculum-data lint must not be represented as a complete review of lesson accuracy, source coverage, citation quality, quiz validity, or learner comprehension.",
+      "provenanceIds": ["PROV-001", "PROV-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-LAT-ACA-001", "FOS-LAT-ACA-002"],
+      "conflicts": ["Full Academy sourcing or educational validation claim"],
+      "owners": ["README.md", "app/Academy.tsx", "docs/design/16-LATTICE-COPY-ARCHITECTURE.md"],
+      "acceptanceCriteria": [{"id": "FOS-LAT-ACA-003-AC-01", "assertion": "Current documentation identifies the selected UI copy and advisory lint scope and names unverified educational questions."}],
+      "tests": [
+        {"id": "FOS-LAT-ACA-003-T-P01", "kind": "positive", "assertion": "The Academy scope statement is bounded to five outputs and advisory curriculum-data lint.", "evidence": "Documentation assertion"},
+        {"id": "FOS-LAT-ACA-003-T-N01", "kind": "negative", "assertion": "Comprehensive, approved, or fully sourced Academy language is prohibited.", "evidence": "Claim scan"},
+        {"id": "FOS-LAT-ACA-003-T-B01", "kind": "boundary", "assertion": "Existing reading lists may be described without claiming the lint authenticated them.", "evidence": "Scope-boundary review"}
+      ],
+      "evidenceMethods": ["static-analysis", "manual-review-not-claimed", "unit-test"],
+      "status": "implemented",
+      "supersedes": [],
+      "supersession": null
+    }
+  ]
+}

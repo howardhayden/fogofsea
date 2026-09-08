@@ -106,8 +106,8 @@ export default function StrategicDecisionFlow(props: StrategicDecisionFlowProps)
         <dl>
           <div><dt>Friendly method</dt><dd>{FLEET_METHOD_LABELS[props.operationalStrategy.friendlyMethod]}</dd></div>
           <div><dt>Friendly posture</dt><dd>{POSTURE_LABELS[props.operationalStrategy.friendlyPosture]}</dd></div>
-          <div><dt>Assessed opposing method</dt><dd>{FLEET_METHOD_LABELS[props.operationalStrategy.opposingMethod]}</dd></div>
-          <div><dt>Assessed opposing posture</dt><dd>{POSTURE_LABELS[props.operationalStrategy.opposingPosture]}</dd></div>
+          <div><dt>Opposing method</dt><dd>Not confirmed; test reasonable alternatives during command.</dd></div>
+          <div><dt>Opposing posture</dt><dd>Not confirmed; do not treat the planning frame as intent.</dd></div>
           <div><dt>Environment-suited uncrewed method</dt><dd>{UNCREWED_DOCTRINE_OPTIONS.find((item) => item.value === props.operationalStrategy.recommendedUncrewed)?.label}</dd></div>
           <div><dt>Environment-suited undersea method</dt><dd>{UNDERSEA_DOCTRINE_OPTIONS.find((item) => item.value === props.operationalStrategy.recommendedUndersea)?.label}</dd></div>
         </dl>

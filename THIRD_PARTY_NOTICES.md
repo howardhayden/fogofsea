@@ -28,6 +28,8 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 | @types/three | 0.179.0 | development | MIT | <https://www.npmjs.com/package/%40types%2Fthree> |
 | @typescript-eslint/parser | 8.66.0 | development | MIT | <https://www.npmjs.com/package/%40typescript-eslint%2Fparser> |
 | @vitejs/plugin-react | 5.2.0 | development | MIT | <https://www.npmjs.com/package/%40vitejs%2Fplugin-react> |
+| ajv | 6.15.0 | development | MIT | <https://www.npmjs.com/package/ajv> |
+| ajv | 8.17.1 | development | MIT | <https://www.npmjs.com/package/ajv> |
 | astronomy-engine | 2.1.19 | runtime | MIT | <https://www.npmjs.com/package/astronomy-engine> |
 | eslint | 9.39.4 | development | MIT | <https://www.npmjs.com/package/eslint> |
 | eslint-plugin-react-hooks | 7.1.1 | development | MIT | <https://www.npmjs.com/package/eslint-plugin-react-hooks> |
@@ -79,6 +81,7 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 
 - @webgpu/types@0.1.71 — development
 - esquery@1.7.0 — development
+- fast-uri@3.1.7 — development
 - source-map-js@1.2.1 — development
 
 ### CC-BY-4.0
@@ -206,6 +209,7 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 - acorn@8.16.0 — development
 - acorn-jsx@5.3.2 — development
 - ajv@6.15.0 — development
+- ajv@8.17.1 — development
 - ansi-styles@4.3.0 — development
 - astronomy-engine@2.1.19 — runtime
 - balanced-match@1.0.2 — development
@@ -253,6 +257,7 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 - jsesc@3.1.0 — development
 - json-buffer@3.0.1 — development
 - json-schema-traverse@0.4.1 — development
+- json-schema-traverse@1.0.0 — development
 - json-stable-stringify-without-jsonify@1.0.1 — development
 - json5@2.2.3 — development
 - keyv@4.5.4 — development
@@ -278,6 +283,7 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 - react@19.2.6 — runtime
 - react-dom@19.2.6 — runtime
 - react-refresh@0.18.0 — development
+- require-from-string@2.0.2 — development
 - resolve-from@4.0.0 — development
 - rollup@4.62.4 — development
 - scheduler@0.27.0 — runtime

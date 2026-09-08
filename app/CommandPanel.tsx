@@ -10,20 +10,13 @@ import {
   TEMPO_OPTIONS,
   UNDERSEA_DOCTRINE_OPTIONS,
   UNCREWED_DOCTRINE_OPTIONS,
+  outcomeLearningAssessment,
   turnLearningNote,
   type RigidGameState,
   type RigidOrders,
 } from "./kriegsspiel";
 import { FLEET_METHOD_LABELS, POSTURE_LABELS, type OperationalStrategy } from "./operationalStrategy";
-import TurnSituationPanel, {
-  type SituationObjective,
-  type TurnSituationEvent,
-} from "./TurnSituationPanel";
-import {
-  canDiscloseOpposingImpact,
-  publicKnowledgeForDisruption,
-  type ContactVisibility,
-} from "./contactVisualization";
+import { COMMAND_ORDERS_FORM_ID } from "./CommandIntelligencePanel";
 
 type CommandPanelProps = {
   state: RigidGameState;
@@ -33,8 +26,6 @@ type CommandPanelProps = {
   headingRef: RefObject<HTMLHeadingElement | null>;
   planningRecap: ReactNode;
   operationalStrategy: OperationalStrategy;
-  adversaryCount: number;
-  contactVisibility: ContactVisibility;
   onOrdersChange: (value: Partial<RigidOrders>) => void;
   onResolve: () => void;
   onUndo: () => void;
@@ -70,53 +61,18 @@ export default function CommandPanel({
   headingRef,
   planningRecap,
   operationalStrategy,
-  adversaryCount,
-  contactVisibility,
   onOrdersChange,
   onResolve,
   onUndo,
   onReturn,
 }: CommandPanelProps) {
   const latestReport = state.reports.at(-1);
-  const displayTurn = Math.min(state.maxTurns, state.turn + 1);
-  const matrix = state.matrix;
-  const situationEvents: TurnSituationEvent[] = (matrix?.activeDisruptions ?? []).map((event) => ({
-    id: event.id,
-    kind: event.kind,
-    severity: event.severity,
-    headline: event.headline,
-    description: event.description,
-    startsTurn: event.startsTurn,
-    endsTurn: event.endsTurn,
-    knowledge: publicKnowledgeForDisruption(event, state.contactQuality, contactVisibility),
-    impacts: (state.disruptionImpacts ?? []).filter((impact) => impact.disruptionId === event.id).map((impact) => ({
-      id: impact.id,
-      side: impact.side,
-      kind: impact.domain === "air" ? "aircraft" : impact.domain === "subsurface" ? "submarine" : impact.domain === "surface" ? "vessel" : impact.domain === "mission-pack" ? "mission-pack" : "capability",
-      label: impact.label,
-      quantity: impact.quantity,
-      status: impact.status,
-      unavailableThroughTurn: impact.unavailableThroughTurn,
-      capabilitiesUnavailable: impact.capabilitiesUnavailable,
-      knowledge: impact.side === "opposing-force"
-        && !canDiscloseOpposingImpact(impact.domain, state.contactQuality, contactVisibility)
-        ? "concealed"
-        : impact.knowledge,
-    })),
-  }));
-  const objectives: SituationObjective[] = [
-    { id: "primary", kind: "primary", label: "Primary mission objective", status: state.objectiveProgress >= 100 ? "complete" : "active", progress: state.objectiveProgress, revealedTurn: 1 },
-    ...(matrix?.activeSecondaryObjective && displayTurn >= matrix.activeSecondaryObjective.revealTurn ? [{
-      id: matrix.activeSecondaryObjective.id,
-      kind: "secondary" as const,
-      label: matrix.activeSecondaryObjective.label,
-      status: (state.secondaryObjectiveProgress ?? 0) >= 100 ? "complete" as const : "active" as const,
-      progress: state.secondaryObjectiveProgress ?? 0,
-      revealedTurn: matrix.activeSecondaryObjective.revealTurn,
-    }] : []),
-  ];
+  const pendingReview = outcomeLearningAssessment(state);
   return (
-    <section className="kriegsspiel-panel" aria-labelledby="rigid-turn-heading">
+    <form id={COMMAND_ORDERS_FORM_ID} className="kriegsspiel-panel" aria-labelledby="rigid-turn-heading" onSubmit={(event) => {
+      event.preventDefault();
+      onResolve();
+    }}>
       <div className="kriegsspiel-header">
         <div>
           <span className="kriegsspiel-kicker">COMMAND</span>
@@ -125,40 +81,22 @@ export default function CommandPanel({
         <span className="kriegsspiel-meta">{state.turn < 2 ? "APPROACH & CLASSIFICATION" : state.turn < 4 ? "CONTEST & MANOEUVRE" : "DECISION & TRANSITION"}</span>
       </div>
 
-      <dl className="kriegsspiel-grid" aria-label={`State at the start of turn ${state.turn + 1}`}>
-        <div className="kriegsspiel-row"><dt className="kriegsspiel-label">RANGE</dt><dd className="kriegsspiel-value">{state.rangeNm} invented nm</dd></div>
-        <div className="kriegsspiel-row"><dt className="kriegsspiel-label">CONTACT QUALITY</dt><dd className="kriegsspiel-value">{state.contactQuality}/100</dd></div>
-        <div className="kriegsspiel-row"><dt className="kriegsspiel-label">FORCE INTEGRITY</dt><dd className="kriegsspiel-value">{state.integrity}/100</dd></div>
-        <div className="kriegsspiel-row"><dt className="kriegsspiel-label">COMMAND READINESS</dt><dd className="kriegsspiel-value">{state.readiness}/100</dd></div>
-        <div className="kriegsspiel-row"><dt className="kriegsspiel-label">SUPPLY</dt><dd className="kriegsspiel-value">{state.supply}/100</dd></div>
-        <div className="kriegsspiel-row"><dt className="kriegsspiel-label">OBJECTIVE PROGRESS</dt><dd className="kriegsspiel-value">{state.objectiveProgress}/100</dd></div>
-        <div className="kriegsspiel-row"><dt className="kriegsspiel-label">ESCALATION</dt><dd className="kriegsspiel-value">{state.escalation}/100</dd></div>
-      </dl>
-
-      {matrix && (
-        <TurnSituationPanel
-          id="command-situation"
-          turn={displayTurn}
-          maxTurns={state.maxTurns}
-          events={situationEvents}
-          objectives={objectives}
-        />
-      )}
+      <section id="pending-review" className={`result-learning ${pendingReview.kind}`} aria-labelledby="pending-review-title">
+        <h3 id="pending-review-title">{pendingReview.heading}</h3>
+        <p>{pendingReview.summary}</p>
+      </section>
 
       <details className="kriegsspiel-report operational-frame">
-        <summary>OPERATIONAL FRAME</summary>
+        <summary>FRIENDLY OPERATING FRAME</summary>
         <dl>
           <div><dt>Friendly method</dt><dd>{FLEET_METHOD_LABELS[operationalStrategy.friendlyMethod]}</dd></div>
           <div><dt>Friendly posture</dt><dd>{POSTURE_LABELS[operationalStrategy.friendlyPosture]}</dd></div>
-          <div><dt>Assessed opposing method</dt><dd>{FLEET_METHOD_LABELS[operationalStrategy.opposingMethod]}</dd></div>
-          <div><dt>Assessed opposing posture</dt><dd>{POSTURE_LABELS[operationalStrategy.opposingPosture]}</dd></div>
-          <div><dt>Distinct opposing actors</dt><dd>{adversaryCount}</dd></div>
         </dl>
         <ul>{operationalStrategy.environmentEffects.map((effect) => <li key={effect}>{effect}</li>)}</ul>
       </details>
 
       {latestReport && (
-        <details className="kriegsspiel-report">
+        <details id="last-turn-learning" className="kriegsspiel-report">
           <summary>LAST TURN · {latestReport.turn}</summary>
           <p>{latestReport.contactReport}</p>
           <p><b>CHANGE</b> contact {latestReport.delta.contactQuality > 0 ? "+" : ""}{latestReport.delta.contactQuality}; integrity {latestReport.delta.integrity > 0 ? "+" : ""}{latestReport.delta.integrity}; supply {latestReport.delta.supply > 0 ? "+" : ""}{latestReport.delta.supply}; objective {latestReport.delta.objectiveProgress > 0 ? "+" : ""}{latestReport.delta.objectiveProgress}; escalation {latestReport.delta.escalation > 0 ? "+" : ""}{latestReport.delta.escalation}.</p>
@@ -184,11 +122,11 @@ export default function CommandPanel({
       </div>
 
       <div className="kriegsspiel-actions">
-        <button type="button" className="resolve-turn" onClick={onResolve}>RESOLVE TURN {state.turn + 1}</button>
+        <button type="submit" className="resolve-turn">RESOLVE TURN {state.turn + 1}</button>
         {state.reports.length > 0 && <button type="button" onClick={onUndo}>UNDO LAST TURN</button>}
         <button type="button" onClick={onReturn}>END &amp; RETURN TO PLANNING</button>
       </div>
       {planningRecap}
-    </section>
+    </form>
   );
 }

@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "fog-of-sea.lattice-copy.index.v2",
+  "current": {
+    "snapshotId": "lattice-copy-f53d8019c0cb50735751c7f8",
+    "path": "evidence/lattice/current.json",
+    "sha256": "046f871e10eb22a0481f1c523cabb6bf840e3703ef666e1b6784674262053847"
+  },
+  "entries": [
+    {
+      "snapshotId": "lattice-copy-f53d8019c0cb50735751c7f8",
+      "evidencePath": "evidence/lattice/current.json",
+      "evidenceSha256": "046f871e10eb22a0481f1c523cabb6bf840e3703ef666e1b6784674262053847",
+      "generatedPath": "app/generated/lattice-copy.json",
+      "generatedSha256": "179eea117cabf95fcb165232f3436f0fdac8538748ce44d4581aa886faea7ae7",
+      "runtimePath": "app/generated/lattice-copy.runtime.json",
+      "runtimeSha256": "c0425a1f5aad2bdad8a3556d36514900479ed842157bba6a6650abba5eb01768",
+      "requestSha256": "0cc9ad480234c8ab0270612a4d9f5929c1ea5092ce7a8ee664342220b6cc7d86",
+      "academySourceSha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41",
+      "academyCorpusSha256": "340e3f88ac6a8b8e6d5731d6d5ca007333f266526b43203e50b0d780c8dd755b",
+      "academyLintSha256": "97ea9734510b064215bdd7e69835dca8e5faa466126fa09ddb66951e0580093a",
+      "traceabilitySha256": "189941935c3749ce7b1ddc92f6e66c71e2ca3566a6351a0a91d7cbeee5c18934",
+      "realizationSha256": "3867949568ac0d05a18563ca465242de6ebdce4ef70ff8efb0b885ef63280a5d",
+      "copySha256": "9d796bb2e8761e7287b8a11914459a95e1927ff2eeed829d18e7bcc44e179f57",
+      "conformance": "degraded",
+      "humanReviewStatus": "not-claimed",
+      "engineVersion": "0.1.1",
+      "profileVersion": "v1.0.0",
+      "profileDigest": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a",
+      "implementationAuthority": {
+        "format": "fog-of-sea.lattice-implementation-authority.v1",
+        "algorithm": "sha256-stable-json-v1",
+        "files": [
+          {
+            "path": "package-lock.json",
+            "sha256": "75870267a43b0d80f661dd762dfc64cea98e2ed5522e6b33a6bd4ee5582c8bb7"
+          },
+          {
+            "path": "package.json",
+            "sha256": "02195046f49b59e0ef6b949731fbcfc754b618abd31bd45d810add6d04297a1a"
+          },
+          {
+            "path": "requirements/lattice-adoption.schema.json",
+            "sha256": "6bee0b26685f6b6348a388f9dbf0b9331c5005c64e14f113cd2339d1b0ea313d"
+          },
+          {
+            "path": "requirements/lattice-copy-inventory.schema.json",
+            "sha256": "d069dce6756e75b825779c1348460b834474da6561e0b938530ebdfc67dcbaf1"
+          },
+          {
+            "path": "schemas/lattice-copy-evidence.schema.json",
+            "sha256": "ea7092d776085ec4615f218e7383b85a9a5269660f3428a3f24947bdef4b5d1c"
+          },
+          {
+            "path": "schemas/lattice-copy-generated.schema.json",
+            "sha256": "50d189547174517f7d86c30543f94a89b5532f94f92dafaec2da4b24af962dbf"
+          },
+          {
+            "path": "schemas/lattice-copy-index.schema.json",
+            "sha256": "267f1e07f6b1be3e4847fff961cc7d9096f630548ffd9a5a1bff2900229ad839"
+          },
+          {
+            "path": "schemas/lattice-copy-requests.schema.json",
+            "sha256": "e8f6f0aa40b5348613e0305a11964fa75f3d9ca8f27f8dc4e8f8825ac3d397d8"
+          },
+          {
+            "path": "schemas/lattice-copy-runtime.schema.json",
+            "sha256": "866838a2fbb82cc077143ff308a44899d09514b9a402ec5b0c3695a6b14ce201"
+          },
+          {
+            "path": "scripts/compile-lattice-copy.mjs",
+            "sha256": "0db54206fd53ddf6264f03439f64dfea599eced14a65a375c01f0b260a309224"
+          },
+          {
+            "path": "scripts/lattice-copy-corpus.mjs",
+            "sha256": "e88542c76bdce286993bf65871b38cc1ceb887abaeeba109517880cc9e325703"
+          },
+          {
+            "path": "scripts/validate-lattice-schemas.d.mts",
+            "sha256": "97f98f88847e402ef4d4d14a1fd3fa2936de452eaeb36a6579cd600c4f493219"
+          },
+          {
+            "path": "scripts/validate-lattice-schemas.mjs",
+            "sha256": "a325f1e826b9dd1ebadde4a15fa4b9ea4be2f75d7dece7bef43b3318ed7951d5"
+          },
+          {
+            "path": "scripts/verify-lattice-copy.mts",
+            "sha256": "04685547c726465cc7d67a8f6cff6712a595aa99750bacb9e38235c7e5636605"
+          }
+        ],
+        "sha256": "3fd99c5be8006fb734a5df535c980f7299fddc8a85e59df8c273cd0b2a6c7504"
+      }
+    }
+  ]
+}

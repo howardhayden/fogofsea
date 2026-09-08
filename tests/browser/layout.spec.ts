@@ -74,7 +74,7 @@ test("one canonical glass source owns every occupied app surface", () => {
     ".sky-readout-toggle", ".save-indicator", ".global-tools-menu > nav",
     ".field-guide", ".data-dialog", ".privacy-gate", ".credits-dialog",
     ".confirm-dialog", ".academy", ".sound-settings section",
-    ".kriegsspiel-panel", ".kriegsspiel-report", ".turn-situation-panel",
+    ".kriegsspiel-panel", ".command-intelligence-panel", ".kriegsspiel-report", ".turn-situation-panel",
     ".planning-recap", ".result-card",
   ]) expect(selectors, `${selector} consumes the canonical material`).toContain(selector);
   expect(declaration).toContain("background: var(--glass-surface-background)");

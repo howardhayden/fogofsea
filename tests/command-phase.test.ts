@@ -8,8 +8,15 @@ import {
   undoCommandTransition,
   type CommandDecisionSnapshot,
 } from "../app/commandPhase";
+import { adversaryAssessmentOptions } from "../app/commandIntelligence";
 import { generateScenario } from "../app/gameModel";
-import { DEFAULT_RIGID_ORDERS, type RigidGameState, type RigidOrders, type RigidReadiness } from "../app/kriegsspiel";
+import {
+  ADVERSARY_INTENT_ASSUMPTIONS,
+  DEFAULT_RIGID_ORDERS,
+  type RigidGameState,
+  type RigidOrders,
+  type RigidReadiness,
+} from "../app/kriegsspiel";
 
 const scenario = generateScenario(0, () => 0.31);
 const readiness: RigidReadiness = {
@@ -69,7 +76,14 @@ function ordersForTurn(index: number): RigidOrders {
     { formation: "concentrated-screen", sensors: "passive-search", tempo: "measured-advance", engagement: "contain", task },
     { formation: "concentrated-screen", sensors: "passive-search", tempo: "measured-advance", engagement: "contain", task: "reconnaissance" },
   ];
-  return orders[index];
+  return index === 0 ? orders[index] : {
+    ...orders[index],
+    adversaryAssessment: {
+      intent: "insufficient-evidence",
+      observedPattern: "insufficient-evidence",
+      nextAction: "insufficient-evidence",
+    },
+  };
 }
 
 function start() {
@@ -173,6 +187,55 @@ test("resolve transition creates exactly one coherent immutable decision record 
   assert.notEqual(first.record.rigidTurns?.[0], first.state.reports[0]);
   assert.notEqual(first.record.notes, first.outcome.notes);
 
+  const recordTurns = first.record.rigidTurns;
+  assert.ok(recordTurns);
+
+  const assessedTurnIndex = recordTurns.findIndex((report) => report.orders.adversaryAssessment !== undefined);
+  assert.notEqual(assessedTurnIndex, -1, "the fixture must include a committed adversary assessment");
+  const recordAssessment = recordTurns[assessedTurnIndex].orders.adversaryAssessment;
+  const stateAssessment = first.state.reports[assessedTurnIndex].orders.adversaryAssessment;
+  assert.ok(recordAssessment);
+  assert.ok(stateAssessment);
+  assert.notEqual(recordAssessment, stateAssessment);
+  const stateIntent = stateAssessment.intent;
+  recordAssessment.intent = "preserve-freedom";
+  assert.equal(stateAssessment.intent, stateIntent, "mutating the record assessment must not alter command state");
+
+  const recordAction = recordTurns[0].adversaryActions?.[0];
+  const stateAction = first.state.reports[0].adversaryActions?.[0];
+  assert.ok(recordAction);
+  assert.ok(stateAction);
+  assert.notEqual(recordAction, stateAction);
+  assert.notEqual(recordAction.domains, stateAction.domains);
+  const stateActionDomains = [...stateAction.domains];
+  recordAction.domains[0] = recordAction.domains[0] === "air" ? "surface" : "air";
+  assert.deepEqual(stateAction.domains, stateActionDomains, "mutating record action domains must not alter command state");
+
+  const inflictionTurnIndex = recordTurns.findIndex((report) => (report.inflictions?.length ?? 0) > 0);
+  assert.notEqual(inflictionTurnIndex, -1, "the fixture must include a modeled infliction");
+  const recordInfliction = recordTurns[inflictionTurnIndex].inflictions?.[0];
+  const stateInfliction = first.state.reports[inflictionTurnIndex].inflictions?.[0];
+  assert.ok(recordInfliction);
+  assert.ok(stateInfliction);
+  assert.notEqual(recordInfliction, stateInfliction);
+  assert.notEqual(recordInfliction.domains, stateInfliction.domains);
+  const stateInflictionDomains = [...stateInfliction.domains];
+  recordInfliction.domains[0] = recordInfliction.domains[0] === "subsurface" ? "surface" : "subsurface";
+  assert.deepEqual(stateInfliction.domains, stateInflictionDomains, "mutating record infliction domains must not alter command state");
+
+  const recordObservationDomains = recordTurns[0].observationDomains;
+  const stateObservationDomains = first.state.reports[0].observationDomains;
+  assert.ok(recordObservationDomains);
+  assert.ok(stateObservationDomains);
+  assert.notEqual(recordObservationDomains, stateObservationDomains);
+  const originalStateObservationDomains = [...stateObservationDomains];
+  recordObservationDomains[0] = recordObservationDomains[0] === "surface" ? "air" : "surface";
+  assert.deepEqual(
+    stateObservationDomains,
+    originalStateObservationDomains,
+    "mutating record observation domains must not alter command state",
+  );
+
   assert.equal(resolveCommandTransition({
     scenario,
     difficulty: "standard",
@@ -191,6 +254,46 @@ test("resolve transition creates exactly one coherent immutable decision record 
     decision,
     recordedAt,
   }), null, "a missing command state is a no-op");
+});
+
+test("turns after the first reject missing, incomplete, or unavailable adversary assessments", () => {
+  const first = resolveFrom(start().state, 0);
+  assert.ok(first);
+
+  const resolveWith = (orders: RigidOrders) => resolveCommandTransition({
+    scenario,
+    difficulty: "standard",
+    readiness,
+    orders,
+    state: first.state,
+    decision,
+    recordedAt,
+  });
+
+  assert.equal(resolveWith({ ...ordersForTurn(1), adversaryAssessment: undefined }), null);
+  assert.equal(resolveWith({
+    ...ordersForTurn(1),
+    adversaryAssessment: {
+      intent: "insufficient-evidence",
+      observedPattern: "insufficient-evidence",
+    },
+  }), null);
+
+  const options = adversaryAssessmentOptions(first.state);
+  const unavailableIntent = ADVERSARY_INTENT_ASSUMPTIONS.find(
+    (value) => !options.intent.some((option) => option.value === value),
+  );
+  assert.ok(unavailableIntent);
+  assert.equal(resolveWith({
+    ...ordersForTurn(1),
+    adversaryAssessment: {
+      intent: unavailableIntent,
+      observedPattern: options.observedPattern[0].value,
+      nextAction: options.nextAction[0].value,
+    },
+  }), null);
+
+  assert.ok(resolveWith(ordersForTurn(1)));
 });
 
 test("undo transition reverses an active or completed turn and signals history removal", () => {

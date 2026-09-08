@@ -71,9 +71,11 @@ Selecting a value advances focus to the next select. The second theory cannot du
 
 Live gameplay copy stays economical: it names the current state and one useful
 repair. Model boundaries, privacy, security, persistence, scoring detail, and
-the complete mission-credit explanation are progressive Field Guide content or
+the bounded mission-credit explanation are progressive Field Guide content or
 linked player documentation. After resolution, the debrief gives a supported
-adjustment or explicitly says that no clear mistake was indicated.
+adjustment for each recorded final finding or says only that no tracked turn
+mismatch or final finding was recorded. That absence is not proof that every
+requirement was met.
 
 ### 4.4 Optional writing
 
@@ -154,25 +156,69 @@ The focusable **Greet a visible animal** action cycles through currently visible
 
 ### 7.6 Progressive information load
 
-FOG OF SEA follows an **essential state → next action → explanation on request** sequence. Scenario identity, current conditions, current decision, turn state, and the next required control remain visible. Mission prose, reference catalogs, method explanations, previous-turn summaries, detailed score components, Academy lesson bodies, concepts, seminar prompts, and reading trails begin in closed native disclosures. Opening a disclosure never changes simulation state; it only exposes explanatory text. Internal probability ranges, committed draws, matrix notes, and validation machinery do not appear in ordinary turn play. Plain-language explanations live in the Field Guide and its bundled player documents. After resolution, one learning note distinguishes a correctable pattern from an unfavorable result with no clear mistake indicated. Detailed findings open only when they provide a supported recovery path; breakdowns and history remain opt-in.
+FOG OF SEA follows an **essential state → next action → explanation on request** sequence. Scenario identity, current conditions, current decision, turn state, and the next required control remain visible. Mission prose, reference catalogs, method explanations, previous-turn summaries, detailed score components, Academy lesson bodies, concepts, seminar prompts, and reading trails begin in closed native disclosures. Opening a disclosure never changes simulation state; it only exposes explanatory text. Internal probability ranges, committed draws, matrix notes, and validation machinery do not appear in ordinary turn play. Plain-language explanations live in the Field Guide and its bundled player documents. After resolution, one learning note distinguishes a tracked mismatch, a committed matrix failure, and the absence of a tracked mismatch. Detailed findings open only when they provide a supported recovery path; breakdowns and history remain opt-in. No-finding copy avoids both invented blame and unsupported success claims.
 
 This rule applies at every viewport. Compact layouts may reposition or mutually exclude overlays, but they may not force explanatory text open, hide the next action, or replace semantic `details`/`summary` behavior with a pointer-only affordance.
 Selecting a compact workspace or global-tool destination is atomic: update the active view or open the requested dialog, close the menu, remove its occupied drawer from layout and hit testing, then move focus into the chosen region. The open chooser is a full-width, scrollable two-tier drawer directly beneath the status bar; large workspace and tool tiles plus a neutral dismiss scrim prevent live workspace text from competing with navigation labels. Visualization remains an explicit destination during command review rather than being masked by the command form, while Academy, Save / Load, Field Guide, Credits, and Sound Settings remain directly reachable on narrow screens. A closed menu has no painted box and cannot intercept input.
 
 ## 8. Command interaction
 
-Each of six turns presents:
+Each of six turns presents the current strike-group indices and orders. On
+wide layouts, command intelligence occupies the matching left-side glass
+surface and the orders form remains on the right; neither surface paints its
+positioning wrapper. On layouts at or below 760 CSS pixels, the tactical
+workspace becomes the single vertical scroll owner and places intelligence
+before orders. The mobile path contains the same content and controls rather
+than a reduced summary.
+
+The intelligence surface separates three kinds of information:
+
+- **Absolutely known** contains the current invented range, contact, force,
+  supply, objective, and escalation indices plus only opposing actions whose
+  typed confirmation rule has been met. It never infers intent from an effect.
+- **Potentials · staff judgment** appears from Turn 2 through Turn 6. Before
+  Resolve, the player must choose one bounded aggregate-opposition hypothesis
+  for intent, one for observable pattern, and one for likely next action. Each
+  native select includes an explicit insufficient-evidence option. These
+  selections are recorded for reflection and never enter adjudication.
+- **Log** keeps Immediate visible and History in a native disclosure.
+  Immediate includes the latest absolutely known opposing action and the
+  current turn's known inflictions and discoveries. History includes every
+  resolved turn, even an empty one, and groups each fact under the turn when it
+  occurred. A later confirmation is nested there as **Discovered during Turn
+  N** rather than moved to its discovery turn.
+
+The hypothesis menu is derived only from the player-visible state, observed
+metric changes, and already disclosed inflictions. Hidden actor count,
+committed future events, actual concealed actions, and matrix truth cannot
+change its membership or ordering. The selectors discuss the opposition in
+aggregate so their number does not disclose whether the scenario contains one
+or several concealed actors.
+
+Each turn's orders include:
 
 - range, contact, integrity, readiness, supply, objective, and escalation;
 - current disruptions and objectives;
 - a concise previous-turn outcome and metric changes;
 - formation, sensor policy, tempo, engagement posture, uncrewed employment, undersea employment, risk treatment, coordination, strategic-force policy, and assigned warfare task.
 
-Every select is paired with a short explanatory note. Resolve applies one deterministic transition. The player sees its consequences, not its implementation trace; deeper rules are available from the Field Guide.
+Every select is paired with a short explanatory note. Turn 1 establishes the
+baseline without an adversary-assessment gate. From Turn 2 onward, native form
+validation and the typed transition boundary both require all three current
+staff judgments. Resolve applies one deterministic transition. The player
+sees its consequences, not its implementation trace; deeper rules are
+available from the Field Guide. After a nonfinal resolution, focus moves to
+the intelligence heading so the newly available picture precedes the next
+orders in keyboard and screen-reader use.
 
 ### Undo
 
-Undo restores exactly one previous turn state. Repeating identical orders produces the same result. Undo is for learning and correction, not rerolling.
+Undo restores exactly one previous turn state and removes that undone turn
+from the active-branch log. It cannot erase what a person already saw.
+Repeating identical orders produces the same result. Undo is for learning and
+correction, not rerolling. Resolve, Undo, Retry, and Return to Planning clear
+the pending three-part assessment so a judgment is never silently carried into
+another decision point.
 
 ### End and return
 
@@ -184,7 +230,9 @@ The debrief leads with outcome, score, and explicit thresholds. It then presents
 
 - component scores;
 - Cause → Evidence → Adjustment findings;
-- a complete expandable turn timeline;
+- a complete expandable as-known turn timeline, including recorded staff
+  judgments and occurrence-turn/discovery-turn groupings without raw hidden
+  matrix notes;
 - related Academy lessons;
 - Undo Final Turn, Retry Same Scenario, Return to Planning, and New Scenario.
 
@@ -216,11 +264,22 @@ The review region is focusable and supports Page Up, Page Down, Home, and End. W
 
 ### TXT export
 
-Download produces a readable decision record followed by a versioned machine block. If command is active, unrevealed commitments remain in an encoded payload. Encoding is labelled as not encryption.
+Download produces a readable decision record followed by a versioned machine
+block. Version 4 stores typed opposing actions, inflictions, observation
+domains, and staff judgments; display prose is regenerated on import. The
+readable portion contains only the as-known intelligence log. If command is
+active, unrevealed commitments remain in an encoded payload. Encoding is
+labelled as not encryption.
 
 ### TXT import
 
-The file chooser accepts plain text. The app rejects oversized, malformed, unknown, noncanonical, or tampered current state and retains the current safe session. A successful import restores the saved phase and moves focus there.
+The file chooser accepts plain text. The app rejects oversized, malformed,
+unknown, noncanonical, or tampered current state—including stripped or changed
+typed intelligence—and retains the current safe session. Pending partial staff
+judgments may restore only when every selected value remains within the
+current public option set. Supported version-3 command transcripts migrate to
+the version-2 typed rigid-state model without deriving facts from stored
+prose. A successful import restores the saved phase and moves focus there.
 
 ## 12. Global utilities
 
@@ -230,7 +289,7 @@ The file chooser accepts plain text. The app rejects oversized, malformed, unkno
 | Sound | Opens named volume controls; user gesture initializes audio; mute is explicit |
 | Field Guide | Modal reference organized around rules and player questions |
 | Credits | Modal provenance, independence, licenses, and evidence limits |
-| New Game | Confirmation before displacement; creates new validated scenario |
+| New Game | Confirmation before displacement; creates a new scenario that passes the implemented structured coexistence checks |
 | Tools | Compact menu exposes equivalent global actions, closes with Escape/outside action |
 
 ## 13. Error and recovery model

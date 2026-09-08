@@ -5,6 +5,7 @@ import {
   isRigidGameState,
   outcomeLearningAssessment,
   resolveRigidTurn,
+  RIGID_TURN_DIAGNOSTIC_CODES,
   secondaryObjectiveThreshold,
   turnLearningNote,
   undoRigidTurn,
@@ -84,6 +85,33 @@ test("secondary objective thresholds are centralized by difficulty", () => {
   assert.equal(secondaryObjectiveThreshold("guided"), 25);
   assert.equal(secondaryObjectiveThreshold("standard"), 34);
   assert.equal(secondaryObjectiveThreshold("challenge"), 40);
+});
+
+test("an early terminal state is not scored or explained against an unrevealed secondary objective", () => {
+  let generated = generateScenario(0, () => 0.31);
+  for (let previousId = 1; previousId < 200 && (!generated.matrix?.secondaryObjective || generated.matrix.secondaryObjective.revealTurn <= 1); previousId += 1) {
+    generated = generateScenario(previousId, () => 0.31);
+  }
+  assert.ok(generated.matrix?.secondaryObjective);
+  assert.ok(generated.matrix.secondaryObjective.revealTurn > 1);
+  const early = {
+    ...createInitialRigidState(weakReadiness, { ...generated, difficulty: "challenge" }),
+    integrity: 0,
+    supply: 0,
+  };
+  const terminal = resolveRigidTurn(early, {
+    formation: "concentrated-screen",
+    sensors: "passive-search",
+    tempo: "hold",
+    engagement: "avoid",
+    task: generated.required[0],
+  }, weakReadiness, { ...generated, difficulty: "challenge" });
+
+  assert.equal(terminal.phase, "complete");
+  assert.equal(terminal.turn, 1);
+  assert.ok(terminal.outcome);
+  assert.ok(terminal.outcome.notes.every((note) => !/revealed secondary objective/i.test(note)));
+  assert.ok(terminal.outcome.findings.every((finding) => !/secondary objective/i.test(finding.evidence)));
 });
 
 function play(readiness: RigidReadiness, orders = winningOrders, gameScenario = scenario) {
@@ -175,6 +203,7 @@ test("post-resolution learning distinguishes mistakes from unfavorable uncertain
   } as RigidOrders)));
   assert.equal(outcomeLearningAssessment(weakFinal).kind, "adjustment");
   assert.equal(turnLearningNote(weakFinal.reports[0]).kind, "adjustment");
+  assert.ok(weakFinal.reports[0].diagnosticCodes?.includes("task-mismatch"));
 
   const coherent = play(strongReadiness);
   const adverseReports = coherent.reports.map((report, index) => index === 0 ? {
@@ -184,16 +213,56 @@ test("post-resolution learning distinguishes mistakes from unfavorable uncertain
       components: [],
       ultimate: { key: "ultimate" as const, label: "Ultimate mission matrix", range: [45, 65] as const, committedChance: 55, draw: 90, result: "failure" as const },
     },
-    umpireNotes: report.umpireNotes.filter((note) => !/does not address|outside every|remains below|lacks the force or environmental conditions/i.test(note)),
+    diagnosticCodes: [],
   } : report);
   const uncertaintyState = {
     ...coherent,
     reports: adverseReports,
     outcome: { ...coherent.outcome!, won: false, findings: [] },
   };
-  assert.equal(turnLearningNote(adverseReports[0]).kind, "uncertainty");
+  const turnUncertainty = turnLearningNote(adverseReports[0]);
+  assert.equal(turnUncertainty.kind, "uncertainty");
+  assert.match(turnUncertainty.heading, /MATRIX FAILURE/);
   assert.equal(outcomeLearningAssessment(uncertaintyState).kind, "uncertainty");
-  assert.match(outcomeLearningAssessment(uncertaintyState).heading, /NO CLEAR MISTAKE/);
+  assert.match(outcomeLearningAssessment(uncertaintyState).heading, /NO TRACKED FINDING/);
+
+  const scoreOnlyLoss = {
+    ...coherent,
+    outcome: { ...coherent.outcome!, won: false, findings: [] },
+  };
+  const scoreOnlyLearning = outcomeLearningAssessment(scoreOnlyLoss);
+  assert.equal(scoreOnlyLearning.kind, "clear");
+  assert.match(scoreOnlyLearning.heading, /NO FINAL FINDING/);
+  assert.doesNotMatch(scoreOnlyLearning.summary, /met the model's requirements/i);
+});
+
+test("turn learning follows typed diagnostics rather than wording", () => {
+  const base = play(strongReadiness).reports[0];
+  const misleadingProse = {
+    ...base,
+    diagnosticCodes: [],
+    umpireNotes: base.umpireNotes.map((note, index) => index === 0
+      ? "This sentence says does not address, but it is presentation text only."
+      : note),
+  };
+  assert.notEqual(turnLearningNote(misleadingProse).kind, "adjustment");
+
+  const adjustmentPatterns: Record<(typeof RIGID_TURN_DIAGNOSTIC_CODES)[number], RegExp> = {
+    "task-mismatch": /assign a task from the scenario's required or recommended warfare areas/i,
+    "reach-gap": /close the range or select a posture supported by the force's credited reach/i,
+    "contact-gap": /improve the contact picture or select a posture whose contact threshold is met/i,
+    "employment-mismatch": /select employment methods supported by the available uncrewed and undersea elements/i,
+  };
+  for (const code of RIGID_TURN_DIAGNOSTIC_CODES) {
+    const typed = {
+      ...base,
+      diagnosticCodes: [code],
+      umpireNotes: base.umpireNotes.map((_, index) => `Safe paraphrase ${index + 1}.`),
+    };
+    const learning = turnLearningNote(typed);
+    assert.equal(learning.kind, "adjustment", code);
+    assert.match(learning.summary, adjustmentPatterns[code], code);
+  }
 });
 
 test("undo reverses active and completed turns exactly", () => {
@@ -243,7 +312,7 @@ test("the umpire accepts no writing and explicitly disclaims prose evaluation", 
   const final = play(strongReadiness);
   const machineData = JSON.stringify(final);
   assert.doesNotMatch(machineData, /rationale|synthesis|assumption|termination|proseScore/i);
-  assert.match(final.outcome?.notes.join(" ") || "", /No written response was evaluated/i);
+  assert.match(final.outcome?.notes.join(" ") || "", /Written responses were not evaluated/i);
 });
 
 test("invalid imported rigid state is rejected", () => {

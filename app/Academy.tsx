@@ -11,6 +11,7 @@ import {
   type AcademyPath,
 } from "./academyData";
 import { INPUT_LIMITS, sanitizeAcademyNote } from "./inputSecurity";
+import { latticeCopy } from "./latticeCopy";
 
 type AcademyView = "course" | "compare" | "sources";
 
@@ -241,7 +242,7 @@ export default function Academy({ initialModuleId, onClose, completed, onComplet
           </div>
 
           <div id="academy-panel-compare" className="academy-reference" role="tabpanel" aria-labelledby="academy-view-compare" hidden={view !== "compare"}>
-            <header><span>COMPARATIVE METHOD</span><h3>THINKERS IN CONTEXT</h3><p>Compare thinkers who confronted overlapping historical problems, then test whether ideas from different settings can form one coherent theory. The summaries compress complex works; return to the lessons and primary texts before drawing conclusions.</p></header>
+            <header id="academy-compare-intro"><span>COMPARATIVE METHOD</span><h3>THINKERS IN CONTEXT</h3><p>{latticeCopy("academy.compare.intro")}</p></header>
             <div className="comparison-clusters">
               {THINKER_CLUSTERS.map((cluster) => (
                 <section key={cluster.period}>
@@ -294,7 +295,7 @@ export default function Academy({ initialModuleId, onClose, completed, onComplet
           </div>
 
           <div id="academy-panel-sources" className="academy-reference sources-view" role="tabpanel" aria-labelledby="academy-view-sources" hidden={view !== "sources"}>
-            <header><span>TRANSPARENCY</span><h3>READING ROOM, SCOPE &amp; LIMITS</h3><p>This independent educational simulation separates original instructional content, suggested reading, and model assumptions.</p></header>
+            <header id="academy-sources-intro"><span>TRANSPARENCY</span><h3>READING ROOM, SCOPE &amp; LIMITS</h3><p>{latticeCopy("academy.sources.intro")}</p></header>
             <div className="source-groups">
               {SOURCE_GROUPS.map((group) => (
                 <section key={group.title}>
@@ -302,13 +303,17 @@ export default function Academy({ initialModuleId, onClose, completed, onComplet
                   <ul>{group.items.map((item) => <li key={item.label}>{item.href ? <a href={item.href} target="_blank" rel="noreferrer" aria-label={`${item.label} (opens in a new tab)`}>{item.label} <span aria-hidden="true">↗</span></a> : item.label}</li>)}</ul>
                 </section>
               ))}
-              <section>
+              <section id="academy-model-boundary">
                 <h4>Model and realism boundary</h4>
-                <p>Capability families loosely synthesize publicly described maritime concepts, then deliberately alter names, combinations, personnel, capacity, and performance. Any discrepancy in realism reflects the developer&apos;s subject-matter inexperience and deliberate abstraction.</p>
+                <p>{latticeCopy("academy.sources.modelBoundary")}</p>
               </section>
-              <section>
+              <section id="academy-independent-status">
                 <h4>Independent status</h4>
-                <p>Independently produced as a fictional educational simulation. Not affiliated with, sponsored by, approved by, or endorsed by any government agency or manufacturer.</p>
+                <p>{latticeCopy("academy.sources.independentStatus")}</p>
+              </section>
+              <section id="academy-language-system">
+                <h4>Language system</h4>
+                <p>{latticeCopy("academy.sources.languageSystem")}</p>
               </section>
             </div>
           </div>

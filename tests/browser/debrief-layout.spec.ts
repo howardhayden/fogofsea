@@ -6,6 +6,14 @@ async function openSession(page: Page) {
   await expect(page.getByRole("dialog", { name: "HOW SHOULD THIS GAME REMEMBER YOU?" })).toBeHidden();
 }
 
+async function completeAdversaryAssessment(page: Page) {
+  for (const selector of [
+    "#adversary-intent-assumption",
+    "#observed-pattern-assumption",
+    "#adversary-next-action-assumption",
+  ]) await page.locator(selector).selectOption("insufficient-evidence");
+}
+
 async function reachFinalReview(page: Page) {
   await page.locator(".warfare-grid").getByRole("button", { name: /Intelligence and reconnaissance/i }).click();
   await page.locator("#strategic-end-state").selectOption("access");
@@ -20,6 +28,7 @@ async function reachFinalReview(page: Page) {
   if (await readiness.isVisible()) await readiness.getByRole("button", { name: "PROCEED ANYWAY" }).click();
 
   for (let turn = 1; turn <= 6; turn += 1) {
+    if (turn > 1) await completeAdversaryAssessment(page);
     const resolve = page.getByRole("button", { name: `RESOLVE TURN ${turn}`, exact: true });
     await expect(resolve).toBeVisible();
     await resolve.click();

@@ -1,0 +1,3438 @@
+{
+  "schemaVersion": "fog-of-sea.lattice-copy.evidence.v2",
+  "snapshotId": "lattice-copy-f53d8019c0cb50735751c7f8",
+  "lattice": {
+    "engineName": "Lattice — Layered Register Engine",
+    "engineVersion": "0.1.1",
+    "profileId": "relational-systems",
+    "profileVersion": "v1.0.0",
+    "profileDigest": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a",
+    "ownerPackageDigest": "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0"
+  },
+  "implementationAuthority": {
+    "format": "fog-of-sea.lattice-implementation-authority.v1",
+    "algorithm": "sha256-stable-json-v1",
+    "files": [
+      {
+        "path": "package-lock.json",
+        "sha256": "75870267a43b0d80f661dd762dfc64cea98e2ed5522e6b33a6bd4ee5582c8bb7"
+      },
+      {
+        "path": "package.json",
+        "sha256": "02195046f49b59e0ef6b949731fbcfc754b618abd31bd45d810add6d04297a1a"
+      },
+      {
+        "path": "requirements/lattice-adoption.schema.json",
+        "sha256": "6bee0b26685f6b6348a388f9dbf0b9331c5005c64e14f113cd2339d1b0ea313d"
+      },
+      {
+        "path": "requirements/lattice-copy-inventory.schema.json",
+        "sha256": "d069dce6756e75b825779c1348460b834474da6561e0b938530ebdfc67dcbaf1"
+      },
+      {
+        "path": "schemas/lattice-copy-evidence.schema.json",
+        "sha256": "ea7092d776085ec4615f218e7383b85a9a5269660f3428a3f24947bdef4b5d1c"
+      },
+      {
+        "path": "schemas/lattice-copy-generated.schema.json",
+        "sha256": "50d189547174517f7d86c30543f94a89b5532f94f92dafaec2da4b24af962dbf"
+      },
+      {
+        "path": "schemas/lattice-copy-index.schema.json",
+        "sha256": "267f1e07f6b1be3e4847fff961cc7d9096f630548ffd9a5a1bff2900229ad839"
+      },
+      {
+        "path": "schemas/lattice-copy-requests.schema.json",
+        "sha256": "e8f6f0aa40b5348613e0305a11964fa75f3d9ca8f27f8dc4e8f8825ac3d397d8"
+      },
+      {
+        "path": "schemas/lattice-copy-runtime.schema.json",
+        "sha256": "866838a2fbb82cc077143ff308a44899d09514b9a402ec5b0c3695a6b14ce201"
+      },
+      {
+        "path": "scripts/compile-lattice-copy.mjs",
+        "sha256": "0db54206fd53ddf6264f03439f64dfea599eced14a65a375c01f0b260a309224"
+      },
+      {
+        "path": "scripts/lattice-copy-corpus.mjs",
+        "sha256": "e88542c76bdce286993bf65871b38cc1ceb887abaeeba109517880cc9e325703"
+      },
+      {
+        "path": "scripts/validate-lattice-schemas.d.mts",
+        "sha256": "97f98f88847e402ef4d4d14a1fd3fa2936de452eaeb36a6579cd600c4f493219"
+      },
+      {
+        "path": "scripts/validate-lattice-schemas.mjs",
+        "sha256": "a325f1e826b9dd1ebadde4a15fa4b9ea4be2f75d7dece7bef43b3318ed7951d5"
+      },
+      {
+        "path": "scripts/verify-lattice-copy.mts",
+        "sha256": "04685547c726465cc7d67a8f6cff6712a595aa99750bacb9e38235c7e5636605"
+      }
+    ],
+    "sha256": "3fd99c5be8006fb734a5df535c980f7299fddc8a85e59df8c273cd0b2a6c7504"
+  },
+  "source": {
+    "requestPath": "authoring/lattice-copy.requests.json",
+    "requestSha256": "0cc9ad480234c8ab0270612a4d9f5929c1ea5092ce7a8ee664342220b6cc7d86",
+    "academySourcePath": "app/academyData.ts",
+    "academySourceSha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41",
+    "academyCorpusSha256": "340e3f88ac6a8b8e6d5731d6d5ca007333f266526b43203e50b0d780c8dd755b",
+    "academyLintSha256": "97ea9734510b064215bdd7e69835dca8e5faa466126fa09ddb66951e0580093a",
+    "provenance": {
+      "fogBaselineCommit": "70907a77cba735c151e52929dd5a56d795c3d04f",
+      "latticeCommit": "d6cc85b275e3f14163a5a547f626832fd21b27b0",
+      "requestAuthority": "FOG OF SEA source-controlled authoring contract"
+    }
+  },
+  "boundary": {
+    "ownerCompilerRequired": true,
+    "runtimeEngineIncluded": false,
+    "runtimeProfileIncluded": false,
+    "receiptsIncluded": false,
+    "ruleDecisionsIncluded": false
+  },
+  "assurance": {
+    "deterministic": true,
+    "networkIndependentAtRealization": true,
+    "authenticated": false,
+    "externallyAnchored": false,
+    "trustScope": "reproducibility-and-conformance-only",
+    "conformance": "degraded",
+    "conformanceCeiling": "degraded",
+    "humanReviewStatus": "not-claimed"
+  },
+  "hostAssertions": {
+    "sha256": "943a0eb71d8765710860410fc851395d20d6d325e406214892a6ba9fd65a9dbc",
+    "publishIds": [
+      "academy.compare.intro",
+      "academy.sources.independentStatus",
+      "academy.sources.intro",
+      "academy.sources.languageSystem",
+      "academy.sources.modelBoundary",
+      "game.guide.commandTurns.interpretive",
+      "game.guide.commandTurns.operative",
+      "game.guide.missionCredit.interpretive",
+      "game.guide.missionCredit.operative",
+      "game.guide.missionLearning.interpretive",
+      "game.guide.missionLearning.operative",
+      "game.guide.modelBoundary.interpretive",
+      "game.guide.modelBoundary.operative",
+      "game.guide.scenarioAcceptance.interpretive",
+      "game.guide.scenarioAcceptance.operative",
+      "game.guide.strategicFit.interpretive",
+      "game.guide.strategicFit.operative",
+      "game.guide.uncrewedUndersea.interpretive",
+      "game.guide.uncrewedUndersea.operative",
+      "game.learning.outcome.adjustment",
+      "game.learning.outcome.clear",
+      "game.learning.outcome.pending",
+      "game.learning.outcome.uncertainty",
+      "game.learning.turn.clear",
+      "game.learning.turn.uncertainty",
+      "game.outcome.unscoredWriting"
+    ],
+    "requiredPhraseCount": 110,
+    "prohibitedPhraseCount": 78,
+    "exactTextCount": 19
+  },
+  "traceabilitySha256": "189941935c3749ce7b1ddc92f6e66c71e2ca3566a6351a0a91d7cbeee5c18934",
+  "traceability": {
+    "authorityFiles": [
+      {
+        "path": "requirements/lattice-adoption.json",
+        "sha256": "b6c6d2cb373686c46f7cebf344c17a6903ded804a3487fd000ad0e5948d5b169"
+      },
+      {
+        "path": "requirements/lattice-copy-inventory.json",
+        "sha256": "e28a84f6a4846f42f50570172903441b7aea080951271b4a44e4a849f51d07c1"
+      }
+    ],
+    "sourceCatalog": [
+      {
+        "id": "src.academy.comparison",
+        "path": "app/academyData.ts",
+        "symbol": "THINKER_COMPARISON",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+      },
+      {
+        "id": "src.academy.modules",
+        "path": "app/academyData.ts",
+        "symbol": "ACADEMY_MODULE_DEFINITIONS",
+        "kind": "variable",
+        "exported": false,
+        "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+      },
+      {
+        "id": "src.academy.sources",
+        "path": "app/academyData.ts",
+        "symbol": "SOURCE_GROUPS",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+      },
+      {
+        "id": "src.catalog.aircraft",
+        "path": "app/catalog.ts",
+        "symbol": "AIRCRAFT",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "70d7e7e0989a56c8d919c9980810d77da3fc0404d5dfc88851905e0a22dfdde6"
+      },
+      {
+        "id": "src.catalog.platforms",
+        "path": "app/catalog.ts",
+        "symbol": "PLATFORMS",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "70d7e7e0989a56c8d919c9980810d77da3fc0404d5dfc88851905e0a22dfdde6"
+      },
+      {
+        "id": "src.game.final-outcome",
+        "path": "app/kriegsspiel.ts",
+        "symbol": "finalOutcome",
+        "kind": "function",
+        "exported": false,
+        "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+      },
+      {
+        "id": "src.game.outcome-learning",
+        "path": "app/kriegsspiel.ts",
+        "symbol": "outcomeLearningAssessment",
+        "kind": "function",
+        "exported": true,
+        "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+      },
+      {
+        "id": "src.game.turn-learning",
+        "path": "app/kriegsspiel.ts",
+        "symbol": "turnLearningNote",
+        "kind": "function",
+        "exported": true,
+        "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+      },
+      {
+        "id": "src.model.armaments",
+        "path": "app/gameModel.ts",
+        "symbol": "ARMAMENTS",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+      },
+      {
+        "id": "src.model.mission-credit",
+        "path": "app/gameModel.ts",
+        "symbol": "calculateMissionCreditedForcePoints",
+        "kind": "function",
+        "exported": true,
+        "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+      },
+      {
+        "id": "src.model.scenario-coexistence",
+        "path": "app/gameModel.ts",
+        "symbol": "validateScenarioCoexistence",
+        "kind": "function",
+        "exported": true,
+        "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+      },
+      {
+        "id": "src.planning.readiness-gaps",
+        "path": "app/planningAssessment.ts",
+        "symbol": "deriveReadinessGaps",
+        "kind": "function",
+        "exported": true,
+        "sha256": "38f593b5d41a548acd1f45fab3f5a6f990e5cd4aee2750971c5536308f1ebec7"
+      }
+    ],
+    "requests": [
+      {
+        "requestId": "fos.academy.compare-intro",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-004"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.independent-status",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-005"
+        ],
+        "sourceRefs": [
+          "src.academy.sources"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.language-system",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-008"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.sources"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.model-boundary",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SCP-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-007"
+        ],
+        "sourceRefs": [
+          "src.academy.sources",
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.armaments"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.sources-intro",
+        "requirementIds": [
+          "FOS-LAT-ACA-001",
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-006"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.sources"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.command-turns",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-003",
+          "FOS-COPY-GUIDE-004"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.turn-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.mission-credit",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-003",
+          "FOS-COPY-GUIDE-004"
+        ],
+        "sourceRefs": [
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.armaments",
+          "src.model.mission-credit"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.mission-learning",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-009",
+          "FOS-COPY-GUIDE-010"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning",
+          "src.game.turn-learning",
+          "src.model.mission-credit"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.model-boundary",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-007",
+          "FOS-COPY-GUIDE-008"
+        ],
+        "sourceRefs": [
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.armaments"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.scenario-acceptance",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SCP-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-001",
+          "FOS-COPY-GUIDE-002"
+        ],
+        "sourceRefs": [
+          "src.model.scenario-coexistence"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.strategic-fit",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-005",
+          "FOS-COPY-GUIDE-006"
+        ],
+        "sourceRefs": [
+          "src.model.mission-credit",
+          "src.planning.readiness-gaps"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.uncrewed-undersea",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-001",
+          "FOS-COPY-GUIDE-002"
+        ],
+        "sourceRefs": [
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.mission-credit",
+          "src.planning.readiness-gaps"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.outcome-adjustment",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-001"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.outcome-clear",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-001"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.outcome-pending",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-002"
+        ],
+        "sourceRefs": [
+          "src.game.outcome-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.outcome-uncertainty",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-001"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.turn-clear",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-003"
+        ],
+        "sourceRefs": [
+          "src.game.turn-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.turn-uncertainty",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-003"
+        ],
+        "sourceRefs": [
+          "src.game.turn-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.outcome.unscored-writing",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-002",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-003"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      }
+    ]
+  },
+  "realizationSha256": "3867949568ac0d05a18563ca465242de6ebdce4ef70ff8efb0b885ef63280a5d",
+  "copySha256": "9d796bb2e8761e7287b8a11914459a95e1927ff2eeed829d18e7bcc44e179f57",
+  "generatedFile": {
+    "path": "app/generated/lattice-copy.json",
+    "sha256": "179eea117cabf95fcb165232f3436f0fdac8538748ce44d4581aa886faea7ae7"
+  },
+  "runtimeFile": {
+    "path": "app/generated/lattice-copy.runtime.json",
+    "sha256": "c0425a1f5aad2bdad8a3556d36514900479ed842157bba6a6650abba5eb01768"
+  },
+  "academyCorpus": {
+    "schemaVersion": "fog-of-sea.lattice-copy.academy-corpus.v1",
+    "entryCount": 1011,
+    "characterCount": 99474,
+    "roles": {
+      "label": 38,
+      "short": 3,
+      "description": 3,
+      "number": 25,
+      "title": 28,
+      "subtitle": 25,
+      "era": 25,
+      "level": 25,
+      "objectives": 75,
+      "thesis": 25,
+      "lesson": 75,
+      "term": 83,
+      "definition": 83,
+      "misreading": 25,
+      "application": 25,
+      "discussion": 25,
+      "question": 25,
+      "options": 100,
+      "explanation": 25,
+      "readings": 92,
+      "thinker": 26,
+      "period": 31,
+      "contemporary": 26,
+      "contrast": 31,
+      "contribution": 26,
+      "tension": 26,
+      "thinkers": 5,
+      "synthesis": 5,
+      "unresolved": 5
+    },
+    "sections": {
+      "PATHS": 9,
+      "ACADEMY_MODULE_DEFINITIONS": 783,
+      "THINKER_COMPARISON": 156,
+      "THINKER_CLUSTERS": 25,
+      "SOURCE_GROUPS": 38
+    },
+    "sha256": "340e3f88ac6a8b8e6d5731d6d5ca007333f266526b43203e50b0d780c8dd755b"
+  },
+  "academyLint": {
+    "status": "advisory",
+    "advisoryOnly": true,
+    "semanticGuarantee": false,
+    "corpusSha256": "340e3f88ac6a8b8e6d5731d6d5ca007333f266526b43203e50b0d780c8dd755b",
+    "sourceSha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41",
+    "entryCount": 1011,
+    "batchCount": 2,
+    "findingCount": 50,
+    "unresolvedFindingCount": 39,
+    "statusCounts": {
+      "not-applicable": 6,
+      "pass": 5,
+      "unknown": 28,
+      "warn": 11
+    },
+    "codeCounts": {
+      "M_MANUAL_REVIEW": 28,
+      "N_NO_FOCALIZER": 4,
+      "N_NOT_ACTION": 2,
+      "P_NO_REDUNDANT_INFERENCE": 1,
+      "P_PUNCTUATION_RESTRAINED": 4,
+      "W_EXPOSITION_NO_DELTA": 4,
+      "W_EXTERNALITIES_MISSING": 6,
+      "W_REDUNDANT_INFERENCE": 1
+    },
+    "batches": [
+      {
+        "id": "academy-lint-1-of-2",
+        "entryIds": [
+          "academy-copy-0001",
+          "academy-copy-0002",
+          "academy-copy-0003",
+          "academy-copy-0004",
+          "academy-copy-0005",
+          "academy-copy-0006",
+          "academy-copy-0007",
+          "academy-copy-0008",
+          "academy-copy-0009",
+          "academy-copy-0010",
+          "academy-copy-0011",
+          "academy-copy-0012",
+          "academy-copy-0013",
+          "academy-copy-0014",
+          "academy-copy-0015",
+          "academy-copy-0016",
+          "academy-copy-0017",
+          "academy-copy-0018",
+          "academy-copy-0019",
+          "academy-copy-0020",
+          "academy-copy-0021",
+          "academy-copy-0022",
+          "academy-copy-0023",
+          "academy-copy-0024",
+          "academy-copy-0025",
+          "academy-copy-0026",
+          "academy-copy-0027",
+          "academy-copy-0028",
+          "academy-copy-0029",
+          "academy-copy-0030",
+          "academy-copy-0031",
+          "academy-copy-0032",
+          "academy-copy-0033",
+          "academy-copy-0034",
+          "academy-copy-0035",
+          "academy-copy-0036",
+          "academy-copy-0037",
+          "academy-copy-0038",
+          "academy-copy-0039",
+          "academy-copy-0040",
+          "academy-copy-0041",
+          "academy-copy-0042",
+          "academy-copy-0043",
+          "academy-copy-0044",
+          "academy-copy-0045",
+          "academy-copy-0046",
+          "academy-copy-0047",
+          "academy-copy-0048",
+          "academy-copy-0049",
+          "academy-copy-0050",
+          "academy-copy-0051",
+          "academy-copy-0052",
+          "academy-copy-0053",
+          "academy-copy-0054",
+          "academy-copy-0055",
+          "academy-copy-0056",
+          "academy-copy-0057",
+          "academy-copy-0058",
+          "academy-copy-0059",
+          "academy-copy-0060",
+          "academy-copy-0061",
+          "academy-copy-0062",
+          "academy-copy-0063",
+          "academy-copy-0064",
+          "academy-copy-0065",
+          "academy-copy-0066",
+          "academy-copy-0067",
+          "academy-copy-0068",
+          "academy-copy-0069",
+          "academy-copy-0070",
+          "academy-copy-0071",
+          "academy-copy-0072",
+          "academy-copy-0073",
+          "academy-copy-0074",
+          "academy-copy-0075",
+          "academy-copy-0076",
+          "academy-copy-0077",
+          "academy-copy-0078",
+          "academy-copy-0079",
+          "academy-copy-0080",
+          "academy-copy-0081",
+          "academy-copy-0082",
+          "academy-copy-0083",
+          "academy-copy-0084",
+          "academy-copy-0085",
+          "academy-copy-0086",
+          "academy-copy-0087",
+          "academy-copy-0088",
+          "academy-copy-0089",
+          "academy-copy-0090",
+          "academy-copy-0091",
+          "academy-copy-0092",
+          "academy-copy-0093",
+          "academy-copy-0094",
+          "academy-copy-0095",
+          "academy-copy-0096",
+          "academy-copy-0097",
+          "academy-copy-0098",
+          "academy-copy-0099",
+          "academy-copy-0100",
+          "academy-copy-0101",
+          "academy-copy-0102",
+          "academy-copy-0103",
+          "academy-copy-0104",
+          "academy-copy-0105",
+          "academy-copy-0106",
+          "academy-copy-0107",
+          "academy-copy-0108",
+          "academy-copy-0109",
+          "academy-copy-0110",
+          "academy-copy-0111",
+          "academy-copy-0112",
+          "academy-copy-0113",
+          "academy-copy-0114",
+          "academy-copy-0115",
+          "academy-copy-0116",
+          "academy-copy-0117",
+          "academy-copy-0118",
+          "academy-copy-0119",
+          "academy-copy-0120",
+          "academy-copy-0121",
+          "academy-copy-0122",
+          "academy-copy-0123",
+          "academy-copy-0124",
+          "academy-copy-0125",
+          "academy-copy-0126",
+          "academy-copy-0127",
+          "academy-copy-0128",
+          "academy-copy-0129",
+          "academy-copy-0130",
+          "academy-copy-0131",
+          "academy-copy-0132",
+          "academy-copy-0133",
+          "academy-copy-0134",
+          "academy-copy-0135",
+          "academy-copy-0136",
+          "academy-copy-0137",
+          "academy-copy-0138",
+          "academy-copy-0139",
+          "academy-copy-0140",
+          "academy-copy-0141",
+          "academy-copy-0142",
+          "academy-copy-0143",
+          "academy-copy-0144",
+          "academy-copy-0145",
+          "academy-copy-0146",
+          "academy-copy-0147",
+          "academy-copy-0148",
+          "academy-copy-0149",
+          "academy-copy-0150",
+          "academy-copy-0151",
+          "academy-copy-0152",
+          "academy-copy-0153",
+          "academy-copy-0154",
+          "academy-copy-0155",
+          "academy-copy-0156",
+          "academy-copy-0157",
+          "academy-copy-0158",
+          "academy-copy-0159",
+          "academy-copy-0160",
+          "academy-copy-0161",
+          "academy-copy-0162",
+          "academy-copy-0163",
+          "academy-copy-0164",
+          "academy-copy-0165",
+          "academy-copy-0166",
+          "academy-copy-0167",
+          "academy-copy-0168",
+          "academy-copy-0169",
+          "academy-copy-0170",
+          "academy-copy-0171",
+          "academy-copy-0172",
+          "academy-copy-0173",
+          "academy-copy-0174",
+          "academy-copy-0175",
+          "academy-copy-0176",
+          "academy-copy-0177",
+          "academy-copy-0178",
+          "academy-copy-0179",
+          "academy-copy-0180",
+          "academy-copy-0181",
+          "academy-copy-0182",
+          "academy-copy-0183",
+          "academy-copy-0184",
+          "academy-copy-0185",
+          "academy-copy-0186",
+          "academy-copy-0187",
+          "academy-copy-0188",
+          "academy-copy-0189",
+          "academy-copy-0190",
+          "academy-copy-0191",
+          "academy-copy-0192",
+          "academy-copy-0193",
+          "academy-copy-0194",
+          "academy-copy-0195",
+          "academy-copy-0196",
+          "academy-copy-0197",
+          "academy-copy-0198",
+          "academy-copy-0199",
+          "academy-copy-0200",
+          "academy-copy-0201",
+          "academy-copy-0202",
+          "academy-copy-0203",
+          "academy-copy-0204",
+          "academy-copy-0205",
+          "academy-copy-0206",
+          "academy-copy-0207",
+          "academy-copy-0208",
+          "academy-copy-0209",
+          "academy-copy-0210",
+          "academy-copy-0211",
+          "academy-copy-0212",
+          "academy-copy-0213",
+          "academy-copy-0214",
+          "academy-copy-0215",
+          "academy-copy-0216",
+          "academy-copy-0217",
+          "academy-copy-0218",
+          "academy-copy-0219",
+          "academy-copy-0220",
+          "academy-copy-0221",
+          "academy-copy-0222",
+          "academy-copy-0223",
+          "academy-copy-0224",
+          "academy-copy-0225",
+          "academy-copy-0226",
+          "academy-copy-0227",
+          "academy-copy-0228",
+          "academy-copy-0229",
+          "academy-copy-0230",
+          "academy-copy-0231",
+          "academy-copy-0232",
+          "academy-copy-0233",
+          "academy-copy-0234",
+          "academy-copy-0235",
+          "academy-copy-0236",
+          "academy-copy-0237",
+          "academy-copy-0238",
+          "academy-copy-0239",
+          "academy-copy-0240",
+          "academy-copy-0241",
+          "academy-copy-0242",
+          "academy-copy-0243",
+          "academy-copy-0244",
+          "academy-copy-0245",
+          "academy-copy-0246",
+          "academy-copy-0247",
+          "academy-copy-0248",
+          "academy-copy-0249",
+          "academy-copy-0250",
+          "academy-copy-0251",
+          "academy-copy-0252",
+          "academy-copy-0253",
+          "academy-copy-0254",
+          "academy-copy-0255",
+          "academy-copy-0256",
+          "academy-copy-0257",
+          "academy-copy-0258",
+          "academy-copy-0259",
+          "academy-copy-0260",
+          "academy-copy-0261",
+          "academy-copy-0262",
+          "academy-copy-0263",
+          "academy-copy-0264",
+          "academy-copy-0265",
+          "academy-copy-0266",
+          "academy-copy-0267",
+          "academy-copy-0268",
+          "academy-copy-0269",
+          "academy-copy-0270",
+          "academy-copy-0271",
+          "academy-copy-0272",
+          "academy-copy-0273",
+          "academy-copy-0274",
+          "academy-copy-0275",
+          "academy-copy-0276",
+          "academy-copy-0277",
+          "academy-copy-0278",
+          "academy-copy-0279",
+          "academy-copy-0280",
+          "academy-copy-0281",
+          "academy-copy-0282",
+          "academy-copy-0283",
+          "academy-copy-0284",
+          "academy-copy-0285",
+          "academy-copy-0286",
+          "academy-copy-0287",
+          "academy-copy-0288",
+          "academy-copy-0289",
+          "academy-copy-0290",
+          "academy-copy-0291",
+          "academy-copy-0292",
+          "academy-copy-0293",
+          "academy-copy-0294",
+          "academy-copy-0295",
+          "academy-copy-0296",
+          "academy-copy-0297",
+          "academy-copy-0298",
+          "academy-copy-0299",
+          "academy-copy-0300",
+          "academy-copy-0301",
+          "academy-copy-0302",
+          "academy-copy-0303",
+          "academy-copy-0304",
+          "academy-copy-0305",
+          "academy-copy-0306",
+          "academy-copy-0307",
+          "academy-copy-0308",
+          "academy-copy-0309",
+          "academy-copy-0310",
+          "academy-copy-0311",
+          "academy-copy-0312",
+          "academy-copy-0313",
+          "academy-copy-0314",
+          "academy-copy-0315",
+          "academy-copy-0316",
+          "academy-copy-0317",
+          "academy-copy-0318",
+          "academy-copy-0319",
+          "academy-copy-0320",
+          "academy-copy-0321",
+          "academy-copy-0322",
+          "academy-copy-0323",
+          "academy-copy-0324",
+          "academy-copy-0325",
+          "academy-copy-0326",
+          "academy-copy-0327",
+          "academy-copy-0328",
+          "academy-copy-0329",
+          "academy-copy-0330",
+          "academy-copy-0331",
+          "academy-copy-0332",
+          "academy-copy-0333",
+          "academy-copy-0334",
+          "academy-copy-0335",
+          "academy-copy-0336",
+          "academy-copy-0337",
+          "academy-copy-0338",
+          "academy-copy-0339",
+          "academy-copy-0340",
+          "academy-copy-0341",
+          "academy-copy-0342",
+          "academy-copy-0343",
+          "academy-copy-0344",
+          "academy-copy-0345",
+          "academy-copy-0346",
+          "academy-copy-0347",
+          "academy-copy-0348",
+          "academy-copy-0349",
+          "academy-copy-0350",
+          "academy-copy-0351",
+          "academy-copy-0352",
+          "academy-copy-0353",
+          "academy-copy-0354",
+          "academy-copy-0355",
+          "academy-copy-0356",
+          "academy-copy-0357",
+          "academy-copy-0358",
+          "academy-copy-0359",
+          "academy-copy-0360",
+          "academy-copy-0361",
+          "academy-copy-0362",
+          "academy-copy-0363",
+          "academy-copy-0364",
+          "academy-copy-0365",
+          "academy-copy-0366",
+          "academy-copy-0367",
+          "academy-copy-0368",
+          "academy-copy-0369",
+          "academy-copy-0370",
+          "academy-copy-0371",
+          "academy-copy-0372",
+          "academy-copy-0373",
+          "academy-copy-0374",
+          "academy-copy-0375",
+          "academy-copy-0376",
+          "academy-copy-0377",
+          "academy-copy-0378",
+          "academy-copy-0379",
+          "academy-copy-0380",
+          "academy-copy-0381",
+          "academy-copy-0382",
+          "academy-copy-0383",
+          "academy-copy-0384",
+          "academy-copy-0385",
+          "academy-copy-0386",
+          "academy-copy-0387",
+          "academy-copy-0388",
+          "academy-copy-0389",
+          "academy-copy-0390",
+          "academy-copy-0391",
+          "academy-copy-0392",
+          "academy-copy-0393",
+          "academy-copy-0394",
+          "academy-copy-0395",
+          "academy-copy-0396",
+          "academy-copy-0397",
+          "academy-copy-0398",
+          "academy-copy-0399",
+          "academy-copy-0400",
+          "academy-copy-0401",
+          "academy-copy-0402",
+          "academy-copy-0403",
+          "academy-copy-0404",
+          "academy-copy-0405",
+          "academy-copy-0406",
+          "academy-copy-0407",
+          "academy-copy-0408",
+          "academy-copy-0409",
+          "academy-copy-0410",
+          "academy-copy-0411",
+          "academy-copy-0412",
+          "academy-copy-0413",
+          "academy-copy-0414",
+          "academy-copy-0415",
+          "academy-copy-0416",
+          "academy-copy-0417",
+          "academy-copy-0418",
+          "academy-copy-0419",
+          "academy-copy-0420",
+          "academy-copy-0421",
+          "academy-copy-0422",
+          "academy-copy-0423",
+          "academy-copy-0424",
+          "academy-copy-0425",
+          "academy-copy-0426",
+          "academy-copy-0427",
+          "academy-copy-0428",
+          "academy-copy-0429",
+          "academy-copy-0430",
+          "academy-copy-0431",
+          "academy-copy-0432",
+          "academy-copy-0433",
+          "academy-copy-0434",
+          "academy-copy-0435",
+          "academy-copy-0436",
+          "academy-copy-0437",
+          "academy-copy-0438",
+          "academy-copy-0439",
+          "academy-copy-0440",
+          "academy-copy-0441",
+          "academy-copy-0442",
+          "academy-copy-0443",
+          "academy-copy-0444",
+          "academy-copy-0445",
+          "academy-copy-0446",
+          "academy-copy-0447",
+          "academy-copy-0448",
+          "academy-copy-0449",
+          "academy-copy-0450",
+          "academy-copy-0451",
+          "academy-copy-0452",
+          "academy-copy-0453",
+          "academy-copy-0454",
+          "academy-copy-0455",
+          "academy-copy-0456",
+          "academy-copy-0457",
+          "academy-copy-0458",
+          "academy-copy-0459",
+          "academy-copy-0460",
+          "academy-copy-0461",
+          "academy-copy-0462",
+          "academy-copy-0463",
+          "academy-copy-0464",
+          "academy-copy-0465",
+          "academy-copy-0466",
+          "academy-copy-0467",
+          "academy-copy-0468",
+          "academy-copy-0469",
+          "academy-copy-0470",
+          "academy-copy-0471",
+          "academy-copy-0472",
+          "academy-copy-0473",
+          "academy-copy-0474",
+          "academy-copy-0475",
+          "academy-copy-0476",
+          "academy-copy-0477",
+          "academy-copy-0478",
+          "academy-copy-0479",
+          "academy-copy-0480",
+          "academy-copy-0481",
+          "academy-copy-0482",
+          "academy-copy-0483",
+          "academy-copy-0484",
+          "academy-copy-0485",
+          "academy-copy-0486",
+          "academy-copy-0487",
+          "academy-copy-0488",
+          "academy-copy-0489",
+          "academy-copy-0490",
+          "academy-copy-0491",
+          "academy-copy-0492",
+          "academy-copy-0493",
+          "academy-copy-0494",
+          "academy-copy-0495",
+          "academy-copy-0496",
+          "academy-copy-0497",
+          "academy-copy-0498",
+          "academy-copy-0499",
+          "academy-copy-0500",
+          "academy-copy-0501",
+          "academy-copy-0502",
+          "academy-copy-0503",
+          "academy-copy-0504",
+          "academy-copy-0505",
+          "academy-copy-0506"
+        ],
+        "entryCount": 506,
+        "textSha256": "170046514f09358bbf128a250748c75216eff6895659954683270b0d3a77ca9e",
+        "findingCount": 25,
+        "statusCounts": {
+          "not-applicable": 3,
+          "pass": 2,
+          "unknown": 14,
+          "warn": 6
+        },
+        "codeCounts": {
+          "M_MANUAL_REVIEW": 14,
+          "N_NO_FOCALIZER": 2,
+          "N_NOT_ACTION": 1,
+          "P_PUNCTUATION_RESTRAINED": 2,
+          "W_EXPOSITION_NO_DELTA": 2,
+          "W_EXTERNALITIES_MISSING": 3,
+          "W_REDUNDANT_INFERENCE": 1
+        }
+      },
+      {
+        "id": "academy-lint-2-of-2",
+        "entryIds": [
+          "academy-copy-0507",
+          "academy-copy-0508",
+          "academy-copy-0509",
+          "academy-copy-0510",
+          "academy-copy-0511",
+          "academy-copy-0512",
+          "academy-copy-0513",
+          "academy-copy-0514",
+          "academy-copy-0515",
+          "academy-copy-0516",
+          "academy-copy-0517",
+          "academy-copy-0518",
+          "academy-copy-0519",
+          "academy-copy-0520",
+          "academy-copy-0521",
+          "academy-copy-0522",
+          "academy-copy-0523",
+          "academy-copy-0524",
+          "academy-copy-0525",
+          "academy-copy-0526",
+          "academy-copy-0527",
+          "academy-copy-0528",
+          "academy-copy-0529",
+          "academy-copy-0530",
+          "academy-copy-0531",
+          "academy-copy-0532",
+          "academy-copy-0533",
+          "academy-copy-0534",
+          "academy-copy-0535",
+          "academy-copy-0536",
+          "academy-copy-0537",
+          "academy-copy-0538",
+          "academy-copy-0539",
+          "academy-copy-0540",
+          "academy-copy-0541",
+          "academy-copy-0542",
+          "academy-copy-0543",
+          "academy-copy-0544",
+          "academy-copy-0545",
+          "academy-copy-0546",
+          "academy-copy-0547",
+          "academy-copy-0548",
+          "academy-copy-0549",
+          "academy-copy-0550",
+          "academy-copy-0551",
+          "academy-copy-0552",
+          "academy-copy-0553",
+          "academy-copy-0554",
+          "academy-copy-0555",
+          "academy-copy-0556",
+          "academy-copy-0557",
+          "academy-copy-0558",
+          "academy-copy-0559",
+          "academy-copy-0560",
+          "academy-copy-0561",
+          "academy-copy-0562",
+          "academy-copy-0563",
+          "academy-copy-0564",
+          "academy-copy-0565",
+          "academy-copy-0566",
+          "academy-copy-0567",
+          "academy-copy-0568",
+          "academy-copy-0569",
+          "academy-copy-0570",
+          "academy-copy-0571",
+          "academy-copy-0572",
+          "academy-copy-0573",
+          "academy-copy-0574",
+          "academy-copy-0575",
+          "academy-copy-0576",
+          "academy-copy-0577",
+          "academy-copy-0578",
+          "academy-copy-0579",
+          "academy-copy-0580",
+          "academy-copy-0581",
+          "academy-copy-0582",
+          "academy-copy-0583",
+          "academy-copy-0584",
+          "academy-copy-0585",
+          "academy-copy-0586",
+          "academy-copy-0587",
+          "academy-copy-0588",
+          "academy-copy-0589",
+          "academy-copy-0590",
+          "academy-copy-0591",
+          "academy-copy-0592",
+          "academy-copy-0593",
+          "academy-copy-0594",
+          "academy-copy-0595",
+          "academy-copy-0596",
+          "academy-copy-0597",
+          "academy-copy-0598",
+          "academy-copy-0599",
+          "academy-copy-0600",
+          "academy-copy-0601",
+          "academy-copy-0602",
+          "academy-copy-0603",
+          "academy-copy-0604",
+          "academy-copy-0605",
+          "academy-copy-0606",
+          "academy-copy-0607",
+          "academy-copy-0608",
+          "academy-copy-0609",
+          "academy-copy-0610",
+          "academy-copy-0611",
+          "academy-copy-0612",
+          "academy-copy-0613",
+          "academy-copy-0614",
+          "academy-copy-0615",
+          "academy-copy-0616",
+          "academy-copy-0617",
+          "academy-copy-0618",
+          "academy-copy-0619",
+          "academy-copy-0620",
+          "academy-copy-0621",
+          "academy-copy-0622",
+          "academy-copy-0623",
+          "academy-copy-0624",
+          "academy-copy-0625",
+          "academy-copy-0626",
+          "academy-copy-0627",
+          "academy-copy-0628",
+          "academy-copy-0629",
+          "academy-copy-0630",
+          "academy-copy-0631",
+          "academy-copy-0632",
+          "academy-copy-0633",
+          "academy-copy-0634",
+          "academy-copy-0635",
+          "academy-copy-0636",
+          "academy-copy-0637",
+          "academy-copy-0638",
+          "academy-copy-0639",
+          "academy-copy-0640",
+          "academy-copy-0641",
+          "academy-copy-0642",
+          "academy-copy-0643",
+          "academy-copy-0644",
+          "academy-copy-0645",
+          "academy-copy-0646",
+          "academy-copy-0647",
+          "academy-copy-0648",
+          "academy-copy-0649",
+          "academy-copy-0650",
+          "academy-copy-0651",
+          "academy-copy-0652",
+          "academy-copy-0653",
+          "academy-copy-0654",
+          "academy-copy-0655",
+          "academy-copy-0656",
+          "academy-copy-0657",
+          "academy-copy-0658",
+          "academy-copy-0659",
+          "academy-copy-0660",
+          "academy-copy-0661",
+          "academy-copy-0662",
+          "academy-copy-0663",
+          "academy-copy-0664",
+          "academy-copy-0665",
+          "academy-copy-0666",
+          "academy-copy-0667",
+          "academy-copy-0668",
+          "academy-copy-0669",
+          "academy-copy-0670",
+          "academy-copy-0671",
+          "academy-copy-0672",
+          "academy-copy-0673",
+          "academy-copy-0674",
+          "academy-copy-0675",
+          "academy-copy-0676",
+          "academy-copy-0677",
+          "academy-copy-0678",
+          "academy-copy-0679",
+          "academy-copy-0680",
+          "academy-copy-0681",
+          "academy-copy-0682",
+          "academy-copy-0683",
+          "academy-copy-0684",
+          "academy-copy-0685",
+          "academy-copy-0686",
+          "academy-copy-0687",
+          "academy-copy-0688",
+          "academy-copy-0689",
+          "academy-copy-0690",
+          "academy-copy-0691",
+          "academy-copy-0692",
+          "academy-copy-0693",
+          "academy-copy-0694",
+          "academy-copy-0695",
+          "academy-copy-0696",
+          "academy-copy-0697",
+          "academy-copy-0698",
+          "academy-copy-0699",
+          "academy-copy-0700",
+          "academy-copy-0701",
+          "academy-copy-0702",
+          "academy-copy-0703",
+          "academy-copy-0704",
+          "academy-copy-0705",
+          "academy-copy-0706",
+          "academy-copy-0707",
+          "academy-copy-0708",
+          "academy-copy-0709",
+          "academy-copy-0710",
+          "academy-copy-0711",
+          "academy-copy-0712",
+          "academy-copy-0713",
+          "academy-copy-0714",
+          "academy-copy-0715",
+          "academy-copy-0716",
+          "academy-copy-0717",
+          "academy-copy-0718",
+          "academy-copy-0719",
+          "academy-copy-0720",
+          "academy-copy-0721",
+          "academy-copy-0722",
+          "academy-copy-0723",
+          "academy-copy-0724",
+          "academy-copy-0725",
+          "academy-copy-0726",
+          "academy-copy-0727",
+          "academy-copy-0728",
+          "academy-copy-0729",
+          "academy-copy-0730",
+          "academy-copy-0731",
+          "academy-copy-0732",
+          "academy-copy-0733",
+          "academy-copy-0734",
+          "academy-copy-0735",
+          "academy-copy-0736",
+          "academy-copy-0737",
+          "academy-copy-0738",
+          "academy-copy-0739",
+          "academy-copy-0740",
+          "academy-copy-0741",
+          "academy-copy-0742",
+          "academy-copy-0743",
+          "academy-copy-0744",
+          "academy-copy-0745",
+          "academy-copy-0746",
+          "academy-copy-0747",
+          "academy-copy-0748",
+          "academy-copy-0749",
+          "academy-copy-0750",
+          "academy-copy-0751",
+          "academy-copy-0752",
+          "academy-copy-0753",
+          "academy-copy-0754",
+          "academy-copy-0755",
+          "academy-copy-0756",
+          "academy-copy-0757",
+          "academy-copy-0758",
+          "academy-copy-0759",
+          "academy-copy-0760",
+          "academy-copy-0761",
+          "academy-copy-0762",
+          "academy-copy-0763",
+          "academy-copy-0764",
+          "academy-copy-0765",
+          "academy-copy-0766",
+          "academy-copy-0767",
+          "academy-copy-0768",
+          "academy-copy-0769",
+          "academy-copy-0770",
+          "academy-copy-0771",
+          "academy-copy-0772",
+          "academy-copy-0773",
+          "academy-copy-0774",
+          "academy-copy-0775",
+          "academy-copy-0776",
+          "academy-copy-0777",
+          "academy-copy-0778",
+          "academy-copy-0779",
+          "academy-copy-0780",
+          "academy-copy-0781",
+          "academy-copy-0782",
+          "academy-copy-0783",
+          "academy-copy-0784",
+          "academy-copy-0785",
+          "academy-copy-0786",
+          "academy-copy-0787",
+          "academy-copy-0788",
+          "academy-copy-0789",
+          "academy-copy-0790",
+          "academy-copy-0791",
+          "academy-copy-0792",
+          "academy-copy-0793",
+          "academy-copy-0794",
+          "academy-copy-0795",
+          "academy-copy-0796",
+          "academy-copy-0797",
+          "academy-copy-0798",
+          "academy-copy-0799",
+          "academy-copy-0800",
+          "academy-copy-0801",
+          "academy-copy-0802",
+          "academy-copy-0803",
+          "academy-copy-0804",
+          "academy-copy-0805",
+          "academy-copy-0806",
+          "academy-copy-0807",
+          "academy-copy-0808",
+          "academy-copy-0809",
+          "academy-copy-0810",
+          "academy-copy-0811",
+          "academy-copy-0812",
+          "academy-copy-0813",
+          "academy-copy-0814",
+          "academy-copy-0815",
+          "academy-copy-0816",
+          "academy-copy-0817",
+          "academy-copy-0818",
+          "academy-copy-0819",
+          "academy-copy-0820",
+          "academy-copy-0821",
+          "academy-copy-0822",
+          "academy-copy-0823",
+          "academy-copy-0824",
+          "academy-copy-0825",
+          "academy-copy-0826",
+          "academy-copy-0827",
+          "academy-copy-0828",
+          "academy-copy-0829",
+          "academy-copy-0830",
+          "academy-copy-0831",
+          "academy-copy-0832",
+          "academy-copy-0833",
+          "academy-copy-0834",
+          "academy-copy-0835",
+          "academy-copy-0836",
+          "academy-copy-0837",
+          "academy-copy-0838",
+          "academy-copy-0839",
+          "academy-copy-0840",
+          "academy-copy-0841",
+          "academy-copy-0842",
+          "academy-copy-0843",
+          "academy-copy-0844",
+          "academy-copy-0845",
+          "academy-copy-0846",
+          "academy-copy-0847",
+          "academy-copy-0848",
+          "academy-copy-0849",
+          "academy-copy-0850",
+          "academy-copy-0851",
+          "academy-copy-0852",
+          "academy-copy-0853",
+          "academy-copy-0854",
+          "academy-copy-0855",
+          "academy-copy-0856",
+          "academy-copy-0857",
+          "academy-copy-0858",
+          "academy-copy-0859",
+          "academy-copy-0860",
+          "academy-copy-0861",
+          "academy-copy-0862",
+          "academy-copy-0863",
+          "academy-copy-0864",
+          "academy-copy-0865",
+          "academy-copy-0866",
+          "academy-copy-0867",
+          "academy-copy-0868",
+          "academy-copy-0869",
+          "academy-copy-0870",
+          "academy-copy-0871",
+          "academy-copy-0872",
+          "academy-copy-0873",
+          "academy-copy-0874",
+          "academy-copy-0875",
+          "academy-copy-0876",
+          "academy-copy-0877",
+          "academy-copy-0878",
+          "academy-copy-0879",
+          "academy-copy-0880",
+          "academy-copy-0881",
+          "academy-copy-0882",
+          "academy-copy-0883",
+          "academy-copy-0884",
+          "academy-copy-0885",
+          "academy-copy-0886",
+          "academy-copy-0887",
+          "academy-copy-0888",
+          "academy-copy-0889",
+          "academy-copy-0890",
+          "academy-copy-0891",
+          "academy-copy-0892",
+          "academy-copy-0893",
+          "academy-copy-0894",
+          "academy-copy-0895",
+          "academy-copy-0896",
+          "academy-copy-0897",
+          "academy-copy-0898",
+          "academy-copy-0899",
+          "academy-copy-0900",
+          "academy-copy-0901",
+          "academy-copy-0902",
+          "academy-copy-0903",
+          "academy-copy-0904",
+          "academy-copy-0905",
+          "academy-copy-0906",
+          "academy-copy-0907",
+          "academy-copy-0908",
+          "academy-copy-0909",
+          "academy-copy-0910",
+          "academy-copy-0911",
+          "academy-copy-0912",
+          "academy-copy-0913",
+          "academy-copy-0914",
+          "academy-copy-0915",
+          "academy-copy-0916",
+          "academy-copy-0917",
+          "academy-copy-0918",
+          "academy-copy-0919",
+          "academy-copy-0920",
+          "academy-copy-0921",
+          "academy-copy-0922",
+          "academy-copy-0923",
+          "academy-copy-0924",
+          "academy-copy-0925",
+          "academy-copy-0926",
+          "academy-copy-0927",
+          "academy-copy-0928",
+          "academy-copy-0929",
+          "academy-copy-0930",
+          "academy-copy-0931",
+          "academy-copy-0932",
+          "academy-copy-0933",
+          "academy-copy-0934",
+          "academy-copy-0935",
+          "academy-copy-0936",
+          "academy-copy-0937",
+          "academy-copy-0938",
+          "academy-copy-0939",
+          "academy-copy-0940",
+          "academy-copy-0941",
+          "academy-copy-0942",
+          "academy-copy-0943",
+          "academy-copy-0944",
+          "academy-copy-0945",
+          "academy-copy-0946",
+          "academy-copy-0947",
+          "academy-copy-0948",
+          "academy-copy-0949",
+          "academy-copy-0950",
+          "academy-copy-0951",
+          "academy-copy-0952",
+          "academy-copy-0953",
+          "academy-copy-0954",
+          "academy-copy-0955",
+          "academy-copy-0956",
+          "academy-copy-0957",
+          "academy-copy-0958",
+          "academy-copy-0959",
+          "academy-copy-0960",
+          "academy-copy-0961",
+          "academy-copy-0962",
+          "academy-copy-0963",
+          "academy-copy-0964",
+          "academy-copy-0965",
+          "academy-copy-0966",
+          "academy-copy-0967",
+          "academy-copy-0968",
+          "academy-copy-0969",
+          "academy-copy-0970",
+          "academy-copy-0971",
+          "academy-copy-0972",
+          "academy-copy-0973",
+          "academy-copy-0974",
+          "academy-copy-0975",
+          "academy-copy-0976",
+          "academy-copy-0977",
+          "academy-copy-0978",
+          "academy-copy-0979",
+          "academy-copy-0980",
+          "academy-copy-0981",
+          "academy-copy-0982",
+          "academy-copy-0983",
+          "academy-copy-0984",
+          "academy-copy-0985",
+          "academy-copy-0986",
+          "academy-copy-0987",
+          "academy-copy-0988",
+          "academy-copy-0989",
+          "academy-copy-0990",
+          "academy-copy-0991",
+          "academy-copy-0992",
+          "academy-copy-0993",
+          "academy-copy-0994",
+          "academy-copy-0995",
+          "academy-copy-0996",
+          "academy-copy-0997",
+          "academy-copy-0998",
+          "academy-copy-0999",
+          "academy-copy-1000",
+          "academy-copy-1001",
+          "academy-copy-1002",
+          "academy-copy-1003",
+          "academy-copy-1004",
+          "academy-copy-1005",
+          "academy-copy-1006",
+          "academy-copy-1007",
+          "academy-copy-1008",
+          "academy-copy-1009",
+          "academy-copy-1010",
+          "academy-copy-1011"
+        ],
+        "entryCount": 505,
+        "textSha256": "39ea1e7b246cb9dff5a589c515e1f325c767f930d38aa9d5763dedcf02ed8416",
+        "findingCount": 25,
+        "statusCounts": {
+          "not-applicable": 3,
+          "pass": 3,
+          "unknown": 14,
+          "warn": 5
+        },
+        "codeCounts": {
+          "M_MANUAL_REVIEW": 14,
+          "N_NO_FOCALIZER": 2,
+          "N_NOT_ACTION": 1,
+          "P_NO_REDUNDANT_INFERENCE": 1,
+          "P_PUNCTUATION_RESTRAINED": 2,
+          "W_EXPOSITION_NO_DELTA": 2,
+          "W_EXTERNALITIES_MISSING": 3
+        }
+      }
+    ]
+  },
+  "requests": [
+    {
+      "requestId": "fos.academy.compare-intro",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-004"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "db7ecb4f8949f4852aaaea3e64146ccea5c1cc0280da603c8c4a4d475815d461",
+      "derivationDigest": "fd69c325253a6ca9d37bff3666204c2a708a5be5c2884a4ada2a668ca9de6951",
+      "outputs": [
+        {
+          "publishId": "academy.compare.intro",
+          "key": "interpretive:standard",
+          "candidateId": "academy.compare-intro-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "e4922e2d49cb714e24f5afc27f7341c3921d2dbf5ae7763880b6a038749f2d40",
+          "requiredAtomCount": 5,
+          "coveredAtomCount": 5,
+          "requiredAtomIdsSha256": "22a6f642220ce3016c57e96b2a2337bc6638a309d0bb2a1965750add38c9bfae",
+          "coverageRatio": 1,
+          "findingCount": 45,
+          "statusCounts": {
+            "not-applicable": 5,
+            "pass": 20,
+            "unknown": 20
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 20,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "N_NOT_MAJOR_SCENE": 2,
+            "P_CADENCE_RANGE": 2,
+            "P_CLAIMS_SCOPED": 3,
+            "P_ENDING_ADVANCES": 1,
+            "P_EXPOSITION_LINKED": 6,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 2,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.academy.independent-status",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-005"
+        ],
+        "sourceRefs": [
+          "src.academy.sources"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "2ddb5f96e22a8068a3e34c2f035f4fb5b42d669251ea8bd6e52a50d7e14f25aa",
+      "derivationDigest": "359aa99f500f743588369f8338b280ae2f4cf713b762474959dfd42156a59c82",
+      "outputs": [
+        {
+          "publishId": "academy.sources.independentStatus",
+          "key": "operative:standard",
+          "candidateId": "academy.independent-status-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "73811af75e3e782a9e72655a25e6e5583ddcccf5ed1b93fae01e19806b92a0e7",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "e3716f63418428ee8983b18579c3123d498d83ac0e6744bcf299f94ae1cf7059",
+          "coverageRatio": 1,
+          "findingCount": 26,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 12,
+            "unknown": 11
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 11,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 1,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.academy.language-system",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-008"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.sources"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "f090c441a95843186aac08c6a6d89868b6be9c7a79394e0d2c0aaa0af1b8b398",
+      "derivationDigest": "8990bae54f277278557d477165fa45f2eb9f12fcc9ea53deb4b4bedc0d5d7c28",
+      "outputs": [
+        {
+          "publishId": "academy.sources.languageSystem",
+          "key": "interpretive:standard",
+          "candidateId": "academy.language-system-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "372ab72d14963b5c8a08e2302824639c3780dbd843626c7e193f649784aded7f",
+          "requiredAtomCount": 6,
+          "coveredAtomCount": 6,
+          "requiredAtomIdsSha256": "b6690e2194bec825962b0d479a2780fc073395a8cd2de61ab5d4d415884ca973",
+          "coverageRatio": 1,
+          "findingCount": 29,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 11,
+            "unknown": 13,
+            "warn": 2
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 13,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 2
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.academy.model-boundary",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SCP-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-007"
+        ],
+        "sourceRefs": [
+          "src.academy.sources",
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.armaments"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "4d26d570c977ac1b749a13866c77dc31202102bca115f312e07dadd5085c41bc",
+      "derivationDigest": "d11100b52d204a0a0b4ffee7733caa811dfb0d7fcb4de721654e066f0f62355f",
+      "outputs": [
+        {
+          "publishId": "academy.sources.modelBoundary",
+          "key": "operative:standard",
+          "candidateId": "academy.model-boundary-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "58e4ecb90924401c99bd9dabec4a8149564b10278f7eefc3df04094aee8ba184",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "83a9887cbab8fe1d90803ad7b73d23696349c6d305481e050953ca5a40fb2e89",
+          "coverageRatio": 1,
+          "findingCount": 24,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 11,
+            "unknown": 9,
+            "warn": 1
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 9,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.academy.sources-intro",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-001",
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-006"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.sources"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "da2a402ad106379c351d2e8cb5fca85d383bb7d42f5eddd62da8b79ca21b6392",
+      "derivationDigest": "5f49cab2a1dcf1ed8a8f66ceb835c010be45e2f2b41d05e9eb3127e4cf2be34c",
+      "outputs": [
+        {
+          "publishId": "academy.sources.intro",
+          "key": "interpretive:standard",
+          "candidateId": "academy.sources-intro-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "f4f71e290ffa491803d2c70adc9dc3a772365a5d28c5cf53f3dc56ce9604c6d3",
+          "requiredAtomCount": 5,
+          "coveredAtomCount": 5,
+          "requiredAtomIdsSha256": "bfcdafa4745a5bbf03186c4291d7ec1c0297758a56f9695aac14b96cf8a9e29f",
+          "coverageRatio": 1,
+          "findingCount": 27,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 8,
+            "unknown": 14,
+            "warn": 2
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 14,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 1,
+            "P_EXPOSITION_LINKED": 2,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 2
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.guide.command-turns",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-003",
+          "FOS-COPY-GUIDE-004"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.turn-learning"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "44bfd3b7b75ea800ef8e22581d6c62859f4646eeff484955e2e86f4f341a0691",
+      "derivationDigest": "a05dbb51bae3e386183ee57633eb9f0a20400cab2bfe5a72350ac8920120e585",
+      "outputs": [
+        {
+          "publishId": "game.guide.commandTurns.interpretive",
+          "key": "interpretive:standard",
+          "candidateId": "command-turns-interpretive-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "db909e802be50eb81a3777286f7422b21aca814e3479798f74068cea816cba09",
+          "requiredAtomCount": 4,
+          "coveredAtomCount": 4,
+          "requiredAtomIdsSha256": "b26a19f18c4b7610fb224e312676904ea94fc20e340e4646696814c9a8657eac",
+          "coverageRatio": 1,
+          "findingCount": 26,
+          "statusCounts": {
+            "not-applicable": 2,
+            "pass": 10,
+            "unknown": 12,
+            "warn": 2
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 12,
+            "N_NO_FOCALIZER": 2,
+            "P_ACTION_GRAPH": 4,
+            "P_CLAIMS_SCOPED": 1,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 2
+          }
+        },
+        {
+          "publishId": "game.guide.commandTurns.operative",
+          "key": "operative:standard",
+          "candidateId": "command-turns-operative-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "1931a91b33e106961049763e04d158ccbff719f028724265a3f96f7defa8512b",
+          "requiredAtomCount": 4,
+          "coveredAtomCount": 4,
+          "requiredAtomIdsSha256": "2d27e84b5a4f5c8eeef9af15ee80c53feef42b60291b3db3dbd1fb970afc7cf1",
+          "coverageRatio": 1,
+          "findingCount": 21,
+          "statusCounts": {
+            "not-applicable": 2,
+            "pass": 10,
+            "unknown": 8,
+            "warn": 1
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 8,
+            "N_NO_FOCALIZER": 2,
+            "P_ACTION_GRAPH": 4,
+            "P_CLAIMS_SCOPED": 1,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.guide.mission-credit",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-003",
+          "FOS-COPY-GUIDE-004"
+        ],
+        "sourceRefs": [
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.armaments",
+          "src.model.mission-credit"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "9eac9f361f5c30370ae831ff621bcf007c8020fa41317ac6617e6983db7aaafc",
+      "derivationDigest": "2add8635ba639b9cd68b988a74681cec85e796b7aa5cf43d81c73a4f47bbf9e1",
+      "outputs": [
+        {
+          "publishId": "game.guide.missionCredit.interpretive",
+          "key": "interpretive:standard",
+          "candidateId": "mission-credit-interpretive-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "1b9281e8905e9adec4fb771f5c8733a83698c5475f1e2a365c111204123f8e5e",
+          "requiredAtomCount": 5,
+          "coveredAtomCount": 5,
+          "requiredAtomIdsSha256": "b1eff36d213bc59aa9e4b80c7f5f1685acee4dc89a9cd82c922674fdcafde2ee",
+          "coverageRatio": 1,
+          "findingCount": 26,
+          "statusCounts": {
+            "not-applicable": 2,
+            "pass": 10,
+            "unknown": 12,
+            "warn": 2
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 12,
+            "N_NO_FOCALIZER": 2,
+            "P_ACTION_GRAPH": 4,
+            "P_CLAIMS_SCOPED": 1,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 2
+          }
+        },
+        {
+          "publishId": "game.guide.missionCredit.operative",
+          "key": "operative:standard",
+          "candidateId": "mission-credit-operative-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "9c947905c8b776e478f0cab6b2ea197178b92c007fe55eac9cf2ea3be0c340c8",
+          "requiredAtomCount": 5,
+          "coveredAtomCount": 5,
+          "requiredAtomIdsSha256": "d459037eadc0e11be7fd106168774421ca58b49320da2d2721e9562a8148e8d9",
+          "coverageRatio": 1,
+          "findingCount": 21,
+          "statusCounts": {
+            "not-applicable": 2,
+            "pass": 11,
+            "unknown": 8
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 8,
+            "N_NO_FOCALIZER": 2,
+            "P_ACTION_GRAPH": 4,
+            "P_CLAIMS_SCOPED": 1,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 1,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.guide.mission-learning",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-009",
+          "FOS-COPY-GUIDE-010"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning",
+          "src.game.turn-learning",
+          "src.model.mission-credit"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "51bb545fa7ef3d0bb4882916549cc5d0dae81ebb30a6a0c2d68f0667c033884c",
+      "derivationDigest": "c0199550fff5d96dbc089538398f3b9c8b5641a174b35c19167186beaa36f816",
+      "outputs": [
+        {
+          "publishId": "game.guide.missionLearning.interpretive",
+          "key": "interpretive:standard",
+          "candidateId": "mission-learning-interpretive-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "7a9812a25b83089204299c305c9fb3e90fc3daec2e25ae814174b975a1a92d51",
+          "requiredAtomCount": 4,
+          "coveredAtomCount": 4,
+          "requiredAtomIdsSha256": "1f9bcd1b991b4f72ca5491c87fdc5dfc1c239366c080043fed9255290301c7e5",
+          "coverageRatio": 1,
+          "findingCount": 23,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 8,
+            "unknown": 12
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 12,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 1,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        },
+        {
+          "publishId": "game.guide.missionLearning.operative",
+          "key": "operative:standard",
+          "candidateId": "mission-learning-operative-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "32cb087f6f1ab9a51ca15c1dc47a82726d38c20b4c01f8c7cc82385d680ff0cd",
+          "requiredAtomCount": 4,
+          "coveredAtomCount": 4,
+          "requiredAtomIdsSha256": "665b9a693a46c12060834234a2187e3885d66edf612d929a4cf4406eb2b62bd4",
+          "coverageRatio": 1,
+          "findingCount": 18,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 6,
+            "unknown": 8,
+            "warn": 1
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 8,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 1,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.guide.model-boundary",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-007",
+          "FOS-COPY-GUIDE-008"
+        ],
+        "sourceRefs": [
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.armaments"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "1d1a79409520d448b87f791f71fca637bb9b1464d2a77698f831348e9292ff8d",
+      "derivationDigest": "8ec17827c2efade452b563543018068cfdb6a3d6cb782c787a1772b94b63d586",
+      "outputs": [
+        {
+          "publishId": "game.guide.modelBoundary.interpretive",
+          "key": "interpretive:standard",
+          "candidateId": "model-boundary-interpretive-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "08e73b2be2aa98caa3f01d346ddb630251ac65cc4e8f29d6ca8309099faa3ed2",
+          "requiredAtomCount": 4,
+          "coveredAtomCount": 4,
+          "requiredAtomIdsSha256": "acf0bf75b7213a4af33233db79f0ef5af2671c9d9c26dd0a8134855585ff1f8e",
+          "coverageRatio": 1,
+          "findingCount": 29,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 13,
+            "unknown": 13
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 13,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        },
+        {
+          "publishId": "game.guide.modelBoundary.operative",
+          "key": "operative:standard",
+          "candidateId": "model-boundary-operative-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "5d6115e1f831e0f0a76d0f484cbe40bb541c167b691af405e74d511ddfd73095",
+          "requiredAtomCount": 4,
+          "coveredAtomCount": 4,
+          "requiredAtomIdsSha256": "de3a977a1975389f2f5a4034e40bb209ea93bcd8b0c41ebd0b57c5cdfa796fa1",
+          "coverageRatio": 1,
+          "findingCount": 24,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 12,
+            "unknown": 9
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 9,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 1,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.guide.scenario-acceptance",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SCP-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-001",
+          "FOS-COPY-GUIDE-002"
+        ],
+        "sourceRefs": [
+          "src.model.scenario-coexistence"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "e9dcda448087f11588a5fe12f49f9d665b62ce2e2294cf0a2634d454863c55bd",
+      "derivationDigest": "8f70f39234ee01acd85dd90c6cb318e993ac6abe73d110e6bd6891aa3f88c86d",
+      "outputs": [
+        {
+          "publishId": "game.guide.scenarioAcceptance.interpretive",
+          "key": "interpretive:standard",
+          "candidateId": "scenario-acceptance-interpretive-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "e8ae10fd37d9545fa59e9a3c45678c946d7b1a468e749f36f66921670a075346",
+          "requiredAtomCount": 3,
+          "coveredAtomCount": 3,
+          "requiredAtomIdsSha256": "d806956df2fd2862829bd26d45179e90b417189e0f02329285bf65055a41e7f3",
+          "coverageRatio": 1,
+          "findingCount": 29,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 13,
+            "unknown": 13
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 13,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        },
+        {
+          "publishId": "game.guide.scenarioAcceptance.operative",
+          "key": "operative:standard",
+          "candidateId": "scenario-acceptance-operative-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "c71681634349e0cec2791f9446e1f4fb5587cfa89ad23ee30e2b0faf0c830203",
+          "requiredAtomCount": 3,
+          "coveredAtomCount": 3,
+          "requiredAtomIdsSha256": "9756249ed130f801bb0d50404dbdbc52caa04ccb3b8be9e4f3ec5cfcab9a6392",
+          "coverageRatio": 1,
+          "findingCount": 24,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 12,
+            "unknown": 9
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 9,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 1,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.guide.strategic-fit",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-005",
+          "FOS-COPY-GUIDE-006"
+        ],
+        "sourceRefs": [
+          "src.model.mission-credit",
+          "src.planning.readiness-gaps"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "bb8c92a411f08770562955f70df74d7d69ca4d83f4467a135f2799fdb24abb4a",
+      "derivationDigest": "efe7c79aa0b4569be6c68a7923a7f17444c84b20c7d361c1df9372e23aa05697",
+      "outputs": [
+        {
+          "publishId": "game.guide.strategicFit.interpretive",
+          "key": "interpretive:standard",
+          "candidateId": "strategic-fit-interpretive-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "207f5d23248d02ab27525d9bea624e5694c9b092ed185135f9b7ab1574621cb2",
+          "requiredAtomCount": 3,
+          "coveredAtomCount": 3,
+          "requiredAtomIdsSha256": "63488b6ba4ba65e86daae6f2bb43ae070dab495f8836797ea16eb0e900096233",
+          "coverageRatio": 1,
+          "findingCount": 31,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 11,
+            "unknown": 15,
+            "warn": 2
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 15,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 2
+          }
+        },
+        {
+          "publishId": "game.guide.strategicFit.operative",
+          "key": "operative:standard",
+          "candidateId": "strategic-fit-operative-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "df6fa61457f74c1549163d17de7bdd07d7ec73956971a7f8d79e84e771e0cedc",
+          "requiredAtomCount": 3,
+          "coveredAtomCount": 3,
+          "requiredAtomIdsSha256": "0678ecc410b1db1aad044edb7cfd5134cb50941531737c4e8abe87d32fd9fabc",
+          "coverageRatio": 1,
+          "findingCount": 26,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 12,
+            "unknown": 11
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 11,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 1,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.guide.uncrewed-undersea",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-001",
+          "FOS-COPY-GUIDE-002"
+        ],
+        "sourceRefs": [
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.mission-credit",
+          "src.planning.readiness-gaps"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "f3471fddbb8dec0637b56650fd44b8eb8828049a70aa179282d2e77ed88b0279",
+      "derivationDigest": "9a8b33a682717c78fdbe9a192e688f009f80dc0a5dae89ba0fc0c50537f5a8b3",
+      "outputs": [
+        {
+          "publishId": "game.guide.uncrewedUndersea.interpretive",
+          "key": "interpretive:standard",
+          "candidateId": "uncrewed-undersea-interpretive-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "98d057eeea684974d75cd8c0a92af61aa9bb6f0eba455aeac8bba172217e256d",
+          "requiredAtomCount": 4,
+          "coveredAtomCount": 4,
+          "requiredAtomIdsSha256": "618d072dbc9e6667fab1a97099d3e9e2b829ac550c35df8957848b4844b84d11",
+          "coverageRatio": 1,
+          "findingCount": 29,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 11,
+            "unknown": 13,
+            "warn": 2
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 13,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 2
+          }
+        },
+        {
+          "publishId": "game.guide.uncrewedUndersea.operative",
+          "key": "operative:standard",
+          "candidateId": "uncrewed-undersea-operative-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "412a6a0be20e258287861695d701a2c2e477b02c193672cd2fca901241440615",
+          "requiredAtomCount": 4,
+          "coveredAtomCount": 4,
+          "requiredAtomIdsSha256": "7f3a0ffe6a22a02860720f713a7cc9a1464653ee3f80b47cbafd93ccca401805",
+          "coverageRatio": 1,
+          "findingCount": 24,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 12,
+            "unknown": 9
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 9,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 1,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.learning.outcome-adjustment",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-001"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "2b329247b0198c7688d4f1b2e761e863625b50a82faff48cd22f67bbec95a8d4",
+      "derivationDigest": "b96f8b771b5bfce6b8e2a49400281bc046a965bf6577deea50c7750135c6fd21",
+      "outputs": [
+        {
+          "publishId": "game.learning.outcome.adjustment",
+          "key": "interpretive:standard",
+          "candidateId": "outcome-adjustment-v2",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "39beb64ad951cf19737695ba47061329cd0c331e84ff9f7571c356b6af59ce8c",
+          "requiredAtomCount": 5,
+          "coveredAtomCount": 5,
+          "requiredAtomIdsSha256": "caf89ea3815fa1b4606008d2b4ef79de7b0db8c2411f2a89911f88ed8b0d86b5",
+          "coverageRatio": 1,
+          "findingCount": 34,
+          "statusCounts": {
+            "not-applicable": 7,
+            "pass": 13,
+            "unknown": 14
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 14,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "N_NOT_MAJOR_SCENE": 2,
+            "N_SHORT_SAMPLE": 2,
+            "P_CLAIMS_SCOPED": 1,
+            "P_ENDING_ADVANCES": 1,
+            "P_EXPOSITION_LINKED": 4,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.learning.outcome-clear",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-001"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "359d392edafe70435da90de684784d16a2f3494bc32b0e6e625205850fd59be5",
+      "derivationDigest": "d1ec7ac1eb38410bae5b4e5e3906355c6d5f92170b1015dbe561403d820a02f6",
+      "outputs": [
+        {
+          "publishId": "game.learning.outcome.clear",
+          "key": "interpretive:standard",
+          "candidateId": "learning.outcome-clear-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "559874aae10dca36fc449744247e4e4779793194bff1223ce4fdbb8b9342586f",
+          "requiredAtomCount": 5,
+          "coveredAtomCount": 5,
+          "requiredAtomIdsSha256": "e421cd986f8b59e27123d68fcac1d68f5109f4ae52f9be715f1861089afcc2e4",
+          "coverageRatio": 1,
+          "findingCount": 34,
+          "statusCounts": {
+            "not-applicable": 7,
+            "pass": 13,
+            "unknown": 14
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 14,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "N_NOT_MAJOR_SCENE": 2,
+            "N_SHORT_SAMPLE": 2,
+            "P_CLAIMS_SCOPED": 1,
+            "P_ENDING_ADVANCES": 1,
+            "P_EXPOSITION_LINKED": 4,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.learning.outcome-pending",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-002"
+        ],
+        "sourceRefs": [
+          "src.game.outcome-learning"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "3fbf9bbf0c03513ee142b5c632592eed23cf663d76190230b54a6027b5c1601f",
+      "derivationDigest": "90fe7abc8c58f92a975917de155bb70f91837b5ef0c8b47cfb3ab7d7fb55611e",
+      "outputs": [
+        {
+          "publishId": "game.learning.outcome.pending",
+          "key": "operative:standard",
+          "candidateId": "learning.outcome-pending-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "7d0e39031f38c8f174f4a84c8b41235485c084b551d8f5bdd737e29b069e50d3",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "b154d9b5c0a5404aede2aab4562dad827103ec8758010e15b3d1e73d28359cc4",
+          "coverageRatio": 1,
+          "findingCount": 23,
+          "statusCounts": {
+            "not-applicable": 6,
+            "pass": 8,
+            "unknown": 9
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 9,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "N_NOT_MAJOR_SCENE": 2,
+            "N_SINGLE_SENTENCE": 1,
+            "P_CLAIMS_SCOPED": 1,
+            "P_EXPOSITION_LINKED": 4,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 1,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.learning.outcome-uncertainty",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-001"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "25fc14c4304adc23ef23d46bb6c3a5d0e41c5cb1e89f88a81a797c429db5e318",
+      "derivationDigest": "c7864c4f1e4cf3b6b4ac895313bca4d84ed9bc86b8564462b38901c2f996f88d",
+      "outputs": [
+        {
+          "publishId": "game.learning.outcome.uncertainty",
+          "key": "interpretive:standard",
+          "candidateId": "learning.outcome-uncertainty-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "cb147dfc60cd82d819e4e91c2e42d27d7a149081fd47456dbd31a8536f4332d7",
+          "requiredAtomCount": 5,
+          "coveredAtomCount": 5,
+          "requiredAtomIdsSha256": "9747853b3e2f7e95ea7c3e635c672cd5de32067d7b2e28b8fe8b2217f0f2f0db",
+          "coverageRatio": 1,
+          "findingCount": 34,
+          "statusCounts": {
+            "not-applicable": 7,
+            "pass": 13,
+            "unknown": 14
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 14,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "N_NOT_MAJOR_SCENE": 2,
+            "N_SHORT_SAMPLE": 2,
+            "P_CLAIMS_SCOPED": 1,
+            "P_ENDING_ADVANCES": 1,
+            "P_EXPOSITION_LINKED": 4,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.learning.turn-clear",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-003"
+        ],
+        "sourceRefs": [
+          "src.game.turn-learning"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "4a3b95248870009e054cb243f0b93bbe85f13f85d46e3c6979ba42bcac128eee",
+      "derivationDigest": "e4e4edfc3db393f062509cfb880ff32008b8ed1e7a86ebab8f32086e29119557",
+      "outputs": [
+        {
+          "publishId": "game.learning.turn.clear",
+          "key": "operative:standard",
+          "candidateId": "learning.turn-clear-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "599cd0ab579d245173e84e1ce035dbacb4934a8dfef2df2679347635b9c50038",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "fceb42461a0b94d873b4d672eca8de2b61785a4048995f51ed72e69d050ed7ee",
+          "coverageRatio": 1,
+          "findingCount": 24,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 12,
+            "unknown": 9
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 9,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 1,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.learning.turn-uncertainty",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-003"
+        ],
+        "sourceRefs": [
+          "src.game.turn-learning"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "b3d828345a643086479048a44049eb02d94fe78f91fc9a686a7d33b34ec9cb78",
+      "derivationDigest": "b4b01be2ff4ae1e3fd68f3b20467b141855116568be0a4004a3579527c32168b",
+      "outputs": [
+        {
+          "publishId": "game.learning.turn.uncertainty",
+          "key": "operative:standard",
+          "candidateId": "learning.turn-uncertainty-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "dbe7279ca411e83d3b06f5947a3ae8294c462e7e8fd13e671e9e38118403f49c",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "0d18364ffaf58b60393d9ed8d2f6bd2fa9c14160266ea3a4108222ff061afbf5",
+          "coverageRatio": 1,
+          "findingCount": 24,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 11,
+            "unknown": 9,
+            "warn": 1
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 9,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.game.outcome.unscored-writing",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-002",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-003"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "340f5adfee8132edd5b3b8a1423c5adcda593a6de42410b476a60bb6329447ce",
+      "derivationDigest": "11bc26c74b01276c4025abc442e6f9972eb6c6825fa9d6221f8eed0546cdcab9",
+      "outputs": [
+        {
+          "publishId": "game.outcome.unscoredWriting",
+          "key": "operative:standard",
+          "candidateId": "unscored-writing-operative-v2",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "ebaa4fd7a4c6fd6f70ce86e1c390380482e69f4b087a158374e430a5dd4cdce5",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "66d1b64e73833a02884479c0a2e8ca9cc1595324ccfdfe4bdcdb28b80cd49c14",
+          "coverageRatio": 1,
+          "findingCount": 24,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 12,
+            "unknown": 9
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 9,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 1,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -119,7 +119,7 @@ export function deriveOperationalStrategy(input: OperationalStrategyInput | Scen
     recommendedUncrewed,
     recommendedUndersea,
     environmentEffects,
-    summary: `${FLEET_METHOD_LABELS[friendlyMethod]} under ${POSTURE_LABELS[friendlyPosture].toLowerCase()}; opposition is assessed as ${FLEET_METHOD_LABELS[opposingMethod].toLowerCase()} under ${POSTURE_LABELS[opposingPosture].toLowerCase()}.`,
+    summary: `${FLEET_METHOD_LABELS[friendlyMethod]} under ${POSTURE_LABELS[friendlyPosture].toLowerCase()}. Opposing method and posture are not confirmed.`,
   };
 }
 

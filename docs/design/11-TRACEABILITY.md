@@ -7,14 +7,17 @@
 | No account or gameplay telemetry | Privacy gate and Save dialog disclosure | Static app and local launcher | `SECURITY.md`, release network checks | Any app request sends decisions or save content |
 | No browser write before opt-in | Session-only path | `useBrowserSaveManager.ts`, `browserSaves.ts` | Browser privacy tests | New app storage appears before consent |
 | Prose excluded by default | Save-policy checkbox and status | `minimizePortableSaveForBrowser` | Save-game/browser-save tests | Prose enters a default browser slot |
-| Coherent generated scenario | Atomic accepted brief | `synthesizeScenario`, `validateScenarioCoexistence` | Scenario/coastal tests | Any presented scenario has validation issue |
+| Structured coexistence-screened scenario | Atomic accepted brief | `synthesizeScenario`, `validateScenarioCoexistence` | Scenario/coastal tests | A presented scenario fails an implemented structured check, or those checks are called complete feasibility |
 | Ordered strategic reasoning | Locked/current/complete steps | `StrategicDecisionFlow.tsx` | Source/browser lifecycle tests | Force optimization precedes purpose without explanation |
 | Legal and credited force | Compatibility, capacity, points, readiness | `gameModel.ts`, `catalogMath.ts`, `forceReadiness.ts` | Catalog/readiness tests | Unhosted item earns mission credit |
 | Unknown contacts require sensing | “No markers shown” or bounded domain markers | `contactVisualization.ts`, `viewModel.ts` | Contact visualization tests | Identity/composition leaks or unsupported marker appears |
 | Deterministic command | No-reroll copy, exact undo | `kriegsspiel.ts`, `scenarioMatrix.ts` | Rigid/matrix/save replay tests | Same state/orders produce different result |
 | Uncertainty is precommitted | Matrix ranges and turn report | `scenarioMatrix.ts` | Matrix and browser situation tests | Draw is created only after seeing player order |
+| Evidence-led adversary reflection | Turns 2–6 require intent, observable-pattern, and next-action staff judgments, each with insufficient evidence | `commandIntelligence.ts`, `CommandIntelligencePanel.tsx`, `commandPhase.ts` | Command-intelligence/model/layout/browser tests; `requirements/turn-intelligence.json` | Resolve accepts a missing/unavailable judgment or a judgment changes adjudication |
+| Absolute intelligence chronology | Left-side known picture, Immediate, and occurrence-turn History with “Discovered during Turn N” | `commandIntelligence.ts`, `CommandIntelligencePanel.tsx`, `ResultDebrief.tsx` | Command-intelligence and debrief tests | Concealed fact leaks, late fact moves to discovery turn, or an empty resolved turn disappears |
 | Optional writing never scored | Point-of-entry note, TXT label | `StrategicDecisionFlow.tsx`, `kriegsspiel.ts` inputs | Source/unit tests | Resolution reads prose content |
-| Diagnostic loss and win | Cause → Evidence → Adjustment | `ResultDebrief.tsx` | Debrief/browser lifecycle tests | Finding has no cited evidence or repair |
+| Diagnostic loss and win | Recorded finding → evidence → adjustment; bounded no-finding state | `kriegsspiel.ts`, `ResultDebrief.tsx`, generated Lattice text map | Debrief/unit tests; browser suite inventory | Finding has no cited evidence or repair, or absent finding is called proof of correct play |
+| Bounded Lattice copy | Paired Field Guide layers, typed learning copy, selected Academy chrome | Owner-side compiler; `latticeCopy.ts`; 19 requests / 26 outputs | Closed requirements/inventory; pinned evidence; artifact scan | Runtime ships owner materials, copy alters mechanics, or bounded adoption is called product-wide |
 | Complete keyboard path | Skip link, native controls, dialog focus | `page.tsx`, dialog components | `ACCESSIBILITY.md`, browser tests | A required action is pointer-only |
 | Reduced motion completeness | Static representative scene | CSS and WebGL update functions | Reduced-motion browser/model tests | Essential object/state disappears |
 | Compact scene remains usable | Bounded mutually exclusive cards | `globals.css`, Battlefield HUD | Layout/text-containment tests | Wrapper paints or card consumes main plot |
@@ -26,12 +29,30 @@
 | Dark moon side is not drawn | Illuminated facet geometry only | `battlefieldScene.ts`, `MoonPhaseSwatch.tsx` | Celestial visibility tests | Dark hemisphere appears as an opaque disk |
 | Local portable TXT | Download/import controls and readable record | `saveGame.ts`, `SaveManager.tsx` | Save/import/browser tests | Invalid import partially replaces session |
 | Current save integrity | Replay rejection | `isCanonicalRigidState`, `parsePortableSave` | Save-game tamper tests | Altered commitment/state imports successfully |
+| Typed intelligence persistence | Version-4 machine payload plus as-known readable log | `saveGame.ts`, `kriegsspiel.ts` | Turn-intelligence save red-team tests | Typed action/infliction/observation data is stripped, presentation prose becomes authority, or active readable TXT reveals concealed state |
 | Fictional boundary | Independence copy and invented catalog | `README.md`, content data | Content verification | Official identifier or real-world claim enters release |
 | Dependency accountability | Notices, licenses, SBOM | `scripts/`, lockfile | License/SBOM/audit checks | Unreviewed license/version ships |
 | Perceptual organization | Clear figure–ground, semantic grouping, distinct motion channels | `globals.css`, scene render order and update functions | Gestalt analysis, layout/environment tests | Decorative or wrapper paint becomes the perceived content surface |
 | Empathy-led requirements | Persona pains/gains map to interaction and research questions | Cross-cutting product behavior | Empathy maps and playtest protocols | Hypotheses are presented as observed user fact |
 | Informative microcopy | Status, dependency, privacy, uncertainty, and recovery copy describes actual rules | React components and domain-derived labels | Microcopy system, content/source/browser tests | Copy omits consequence, repair, scope, or trust boundary |
 | Heuristic quality | Strengths, residual risks, and roadmap findings use a severity rubric | Cross-cutting implementation | Heuristic evaluation and re-evaluation protocol | Known severity 3–4 issue has no owner/evidence/release decision |
+
+### 1.1 Lattice evidence chain
+
+| Authority or artifact | Bound identity | What it does not establish |
+| --- | --- | --- |
+| `requirements/lattice-adoption.json` | Active semantic requirements, dependencies, conflicts, owners, acceptance, adversarial tests, status, supersession | That an implemented status has passed every test |
+| `requirements/lattice-copy-inventory.json` | 37 exact product-family units, routes, owners, adopted/exempt/blocked status | Product-wide adoption |
+| `authoring/lattice-copy.requests.json` | 19 requests, 26 targets, source references, selected candidates, `not-claimed` human status | Source truth or human approval |
+| Twelve hashed TypeScript declarations | Exact source file/declaration identity and drift | Domain correctness or semantic truth |
+| Owner generated output and evidence | Pinned realization, traceability, assertions, copy and file digests | Authentication, external anchoring, or full conformance |
+| Four-field runtime JSON | Snapshot ID, copy digest, and selected text map | Engine/profile execution or owner evidence in the browser |
+
+Traceability closes in both directions: a request must name active requirements,
+non-exempt inventory routes, owned publication paths, and existing source
+symbols; an adopted inventory target must resolve to the request and output
+that own it. The traceability digest is part of the generated and evidence
+snapshots. Generated outputs do not validate their own inputs.
 
 ## 2. Domain coverage matrix
 
@@ -62,7 +83,7 @@ Before implementation:
 
 Before release:
 
-- Has the rule been implemented once in a pure source of truth?
+- Has the rule been implemented once by an authoritative typed owner rather than inferred from presentation prose?
 - Do UI and TXT use player-facing labels rather than duplicating formulas?
 - Are state migrations and imports bounded and canonical?
 - Do source/model, interaction, rendered visual, and human-evidence claims remain distinct?
@@ -113,6 +134,11 @@ Before release:
 - Status messages are finite and do not compete with reports.
 - Outcome copy is evidence-based and non-shaming.
 - Unknown information is not implied through labels, animation, or export.
+- Turns 2–6 cannot resolve until all three bounded staff judgments are explicit;
+  insufficient evidence remains a valid, non-penalized choice.
+- Absolutely known facts and potentials are visually and semantically distinct.
+- Immediate includes the latest known opposing action and current known
+  inflictions; History preserves occurrence turn and first discovery turn.
 
 ## 6. Security and privacy review
 
@@ -120,6 +146,9 @@ Before release:
 - New fields have a documented minimization and TXT policy.
 - Imported values have size, shape, domain, and canonical checks.
 - Current command state remains replay-verifiable.
+- Current-format intelligence arrays and post-first-turn assessments are
+  shape-validated and replay-verified; partial pending judgments are limited
+  to the current public candidate sets.
 - Active readable TXT does not reveal future commitments.
 - Browser data is still described as unencrypted.
 - Runtime content policy and local-only asset assumptions still hold.
@@ -149,5 +178,8 @@ Update this suite when any of the following changes:
 - Academy content structure or progress storage;
 - release checks, dependencies, browser support, or evidence limits.
 - microcopy terminology, severity findings, persona hypotheses, or perceptual composition rules.
+- Lattice engine/profile pins, request or inventory routes, source-symbol hashes, runtime payload boundary, or adoption blockers.
+- turn-intelligence codes, disclosure thresholds, potential derivation,
+  occurrence/discovery chronology, save version, or responsive command order.
 
 The suite is versioned with the release. It should describe the product that is actually in the archive, not a remembered intention.

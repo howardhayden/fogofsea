@@ -104,5 +104,5 @@ One person may perform several roles, but every release still reviews each respo
 - A visual fallback preserves the complete decision service.
 - A loss includes evidence and recovery paths.
 - A hidden event cannot be exposed through TXT’s readable section before reveal.
-- A scenario is accepted only as a coherent whole.
+- A scenario is accepted only after the complete candidate passes the implemented structured coexistence checks; this does not establish complete feasibility.
 - A repeated state/order pair cannot produce a different result.

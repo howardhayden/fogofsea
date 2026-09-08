@@ -37,6 +37,7 @@ import {
 } from "./scenarioMatrix";
 import { isBoundedCleanText, isSafeIdentifier } from "./inputSecurity";
 import { jsonSemanticEqual } from "./jsonSemantic";
+import { latticeCopy, latticeLearningCopy } from "./latticeCopy";
 
 export type { Difficulty } from "./gameModel";
 
@@ -44,6 +45,73 @@ export type FormationOrder = "concentrated-screen" | "distributed-barrier" | "pr
 export type SensorOrder = "emission-control" | "passive-search" | "cooperative-fusion" | "active-sweep";
 export type TempoOrder = "hold" | "measured-advance" | "high-speed-dash" | "withdraw";
 export type EngagementOrder = "avoid" | "shadow" | "contain" | "bounded-effects";
+
+/**
+ * A player's deliberately non-authoritative reading of the opposition. These
+ * values frame the next order but never modify adjudication. `insufficient-*`
+ * values let the player record that the public evidence does not support a
+ * narrower judgment instead of forcing false certainty.
+ */
+export type AdversaryIntentAssumption =
+  | "preserve-freedom"
+  | "delay-objective"
+  | "degrade-screen"
+  | "deny-classification"
+  | "raise-political-cost"
+  | "insufficient-evidence";
+
+export type ObservedPatternAssumption =
+  | "probing-screen"
+  | "masking-main-movement"
+  | "concentrating-pressure"
+  | "dispersing-after-effects"
+  | "holding-contested-position"
+  | "insufficient-evidence";
+
+export type AdversaryNextActionAssumption =
+  | "probe-screen"
+  | "contest-sensors"
+  | "concentrate-pressure"
+  | "mask-movement"
+  | "disengage-preserve"
+  | "exploit-disruption"
+  | "insufficient-evidence";
+
+export type RigidAdversaryAssessment = {
+  intent?: AdversaryIntentAssumption;
+  observedPattern?: ObservedPatternAssumption;
+  nextAction?: AdversaryNextActionAssumption;
+};
+
+export type RigidObservationDomain = "air" | "surface" | "subsurface";
+
+/** Typed model truth. Public certainty is derived separately and never stored. */
+export type RigidAdversaryActionCode =
+  | "apply-pressure"
+  | "probe-screen"
+  | "contest-sensors"
+  | "mask-movement"
+  | "disperse-and-preserve"
+  | "hold-and-preserve"
+  | "exploit-disruption";
+
+export type RigidAdversaryAction = {
+  id: string;
+  occurredTurn: number;
+  subject: "opposition";
+  action: RigidAdversaryActionCode;
+  domains: RigidObservationDomain[];
+};
+
+export type RigidInfliction = {
+  id: string;
+  occurredTurn: number;
+  sourceSide: "selected-force" | "opposing-force";
+  targetSide: "selected-force" | "opposing-force";
+  effect: "integrity" | "cohesion";
+  amount: number;
+  domains: RigidObservationDomain[];
+};
 
 export type RigidOrders = {
   formation: FormationOrder;
@@ -61,6 +129,8 @@ export type RigidOrders = {
   coordination?: CoordinationMode;
   /** Optional only for migration of earlier local saves. */
   strategicPolicy?: StrategicForcePolicy;
+  /** Pending values may be partial; resolved turns 2–6 record all fields. */
+  adversaryAssessment?: RigidAdversaryAssessment;
 };
 
 export type RigidReadiness = {
@@ -153,6 +223,17 @@ export type RigidTurnDelta = {
   secondaryObjectiveProgress?: number;
 };
 
+/**
+ * Machine-readable reasons that a resolved turn did not fit the tracked
+ * command constraints. Presentation copy must never be parsed to recover
+ * these facts.
+ */
+export type RigidTurnDiagnosticCode =
+  | "task-mismatch"
+  | "reach-gap"
+  | "contact-gap"
+  | "employment-mismatch";
+
 export type RigidTurnReport = {
   turn: number;
   orders: RigidOrders;
@@ -164,6 +245,14 @@ export type RigidTurnReport = {
   matrixInput?: ResolutionMatrixInput;
   matrixResolution?: ResolutionMatrix;
   activeDisruptionIds?: string[];
+  /** Missing only on saves produced before typed turn diagnostics existed. */
+  diagnosticCodes?: RigidTurnDiagnosticCode[];
+  /** Required by v2 states; absent only on imported v1 transcripts. */
+  adversaryActions?: RigidAdversaryAction[];
+  /** Required by v2 states; absent only on imported v1 transcripts. */
+  inflictions?: RigidInfliction[];
+  /** Credited observation domains for this turn; required by v2 states. */
+  observationDomains?: RigidObservationDomain[];
 };
 
 export type RigidScoreBreakdown = {
@@ -232,7 +321,7 @@ export type RigidLearningAssessment = {
 };
 
 export type RigidGameState = {
-  version: 1;
+  version: 1 | 2;
   phase: "active" | "complete";
   turn: number;
   maxTurns: 6;
@@ -292,6 +381,121 @@ export const DEFAULT_RIGID_ORDERS: RigidOrders = {
   coordination: "federated",
   strategicPolicy: "conventional-restraint",
 };
+
+export const ADVERSARY_INTENT_ASSUMPTIONS: readonly AdversaryIntentAssumption[] = [
+  "preserve-freedom",
+  "delay-objective",
+  "degrade-screen",
+  "deny-classification",
+  "raise-political-cost",
+  "insufficient-evidence",
+];
+
+export const OBSERVED_PATTERN_ASSUMPTIONS: readonly ObservedPatternAssumption[] = [
+  "probing-screen",
+  "masking-main-movement",
+  "concentrating-pressure",
+  "dispersing-after-effects",
+  "holding-contested-position",
+  "insufficient-evidence",
+];
+
+export const ADVERSARY_NEXT_ACTION_ASSUMPTIONS: readonly AdversaryNextActionAssumption[] = [
+  "probe-screen",
+  "contest-sensors",
+  "concentrate-pressure",
+  "mask-movement",
+  "disengage-preserve",
+  "exploit-disruption",
+  "insufficient-evidence",
+];
+
+export const UNRESOLVED_ADVERSARY_ASSESSMENT: Readonly<Required<RigidAdversaryAssessment>> = {
+  intent: "insufficient-evidence",
+  observedPattern: "insufficient-evidence",
+  nextAction: "insufficient-evidence",
+};
+
+export type RigidAdversaryAssessmentCandidates = {
+  intent: AdversaryIntentAssumption[];
+  observedPattern: ObservedPatternAssumption[];
+  nextAction: AdversaryNextActionAssumption[];
+};
+
+function appendUniqueAssumption<T extends string>(values: T[], value: T) {
+  if (!values.includes(value)) values.push(value);
+}
+
+function boundedAssumptionCandidates<T extends string>(values: T[], insufficient: T) {
+  return [...values.filter((value) => value !== insufficient).slice(0, 2), insufficient];
+}
+
+/**
+ * Candidate codes are derived only from player-visible state and disclosed
+ * turn effects. Hidden actions, matrix commitments, and actor count are not
+ * inputs. Keeping this predicate in the rigid domain lets live resolution and
+ * canonical replay enforce the same historical choice set.
+ */
+export function rigidAdversaryAssessmentCandidates(
+  state: RigidGameState,
+): RigidAdversaryAssessmentCandidates {
+  const latest = state.reports.at(-1);
+  const intent: AdversaryIntentAssumption[] = [];
+  if (state.contactQuality < 65) appendUniqueAssumption(intent, "deny-classification");
+  if (state.objectiveProgress < 75) appendUniqueAssumption(intent, "delay-objective");
+  if ((latest?.inflictions ?? []).some((entry) => entry.targetSide === "selected-force")) {
+    appendUniqueAssumption(intent, "degrade-screen");
+  }
+  if (state.escalation > 35) appendUniqueAssumption(intent, "raise-political-cost");
+
+  const observedPattern: ObservedPatternAssumption[] = [];
+  if ((latest?.inflictions ?? []).some((entry) => entry.targetSide === "selected-force")) {
+    appendUniqueAssumption(observedPattern, "concentrating-pressure");
+  }
+  if ((latest?.inflictions ?? []).some((entry) => entry.targetSide === "opposing-force")) {
+    appendUniqueAssumption(observedPattern, "dispersing-after-effects");
+  }
+  if ((latest?.delta.contactQuality ?? 0) > 0) appendUniqueAssumption(observedPattern, "probing-screen");
+  if (state.contactQuality < 40 || (latest?.delta.contactQuality ?? 0) < 0) {
+    appendUniqueAssumption(observedPattern, "masking-main-movement");
+  }
+
+  const nextAction: AdversaryNextActionAssumption[] = [];
+  if ((latest?.inflictions ?? []).some((entry) => entry.targetSide === "selected-force")) {
+    appendUniqueAssumption(nextAction, "concentrate-pressure");
+  }
+  if (state.contactQuality < 65) appendUniqueAssumption(nextAction, "contest-sensors");
+  if ((latest?.inflictions ?? []).some((entry) => entry.targetSide === "opposing-force")) {
+    appendUniqueAssumption(nextAction, "disengage-preserve");
+  }
+  if ((latest?.delta.contactQuality ?? 0) > 0) appendUniqueAssumption(nextAction, "mask-movement");
+
+  return {
+    intent: boundedAssumptionCandidates(intent, "insufficient-evidence"),
+    observedPattern: boundedAssumptionCandidates(observedPattern, "insufficient-evidence"),
+    nextAction: boundedAssumptionCandidates(nextAction, "insufficient-evidence"),
+  };
+}
+
+export function isReasonableRigidAdversaryAssessment(
+  state: RigidGameState,
+  assessment: RigidAdversaryAssessment | undefined,
+): assessment is Required<RigidAdversaryAssessment> {
+  if (!isCompleteAdversaryAssessment(assessment)) return false;
+  const candidates = rigidAdversaryAssessmentCandidates(state);
+  return candidates.intent.includes(assessment.intent)
+    && candidates.observedPattern.includes(assessment.observedPattern)
+    && candidates.nextAction.includes(assessment.nextAction);
+}
+
+export function isCompleteAdversaryAssessment(
+  value: RigidAdversaryAssessment | undefined,
+): value is Required<RigidAdversaryAssessment> {
+  return Boolean(value
+    && value.intent && ADVERSARY_INTENT_ASSUMPTIONS.includes(value.intent)
+    && value.observedPattern && OBSERVED_PATTERN_ASSUMPTIONS.includes(value.observedPattern)
+    && value.nextAction && ADVERSARY_NEXT_ACTION_ASSUMPTIONS.includes(value.nextAction));
+}
 
 type DifficultyRules = {
   sensorAdjustment: number;
@@ -512,6 +716,10 @@ function engagementContactThreshold(engagement: EngagementOrder, scenario: Rigid
   return clamp(base + difficultyRules(scenario).contactThresholdAdjustment);
 }
 
+function requiresEffectReach(orders: RigidOrders) {
+  return orders.engagement !== "avoid" && orders.tempo !== "withdraw";
+}
+
 function environmentalFriction(scenario: RigidScenario) {
   const cloud = { clear: 0, scattered: 1, broken: 3, overcast: 5 }[scenario.clouds];
   const precipitation = scenario.precipitation === "none" ? 0 : 4;
@@ -567,18 +775,75 @@ function defensivePower(readiness: RigidReadiness, scenario: RigidScenario, orde
   return value * (0.82 + forceAdaptationScore(readiness) * 0.0018);
 }
 
-function contactDescription(contactQuality: number, opposingCohesion: number) {
+function contactDescription(contactQuality: number) {
   if (contactQuality < 20) return "Scattered indications only; identity, number, and intent remain unresolved.";
   if (contactQuality < 40) return "A probable contact pattern is forming, but decoys and neutral activity cannot be separated confidently.";
-  if (contactQuality < 65) return opposingCohesion < 55
-    ? "Several correlated tracks show disrupted movement; exact remaining strength is uncertain."
-    : "Correlated tracks reveal organized opposition, though exact strength and disposition remain uncertain.";
-  if (contactQuality < 85) return opposingCohesion < 45
-    ? "High-confidence tracks show fragmented opposition attempting to recover freedom of movement."
-    : "High-confidence tracks reveal the main opposing movement and a smaller supporting element.";
-  return opposingCohesion < 35
-    ? "Persistent multi-method custody shows opposition breaking into isolated elements."
-    : "Persistent multi-method custody shows the opposing scheme, principal movement, and supporting elements.";
+  if (contactQuality < 65) return "Correlated tracks reveal organized opposition, though exact strength, disposition, and intent remain uncertain.";
+  if (contactQuality < 85) return "High-confidence tracks reveal a principal movement and supporting activity; purpose and effects remain assessed rather than confirmed.";
+  return "Persistent multi-method custody establishes the opposing movement and its observable actions; unobserved intent still requires judgment.";
+}
+
+const AIR_OBSERVATION_METHODS = new Set(["active radar", "passive emitter", "infrared", "cooperative network"]);
+const SURFACE_OBSERVATION_METHODS = new Set(["active radar", "passive emitter", "electro-optical", "infrared", "cooperative network"]);
+const SUBSURFACE_OBSERVATION_METHODS = new Set(["active acoustic", "passive acoustic", "magnetic anomaly", "bathymetric comparison"]);
+
+function rigidObservationDomains(readiness: RigidReadiness): RigidObservationDomain[] {
+  const methods = new Set(readiness.trackingMethods.map((method) => method.toLowerCase()));
+  const includesAny = (candidates: ReadonlySet<string>) => [...candidates].some((method) => methods.has(method));
+  return [
+    ...(includesAny(AIR_OBSERVATION_METHODS) ? ["air" as const] : []),
+    ...(includesAny(SURFACE_OBSERVATION_METHODS) ? ["surface" as const] : []),
+    ...(includesAny(SUBSURFACE_OBSERVATION_METHODS) ? ["subsurface" as const] : []),
+  ];
+}
+
+function warfareObservationDomains(task: Warfare): RigidObservationDomain[] {
+  if (task === "air-defense" || task === "missile-defense") return ["air"];
+  if (task === "undersea-operations") return ["subsurface"];
+  if (task === "surface-operations" || task === "maritime-interdiction" || task === "mine-countermeasures") return ["surface"];
+  if (task === "land-attack") return ["air", "surface"];
+  return ["air", "surface", "subsurface"];
+}
+
+function adversaryActionDomains(scenario: RigidScenario): RigidObservationDomain[] {
+  const domains = new Set<RigidObservationDomain>();
+  for (const area of [...scenario.required, ...scenario.recommended]) {
+    for (const domain of warfareObservationDomains(area)) domains.add(domain);
+  }
+  return domains.size ? [...domains] : ["surface"];
+}
+
+function rigidAdversaryAction(input: {
+  turn: number;
+  currentContact: number;
+  nextContact: number;
+  integrityLoss: number;
+  cohesionLoss: number;
+  opposingMethod: ReturnType<typeof deriveOperationalStrategy>["opposingMethod"];
+  opposingPosture: ReturnType<typeof deriveOperationalStrategy>["opposingPosture"];
+  activeDisruptionCount: number;
+  scenario: RigidScenario;
+}): RigidAdversaryAction {
+  const action: RigidAdversaryActionCode = input.integrityLoss > 0
+    ? "apply-pressure"
+    : input.activeDisruptionCount > 0 && input.opposingPosture === "offensive"
+      ? "exploit-disruption"
+      : input.cohesionLoss > 0
+        ? "disperse-and-preserve"
+        : input.nextContact < input.currentContact
+          ? "contest-sensors"
+          : input.nextContact < 40
+            ? "mask-movement"
+            : input.opposingMethod === "fleet-action" && input.opposingPosture === "offensive"
+              ? "probe-screen"
+              : "hold-and-preserve";
+  return {
+    id: `opposition-action-turn-${input.turn}`,
+    occurredTurn: input.turn,
+    subject: "opposition",
+    action,
+    domains: adversaryActionDomains(input.scenario),
+  };
 }
 
 function escalationLimit(scenario: RigidScenario) {
@@ -621,7 +886,7 @@ function diagnosticFindings(
   for (const report of state.reports) {
     range += report.delta.rangeNm;
     contact += report.delta.contactQuality;
-    if (readiness.maxReachNm < range && range > 45) outOfReachTurns += 1;
+    if (requiresEffectReach(report.orders) && readiness.maxReachNm < range && range > 45) outOfReachTurns += 1;
     if (report.orders.engagement !== "avoid" && contact < engagementContactThreshold(report.orders.engagement, scenario)) belowContactTurns += 1;
     if (!scenario.required.includes(report.orders.task) && !scenario.recommended.includes(report.orders.task)) mismatchedTaskTurns += 1;
     if ((report.orders.uncrewed ?? "distributed-scouting") !== operational.recommendedUncrewed && readiness.uncrewedCount < 4) mismatchedUncrewedTurns += 1;
@@ -710,12 +975,16 @@ function diagnosticFindings(
     });
   }
   const secondaryThreshold = secondaryObjectiveThreshold(scenarioDifficulty(scenario));
-  const secondaryGap = Boolean(state.matrix?.activeSecondaryObjective) && (state.secondaryObjectiveProgress ?? 0) < secondaryThreshold;
+  const secondaryDisclosed = Boolean(
+    state.matrix?.activeSecondaryObjective
+    && state.matrix.activeSecondaryObjective.revealTurn <= state.turn,
+  );
+  const secondaryGap = secondaryDisclosed && (state.secondaryObjectiveProgress ?? 0) < secondaryThreshold;
   if (state.objectiveProgress < rules.objectiveThreshold || secondaryGap) {
     findings.push({
       code: "objective-gap",
       cause: "The command sequence did not create enough objective progress.",
-      evidence: `Primary objective progress closed at ${state.objectiveProgress}/100 against ${rules.objectiveThreshold}/100.${state.matrix?.activeSecondaryObjective ? ` The revealed secondary objective closed at ${state.secondaryObjectiveProgress ?? 0}/100 against ${secondaryThreshold}/100.` : ""}`,
+      evidence: `Primary objective progress closed at ${state.objectiveProgress}/100 against ${rules.objectiveThreshold}/100.${secondaryDisclosed ? ` The revealed secondary objective closed at ${state.secondaryObjectiveProgress ?? 0}/100 against ${secondaryThreshold}/100.` : ""}`,
       adjustment: "Sequence identification, position, and a relevant pressure posture around the limited degree and duration of control the objective requires.",
       moduleId: "corbett",
     });
@@ -726,7 +995,10 @@ function diagnosticFindings(
 function finalOutcome(state: RigidGameState, readiness: RigidReadiness, scenario: RigidScenario): RigidOutcome {
   const difficulty = scenarioDifficulty(scenario);
   const rules = difficultyRules(scenario);
-  const secondaryRequired = Boolean(state.matrix?.activeSecondaryObjective);
+  const secondaryRequired = Boolean(
+    state.matrix?.activeSecondaryObjective
+    && state.matrix.activeSecondaryObjective.revealTurn <= state.turn,
+  );
   const secondaryProgress = state.secondaryObjectiveProgress ?? 0;
   const secondaryThreshold = secondaryObjectiveThreshold(difficulty);
   const objective = secondaryRequired
@@ -776,7 +1048,7 @@ function finalOutcome(state: RigidGameState, readiness: RigidReadiness, scenario
   const findings = diagnosticFindings(state, readiness, scenario, rules, limit, peakEscalation);
   const notes = [
     `Objective progress closed at ${state.objectiveProgress}/100; force integrity at ${state.integrity}/100; supply at ${state.supply}/100.`,
-    secondaryRequired ? `The revealed secondary objective closed at ${secondaryProgress}/100 against a ${secondaryThreshold}/100 threshold.` : "No secondary objective was activated for this play mode.",
+    secondaryRequired ? `The revealed secondary objective closed at ${secondaryProgress}/100 against a ${secondaryThreshold}/100 threshold.` : "No disclosed secondary objective affected the terminal review.",
     `The final contact picture reached ${state.contactQuality}/100 while assessed opposing cohesion closed at ${state.opposingCohesion}/100.`,
     guardrailHeld
       ? `The controlling escalation boundary held; escalation peaked at ${peakEscalation}/100 and closed at ${state.escalation}/100.`
@@ -784,67 +1056,101 @@ function finalOutcome(state: RigidGameState, readiness: RigidReadiness, scenario
     readiness.missionReady ? "The force entered play with complete mission-area coverage and compatible pairings." : "Planning gaps constrained every turn of execution.",
     `${readiness.adaptationLabel || "Environment fit"} scored ${forceAdaptationScore(readiness)}/100 against a ${rules.adaptationThreshold}/100 threshold.`,
     `${difficulty[0].toUpperCase()}${difficulty.slice(1)} play required a score of ${rules.victoryThreshold}, objective progress of ${rules.objectiveThreshold}, integrity of ${rules.integrityThreshold}, and supply of ${rules.supplyThreshold}.`,
-    "No written response was evaluated; this result follows only the simulation’s invented numeric rules and selected orders.",
+    latticeCopy("game.outcome.unscoredWriting"),
   ];
   return { won, score, title, difficulty, breakdown, findings, notes };
 }
 
-const EXPLICIT_TURN_PROBLEM = /does not address|outside every|remains below|lacks the force or environmental conditions/i;
+const TURN_DIAGNOSTIC_NOTE_INDEX: Readonly<Record<RigidTurnDiagnosticCode, number>> = {
+  "task-mismatch": 0,
+  "reach-gap": 1,
+  "contact-gap": 2,
+  "employment-mismatch": 3,
+};
+
+const TURN_DIAGNOSTIC_FALLBACK: Readonly<Record<RigidTurnDiagnosticCode, string>> = {
+  "task-mismatch": "The assigned task did not match a required or recommended warfare area.",
+  "reach-gap": "The turn ended outside every compatible selected effect's invented reach band.",
+  "contact-gap": "Contact quality ended below the selected engagement posture's threshold.",
+  "employment-mismatch": "The selected uncrewed or undersea employment method lacked a required force or environmental condition.",
+};
+
+const TURN_DIAGNOSTIC_ADJUSTMENT: Readonly<Record<RigidTurnDiagnosticCode, string>> = {
+  "task-mismatch": "Next turn, assign a task from the scenario's required or recommended warfare areas.",
+  "reach-gap": "Next turn, close the range or select a posture supported by the force's credited reach.",
+  "contact-gap": "Next turn, improve the contact picture or select a posture whose contact threshold is met.",
+  "employment-mismatch": "Next turn, select employment methods supported by the available uncrewed and undersea elements.",
+};
 
 /** A single post-resolution explanation; never used to preview a turn. */
 export function turnLearningNote(report: RigidTurnReport): RigidLearningAssessment {
-  const correction = report.umpireNotes.find((note) => EXPLICIT_TURN_PROBLEM.test(note));
-  if (correction) return { kind: "adjustment", heading: "ADJUST NEXT TURN", summary: correction };
+  const diagnosticCode = report.diagnosticCodes?.[0];
+  const correction = diagnosticCode === undefined
+    ? undefined
+    : report.umpireNotes[TURN_DIAGNOSTIC_NOTE_INDEX[diagnosticCode]];
+  if (diagnosticCode) return {
+    kind: "adjustment",
+    heading: "ADJUST NEXT TURN",
+    summary: `${correction || TURN_DIAGNOSTIC_FALLBACK[diagnosticCode]} ${TURN_DIAGNOSTIC_ADJUSTMENT[diagnosticCode]}`,
+  };
   if (report.matrixResolution?.ultimate.result === "failure") {
     return {
       kind: "uncertainty",
-      heading: "UNCERTAINTY WORKED AGAINST THIS TURN",
-      summary: "No clear rules mistake is indicated by the resolved orders. The prepared uncertainty produced an unfavorable result.",
+      ...latticeLearningCopy("game.learning.turn.uncertainty"),
     };
   }
   return {
     kind: "clear",
-    heading: "NO CLEAR PROBLEM",
-    summary: "The resolved orders fit the visible requirements; compare the state changes before choosing the next turn.",
+    ...latticeLearningCopy("game.learning.turn.clear"),
   };
 }
 
 /** Separates actionable debrief findings from an adverse result without an obvious rules mistake. */
 export function outcomeLearningAssessment(state: RigidGameState): RigidLearningAssessment {
   const outcome = state.outcome;
-  if (!outcome) return { kind: "clear", heading: "REVIEW PENDING", summary: "Complete the scenario to receive an after-action review." };
+  if (!outcome) return { kind: "clear", ...latticeLearningCopy("game.learning.outcome.pending") };
   const hasExplicitProblem = outcome.findings.length > 0
-    || state.reports.some((report) => report.umpireNotes.some((note) => EXPLICIT_TURN_PROBLEM.test(note)));
+    || state.reports.some((report) => (report.diagnosticCodes?.length ?? 0) > 0);
   const adverseUncertainty = state.reports.some((report) => report.matrixResolution?.ultimate.result === "failure");
   if (!outcome.won && !hasExplicitProblem && adverseUncertainty) {
     return {
       kind: "uncertainty",
-      heading: "NO CLEAR MISTAKE INDICATED",
-      summary: "The visible requirements were met, but prepared uncertainty and accumulated pressure produced an unfavorable result. Review the timeline for robustness rather than treating this as a hidden-rule error.",
+      ...latticeLearningCopy("game.learning.outcome.uncertainty"),
     };
   }
   if (outcome.findings.length) {
     return {
       kind: "adjustment",
-      heading: "A CORRECTABLE PATTERN WAS FOUND",
-      summary: "The review below identifies the strongest evidence and one practical adjustment for another attempt.",
+      ...latticeLearningCopy("game.learning.outcome.adjustment"),
     };
   }
   return {
     kind: "clear",
-    heading: "NO BLOCKING PROBLEM FOUND",
-    summary: "The completed play met the model's requirements without a blocking diagnostic finding.",
+    ...latticeLearningCopy("game.learning.outcome.clear"),
   };
 }
 
-function normalizedRigidOrders(orders: RigidOrders): Required<RigidOrders> {
+type NormalizedRigidOrders = RigidOrders & Required<Pick<RigidOrders,
+  "uncrewed" | "undersea" | "riskTreatment" | "coordination" | "strategicPolicy">>;
+
+function normalizedRigidOrders(orders: RigidOrders, turn: number): NormalizedRigidOrders {
+  const assessment = turn > 1
+    ? isCompleteAdversaryAssessment(orders.adversaryAssessment)
+      ? { ...orders.adversaryAssessment }
+      : { ...UNRESOLVED_ADVERSARY_ASSESSMENT }
+    : undefined;
   return {
-    ...orders,
+    formation: orders.formation,
+    sensors: orders.sensors,
+    tempo: orders.tempo,
+    engagement: orders.engagement,
+    task: orders.task,
     uncrewed: orders.uncrewed ?? DEFAULT_RIGID_ORDERS.uncrewed!,
     undersea: orders.undersea ?? DEFAULT_RIGID_ORDERS.undersea!,
     riskTreatment: orders.riskTreatment ?? DEFAULT_RIGID_ORDERS.riskTreatment!,
     coordination: orders.coordination ?? DEFAULT_RIGID_ORDERS.coordination!,
     strategicPolicy: orders.strategicPolicy ?? DEFAULT_RIGID_ORDERS.strategicPolicy!,
+    ...(assessment ? { adversaryAssessment: assessment } : {}),
   };
 }
 
@@ -900,7 +1206,7 @@ export function createInitialRigidState(readiness: RigidReadiness, scenario: Rig
     contactCapabilityCeiling(readiness),
   ));
   return {
-    version: 1,
+    version: 2,
     phase: "active",
     turn: 0,
     maxTurns: 6,
@@ -925,10 +1231,10 @@ export function createInitialRigidState(readiness: RigidReadiness, scenario: Rig
 export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, readiness: RigidReadiness, scenario: RigidScenario): RigidGameState {
   if (current.phase !== "active") return current;
 
-  const normalizedOrders = normalizedRigidOrders(orders);
+  const turn = current.turn + 1;
+  const normalizedOrders = normalizedRigidOrders(orders, turn);
   const rules = difficultyRules(scenario);
   const operational = deriveOperationalStrategy(scenario);
-  const turn = current.turn + 1;
   const capabilityState = readinessWithCapabilityFactors(readiness, current.matrix, turn);
   const turnReadiness = capabilityState.readiness;
   const matrixInput = rigidTurnMatrixInput(current, orders, readiness, scenario);
@@ -940,6 +1246,7 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const uncrewedFit = uncrewedDoctrineFit(uncrewedOrder, operational.recommendedUncrewed, turnReadiness.uncrewedCount);
   const underseaFit = underseaDoctrineFit(underseaOrder, operational.recommendedUndersea, underseaElements);
   const doctrineFit = uncrewedFit + underseaFit;
+  const employmentMismatch = uncrewedFit < 0 || underseaFit < 0;
   const riskTreatment = orders.riskTreatment ?? "prepare";
   const coordination = orders.coordination ?? "federated";
   const strategicPolicy = orders.strategicPolicy ?? "conventional-restraint";
@@ -986,7 +1293,9 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const supplyLoss = rounded(baseSupplyLoss * rules.supplyUseMultiplier);
 
   const withinReach = turnReadiness.maxReachNm >= nextRange || nextRange <= 45;
+  const reachMismatch = requiresEffectReach(orders) && !withinReach;
   const contactThreshold = engagementContactThreshold(orders.engagement, scenario);
+  const contactMismatch = orders.engagement !== "avoid" && nextContact < contactThreshold;
   const hasCreditedMissionEffect = turnReadiness.selectedUnitCount > 0 && (orders.engagement === "shadow"
     ? turnReadiness.trackCapacity > 0 && creditedTrackingMethodCount(turnReadiness) > 0
     : turnReadiness.compatibleArmamentCount > 0
@@ -995,8 +1304,7 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
       || turnReadiness.airDefenseValue > 0
       || turnReadiness.underseaValue > 0
       || turnReadiness.uncrewedCount > 0);
-  const canApplyPressure = orders.engagement !== "avoid"
-    && orders.tempo !== "withdraw"
+  const canApplyPressure = requiresEffectReach(orders)
     && taskRelevant
     && withinReach
     && nextContact >= contactThreshold
@@ -1068,16 +1376,61 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
     ].filter(Boolean).join(" ")
     : "No compound disruption was active this turn.";
 
+  const observationDomains = rigidObservationDomains(turnReadiness);
+  const adversaryAction = rigidAdversaryAction({
+    turn,
+    currentContact: current.contactQuality,
+    nextContact,
+    integrityLoss,
+    cohesionLoss,
+    opposingMethod: operational.opposingMethod,
+    opposingPosture: operational.opposingPosture,
+    activeDisruptionCount: capabilityState.activeDisruptions.length,
+    scenario,
+  });
+  const inflictions: RigidInfliction[] = [
+    ...(integrityLoss > 0 ? [{
+      id: `opposing-infliction-turn-${turn}`,
+      occurredTurn: turn,
+      sourceSide: "opposing-force" as const,
+      targetSide: "selected-force" as const,
+      effect: "integrity" as const,
+      amount: integrityLoss,
+      domains: [...adversaryAction.domains],
+    }] : []),
+    ...(cohesionLoss > 0 ? [{
+      id: `friendly-infliction-turn-${turn}`,
+      occurredTurn: turn,
+      sourceSide: "selected-force" as const,
+      targetSide: "opposing-force" as const,
+      effect: "cohesion" as const,
+      amount: cohesionLoss,
+      domains: warfareObservationDomains(normalizedOrders.task),
+    }] : []),
+  ];
+
   const report: RigidTurnReport = {
     turn,
     orders: normalizedOrders,
     phase: turn <= 2 ? "Approach and classification" : turn <= 4 ? "Contest and manoeuvre" : "Decision and transition",
-    contactReport: contactDescription(nextWithoutOutcome.contactQuality, nextWithoutOutcome.opposingCohesion),
+    contactReport: contactDescription(nextWithoutOutcome.contactQuality),
     umpireNotes: [
       taskRequired ? "The assigned task directly addresses a required warfare area." : taskRelevant ? "The assigned task supports the mission but is not a principal requirement." : "The assigned task does not address the generated mission’s required or recommended areas.",
-      withinReach ? "At least one compatible fictional effect or close-position option is within its invented reach band." : "The force remains outside every compatible selected effect’s invented reach band.",
-      nextContact >= contactThreshold ? "Contact quality meets the selected engagement posture’s rigid threshold." : "Contact quality remains below the selected engagement posture’s rigid threshold.",
-      doctrineFit >= 6 ? "The uncrewed and undersea employment methods fit the assessed environment and available force." : doctrineFit >= 0 ? "The selected uncrewed and undersea methods are workable but not mutually reinforcing." : "The selected uncrewed or undersea method lacks the force or environmental conditions it assumes.",
+      !requiresEffectReach(orders)
+        ? "The selected posture and tempo do not attempt an effect that requires a reach check."
+        : !reachMismatch
+          ? "At least one compatible fictional effect or close-position option is within its invented reach band."
+          : "The force remains outside every compatible selected effect’s invented reach band.",
+      orders.engagement === "avoid"
+        ? "The avoid posture does not require contact quality to meet an engagement threshold."
+        : !contactMismatch
+          ? "Contact quality meets the selected engagement posture’s rigid threshold."
+          : "Contact quality remains below the selected engagement posture’s rigid threshold.",
+      employmentMismatch
+        ? "At least one selected uncrewed or undersea method lacks the force or environmental conditions it assumes."
+        : doctrineFit >= 6
+          ? "The uncrewed and undersea employment methods fit the assessed environment and available force."
+          : "The selected uncrewed and undersea methods are workable but not mutually reinforcing.",
       `${riskEffects.note} Coordination used ${coordination.replaceAll("-", " ")} against ${scenario.adversaryCount ?? 1} assessed adversary actor${(scenario.adversaryCount ?? 1) === 1 ? "" : "s"}.`,
       secondaryFit?.note ?? "No secondary objective required a separate command posture on this turn.",
       strategicPolicy === "nuclear-employment" ? "Nuclear employment disrupted opposition while imposing extreme escalation, legitimacy, coordination, and recovery costs." : strategicPolicy === "nuclear-demonstration" ? "Nuclear demonstration increased reciprocal mobilization and escalation risk." : strategicPolicy === "nuclear-deterrent" ? "Nuclear capability remained a deterrent reserve; its effect depended on adversary interpretation rather than guaranteed compliance." : "Strategic force policy retained conventional restraint.",
@@ -1098,6 +1451,15 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
     },
     ...(matrixResolution && matrixInput ? { matrixInput, matrixResolution } : {}),
     activeDisruptionIds: capabilityState.activeDisruptions.map((event) => event.id),
+    diagnosticCodes: [
+      ...(!taskRelevant ? ["task-mismatch" as const] : []),
+      ...(reachMismatch ? ["reach-gap" as const] : []),
+      ...(contactMismatch ? ["contact-gap" as const] : []),
+      ...(employmentMismatch ? ["employment-mismatch" as const] : []),
+    ],
+    adversaryActions: [adversaryAction],
+    inflictions,
+    observationDomains,
   };
 
   const withReport = { ...nextWithoutOutcome, reports: [...current.reports, report] };
@@ -1145,6 +1507,13 @@ export const RIGID_FINDING_CODES: readonly RigidFindingCode[] = [
   "objective-gap",
 ];
 
+export const RIGID_TURN_DIAGNOSTIC_CODES: readonly RigidTurnDiagnosticCode[] = [
+  "task-mismatch",
+  "reach-gap",
+  "contact-gap",
+  "employment-mismatch",
+];
+
 export const RIGID_FINDING_MODULES: readonly RigidFindingModuleId[] = [
   "strategy-grammar",
   "wargaming",
@@ -1157,6 +1526,70 @@ export const RIGID_FINDING_MODULES: readonly RigidFindingModuleId[] = [
   "corbett",
   "synthesis",
 ];
+
+export const RIGID_ADVERSARY_ACTION_CODES: readonly RigidAdversaryActionCode[] = [
+  "apply-pressure",
+  "probe-screen",
+  "contest-sensors",
+  "mask-movement",
+  "disperse-and-preserve",
+  "hold-and-preserve",
+  "exploit-disruption",
+];
+
+function hasOnlyObjectKeys(value: Record<string, unknown>, allowed: readonly string[]) {
+  const allowedKeys = new Set(allowed);
+  return Object.keys(value).every((key) => allowedKeys.has(key));
+}
+
+function isRigidAdversaryAssessment(value: unknown, requireComplete = false): value is RigidAdversaryAssessment {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const assessment = value as Record<string, unknown>;
+  if (!hasOnlyObjectKeys(assessment, ["intent", "observedPattern", "nextAction"])) return false;
+  const valid = (assessment.intent === undefined || ADVERSARY_INTENT_ASSUMPTIONS.includes(assessment.intent as AdversaryIntentAssumption))
+    && (assessment.observedPattern === undefined || OBSERVED_PATTERN_ASSUMPTIONS.includes(assessment.observedPattern as ObservedPatternAssumption))
+    && (assessment.nextAction === undefined || ADVERSARY_NEXT_ACTION_ASSUMPTIONS.includes(assessment.nextAction as AdversaryNextActionAssumption));
+  return valid && (!requireComplete || isCompleteAdversaryAssessment(assessment as RigidAdversaryAssessment));
+}
+
+function isRigidObservationDomains(value: unknown): value is RigidObservationDomain[] {
+  return Array.isArray(value)
+    && value.length <= 3
+    && value.every((domain) => ["air", "surface", "subsurface"].includes(String(domain)))
+    && new Set(value).size === value.length;
+}
+
+function isRigidAdversaryAction(value: unknown, turn: number): value is RigidAdversaryAction {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const action = value as Record<string, unknown>;
+  return hasOnlyObjectKeys(action, ["id", "occurredTurn", "subject", "action", "domains"])
+    && isSafeIdentifier(action.id)
+    && action.occurredTurn === turn
+    && action.subject === "opposition"
+    && RIGID_ADVERSARY_ACTION_CODES.includes(action.action as RigidAdversaryActionCode)
+    && isRigidObservationDomains(action.domains)
+    && action.domains.length > 0;
+}
+
+function isRigidInfliction(value: unknown, turn: number): value is RigidInfliction {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const infliction = value as Record<string, unknown>;
+  return hasOnlyObjectKeys(infliction, ["id", "occurredTurn", "sourceSide", "targetSide", "effect", "amount", "domains"])
+    && isSafeIdentifier(infliction.id)
+    && infliction.occurredTurn === turn
+    && ["selected-force", "opposing-force"].includes(String(infliction.sourceSide))
+    && ["selected-force", "opposing-force"].includes(String(infliction.targetSide))
+    && infliction.sourceSide !== infliction.targetSide
+    && ["integrity", "cohesion"].includes(String(infliction.effect))
+    && ((infliction.effect === "integrity" && infliction.targetSide === "selected-force")
+      || (infliction.effect === "cohesion" && infliction.targetSide === "opposing-force"))
+    && typeof infliction.amount === "number"
+    && Number.isFinite(infliction.amount)
+    && infliction.amount > 0
+    && infliction.amount <= 100
+    && isRigidObservationDomains(infliction.domains)
+    && infliction.domains.length > 0;
+}
 
 function isRigidAssetImpact(value: unknown): value is RigidAssetImpact {
   if (!value || typeof value !== "object") return false;
@@ -1225,30 +1658,71 @@ function isRigidOutcome(value: unknown): value is RigidOutcome {
     && outcome.notes.every((note) => isBoundedCleanText(note, 2_000));
 }
 
+export function isRigidTurnReport(
+  value: unknown,
+  index: number,
+  stateVersion: 1 | 2,
+): value is RigidTurnReport {
+  if (!value || typeof value !== "object") return false;
+  const report = value as Record<string, unknown>;
+  const delta = report.delta as Record<string, unknown> | undefined;
+  return hasOnlyObjectKeys(report, [
+    "turn", "orders", "phase", "contactReport", "umpireNotes", "delta",
+    "matrixInput", "matrixResolution", "activeDisruptionIds", "diagnosticCodes",
+    "adversaryActions", "inflictions", "observationDomains",
+  ])
+    && report.turn === index + 1
+    && isRigidOrders(report.orders)
+    && isBoundedCleanText(report.phase, 300, false)
+    && isBoundedCleanText(report.contactReport, 2_000)
+    && Array.isArray(report.umpireNotes) && (report.umpireNotes as unknown[]).every((note) => isBoundedCleanText(note, 2_000))
+    && Boolean(delta)
+    && hasOnlyObjectKeys(delta!, [
+      "rangeNm", "contactQuality", "readiness", "integrity", "supply",
+      "escalation", "objectiveProgress", "opposingCohesion", "secondaryObjectiveProgress",
+    ])
+    && ["rangeNm", "contactQuality", "readiness", "integrity", "supply", "escalation", "objectiveProgress", "opposingCohesion"]
+      .every((key) => typeof delta?.[key] === "number" && Number.isFinite(delta[key] as number) && Math.abs(delta[key] as number) <= 280)
+    && (delta?.secondaryObjectiveProgress === undefined || typeof delta.secondaryObjectiveProgress === "number" && Number.isFinite(delta.secondaryObjectiveProgress) && Math.abs(delta.secondaryObjectiveProgress) <= 100)
+    && (report.matrixInput === undefined || isResolutionMatrixInput(report.matrixInput))
+    && (report.matrixResolution === undefined || isResolutionMatrix(report.matrixResolution))
+    && (report.activeDisruptionIds === undefined || Array.isArray(report.activeDisruptionIds) && report.activeDisruptionIds.length <= 5 && report.activeDisruptionIds.every(isSafeIdentifier))
+    && (report.diagnosticCodes === undefined || Array.isArray(report.diagnosticCodes)
+      && report.diagnosticCodes.length <= RIGID_TURN_DIAGNOSTIC_CODES.length
+      && report.diagnosticCodes.every((code) => RIGID_TURN_DIAGNOSTIC_CODES.includes(code as RigidTurnDiagnosticCode))
+      && new Set(report.diagnosticCodes).size === report.diagnosticCodes.length)
+    && (report.adversaryActions === undefined || Array.isArray(report.adversaryActions)
+      && report.adversaryActions.length >= 1
+      && report.adversaryActions.length <= 4
+      && report.adversaryActions.every((action) => isRigidAdversaryAction(action, report.turn as number))
+      && new Set(report.adversaryActions.map((action) => (action as RigidAdversaryAction).id)).size === report.adversaryActions.length)
+    && (report.inflictions === undefined || Array.isArray(report.inflictions)
+      && report.inflictions.length <= 8
+      && report.inflictions.every((infliction) => isRigidInfliction(infliction, report.turn as number))
+      && new Set(report.inflictions.map((infliction) => (infliction as RigidInfliction).id)).size === report.inflictions.length)
+    && (report.observationDomains === undefined || isRigidObservationDomains(report.observationDomains))
+    && (stateVersion === 1 || Boolean(
+      Array.isArray(report.adversaryActions)
+      && Array.isArray(report.inflictions)
+      && Array.isArray(report.observationDomains)
+      && (report.turn === 1 || isRigidAdversaryAssessment(
+        (report.orders as RigidOrders).adversaryAssessment,
+        true,
+      ))
+    ));
+}
+
 export function isRigidGameState(value: unknown): value is RigidGameState {
   if (!value || typeof value !== "object") return false;
   const state = value as Record<string, unknown>;
+  const stateVersion = state.version;
+  if (stateVersion !== 1 && stateVersion !== 2) return false;
   const bounded = ["rangeNm", "contactQuality", "readiness", "integrity", "supply", "escalation", "objectiveProgress", "opposingCohesion"]
     .every((key) => typeof state[key] === "number" && Number.isFinite(state[key] as number) && (state[key] as number) >= 0 && (key === "rangeNm" ? (state[key] as number) <= 280 : (state[key] as number) <= 100));
-  const reportsValid = Array.isArray(state.reports) && (state.reports as unknown[]).every((value, index) => {
-    if (!value || typeof value !== "object") return false;
-    const report = value as Record<string, unknown>;
-    const delta = report.delta as Record<string, unknown> | undefined;
-    return report.turn === index + 1
-      && isRigidOrders(report.orders)
-      && isBoundedCleanText(report.phase, 300, false)
-      && isBoundedCleanText(report.contactReport, 2_000)
-      && Array.isArray(report.umpireNotes) && (report.umpireNotes as unknown[]).every((note) => isBoundedCleanText(note, 2_000))
-      && Boolean(delta) && ["rangeNm", "contactQuality", "readiness", "integrity", "supply", "escalation", "objectiveProgress", "opposingCohesion"]
-        .every((key) => typeof delta?.[key] === "number" && Number.isFinite(delta[key] as number) && Math.abs(delta[key] as number) <= 280)
-      && (delta?.secondaryObjectiveProgress === undefined || typeof delta.secondaryObjectiveProgress === "number" && Number.isFinite(delta.secondaryObjectiveProgress) && Math.abs(delta.secondaryObjectiveProgress) <= 100)
-      && (report.matrixInput === undefined || isResolutionMatrixInput(report.matrixInput))
-      && (report.matrixResolution === undefined || isResolutionMatrix(report.matrixResolution))
-      && (report.activeDisruptionIds === undefined || Array.isArray(report.activeDisruptionIds) && report.activeDisruptionIds.length <= 5 && report.activeDisruptionIds.every(isSafeIdentifier));
-  });
+  const reportsValid = Array.isArray(state.reports)
+    && (state.reports as unknown[]).every((report, index) => isRigidTurnReport(report, index, stateVersion));
   const outcomeValid = state.outcome === null || isRigidOutcome(state.outcome);
-  return state.version === 1
-    && (state.phase === "active" || state.phase === "complete")
+  return (state.phase === "active" || state.phase === "complete")
     && Number.isInteger(state.turn) && (state.turn as number) >= 0 && (state.turn as number) <= 6
     && state.maxTurns === 6
     && bounded
@@ -1261,26 +1735,106 @@ export function isRigidGameState(value: unknown): value is RigidGameState {
     && (state.phase === "complete" ? state.outcome !== null : state.outcome === null);
 }
 
+function rigidReportAdjudication(
+  report: RigidTurnReport,
+  includeDiagnosticCodes: boolean,
+  includeIntelligence: boolean,
+) {
+  const { adversaryAssessment: _assessment, ...legacyOrders } = report.orders;
+  return {
+    turn: report.turn,
+    orders: includeIntelligence ? report.orders : legacyOrders,
+    delta: report.delta,
+    ...(report.matrixInput === undefined ? {} : { matrixInput: report.matrixInput }),
+    ...(report.matrixResolution === undefined ? {} : { matrixResolution: report.matrixResolution }),
+    ...(report.activeDisruptionIds === undefined ? {} : { activeDisruptionIds: report.activeDisruptionIds }),
+    ...(includeDiagnosticCodes && report.diagnosticCodes !== undefined ? { diagnosticCodes: report.diagnosticCodes } : {}),
+    ...(includeIntelligence ? {
+      adversaryActions: report.adversaryActions,
+      inflictions: report.inflictions,
+      observationDomains: report.observationDomains,
+    } : {}),
+  };
+}
+
+function rigidOutcomeAdjudication(outcome: RigidOutcome | null) {
+  if (!outcome) return null;
+  return {
+    won: outcome.won,
+    score: outcome.score,
+    title: outcome.title,
+    difficulty: outcome.difficulty,
+    breakdown: outcome.breakdown,
+    findings: outcome.findings.map((finding) => ({ code: finding.code, moduleId: finding.moduleId })),
+  };
+}
+
+function rigidStateAdjudication(state: RigidGameState, includeVersion = true) {
+  return {
+    ...(includeVersion ? { version: state.version } : {}),
+    phase: state.phase,
+    turn: state.turn,
+    maxTurns: state.maxTurns,
+    rangeNm: state.rangeNm,
+    contactQuality: state.contactQuality,
+    readiness: state.readiness,
+    integrity: state.integrity,
+    supply: state.supply,
+    escalation: state.escalation,
+    objectiveProgress: state.objectiveProgress,
+    opposingCohesion: state.opposingCohesion,
+    ...(state.matrix === undefined ? {} : { matrix: state.matrix }),
+    ...(state.disruptionImpacts === undefined ? {} : { disruptionImpacts: state.disruptionImpacts }),
+    ...(state.secondaryObjectiveProgress === undefined ? {} : { secondaryObjectiveProgress: state.secondaryObjectiveProgress }),
+  };
+}
+
+/** Compare only outcome fields that can change adjudication or lesson routing. */
+export function rigidOutcomeAdjudicationEqual(left: RigidOutcome | null, right: RigidOutcome | null): boolean {
+  return jsonSemanticEqual(rigidOutcomeAdjudication(left), rigidOutcomeAdjudication(right));
+}
+
 /**
  * Replays a portable state from roster-derived readiness instead of trusting
- * any stored initial value, report, delta, matrix input, or claimed result.
+ * any stored initial value, report, delta, matrix input, diagnostic code, or
+ * claimed result. Safe presentation prose is deliberately not an adjudication
+ * input: accepted saves receive freshly generated report and outcome prose.
  */
+export function canonicalRigidState(
+  state: RigidGameState,
+  scenario: RigidScenario,
+  readiness: RigidReadiness,
+): RigidGameState | null {
+  if (!isRigidGameState(state)) return null;
+  const includeIntelligence = state.version === 2;
+  let replay = createInitialRigidState(readiness, scenario);
+  for (const report of state.reports) {
+    if (replay.phase !== "active") return null;
+    if (includeIntelligence && replay.turn >= 1
+      && !isReasonableRigidAdversaryAssessment(replay, report.orders.adversaryAssessment)) return null;
+    replay = resolveRigidTurn(replay, report.orders, readiness, scenario);
+    const replayedReport = replay.reports.at(-1);
+    if (!replayedReport) return null;
+    const includeDiagnosticCodes = report.diagnosticCodes !== undefined;
+    if (!jsonSemanticEqual(
+      rigidReportAdjudication(replayedReport, includeDiagnosticCodes, includeIntelligence),
+      rigidReportAdjudication(report, includeDiagnosticCodes, includeIntelligence),
+    )) return null;
+  }
+  if (!jsonSemanticEqual(
+    rigidStateAdjudication(replay, includeIntelligence),
+    rigidStateAdjudication(state, includeIntelligence),
+  )) return null;
+  if (!rigidOutcomeAdjudicationEqual(replay.outcome, state.outcome)) return null;
+  return replay;
+}
+
 export function isCanonicalRigidState(
   state: RigidGameState,
   scenario: RigidScenario,
   readiness: RigidReadiness,
 ): boolean {
-  if (!isRigidGameState(state)) return false;
-  let replay = createInitialRigidState(readiness, scenario);
-  for (const report of state.reports) {
-    if (replay.phase !== "active") return false;
-    replay = resolveRigidTurn(replay, report.orders, readiness, scenario);
-    const replayedReport = replay.reports.at(-1);
-    if (!replayedReport || !jsonSemanticEqual(replayedReport, report)) return false;
-  }
-  // This semantic comparison binds readiness to the initial state, every report
-  // and matrix draw, the disruption ledger, and any completed outcome.
-  return jsonSemanticEqual(replay, state);
+  return canonicalRigidState(state, scenario, readiness) !== null;
 }
 
 export function isRigidOrders(value: unknown): value is RigidOrders {
@@ -1288,7 +1842,7 @@ export function isRigidOrders(value: unknown): value is RigidOrders {
   const orders = value as Record<string, unknown>;
   const allowedKeys = new Set([
     "formation", "sensors", "tempo", "engagement", "task", "uncrewed", "undersea",
-    "riskTreatment", "coordination", "strategicPolicy",
+    "riskTreatment", "coordination", "strategicPolicy", "adversaryAssessment",
   ]);
   return Object.keys(orders).every((key) => allowedKeys.has(key))
     && ["concentrated-screen", "distributed-barrier", "protected-column"].includes(String(orders.formation))
@@ -1300,5 +1854,6 @@ export function isRigidOrders(value: unknown): value is RigidOrders {
     && (orders.undersea === undefined || ["independent-patrol", "coordinated-wolfpack", "barrier-ambush", "protective-screen"].includes(String(orders.undersea)))
     && (orders.riskTreatment === undefined || isRiskTreatment(orders.riskTreatment))
     && (orders.coordination === undefined || isCoordinationMode(orders.coordination))
-    && (orders.strategicPolicy === undefined || isStrategicForcePolicy(orders.strategicPolicy));
+    && (orders.strategicPolicy === undefined || isStrategicForcePolicy(orders.strategicPolicy))
+    && (orders.adversaryAssessment === undefined || isRigidAdversaryAssessment(orders.adversaryAssessment));
 }

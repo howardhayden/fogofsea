@@ -109,7 +109,7 @@ The present design is unusually strong in privacy-before-play, progressive discl
 
 ### Strengths
 
-- Whole-scenario validation prevents impossible combinations from being presented.
+- Whole-scenario validation rejects combinations that fail the implemented structured coexistence checks; it does not establish complete feasibility.
 - Affiliation, host, capacity, and budget rules block invalid roster mutations.
 - Destructive actions use confirmation.
 - Imported files receive bounded parse, allowlist, domain, matrix, and canonical replay validation.
@@ -233,7 +233,7 @@ The present design is unusually strong in privacy-before-play, progressive discl
 
 ### Strengths
 
-- Deterministic state, exact undo, validated fallback scenario, semantic scene fallback, no-sound operation, opaque glass fallback, safe launcher failure, portable TXT.
+- Deterministic state, exact undo, structured-screened fallback scenario, semantic scene fallback, no-sound operation, opaque glass fallback, safe launcher failure, portable TXT.
 
 ### Finding
 

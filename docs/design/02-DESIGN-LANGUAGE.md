@@ -156,7 +156,8 @@ Sound is supplementary. No rule, warning, or outcome depends on hearing.
 - Identify fictional and educational status without interrupting every action.
 - Use “selected force” and “opposing actor” where identity is deliberately abstract.
 - Explain why an action is blocked and the smallest action that repairs it.
-- Present post-decision learning as either a supported Cause → Evidence → Adjustment or an explicit statement that no clear mistake was indicated; never manufacture blame from an unfavorable uncertain outcome.
+- Present each final diagnostic finding as Cause → Evidence → Adjustment. When no tracked turn mismatch or final finding exists, say only that none was recorded; do not treat absence as proof of correct play, and never manufacture blame from an unfavorable uncertain outcome.
+- Use the pinned Lattice register only after exact operative meaning is secured. Interpretive prose may deepen consequence, but it may not alter mechanics, uncertainty, scope, recovery, or the fictional boundary.
 - Never imply that a score is a real-world probability or recommendation.
 
 ## 9. Composition tests

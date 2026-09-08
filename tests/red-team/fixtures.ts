@@ -12,7 +12,7 @@ export function deterministicScenario(previousId = 20): Scenario {
 export function minimalPortableSave(scenario = deterministicScenario()): PortableSave {
   return {
     format: "fog-of-sea-save",
-    version: 3,
+    version: 4,
     savedAt: "2026-08-30T00:00:00.000Z",
     game: {
       scenario,

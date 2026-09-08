@@ -33,7 +33,7 @@ deterministic six-turn resolution -> record -> debrief -> Academy links
 | --- | --- | --- | --- |
 | Product shell | Phase routing, overlays, focus restoration, responsive workspace | `app/page.tsx` | Coordinates; does not own domain formulas. |
 | Session state | Canonical mutable player/session state and typed actions | `app/useGameSession.ts` | All gameplay mutations cross one reducer boundary. |
-| Scenario model | Grammar composition, environment, actors, objectives, coexistence validation | `app/gameModel.ts` | No candidate reaches UI until every coupled facet validates. |
+| Scenario model | Grammar composition, environment, actors, objectives, coexistence validation | `app/gameModel.ts` | No candidate reaches UI until every implemented structured check passes; this is not complete feasibility evidence. |
 | Catalog and credit | Fictional platforms, aircraft, packs, hosting, capacity, mission credit | `app/catalog.ts`, `catalogMath.ts`, `forceReadiness.ts` | Selection is not the same as legal hosting or credited capability. |
 | Planning model | Completion, environment fit, gaps, readiness, strategic framing | `planningAssessment.ts`, `operationalStrategy.ts` | Derived explanations must remain inspectable and deterministic. |
 | Command model | Orders, state transitions, undo, score, findings | `kriegsspiel.ts` | Same state + same orders = same next state. |
@@ -41,7 +41,9 @@ deterministic six-turn resolution -> record -> debrief -> Academy links
 | Visibility model | View layers, unknown contacts, celestial transmission and occlusion | `viewModel.ts`, `contactVisualization.ts`, `celestial.ts` | Lack of credited sensing reveals nothing. |
 | Environmental model | Stars, atmosphere, clouds, fog, precipitation, aurora, sea, wildlife, emission | `starfield.ts`, `environmentVisuals.ts`, `wildlife.ts`, `wildlifeAvatar.ts`, `battlefieldScene.ts`, `dreamEmission.ts` | Visual motion must be bounded, non-flashing, depth-aware, and semantically distinct from tactical contacts. Wildlife ecology is pure data; articulated mesh construction and behavior belong to its avatar engine. |
 | Persistence boundary | Portable save format, browser minimization, import validation | `saveGame.ts`, `browserSaves.ts`, `inputSecurity.ts` | Imported state is untrusted until shape, domain, and replay checks pass. |
+| Command-intelligence domain | Typed opposing actions, modeled inflictions, observation domains, public projection, bounded staff hypotheses | `kriegsspiel.ts`, `commandIntelligence.ts`, `commandPhase.ts` | Facts, potentials, and adjudication remain separate; display prose is never authority. |
 | Learning layer | Academy paths, lessons, checks, progress | `Academy.tsx`, `academyData.ts` | Learning content is optional support, not hidden scoring. |
+| Lattice presentation layer | Owner-compiled Field Guide, learning, and selected Academy copy | `requirements/`, `authoring/`, `app/generated/lattice-copy.runtime.json`, `app/latticeCopy.ts` | Runtime text is downstream of typed state and contains no engine, profile, receipt, or owner evidence. |
 | Presentation foundation | Tokens, layout, glass surfaces, reflow, fallbacks | `app/globals.css` | Semantics and usability cannot depend on blur support. |
 | Evidence layer | Source, unit, browser, content, dependency, artifact checks | `tests/`, `scripts/`, `RELEASE_QA.md` | Claims need executable evidence or an explicit evidence limit. |
 
@@ -56,6 +58,7 @@ The session contains:
 - optional written synthesis, rationale, assumptions, and termination criteria;
 - Guided checklist preference and Academy completion;
 - active rigid orders and command state;
+- typed turn evidence and the Turn 2–6 staff-judgment record;
 - completed result and decision history.
 
 Theme, save mode, overlay visibility, visualization telemetry, and short-lived status messages are interface state. They must not alter adjudication.
@@ -69,6 +72,8 @@ Do not persist a value that can be safely re-derived from canonical state unless
 - host and slot compatibility;
 - environment fit and readiness gaps;
 - contact visibility;
+- absolutely known facts, Immediate, occurrence/discovery History, and
+  public-state-bounded adversary-assessment options;
 - operational strategy frame;
 - celestial and atmosphere plans;
 - command matrix preview;
@@ -84,12 +89,16 @@ Do not persist a value that can be safely re-derived from canonical state unless
 6. A result requires a canonical completed command state.
 7. Active command state cannot contain a completed result.
 8. Current-format imported command history must replay from scenario, readiness, orders, and committed draws.
+9. Turns 2–6 require three complete reasonable staff judgments, but those
+   values cannot alter adjudication.
+10. Every public intelligence fact is derived from typed evidence, retains its
+    occurrence and discovery turn, and is never classified from prose.
 
 ## 4. Design-system foundations
 
 ### 4.1 Token families
 
-CSS custom properties are the source of truth for:
+CSS custom properties are the authoritative implementation owner for:
 
 - background, panel, raised surface, line, text, muted text, accent, warning, and outcome colors;
 - spacing rhythm and control sizing;
@@ -145,7 +154,7 @@ occupying the game viewport.
 | Global action | Academy, Save/Load, Field Guide, Credits, Sound, Theme, New Game | 44-pixel compact target, explicit label, predictable overlay focus. |
 | Phase navigation | Mission/Force/Visualization, Stars/Sky/Air/Surface/Subsurface | Selection is text + boundary + state; view changes never change domain state. |
 | Disclosure | Plot Data, Contact Key, celestial data, optional analysis | Summary remains operable; compact details are bounded and mutually exclusive. |
-| Decision | Warfare selections, ordered strategic selects, force counters, command orders | Label, current value, consequence/help, validation, recovery. |
+| Decision | Warfare selections, ordered strategic selects, force counters, command orders, staff judgments | Label, current value, consequence/help, validation, recovery; hypotheses stay distinct from facts and score. |
 | Status | Points, completion, readiness, contact, objective, score | Term/value pairing; polite announcement only when change is actionable. |
 | Learning | Academy path/module/check/notebook | Named tab and panel semantics, optional saved progress. |
 | Confirmation | New game, end command, delete/reset | Consequence in plain language, cancel-first focus strategy, destructive distinction. |

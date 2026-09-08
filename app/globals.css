@@ -1,5 +1,6 @@
 @import "@fontsource-variable/jost/index.css";
 @import "./TurnSituationPanel.css";
+@import "./CommandIntelligencePanel.css";
 
 :root {
   --font-ui: "Jost Variable", Jost, "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
@@ -1426,7 +1427,8 @@ details:not([open]) > .legend-items { display: none; }
 .catalog-tools > small { color: var(--muted); font: 600 10px/1.4 var(--font-data); }
 .empty-roster { margin: 0; padding: 22px 16px; color: var(--muted); font-size: 12px; line-height: 1.5; }
 
-.tactical-panel > .kriegsspiel-panel { position: absolute; z-index: 8; right: 16px; bottom: 82px; width: min(460px, calc(100% - 164px)); max-height: calc(100% - 172px); margin: 0; overflow: auto; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .055), 0 18px 54px rgba(3, 12, 18, .34); backdrop-filter: blur(18px); }
+.tactical-panel > .kriegsspiel-panel { position: absolute; z-index: 8; right: 16px; bottom: 82px; width: var(--command-orders-width, min(460px, calc(100% - 164px))); max-height: calc(100% - 172px); margin: 0; overflow: auto; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .055), 0 18px 54px rgba(3, 12, 18, .34); backdrop-filter: blur(18px); }
+.tactical-panel > .command-intelligence-panel { position: absolute; z-index: 8; left: 16px; bottom: 82px; width: var(--command-intel-width, min(360px, calc(100% - 164px))); max-height: calc(100% - 172px); margin: 0; overflow: auto; }
 .phase-continue-button {
   width: 100%;
   min-height: 48px;
@@ -1632,8 +1634,10 @@ details:not([open]) > .legend-items { display: none; }
     --battlefield-content-width: calc(100% - 16px - var(--battlefield-safe-right));
   }
   .workspace.phase-command {
-    --battlefield-safe-left: 16px;
-    --battlefield-safe-right: 492px;
+    --command-intel-width: clamp(240px, 28vw, 360px);
+    --command-orders-width: clamp(340px, 40vw, 460px);
+    --battlefield-safe-left: calc(var(--command-intel-width) + 32px);
+    --battlefield-safe-right: calc(var(--command-orders-width) + 32px);
     --battlefield-content-width: calc(100% - var(--battlefield-safe-left) - var(--battlefield-safe-right));
   }
   .tactical-panel { grid-column: 1 / -1; grid-row: 1; z-index: 0; }
@@ -1660,6 +1664,11 @@ details:not([open]) > .legend-items { display: none; }
   .environment-readout { top: 276px; max-width: min(330px, calc(var(--battlefield-content-width) - 144px)); }
   .environment-readout[open] { width: min(330px, calc(var(--battlefield-content-width) - 144px)); }
   .legend { bottom: 8px; }
+}
+@media (min-width: 761px) and (max-width: 1023px) {
+  .workspace.phase-command .plot-data-readout,
+  .workspace.phase-command .sky-readout,
+  .workspace.phase-command .environment-readout { display: none; }
 }
 @media (min-width: 761px) and (max-width: 1100px) {
   .sky-readout .sky-mini { display: none; }
@@ -1832,7 +1841,7 @@ details:not([open]) > .legend-items { display: none; }
 .debrief-findings article p { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
 .debrief-findings article p b,
 .turn-timeline article p b,
-.timeline-umpire-notes > b { display: block; color: var(--faint); font: 700 11px var(--font-data); letter-spacing: .07em; }
+.timeline-intelligence-log > b { display: block; color: var(--faint); font: 700 11px var(--font-data); letter-spacing: .07em; }
 .debrief-findings article button { margin-top: 9px; }
 .result-learning { padding: 12px 14px; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--raised) 58%, transparent); }
 .result-learning h3 { margin: 0; color: var(--accent-strong); font: 700 12px var(--font-data); letter-spacing: .08em; }
@@ -1843,7 +1852,8 @@ details:not([open]) > .legend-items { display: none; }
 .turn-timeline h4 { margin: 0; font-size: 13px; }
 .turn-timeline p { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
 .turn-timeline ul { margin: 5px 0 0; padding-left: 18px; color: var(--muted); font-size: 12px; }
-.timeline-umpire-notes { margin-top: 7px; }
+.timeline-intelligence-log { margin-top: 9px; padding-top: 8px; border-top: 1px solid var(--line); }
+.timeline-intelligence-log h5 { margin: 8px 0 0; color: var(--accent-strong); font: 700 10px/1.4 var(--font-data); letter-spacing: .055em; }
 .result-actions {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1939,7 +1949,8 @@ button.decision-step-summary { cursor: pointer; }
   .depth-control { width: 116px; }
   .environment-readout[open] { width: calc(100% - 144px); }
   .kriegsspiel-grid { grid-template-columns: 1fr; }
-  .tactical-panel > .kriegsspiel-panel { left: 12px; right: 12px; bottom: 78px; width: auto; max-height: calc(100% - 164px); }
+  .tactical-panel > .kriegsspiel-panel,
+  .tactical-panel > .command-intelligence-panel { left: 12px; right: 12px; bottom: 78px; width: auto; max-height: calc(100% - 164px); }
   /* Once command or debrief is current, the compact workspace becomes one
      phase surface. The decorative plot remains available at wider sizes but
      its controls and readouts must not sit underneath an operable command
@@ -1947,12 +1958,22 @@ button.decision-step-summary { cursor: pointer; }
   .workspace.phase-command.mobile-view-command .battlefield-canvas,
   .workspace.phase-command.mobile-view-command .plot-topline,
   .workspace.phase-command.mobile-view-command .legend { display: none; }
-  .workspace.phase-command.mobile-view-command .tactical-panel > .kriegsspiel-panel {
-    top: 12px;
-    bottom: 12px;
-    max-height: none;
+  .workspace.phase-command.mobile-view-command .tactical-panel {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding: 12px;
   }
-  .workspace.phase-command.mobile-view-visualization .tactical-panel > .kriegsspiel-panel { display: none; }
+  .workspace.phase-command.mobile-view-command .tactical-panel > :is(.command-intelligence-panel, .kriegsspiel-panel) {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    max-height: none;
+    margin: 0 0 12px;
+    overflow: visible;
+  }
+  .workspace.phase-command.mobile-view-visualization .tactical-panel > :is(.kriegsspiel-panel, .command-intelligence-panel) { display: none; }
   .kriegsspiel-orders { grid-template-columns: 1fr; }
   .kriegsspiel-orders > div:last-child { grid-column: auto; }
   .catalog-tools { align-items: stretch; }
@@ -2391,7 +2412,7 @@ button.decision-step-summary { cursor: pointer; }
   .legend-items, .sky-readout-details, .environment-readout-details,
   .save-indicator, .global-tools-menu > nav,
   .field-guide, .data-dialog, .privacy-gate, .credits-dialog, .confirm-dialog,
-  .academy, .sound-settings section, .kriegsspiel-panel, .kriegsspiel-report,
+  .academy, .sound-settings section, .kriegsspiel-panel, .command-intelligence-panel, .kriegsspiel-report,
   .turn-situation-panel, .planning-recap, .result-card
 ) {
   background: var(--glass-surface-background);
@@ -2648,7 +2669,7 @@ button.decision-step-summary { cursor: pointer; }
   .sky-readout-details, .environment-readout-details, .save-indicator,
   .global-tools-menu > nav, .field-guide, .data-dialog, .privacy-gate,
   .credits-dialog, .confirm-dialog, .academy, .sound-settings section,
-  .kriegsspiel-panel, .kriegsspiel-report, .turn-situation-panel,
+  .kriegsspiel-panel, .command-intelligence-panel, .kriegsspiel-report, .turn-situation-panel,
   .planning-recap, .result-card {
     background: var(--panel);
   }
@@ -2676,6 +2697,7 @@ button.decision-step-summary { cursor: pointer; }
   .save-indicator,
   .global-tools-menu > nav,
   .kriegsspiel-panel,
+  .command-intelligence-panel,
   .kriegsspiel-report,
   .turn-situation-panel,
   .brief-card,

@@ -89,12 +89,12 @@ test("dense instructional copy begins behind native progressive disclosures", as
   assert.match(page, /guidedChecklistCollapsed: true/);
   assert.match(page, /id="mission-brief-details"[^>]*hidden=\{!briefOpen\}/);
   assert.match(page, /<details className="guide-armaments">/);
-  assert.match(page, /<details className="guide-rule"><summary>HOW A SCENARIO IS ACCEPTED/);
+  assert.match(page, /<details id="field-guide-scenario-acceptance" className="guide-rule"><summary>HOW A SCENARIO IS ACCEPTED/);
   assert.match(academy, /<details className="lesson-body">/);
   assert.match(academy, /<details className="academy-disclosure">/);
   assert.match(academy, /<details className="reading-list">/);
-  assert.match(command, /<details className="kriegsspiel-report">\s*<summary>LAST TURN/);
-  assert.doesNotMatch(command, /<details className="kriegsspiel-report" open>/);
+  assert.match(command, /<details id="last-turn-learning" className="kriegsspiel-report">\s*<summary>LAST TURN/);
+  assert.doesNotMatch(command, /<details id="last-turn-learning"[^>]*\sopen(?:=|>)/);
   assert.doesNotMatch(command, /HOW THIS TURN IS ADJUDICATED|umpireNotes\.map|matrixPreview/);
   assert.match(page, /className="guide-rule guide-documents"/);
   assert.match(page, /HOW-THE-GAME-WORKS\.md/);
@@ -160,7 +160,7 @@ test("classification integrity, undo, and evidence-rich debrief remain wired", a
   assert.doesNotMatch(engine, /Math\.random|Date\.now|theorySynthesis|rationale|assumptions|termination/);
 });
 
-test("portable saves are v3, device-local, environment-complete, and prose-preserving", async () => {
+test("portable saves are v4, device-local, environment-complete, and prose-preserving", async () => {
   const [page, save, browserSaves, saveHook, saveManager] = await Promise.all([
     read("../app/page.tsx"),
     read("../app/saveGame.ts"),
@@ -168,7 +168,7 @@ test("portable saves are v3, device-local, environment-complete, and prose-prese
     read("../app/useBrowserSaveManager.ts"),
     read("../app/SaveManager.tsx"),
   ]);
-  assert.match(save, /version: 3/);
+  assert.match(save, /version: 4/);
   assert.match(save, /scenarioDate/);
   assert.match(save, /windHeading/);
   assert.match(save, /currentHeading/);
