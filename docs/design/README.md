@@ -33,6 +33,8 @@ The documentation distinguishes three kinds of statement:
 | [13 — Empathy maps](13-EMPATHY-MAPS.md) | What might each likely player say, think, do, and feel—and which hypotheses require research? |
 | [14 — Informative microcopy](14-INFORMATIVE-MICROCOPY.md) | How should labels, guidance, blocked states, errors, privacy, uncertainty, and recovery be written? |
 | [15 — Heuristic evaluation](15-HEURISTIC-EVALUATION.md) | Where does the current experience meet or risk violating established usability and product-specific heuristics? |
+| [16 — Lattice copy architecture](16-LATTICE-COPY-ARCHITECTURE.md) | How is the bounded in-game and Academy copy slice compiled, routed, traced, separated from runtime, and prevented from changing mechanics? |
+| [17 — Turn intelligence and discovery chronology](17-TURN-INTELLIGENCE.md) | How are post-first-turn staff judgments, absolute facts, Immediate, late discovery, responsive layout, and typed persistence kept separate from hidden truth and adjudication? |
 
 ## Product definition
 
@@ -60,9 +62,9 @@ It is a teaching model, not a forecast, readiness assessment, targeting tool, cu
 9. **Accessibility as behavior.** Keyboard, semantic, reduced-motion, forced-color, and narrow-layout equivalents are release requirements.
 10. **Repair over punishment.** The debrief connects cause to evidence to one feasible adjustment.
 
-## Source-of-truth order
+## Authority and conflict order
 
-When documents and implementation differ, resolve the difference in this order:
+When documents and implementation differ, investigate and resolve the difference in this order. This order identifies change authority; it does not make any one artifact evidence of semantic truth by itself:
 
 1. executable state and validation logic;
 2. tests and release checks;

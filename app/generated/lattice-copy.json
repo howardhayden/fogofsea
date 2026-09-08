@@ -1,0 +1,1085 @@
+{
+  "schemaVersion": "fog-of-sea.lattice-copy.generated.v2",
+  "snapshotId": "lattice-copy-f53d8019c0cb50735751c7f8",
+  "staticOnly": true,
+  "lattice": {
+    "engineName": "Lattice — Layered Register Engine",
+    "engineVersion": "0.1.1",
+    "profileId": "relational-systems",
+    "profileVersion": "v1.0.0",
+    "profileDigest": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a",
+    "ownerPackageDigest": "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0"
+  },
+  "implementationAuthority": {
+    "format": "fog-of-sea.lattice-implementation-authority.v1",
+    "algorithm": "sha256-stable-json-v1",
+    "files": [
+      {
+        "path": "package-lock.json",
+        "sha256": "75870267a43b0d80f661dd762dfc64cea98e2ed5522e6b33a6bd4ee5582c8bb7"
+      },
+      {
+        "path": "package.json",
+        "sha256": "02195046f49b59e0ef6b949731fbcfc754b618abd31bd45d810add6d04297a1a"
+      },
+      {
+        "path": "requirements/lattice-adoption.schema.json",
+        "sha256": "6bee0b26685f6b6348a388f9dbf0b9331c5005c64e14f113cd2339d1b0ea313d"
+      },
+      {
+        "path": "requirements/lattice-copy-inventory.schema.json",
+        "sha256": "d069dce6756e75b825779c1348460b834474da6561e0b938530ebdfc67dcbaf1"
+      },
+      {
+        "path": "schemas/lattice-copy-evidence.schema.json",
+        "sha256": "ea7092d776085ec4615f218e7383b85a9a5269660f3428a3f24947bdef4b5d1c"
+      },
+      {
+        "path": "schemas/lattice-copy-generated.schema.json",
+        "sha256": "50d189547174517f7d86c30543f94a89b5532f94f92dafaec2da4b24af962dbf"
+      },
+      {
+        "path": "schemas/lattice-copy-index.schema.json",
+        "sha256": "267f1e07f6b1be3e4847fff961cc7d9096f630548ffd9a5a1bff2900229ad839"
+      },
+      {
+        "path": "schemas/lattice-copy-requests.schema.json",
+        "sha256": "e8f6f0aa40b5348613e0305a11964fa75f3d9ca8f27f8dc4e8f8825ac3d397d8"
+      },
+      {
+        "path": "schemas/lattice-copy-runtime.schema.json",
+        "sha256": "866838a2fbb82cc077143ff308a44899d09514b9a402ec5b0c3695a6b14ce201"
+      },
+      {
+        "path": "scripts/compile-lattice-copy.mjs",
+        "sha256": "0db54206fd53ddf6264f03439f64dfea599eced14a65a375c01f0b260a309224"
+      },
+      {
+        "path": "scripts/lattice-copy-corpus.mjs",
+        "sha256": "e88542c76bdce286993bf65871b38cc1ceb887abaeeba109517880cc9e325703"
+      },
+      {
+        "path": "scripts/validate-lattice-schemas.d.mts",
+        "sha256": "97f98f88847e402ef4d4d14a1fd3fa2936de452eaeb36a6579cd600c4f493219"
+      },
+      {
+        "path": "scripts/validate-lattice-schemas.mjs",
+        "sha256": "a325f1e826b9dd1ebadde4a15fa4b9ea4be2f75d7dece7bef43b3318ed7951d5"
+      },
+      {
+        "path": "scripts/verify-lattice-copy.mts",
+        "sha256": "04685547c726465cc7d67a8f6cff6712a595aa99750bacb9e38235c7e5636605"
+      }
+    ],
+    "sha256": "3fd99c5be8006fb734a5df535c980f7299fddc8a85e59df8c273cd0b2a6c7504"
+  },
+  "source": {
+    "requestPath": "authoring/lattice-copy.requests.json",
+    "requestSha256": "0cc9ad480234c8ab0270612a4d9f5929c1ea5092ce7a8ee664342220b6cc7d86",
+    "academySourcePath": "app/academyData.ts",
+    "academySourceSha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41",
+    "academyCorpusSha256": "340e3f88ac6a8b8e6d5731d6d5ca007333f266526b43203e50b0d780c8dd755b",
+    "academyLintSha256": "97ea9734510b064215bdd7e69835dca8e5faa466126fa09ddb66951e0580093a",
+    "provenance": {
+      "fogBaselineCommit": "70907a77cba735c151e52929dd5a56d795c3d04f",
+      "latticeCommit": "d6cc85b275e3f14163a5a547f626832fd21b27b0",
+      "requestAuthority": "FOG OF SEA source-controlled authoring contract"
+    }
+  },
+  "boundary": {
+    "ownerCompilerRequired": true,
+    "runtimeEngineIncluded": false,
+    "runtimeProfileIncluded": false,
+    "receiptsIncluded": false,
+    "ruleDecisionsIncluded": false
+  },
+  "assurance": {
+    "conformance": "degraded",
+    "conformanceCeiling": "degraded",
+    "academyLintStatus": "advisory",
+    "humanReviewStatus": "not-claimed",
+    "semanticScope": "declared-contract-and-registered-claims",
+    "sourceTruthEstablished": false
+  },
+  "hostAssertions": {
+    "sha256": "943a0eb71d8765710860410fc851395d20d6d325e406214892a6ba9fd65a9dbc",
+    "publishIds": [
+      "academy.compare.intro",
+      "academy.sources.independentStatus",
+      "academy.sources.intro",
+      "academy.sources.languageSystem",
+      "academy.sources.modelBoundary",
+      "game.guide.commandTurns.interpretive",
+      "game.guide.commandTurns.operative",
+      "game.guide.missionCredit.interpretive",
+      "game.guide.missionCredit.operative",
+      "game.guide.missionLearning.interpretive",
+      "game.guide.missionLearning.operative",
+      "game.guide.modelBoundary.interpretive",
+      "game.guide.modelBoundary.operative",
+      "game.guide.scenarioAcceptance.interpretive",
+      "game.guide.scenarioAcceptance.operative",
+      "game.guide.strategicFit.interpretive",
+      "game.guide.strategicFit.operative",
+      "game.guide.uncrewedUndersea.interpretive",
+      "game.guide.uncrewedUndersea.operative",
+      "game.learning.outcome.adjustment",
+      "game.learning.outcome.clear",
+      "game.learning.outcome.pending",
+      "game.learning.outcome.uncertainty",
+      "game.learning.turn.clear",
+      "game.learning.turn.uncertainty",
+      "game.outcome.unscoredWriting"
+    ],
+    "requiredPhraseCount": 110,
+    "prohibitedPhraseCount": 78,
+    "exactTextCount": 19
+  },
+  "traceabilitySha256": "189941935c3749ce7b1ddc92f6e66c71e2ca3566a6351a0a91d7cbeee5c18934",
+  "traceability": {
+    "authorityFiles": [
+      {
+        "path": "requirements/lattice-adoption.json",
+        "sha256": "b6c6d2cb373686c46f7cebf344c17a6903ded804a3487fd000ad0e5948d5b169"
+      },
+      {
+        "path": "requirements/lattice-copy-inventory.json",
+        "sha256": "e28a84f6a4846f42f50570172903441b7aea080951271b4a44e4a849f51d07c1"
+      }
+    ],
+    "sourceCatalog": [
+      {
+        "id": "src.academy.comparison",
+        "path": "app/academyData.ts",
+        "symbol": "THINKER_COMPARISON",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+      },
+      {
+        "id": "src.academy.modules",
+        "path": "app/academyData.ts",
+        "symbol": "ACADEMY_MODULE_DEFINITIONS",
+        "kind": "variable",
+        "exported": false,
+        "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+      },
+      {
+        "id": "src.academy.sources",
+        "path": "app/academyData.ts",
+        "symbol": "SOURCE_GROUPS",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+      },
+      {
+        "id": "src.catalog.aircraft",
+        "path": "app/catalog.ts",
+        "symbol": "AIRCRAFT",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "70d7e7e0989a56c8d919c9980810d77da3fc0404d5dfc88851905e0a22dfdde6"
+      },
+      {
+        "id": "src.catalog.platforms",
+        "path": "app/catalog.ts",
+        "symbol": "PLATFORMS",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "70d7e7e0989a56c8d919c9980810d77da3fc0404d5dfc88851905e0a22dfdde6"
+      },
+      {
+        "id": "src.game.final-outcome",
+        "path": "app/kriegsspiel.ts",
+        "symbol": "finalOutcome",
+        "kind": "function",
+        "exported": false,
+        "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+      },
+      {
+        "id": "src.game.outcome-learning",
+        "path": "app/kriegsspiel.ts",
+        "symbol": "outcomeLearningAssessment",
+        "kind": "function",
+        "exported": true,
+        "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+      },
+      {
+        "id": "src.game.turn-learning",
+        "path": "app/kriegsspiel.ts",
+        "symbol": "turnLearningNote",
+        "kind": "function",
+        "exported": true,
+        "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+      },
+      {
+        "id": "src.model.armaments",
+        "path": "app/gameModel.ts",
+        "symbol": "ARMAMENTS",
+        "kind": "variable",
+        "exported": true,
+        "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+      },
+      {
+        "id": "src.model.mission-credit",
+        "path": "app/gameModel.ts",
+        "symbol": "calculateMissionCreditedForcePoints",
+        "kind": "function",
+        "exported": true,
+        "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+      },
+      {
+        "id": "src.model.scenario-coexistence",
+        "path": "app/gameModel.ts",
+        "symbol": "validateScenarioCoexistence",
+        "kind": "function",
+        "exported": true,
+        "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+      },
+      {
+        "id": "src.planning.readiness-gaps",
+        "path": "app/planningAssessment.ts",
+        "symbol": "deriveReadinessGaps",
+        "kind": "function",
+        "exported": true,
+        "sha256": "38f593b5d41a548acd1f45fab3f5a6f990e5cd4aee2750971c5536308f1ebec7"
+      }
+    ],
+    "requests": [
+      {
+        "requestId": "fos.academy.compare-intro",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-004"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.independent-status",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-005"
+        ],
+        "sourceRefs": [
+          "src.academy.sources"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.language-system",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-008"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.sources"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.model-boundary",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SCP-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-007"
+        ],
+        "sourceRefs": [
+          "src.academy.sources",
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.armaments"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.sources-intro",
+        "requirementIds": [
+          "FOS-LAT-ACA-001",
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-006"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.sources"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.command-turns",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-003",
+          "FOS-COPY-GUIDE-004"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.turn-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.mission-credit",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-003",
+          "FOS-COPY-GUIDE-004"
+        ],
+        "sourceRefs": [
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.armaments",
+          "src.model.mission-credit"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.mission-learning",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-009",
+          "FOS-COPY-GUIDE-010"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning",
+          "src.game.turn-learning",
+          "src.model.mission-credit"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.model-boundary",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-007",
+          "FOS-COPY-GUIDE-008"
+        ],
+        "sourceRefs": [
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.armaments"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.scenario-acceptance",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SCP-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-001",
+          "FOS-COPY-GUIDE-002"
+        ],
+        "sourceRefs": [
+          "src.model.scenario-coexistence"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.strategic-fit",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-005",
+          "FOS-COPY-GUIDE-006"
+        ],
+        "sourceRefs": [
+          "src.model.mission-credit",
+          "src.planning.readiness-gaps"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.guide.uncrewed-undersea",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-GUI-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-GUIDE-001",
+          "FOS-COPY-GUIDE-002"
+        ],
+        "sourceRefs": [
+          "src.catalog.aircraft",
+          "src.catalog.platforms",
+          "src.model.mission-credit",
+          "src.planning.readiness-gaps"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.outcome-adjustment",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-001"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.outcome-clear",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-001"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.outcome-pending",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-002"
+        ],
+        "sourceRefs": [
+          "src.game.outcome-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.outcome-uncertainty",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-001"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome",
+          "src.game.outcome-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.turn-clear",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-003"
+        ],
+        "sourceRefs": [
+          "src.game.turn-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.learning.turn-uncertainty",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-003"
+        ],
+        "sourceRefs": [
+          "src.game.turn-learning"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.game.outcome.unscored-writing",
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-DEB-001",
+          "FOS-LAT-DOM-002",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-SEM-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-DEBRIEF-003"
+        ],
+        "sourceRefs": [
+          "src.game.final-outcome"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      }
+    ]
+  },
+  "realizationSha256": "3867949568ac0d05a18563ca465242de6ebdce4ef70ff8efb0b885ef63280a5d",
+  "copySha256": "9d796bb2e8761e7287b8a11914459a95e1927ff2eeed829d18e7bcc44e179f57",
+  "copy": {
+    "academy.compare.intro": {
+      "text": "Compare thinkers who confronted overlapping historical problems, then test whether ideas from different settings can form one coherent theory. These summaries compress complex works. Return to the lessons and primary texts before drawing conclusions.",
+      "textSha256": "e4922e2d49cb714e24f5afc27f7341c3921d2dbf5ae7763880b6a038749f2d40",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.compare-intro",
+      "candidateId": "academy.compare-intro-v1",
+      "source": "provided"
+    },
+    "academy.sources.independentStatus": {
+      "text": "FOG OF SEA and its Academy are independently produced fictional educational work. They are not affiliated with, sponsored by, approved by, or endorsed by any government agency, manufacturer, school, or credentialing body. The Academy grants no academic credit or certification.",
+      "textSha256": "73811af75e3e782a9e72655a25e6e5583ddcccf5ed1b93fae01e19806b92a0e7",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.independent-status",
+      "candidateId": "academy.independent-status-v1",
+      "source": "provided"
+    },
+    "academy.sources.intro": {
+      "text": "This independent learning space separates original instructional synthesis, suggested reading, and assumptions used by the fictional model. The reading room offers starting points for further study; it does not verify individual claims or replace primary texts and suitable scholarship.",
+      "textSha256": "f4f71e290ffa491803d2c70adc9dc3a772365a5d28c5cf53f3dc56ce9604c6d3",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.sources-intro",
+      "candidateId": "academy.sources-intro-v1",
+      "source": "provided"
+    },
+    "academy.sources.languageSystem": {
+      "text": "Selected static in-game and Academy copy is processed through the pinned Lattice contract and profile. Automated checks test declared semantic coverage, prohibited claims, accessibility dependencies, and deterministic derivation; they do not establish factual truth, literary quality, human review, or endorsement.",
+      "textSha256": "372ab72d14963b5c8a08e2302824639c3780dbd843626c7e193f649784aded7f",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.language-system",
+      "candidateId": "academy.language-system-v1",
+      "source": "provided"
+    },
+    "academy.sources.modelBoundary": {
+      "text": "Capability families loosely synthesize publicly described maritime concepts, then deliberately alter names, combinations, personnel, capacity, and performance. Differences in realism reflect subject-matter inexperience and deliberate abstraction; they are not claims about current capability.",
+      "textSha256": "58e4ecb90924401c99bd9dabec4a8149564b10278f7eefc3df04094aee8ba184",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.model-boundary",
+      "candidateId": "academy.model-boundary-v1",
+      "source": "provided"
+    },
+    "game.guide.commandTurns.interpretive": {
+      "text": "Each turn reports range, contact quality, force integrity, command readiness, supply, objective progress, and escalation. Those values expose tradeoffs rather than one universally correct posture. Undo lets you compare orders from the same state; it does not buy a new result.",
+      "textSha256": "db909e802be50eb81a3777286f7422b21aca814e3479798f74068cea816cba09",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.command-turns",
+      "candidateId": "command-turns-interpretive-v1",
+      "source": "provided"
+    },
+    "game.guide.commandTurns.operative": {
+      "text": "Choose how the force moves, senses, coordinates, manages risk, and acts. After resolution, range, contact quality, force integrity, command readiness, supply, objective progress, and escalation report the modeled result. Orders can trade progress or protection against supply, time, contact, integrity, or escalation. Canonical replay from the same saved state and orders reproduces the same adjudicated outcome; Undo supports comparison rather than rerolling.",
+      "textSha256": "1931a91b33e106961049763e04d158ccbff719f028724265a3f96f7defa8512b",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.command-turns",
+      "candidateId": "command-turns-operative-v1",
+      "source": "provided"
+    },
+    "game.guide.missionCredit.interpretive": {
+      "text": "Mission credit follows the connection between an identified task and compatible support. Aircraft require deck space; mission packs require a host. Unsupported selections can remain aboard without adding coverage. Environmental fit is a separate check, and a connected force can still fit its environment poorly.",
+      "textSha256": "1b9281e8905e9adec4fb771f5c8733a83698c5475f1e2a365c111204123f8e5e",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.mission-credit",
+      "candidateId": "mission-credit-interpretive-v1",
+      "source": "provided"
+    },
+    "game.guide.missionCredit.operative": {
+      "text": "A selection earns mission credit only when it is tied to an identified warfare area, fits the mission, and has the support it requires. Aircraft require compatible deck space. Mission packs require compatible host slots. Unsupported selections may remain in the force, but they add no mission coverage. Environmental fit is checked separately.",
+      "textSha256": "9c947905c8b776e478f0cab6b2ea197178b92c007fe55eac9cf2ea3be0c340c8",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.mission-credit",
+      "candidateId": "mission-credit-operative-v1",
+      "source": "provided"
+    },
+    "game.guide.missionLearning.interpretive": {
+      "text": "Mission-credit and pairing references remain in the Field Guide. The review follows what the record can support. It can name a tracked mismatch, a committed matrix failure, or a final diagnostic finding and connect evidence to an adjustment. Silence from those checks is not proof of correctness, feasibility, causation, or the best possible decision.",
+      "textSha256": "7a9812a25b83089204299c305c9fb3e90fc3daec2e25ae814174b975a1a92d51",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.mission-learning",
+      "candidateId": "mission-learning-interpretive-v1",
+      "source": "provided"
+    },
+    "game.guide.missionLearning.operative": {
+      "text": "Mission-credit and pairing references remain in the Field Guide. Only connected, compatible selections tied to an identified warfare area earn mission credit. After a turn resolves, the interface reports tracked evidence and offers a focused adjustment only when a tracked mismatch or final finding supports one. When no tracked mismatch or finding is recorded, the interface states that limited absence; it does not infer a cause, full compliance, or optimal play.",
+      "textSha256": "32cb087f6f1ab9a51ca15c1dc47a82726d38c20b4c01f8c7cc82385d680ff0cd",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.mission-learning",
+      "candidateId": "mission-learning-operative-v1",
+      "source": "provided"
+    },
+    "game.guide.modelBoundary.interpretive": {
+      "text": "FOG OF SEA is a notional educational model. It gives decisions a coherent fictional frame, not authority over the real world. Its names and numbers are invented for play inside that frame. They do not describe a current force, predict an outcome, or recommend an operation.",
+      "textSha256": "08e73b2be2aa98caa3f01d346ddb630251ac65cc4e8f29d6ca8309099faa3ed2",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.model-boundary",
+      "candidateId": "model-boundary-interpretive-v1",
+      "source": "provided"
+    },
+    "game.guide.modelBoundary.operative": {
+      "text": "FOG OF SEA is a notional educational model. It does not provide current doctrine, readiness, disposition, targeting, or operational recommendations. Platforms, systems, personnel, capacities, points, ranges, track capacities, contacts, performance, and readiness thresholds are fictionalized or invented. Differences from real-world practice are not claims about current capability.",
+      "textSha256": "5d6115e1f831e0f0a76d0f484cbe40bb541c167b691af405e74d511ddfd73095",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.model-boundary",
+      "candidateId": "model-boundary-operative-v1",
+      "source": "provided"
+    },
+    "game.guide.scenarioAcceptance.interpretive": {
+      "text": "The generator keeps a candidate only when its modeled parts survive the coexistence checks the application actually implements. That is a consistency boundary, not a feasibility oracle: conditions outside those checks may still be unrealistic, incomplete, or wrong.",
+      "textSha256": "e8ae10fd37d9545fa59e9a3c45678c946d7b1a468e749f36f66921670a075346",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.scenario-acceptance",
+      "candidateId": "scenario-acceptance-interpretive-v1",
+      "source": "provided"
+    },
+    "game.guide.scenarioAcceptance.operative": {
+      "text": "Each candidate scenario is checked for implemented consistency across region, season, light, weather, sea conditions, geography, mission, actors, force needs, and objectives. If an implemented check fails, the whole candidate is discarded and another is generated. Passing these checks does not establish real-world feasibility or validity.",
+      "textSha256": "c71681634349e0cec2791f9446e1f4fb5587cfa89ad23ee30e2b0faf0c830203",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.scenario-acceptance",
+      "candidateId": "scenario-acceptance-operative-v1",
+      "source": "provided"
+    },
+    "game.guide.strategicFit.interpretive": {
+      "text": "The brief binds means to political purpose. A coherent selection names the condition sought, the theories supporting the method, and the guardrail that must still hold. Optional writing can clarify that reasoning for the player, but it never alters the score; the result belongs to this model, not to real-world odds.",
+      "textSha256": "207f5d23248d02ab27525d9bea624e5694c9b092ed185135f9b7ab1574621cb2",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.strategic-fit",
+      "candidateId": "strategic-fit-interpretive-v1",
+      "source": "provided"
+    },
+    "game.guide.strategicFit.operative": {
+      "text": "The selected political end state, theory lenses, guardrail, and force plan are checked against the scenario's implemented requirements. Optional writing is stored only when the player consents and is never scored. Results describe the fictional model, not real-world odds.",
+      "textSha256": "df6fa61457f74c1549163d17de7bdd07d7ec73956971a7f8d79e84e771e0cedc",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.strategic-fit",
+      "candidateId": "strategic-fit-operative-v1",
+      "source": "provided"
+    },
+    "game.guide.uncrewedUndersea.interpretive": {
+      "text": "Distributed scouting, deception swarms, attritable massing, and autonomous lane control answer different modeled problems; independent patrols, coordinated wolfpacks, barrier ambushes, and protective screens do the same beneath the surface. They matter only through relationships among hosts, mission pairings, credited force size, and the situation being faced. A wolfpack label cannot manufacture coordination; without two credited undersea elements, the model records coordination and escalation costs.",
+      "textSha256": "98d057eeea684974d75cd8c0a92af61aa9bb6f0eba455aeac8bba172217e256d",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.uncrewed-undersea",
+      "candidateId": "uncrewed-undersea-interpretive-v1",
+      "source": "provided"
+    },
+    "game.guide.uncrewedUndersea.operative": {
+      "text": "Uncrewed systems contribute only when their hosts and mission pairings receive credit. Distributed scouting, deception swarms, attritable massing, and autonomous lane control address different modeled problems. Independent patrols, coordinated wolfpacks, barrier ambushes, and protective screens depend on credited force size and the modeled situation. A coordinated wolfpack with fewer than two credited undersea elements incurs coordination and escalation penalties.",
+      "textSha256": "412a6a0be20e258287861695d701a2c2e477b02c193672cd2fca901241440615",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.guide.uncrewed-undersea",
+      "candidateId": "uncrewed-undersea-operative-v1",
+      "source": "provided"
+    },
+    "game.learning.outcome.adjustment": {
+      "text": "A TRACKED FINDING WAS RECORDED\nThe record contains at least one final diagnostic finding. Each finding below pairs its recorded evidence with one practical adjustment for another attempt.",
+      "textSha256": "39beb64ad951cf19737695ba47061329cd0c331e84ff9f7571c356b6af59ce8c",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.learning.outcome-adjustment",
+      "candidateId": "outcome-adjustment-v2",
+      "source": "provided"
+    },
+    "game.learning.outcome.clear": {
+      "text": "NO FINAL FINDING RECORDED\nNo final diagnostic finding was recorded. Use the score components and timeline to inspect the result.",
+      "textSha256": "559874aae10dca36fc449744247e4e4779793194bff1223ce4fdbb8b9342586f",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.learning.outcome-clear",
+      "candidateId": "learning.outcome-clear-v1",
+      "source": "provided"
+    },
+    "game.learning.outcome.pending": {
+      "text": "REVIEW PENDING\nComplete the scenario to receive an after-action review.",
+      "textSha256": "7d0e39031f38c8f174f4a84c8b41235485c084b551d8f5bdd737e29b069e50d3",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.learning.outcome-pending",
+      "candidateId": "learning.outcome-pending-v1",
+      "source": "provided"
+    },
+    "game.learning.outcome.uncertainty": {
+      "text": "NO TRACKED FINDING RECORDED\nThe record includes at least one committed matrix failure, but no tracked turn mismatch or final diagnostic finding. It does not establish that uncertainty alone caused the outcome or that every requirement was satisfied.",
+      "textSha256": "cb147dfc60cd82d819e4e91c2e42d27d7a149081fd47456dbd31a8536f4332d7",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.learning.outcome-uncertainty",
+      "candidateId": "learning.outcome-uncertainty-v1",
+      "source": "provided"
+    },
+    "game.learning.turn.clear": {
+      "text": "NO TRACKED TURN MISMATCH RECORDED\nThis turn recorded no tracked task, reach, contact, or employment mismatch. Compare the state changes and other modeled costs before choosing the next turn.",
+      "textSha256": "599cd0ab579d245173e84e1ce035dbacb4934a8dfef2df2679347635b9c50038",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.learning.turn-clear",
+      "candidateId": "learning.turn-clear-v1",
+      "source": "provided"
+    },
+    "game.learning.turn.uncertainty": {
+      "text": "COMMITTED MATRIX FAILURE RECORDED\nThe committed matrix resolved as a failure. No tracked task, reach, contact, or employment mismatch was recorded; the turn may still contain other modeled costs.",
+      "textSha256": "dbe7279ca411e83d3b06f5947a3ae8294c462e7e8fd13e671e9e38118403f49c",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.learning.turn-uncertainty",
+      "candidateId": "learning.turn-uncertainty-v1",
+      "source": "provided"
+    },
+    "game.outcome.unscoredWriting": {
+      "text": "Written responses were not evaluated. This result follows the model's invented rules, recorded game state, and selected orders.",
+      "textSha256": "ebaa4fd7a4c6fd6f70ce86e1c390380482e69f4b087a158374e430a5dd4cdce5",
+      "layer": "operative",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.game.outcome.unscored-writing",
+      "candidateId": "unscored-writing-operative-v2",
+      "source": "provided"
+    }
+  }
+}

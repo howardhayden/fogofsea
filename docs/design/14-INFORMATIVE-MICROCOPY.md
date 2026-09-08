@@ -21,7 +21,8 @@ It does not repeat privacy, security, affiliation, storage, or umpire
 mechanics. The Field Guide carries the plain-language model boundary,
 mission-credit rule, learning explanation, security/privacy references, and
 clickable documentation. After resolution, the debrief distinguishes a
-supported adjustment from an unfavorable result with no clear mistake.
+tracked mismatch, committed uncertainty, and the absence of a tracked finding
+without treating the last condition as proof of correct play.
 
 ## 2. Voice characteristics
 
@@ -81,6 +82,10 @@ All-caps is reserved for concise labels, statuses, and actions—not narrative e
 | Readiness-contributing | The credited item improves a readiness measure or minimum |
 | Assessed | Information exists within the model but remains uncertain |
 | Concealed | The model intentionally withholds information until a rule permits disclosure |
+| Absolutely known | A typed player-facing claim whose required confirmation basis is present; it does not imply knowledge of hidden intent, identity, quantity, or coordination |
+| Potential | A bounded staff hypothesis derived from the public picture; never an opposing truth claim or scoring input |
+| Occurred turn | The turn in which the modeled event or change happened |
+| Discovered turn | The first turn in which the strike group's typed observation basis made the displayed claim absolute |
 | Precommitted | The value/draw was fixed before the player’s current action |
 | Encoded | Transformed to discourage casual reading; not encrypted |
 | Session only | State remains in memory unless the player downloads TXT |
@@ -111,7 +116,7 @@ Never use “available,” “valid,” or “supported” where one of these na
 ### Import
 
 **Action:** Import TXT save  
-**Help:** Restore a file created by this app after complete validation  
+**Help:** Restore a file created by this app after bounded shape, domain, matrix, and replay validation
 **Success:** Imported “{operation}” at {phase}. Browser saving remains {on/off} according to the restored choice.  
 **Failure:** This file was not imported: {bounded reason}. The current session remains unchanged.
 
@@ -222,6 +227,40 @@ The control label is **Greet a visible animal**, not “select,” “track,” 
 
 ## 9. Command microcopy
 
+### Known picture and staff judgment
+
+Use **ABSOLUTELY KNOWN** for confirmed observations and current invented game
+indices. Use **POTENTIALS · STAFF JUDGMENT** for the required Turn 2–6
+hypotheses. Never shorten Potential to Known, predicted, detected, or enemy
+intent.
+
+The three labels ask one question each:
+
+- **WHAT MAY THE OPPOSITION WANT?**
+- **WHAT MAY THE OBSERVABLE PATTERN MEAN?**
+- **WHAT MAY THE OPPOSITION DO NEXT?**
+
+The placeholder **Choose a working assumption** is incomplete. Every menu
+must include a real insufficient-evidence choice with copy that explicitly
+declines a narrower claim. The boundary note must say that the choices are
+hypotheses, not facts, and do not change score or adjudication.
+
+Use **IMMEDIATE** for the latest absolutely known opposing action and facts
+newly available for the current decision. Use **HISTORY** for the complete
+active-branch turn record. A late fact appears beneath its occurrence turn
+with the exact heading **Discovered during Turn {N}**. Do not file it under
+Turn {N} unless that is also its occurrence turn, and do not present the staff
+judgment as retroactively correct or incorrect.
+
+When empty, say what is absent without implying a hidden answer:
+
+- **No opposing action is yet known absolutely.**
+- **No absolute change was logged for this turn.**
+- **No absolute opposing action or infliction is available for Immediate.**
+
+Infliction copy names a modeled point change and carries the boundary that it
+is an invented game effect, not a real-world battle-damage assessment.
+
 ### Matrix
 
 **Pending range:** Estimated ultimate range {low}–{high}%. The turn’s result uses a scenario-committed draw that has not yet been disclosed.  
@@ -266,7 +305,7 @@ Avoid “Mission failed because your strategy was poor.” The model can identif
 - **Undo final turn:** Restore the exact state before Turn 6. Repeating the same orders produces the same result.
 - **Retry same scenario:** Keep the accepted scenario and its commitments; restart planning and command.
 - **Return to planning:** Keep the completed record in history and edit the plan.
-- **New scenario:** Replace the current exercise with a newly generated, fully validated scenario.
+- **New scenario:** Replace the current exercise with a newly generated scenario that passes the implemented structured coexistence checks.
 
 ## 11. Academy microcopy
 

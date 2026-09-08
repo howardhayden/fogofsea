@@ -9,6 +9,10 @@ FOG OF SEA is designed for keyboard, screen-reader, reduced-motion, high-contras
 - `Escape` closes the current dismissible dialog, sound panel, or global-tools menu.
 - Arrow keys operate native radio groups, selects, ranges, and the Academy view tabs. `Home` and `End` move to the first or last Academy view.
 - The first focusable control is a phase-aware skip link. Phase changes move focus to the new phase heading or named region.
+- After each nonfinal command resolution, focus moves to **Known picture &
+  log** before the next orders. On Turns 2–6, the three staff-judgment controls
+  are required native selects in the same form as Resolve; browser validation
+  identifies an incomplete select without discarding the player's orders.
 - The final debrief accepts `PageUp`, `PageDown`, `Home`, and `End` while its review region is focused.
 - The tactical plot advertises its keyboard shortcuts to assistive technology, and labelled view buttons provide a non-gesture route to every layer. On compact layouts, the current workspace destinations and global tools—Academy, Save / Load, Field Guide, Credits, and Sound Settings—are presented as large reading tiles in a full-width, scrollable drawer beneath the status bar; its dismiss layer suppresses visual and pointer competition from live workspace text. Selecting any destination closes the drawer as one transition before focus enters the chosen view or dialog. Plot Data, Sky Data, Star or Subsurface Data, and the Contact Key remain separate keyboard-operable disclosures. One surface opens at a time; expanded copy is height-bounded, scrollable, and anchored to the bottom edge so the central scene remains available. The other triggers remain in the document and return in the compact rail when the open surface is closed.
 
@@ -16,20 +20,45 @@ FOG OF SEA is designed for keyboard, screen-reader, reduced-motion, high-contras
 
 - The current phase is exposed as a named region with one concise, finite phase-change announcement rather than a persistent repeating live message.
 - Scenario conditions, force-readiness measures, command state, score components, and planning recap data use terms paired with their values.
-- New games are complete validated syntheses rather than selections from a finite scenario list. Region, climate, season/date, time, weather, sea, celestial eligibility, mission, actors, force requirements, objective, and difficulty branches are checked together before any candidate reaches the interface, so assistive and visual presentations receive the same mutually coherent state.
+- New games are composed rather than selected from a finite scenario list. Region, climate, season/date, time, weather, sea, celestial eligibility, mission, actors, force requirements, objective, and difficulty branches pass the same implemented structured coexistence checks before reaching either assistive or visual presentation. These checks do not prove complete operational, doctrinal, political, or free-prose feasibility.
 - Progressive decisions expose only the current control; completed decisions become named change buttons and locked decisions include their reason.
 - Force cards form a named list. Each item has a heading, compatibility and credit descriptions, and named add/remove controls whose quantity changes are announced through a restrained status message.
-- Command selects include their explanatory note in the accessible description. Turn reports remain ordinary review content rather than competing live announcements. Nothing pre-explains a pending result. After resolution, collapsed reports announce concise state changes and one learning note: either a visible problem to adjust or that no clear mistake was indicated. Probability ranges, committed draws, and matrix notes are not injected into ordinary play or live regions.
+- Command selects include their explanatory note in the accessible description. Turn reports remain ordinary review content rather than competing live announcements. Nothing pre-explains a pending result. After resolution, collapsed reports announce concise state changes and one learning note: a tracked task, reach, contact, or employment mismatch; a committed matrix failure; or that no tracked turn mismatch was recorded. The final phrase is not proof that every requirement was met. Probability ranges, committed draws, and matrix notes are not injected into ordinary play or live regions.
+- Command intelligence is a named complementary region before the orders form.
+  **Absolutely known** presents term/value pairs and exact certainty words;
+  **Potentials · staff judgment** provides three labelled native selects only
+  on Turns 2–6; and **Log** keeps Immediate visible with keyboard-native
+  History disclosure. Each historical fact exposes its occurrence and first
+  discovery turn in text and data attributes. A finite polite status announces
+  at most three newly available summaries plus a remaining-count summary; the
+  complete History is ordinary review content and is never dumped into a live
+  region.
 - The Academy uses a keyboard-operated tab set, named panels, lesson navigation, grouped quiz answers, progress values, and atomic answer feedback.
 - Modal dialogs have an accessible name and description, background content is inert, destructive confirmations use an alert-dialog pattern, and focus is contained and restored.
 - The tactical plot has one stable accessible name and text alternatives for its current state. Its session-randomized star layer is described as a white-dominant, brightness-qualified canopy of as many as 15,360 artistically enlarged faceted field and nebular lights, including sixteen real irregular overlapping density fields, restrained color accents, 88–404-unit overlapping depth, independent non-flashing twinkle, slow size breathing, visible native-color angular halos, and clearly perceptible hash-targeted bounded wandering without orbits, trails, lines, curls, radial kernels, or separate oval panels. Dawn and Dusk retain a guaranteed brightest-light cohort while weather and foreground depth can still soften or occlude it; this does not alter star shape, halo, or motion. Reduced motion freezes every celestial animation. Visible aurorae are described as five to seven long, tapered three-dimensional spline paths, each formed by five unjoined translucent veils at staggered pitch, yaw, elevation, and depth, with a distinct lower-edge hue, slow non-flashing winding, wavering, three-axis drifting, breathing, and bounded shape change. The alternative explicitly states their zero-Day, Dawn, Dusk, and Night luminance progression. Its weather alternative names fog class and smooth vertical thinning, meteorological cloud regime, cohesive faceted cloud shells with bounded drift/breath/morph motion, precipitation tier, cloud-attached source count, particle size, sharply separated speed/density bounds, as many as 8,800 rain streaks or 7,200 snowflakes, as many as six rain curtains, and localized non-flashing storm light. Clouds interrupt celestial light through scene depth while rain and snow terminate at the surface and are explicitly absent from Stars and Subsurface views. Selected-force dream emission is identified as a thin, soft native-color slow breath that remains fog-, wave-, and depth-occluded, distinct from star twinkle. When exceptional celestial light transmits through a shallow-subsurface aperture, the description identifies refraction; surface glints are separately identified as reflections.
 - Unknown-contact descriptions are domain-specific and capability-gated. When the selected force lacks mission-credited compatible detection, the plot says that no markers are shown. When detection exists, it reports only the number and domain of abstract unknown markers and does not expose identity or opposing composition.
 - Recognizable wildlife has its own conditional text alternative naming only broad ecological groups and the scenario factors that support the sighting. It is explicitly described as environmental, non-tactical scenery and never as a contact, identity clue, sensing capability, decision, score, or operational claim. When no credible sighting is supported, no recognizable animal is drawn; the older vague subsurface forms remain separately described. Pointer users may click a creature and keyboard users may focus “Greet a visible animal”; both produce the same habitat-appropriate happy response and a polite live-region description. Reduced motion presents an anatomically active but frozen pose—spread wings, swimming flippers, or a lifted head—rather than an inert body or an animation.
-- Dense explanatory copy uses native `details` and `summary` controls and begins collapsed. Current state, errors, consequences, repair guidance, and the next required action remain exposed. Plain-language rules, security/privacy/save behavior, and accessibility/controls references are linked from the Field Guide; internal UX research is deliberately excluded from player help. This reduces first-play reading load without removing content or creating a pointer-only path. Actionable debrief findings open as the immediate recovery path; when no clear mistake is indicated, the detailed findings remain optional.
+- Dense explanatory copy uses native `details` and `summary` controls and begins collapsed. Current state, errors, consequences, repair guidance, and the next required action remain exposed. Plain-language rules, security/privacy/save behavior, and accessibility/controls references are linked from the Field Guide; internal UX research is deliberately excluded from player help. This reduces first-play reading load without removing content or creating a pointer-only path. Actionable debrief findings open as the immediate recovery path; when no final diagnostic finding is recorded, detailed score components and history remain optional without implying that play was correct.
+
+## Lattice copy boundary
+
+The bounded Lattice pass supplies static text for selected Field Guide,
+post-resolution learning, and Academy interface messages. Operative meaning
+remains primary; copy involving safety, privacy, persistence, accessibility,
+contact disclosure, scoring, controls, or recovery is exempt where implication
+could weaken comprehension. The runtime contains only the selected text map,
+not the Lattice engine or owner-side evidence. Automated semantic and source
+checks are not evidence of screen-reader comprehension, disability-led review,
+or human accessibility approval.
 
 ## Visual and motion support
 
 - Layout reflows without page-level horizontal scrolling at narrow widths and the equivalent of a 200% zoom viewport.
+- At 760 CSS pixels and below, the command tactical workspace owns one
+  vertical scroll path, with intelligence before orders and no nested panel
+  scroll trap. At 380 pixels and below, the known-state pairs become one
+  column. All three assessment selects and the History summary keep a minimum
+  44 CSS-pixel target.
 - Narrow and touch-oriented layouts give their primary controls a minimum 44-by-44 CSS-pixel target.
 - System forced-colors mode replaces glass surfaces with system canvas, text, border, selection, and focus colors.
 - `prefers-reduced-motion: reduce` removes nonessential animation, including star twinkle, nebula, aurora, cloud and fog drift, precipitation, wildlife movement, dream-emission breathing, and autonomous wave motion. Wildlife and faint emission remain visible but still; static lightning geometry and localized storm-light cues never flash.
@@ -41,6 +70,17 @@ Before play, the privacy dialog requires a choice between session-only play and 
 
 ## Verification and evidence limits
 
-Automated checks cover keyboard focus containment and restoration, dialog background inertness, control names, ID references, unique IDs, named phase regions, semantic snapshots, the strategy-to-debrief lifecycle, all four compact tactical disclosures, tactical-plot text alternatives, contact non-disclosure without credited detection, sound-range value text, reduced motion, forced colors, 320-pixel reflow, and a 1024-pixel desktop view in Chromium. Separate rendered-pixel and model checks exercise the deterministic starfield in both themes and viewport classes; those visual checks supplement rather than replace the text alternative.
+The automated test inventory covers keyboard focus containment and restoration,
+dialog background inertness, control names, ID references, unique IDs, named
+phase regions, the required post-first-turn intelligence selects, nonfinal
+focus transfer, semantic snapshots, the strategy-to-debrief lifecycle, all
+four compact tactical disclosures, tactical-plot text alternatives, contact
+non-disclosure without credited detection, sound-range value text, reduced
+motion, forced colors, 320-pixel reflow, and a 1024-pixel desktop view.
+Separate rendered-pixel and model checks exercise the deterministic starfield
+in both themes and viewport classes; those visual checks supplement rather
+than replace the text alternative. In the current workspace, the browser
+suite was enumerated but its browser assertions were not executed because a
+compatible Chromium executable was unavailable.
 
 These checks are meaningful implementation evidence, but they are not a claim of universal accessibility or formal conformance. This release has not been manually tested with NVDA, JAWS, VoiceOver, TalkBack, switch control, speech input, magnification software, or a refreshable braille display. Human testing with those combinations remains the next evidence step.

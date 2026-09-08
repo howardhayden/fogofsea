@@ -1,0 +1,1031 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fogofsea.app/schemas/lattice-copy-requests.schema.json",
+  "title": "FOG OF SEA owner-side Lattice copy requests",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "revision",
+    "lattice",
+    "provenance",
+    "sourceCatalog",
+    "requests"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "fog-of-sea.lattice-copy.requests.v2"
+    },
+    "revision": {
+      "$ref": "#/$defs/version"
+    },
+    "lattice": {
+      "$ref": "#/$defs/lattice"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "sourceCatalog": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "$ref": "#/$defs/sourceCatalogEntry"
+      }
+    },
+    "requests": {
+      "type": "array",
+      "minItems": 19,
+      "maxItems": 19,
+      "items": {
+        "$ref": "#/$defs/request"
+      }
+    },
+    "hostAssertions": {
+      "$ref": "#/$defs/hostAssertions"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9._:@-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[0-9A-Za-z][0-9A-Za-z._+-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100000
+    },
+    "identifierSet": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/identifier"
+      }
+    },
+    "layer": {
+      "enum": [
+        "operative",
+        "experiential",
+        "interpretive"
+      ]
+    },
+    "representation": {
+      "enum": [
+        "standard",
+        "accessibility-equivalent"
+      ]
+    },
+    "lattice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engineName",
+        "engineVersion",
+        "profileId",
+        "profileVersion",
+        "profileDigest",
+        "ownerPackageDigest"
+      ],
+      "properties": {
+        "engineName": {
+          "const": "Lattice — Layered Register Engine"
+        },
+        "engineVersion": {
+          "const": "0.1.1"
+        },
+        "profileId": {
+          "const": "relational-systems"
+        },
+        "profileVersion": {
+          "const": "v1.0.0"
+        },
+        "profileDigest": {
+          "const": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a"
+        },
+        "ownerPackageDigest": {
+          "const": "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fogBaselineCommit",
+        "latticeCommit",
+        "requestAuthority"
+      ],
+      "properties": {
+        "fogBaselineCommit": {
+          "const": "70907a77cba735c151e52929dd5a56d795c3d04f"
+        },
+        "latticeCommit": {
+          "const": "d6cc85b275e3f14163a5a547f626832fd21b27b0"
+        },
+        "requestAuthority": {
+          "const": "FOG OF SEA source-controlled authoring contract"
+        }
+      }
+    },
+    "sourceCatalogEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "symbol",
+        "kind",
+        "exported",
+        "sha256"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^app/.+\\.tsx?$"
+        },
+        "symbol": {
+          "type": "string",
+          "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*$"
+        },
+        "kind": {
+          "enum": ["variable", "function", "class", "interface", "type-alias", "enum", "namespace"]
+        },
+        "exported": {
+          "type": "boolean"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source",
+        "traceability",
+        "context",
+        "outputs",
+        "contract",
+        "profileIds",
+        "candidates",
+        "hostAssertions",
+        "review"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "fos.game.guide.mission-credit",
+            "fos.game.learning.turn-uncertainty",
+            "fos.game.learning.turn-clear",
+            "fos.game.learning.outcome-pending",
+            "fos.game.learning.outcome-uncertainty",
+            "fos.game.learning.outcome-adjustment",
+            "fos.game.learning.outcome-clear",
+            "fos.game.outcome.unscored-writing",
+            "fos.game.guide.scenario-acceptance",
+            "fos.game.guide.uncrewed-undersea",
+            "fos.game.guide.command-turns",
+            "fos.game.guide.strategic-fit",
+            "fos.game.guide.model-boundary",
+            "fos.game.guide.mission-learning",
+            "fos.academy.compare-intro",
+            "fos.academy.sources-intro",
+            "fos.academy.model-boundary",
+            "fos.academy.independent-status",
+            "fos.academy.language-system"
+          ]
+        },
+        "source": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^app/.+\\.tsx?#[A-Za-z][A-Za-z0-9._:@-]*$"
+          }
+        },
+        "traceability": {
+          "$ref": "#/$defs/traceability"
+        },
+        "context": {
+          "$ref": "#/$defs/context"
+        },
+        "outputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/output"
+          }
+        },
+        "contract": {
+          "$ref": "#/$defs/meaningContract"
+        },
+        "profileIds": {
+          "type": "array",
+          "const": [
+            "relational-systems"
+          ]
+        },
+        "candidates": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/candidate"
+          }
+        },
+        "hostAssertions": {
+          "$ref": "#/$defs/hostAssertions"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        }
+      }
+    },
+    "traceability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirementIds",
+        "inventoryIds",
+        "sourceRefs"
+      ],
+      "properties": {
+        "requirementIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^FOS-LAT-[A-Z]+-[0-9]{3}$"
+          }
+        },
+        "inventoryIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^FOS-COPY-[A-Z]+-[0-9]{3}$"
+          }
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/identifierSet"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publishId",
+        "layer",
+        "representation"
+      ],
+      "properties": {
+        "publishId": {
+          "type": "string",
+          "enum": [
+            "game.guide.missionCredit.operative",
+            "game.guide.missionCredit.interpretive",
+            "game.learning.turn.uncertainty",
+            "game.learning.turn.clear",
+            "game.learning.outcome.pending",
+            "game.learning.outcome.uncertainty",
+            "game.learning.outcome.adjustment",
+            "game.learning.outcome.clear",
+            "game.outcome.unscoredWriting",
+            "game.guide.scenarioAcceptance.operative",
+            "game.guide.scenarioAcceptance.interpretive",
+            "game.guide.uncrewedUndersea.operative",
+            "game.guide.uncrewedUndersea.interpretive",
+            "game.guide.commandTurns.operative",
+            "game.guide.commandTurns.interpretive",
+            "game.guide.strategicFit.operative",
+            "game.guide.strategicFit.interpretive",
+            "game.guide.modelBoundary.operative",
+            "game.guide.modelBoundary.interpretive",
+            "game.guide.missionLearning.operative",
+            "game.guide.missionLearning.interpretive",
+            "academy.compare.intro",
+            "academy.sources.intro",
+            "academy.sources.modelBoundary",
+            "academy.sources.independentStatus",
+            "academy.sources.languageSystem"
+          ]
+        },
+        "layer": {
+          "$ref": "#/$defs/layer"
+        },
+        "representation": {
+          "$ref": "#/$defs/representation"
+        }
+      }
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject",
+        "predicate",
+        "polarity",
+        "modality",
+        "conditionIds"
+      ],
+      "properties": {
+        "subject": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "predicate": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "object": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/nonEmptyText"
+            }
+          ]
+        },
+        "unit": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "polarity": {
+          "enum": [
+            "positive",
+            "negative"
+          ]
+        },
+        "modality": {
+          "enum": [
+            "must",
+            "must-not",
+            "may",
+            "will",
+            "might",
+            "is"
+          ]
+        },
+        "conditionIds": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operative": {
+          "enum": [
+            "explicit",
+            "inferable",
+            "optional"
+          ]
+        },
+        "experiential": {
+          "enum": [
+            "explicit",
+            "inferable",
+            "optional"
+          ]
+        },
+        "interpretive": {
+          "enum": [
+            "explicit",
+            "inferable",
+            "optional"
+          ]
+        }
+      }
+    },
+    "match": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allOf": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyText"
+          }
+        },
+        "anyOf": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyText"
+          }
+        },
+        "noneOf": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyText"
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "allOf"
+          ]
+        },
+        {
+          "required": [
+            "anyOf"
+          ]
+        }
+      ]
+    },
+    "atom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "criticality",
+        "frame",
+        "requiredIn",
+        "delivery",
+        "protectedFields",
+        "prohibitedDependencies"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "kind": {
+          "enum": [
+            "action",
+            "state",
+            "timing",
+            "condition",
+            "constraint",
+            "consequence",
+            "prohibition",
+            "uncertainty",
+            "recovery",
+            "relation"
+          ]
+        },
+        "criticality": {
+          "enum": [
+            "safety",
+            "operative",
+            "domain",
+            "contextual"
+          ]
+        },
+        "frame": {
+          "$ref": "#/$defs/frame"
+        },
+        "requiredIn": {
+          "type": "array",
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/layer"
+          }
+        },
+        "delivery": {
+          "$ref": "#/$defs/delivery"
+        },
+        "protectedFields": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "subject",
+              "predicate",
+              "object",
+              "value",
+              "unit",
+              "polarity",
+              "modality",
+              "conditions"
+            ]
+          }
+        },
+        "prohibitedDependencies": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "contains": {
+            "const": "timing-perception"
+          },
+          "items": {
+            "enum": [
+              "imagery",
+              "color",
+              "sound",
+              "direction",
+              "timing-perception",
+              "implication",
+              "spatial-inference"
+            ]
+          }
+        },
+        "literalForm": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "match": {
+          "$ref": "#/$defs/match"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "literalForm"
+          ]
+        },
+        {
+          "required": [
+            "match"
+          ]
+        }
+      ]
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "type",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/identifier"
+        },
+        "type": {
+          "enum": [
+            "before",
+            "after",
+            "causes",
+            "requires",
+            "contradicts"
+          ]
+        },
+        "to": {
+          "$ref": "#/$defs/identifier"
+        }
+      }
+    },
+    "meaningContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "revision",
+        "atoms",
+        "relations",
+        "prohibitedClaims",
+        "terminology"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "revision": {
+          "$ref": "#/$defs/version"
+        },
+        "atoms": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/atom"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {
+            "$ref": "#/$defs/relation"
+          }
+        },
+        "prohibitedClaims": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "literalForm"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/identifier"
+              },
+              "literalForm": {
+                "$ref": "#/$defs/nonEmptyText"
+              }
+            }
+          }
+        },
+        "terminology": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/nonEmptyText"
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "surface",
+        "mode",
+        "stakes",
+        "safetyClass",
+        "locale",
+        "audience",
+        "channel",
+        "limits",
+        "sceneImportance"
+      ],
+      "properties": {
+        "domain": {
+          "$ref": "#/$defs/identifier"
+        },
+        "surface": {
+          "enum": [
+            "instruction",
+            "prompt",
+            "dialogue",
+            "conversation",
+            "transition",
+            "reflection",
+            "summary",
+            "report",
+            "tooltip",
+            "tutorial",
+            "after-action",
+            "public-notice",
+            "narration"
+          ]
+        },
+        "mode": {
+          "enum": [
+            "movement",
+            "care",
+            "conversation",
+            "briefing",
+            "consequence",
+            "environment",
+            "analysis",
+            "action",
+            "exposition",
+            "aftermath",
+            "technical",
+            "institutional",
+            "reflection"
+          ]
+        },
+        "stakes": {
+          "enum": [
+            "ambient",
+            "consequential",
+            "urgent",
+            "safety-critical"
+          ]
+        },
+        "safetyClass": {
+          "enum": [
+            "none",
+            "advisory",
+            "critical"
+          ]
+        },
+        "locale": {
+          "const": "en-US"
+        },
+        "audience": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "knowledgeTags",
+            "readingLevel"
+          ],
+          "properties": {
+            "knowledgeTags": {
+              "type": "array",
+              "maxItems": 256,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              }
+            },
+            "readingLevel": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            }
+          }
+        },
+        "channel": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "visualAvailable",
+            "audioAvailable",
+            "spatialInferenceAllowed"
+          ],
+          "properties": {
+            "visualAvailable": {
+              "type": "boolean"
+            },
+            "audioAvailable": {
+              "type": "boolean"
+            },
+            "spatialInferenceAllowed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "maxCharacters",
+            "maxSentences",
+            "maxCandidates"
+          ],
+          "properties": {
+            "maxCharacters": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50000
+            },
+            "maxSentences": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "maxCandidates": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "sceneImportance": {
+          "enum": [
+            "minor",
+            "major"
+          ]
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status",
+        "atomIds",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "status": {
+          "enum": [
+            "qualified",
+            "fictional",
+            "uncertain"
+          ]
+        },
+        "atomIds": {
+          "$ref": "#/$defs/identifierSet"
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/identifierSet"
+        }
+      }
+    },
+    "candidateMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dependencies",
+        "claims",
+        "affectedParties",
+        "stateChanges"
+      ],
+      "properties": {
+        "dependencies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "imagery",
+              "color",
+              "sound",
+              "direction",
+              "timing-perception",
+              "implication",
+              "spatial-inference"
+            ]
+          }
+        },
+        "claims": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/claim"
+          }
+        },
+        "affectedParties": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "stateChanges": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "actionGraph": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "actor",
+            "action",
+            "result"
+          ],
+          "properties": {
+            "actor": {
+              "$ref": "#/$defs/nonEmptyText"
+            },
+            "action": {
+              "$ref": "#/$defs/nonEmptyText"
+            },
+            "result": {
+              "$ref": "#/$defs/nonEmptyText"
+            }
+          }
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "layer",
+        "representation",
+        "text",
+        "atomIds",
+        "metadata"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "layer": {
+          "$ref": "#/$defs/layer"
+        },
+        "representation": {
+          "$ref": "#/$defs/representation"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50000
+        },
+        "atomIds": {
+          "$ref": "#/$defs/identifierSet"
+        },
+        "metadata": {
+          "$ref": "#/$defs/candidateMetadata"
+        }
+      }
+    },
+    "phraseMap": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[A-Za-z][A-Za-z0-9._:@-]*$"
+      },
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "$ref": "#/$defs/nonEmptyText"
+        }
+      }
+    },
+    "exactTextMap": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[A-Za-z][A-Za-z0-9._:@-]*$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50000
+      }
+    },
+    "hostAssertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requiredPhrases",
+        "prohibitedPhrases"
+      ],
+      "properties": {
+        "requiredPhrases": {
+          "$ref": "#/$defs/phraseMap"
+        },
+        "prohibitedPhrases": {
+          "$ref": "#/$defs/phraseMap"
+        },
+        "exactText": {
+          "$ref": "#/$defs/exactTextMap"
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority",
+        "humanStatus",
+        "claimScope"
+      ],
+      "properties": {
+        "authority": {
+          "const": "FOG OF SEA source-controlled authoring contract"
+        },
+        "humanStatus": {
+          "const": "not-claimed"
+        },
+        "claimScope": {
+          "const": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      }
+    }
+  }
+}

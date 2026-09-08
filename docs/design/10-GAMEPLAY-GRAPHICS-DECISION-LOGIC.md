@@ -35,7 +35,10 @@ The generator composes mission-family grammar, threat, region, climate, observer
 9. difficulty matrix and actor logic;
 10. narrative substance and uniqueness.
 
-Only a complete valid candidate is shown.
+Only a candidate that passes these implemented structured checks is shown.
+This gate does not yet prove constructive winnability, nontriviality,
+doctrinal soundness, political coherence, or every implication of the
+free-form narrative; those remain separate red-team concerns.
 
 ### Phase B — Define strategic logic
 
@@ -74,11 +77,25 @@ Each turn selects:
 - strategic-force policy;
 - assigned warfare task.
 
-Resolution updates range, contact, integrity, readiness, supply, escalation, primary/secondary objectives, opposing pressure/cohesion, disruptions, and report history.
+After Turn 1 establishes a baseline, Turns 2–6 also require three explicit
+aggregate-opposition working judgments: possible intent, meaning of the
+observable pattern, and likely next action. Each dimension includes an
+insufficient-evidence value. Candidate values are bounded to at most two
+substantive public-state-supported hypotheses plus insufficient evidence, and
+the recorded values never alter a matrix component, state delta, diagnostic,
+or score.
+
+Resolution updates range, contact, integrity, readiness, supply, escalation,
+primary/secondary objectives, opposing pressure/cohesion, disruptions, and
+report history. A version-2 rigid report additionally records closed typed
+opposing-action, infliction, and observation-domain data. The public
+intelligence projector—not report prose—decides what is absolutely known,
+when it became known, what remains a potential, and where it appears in the
+log.
 
 ### Phase F — Debrief and iterate
 
-The completed outcome compares explicit thresholds, score components, and turn evidence. The player can undo the final turn, retry the same scenario, return to planning, open a lesson, or generate another validated scenario.
+The completed outcome compares explicit thresholds, score components, and turn evidence. The player can undo the final turn, retry the same scenario, return to planning, open a lesson, or generate another scenario that passes the same structured coexistence checks.
 
 ## 3. Matrix architecture
 
@@ -119,9 +136,27 @@ The draw is fixed before turn resolution. Identical scenario, state, readiness, 
 - Unknown air, surface, and subsurface markers require mission-credited compatible sensing in that domain.
 - Unsupported or merely selected equipment reveals nothing.
 - Visible markers communicate bounded domain uncertainty, never identity or opposing composition.
-- Opposing capability impacts remain concealed unless contact quality and domain visibility permit disclosure.
+- Generated opposing capability impacts remain assessed and cannot enter the
+  absolute log. A future typed confirmed impact would still require the
+  relevant observation basis before disclosure.
 - Future disruptions/objectives remain unrevealed until their turn.
 - The canvas and accessible copy derive from the same visibility model.
+- Current own-force indices and modeled inflictions are direct game-state
+  observations. Inflictions identify only the modeled source side, affected
+  side, effect, and amount that the rules disclose; they do not establish
+  real-world battle damage, hidden actor identity, intent, or coordination.
+- An exact opposing action normally becomes absolute only when contact quality
+  reaches 85 and a relevant credited observation domain exists. The generic
+  `apply-pressure` action is also directly knowable when the same turn records
+  an opposing infliction against the selected force. High contact alone does
+  not reveal intent or actor count.
+- Every absolute fact retains both `occurredTurn` and `discoveredTurn`.
+  History groups by the former and labels the latter as **Discovered during
+  Turn N**. A later observation augments the earlier occurrence group; it does
+  not rewrite the record to imply earlier knowledge.
+- Reasonable-potential derivation reads only current public indices, report
+  deltas, and disclosed inflictions. It must not read the scenario matrix,
+  concealed action codes, future events, or exact opposing actor count.
 
 ## 5. Score and outcome
 
@@ -136,7 +171,11 @@ The final score decomposes into:
 - escalation discipline;
 - planning.
 
-Victory additionally depends on explicit difficulty-aware thresholds for score, primary objective, optional secondary objective, integrity, supply, and escalation. A high score cannot silently override a failed mandatory threshold.
+Victory additionally depends on explicit difficulty-aware thresholds for score,
+primary objective, any secondary objective disclosed by the terminal turn,
+integrity, supply, and escalation. An unrevealed later objective neither appears
+in the debrief nor changes an early terminal score. A high score cannot silently
+override a failed mandatory threshold.
 
 ## 6. Graphics as rule communication
 
@@ -223,6 +262,10 @@ If a lower performance tier is introduced, degradation order is:
 8. No visual effect may erase the foreground or its semantic equivalent.
 9. No weather particle may fall in Stars or Subsurface view.
 10. No aurora may exist during Day.
+11. No working-assumption choice may affect adjudication or disclosure.
+12. No public intelligence fact may be created by parsing presentation prose.
+13. No late discovery may be filed under the discovery turn as though it
+    occurred then.
 
 ## 10. Evaluation protocol
 

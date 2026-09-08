@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fogofsea.app/schemas/lattice-copy-runtime.schema.json",
+  "title": "FOG OF SEA browser-safe Lattice copy snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "snapshotId", "copySha256", "copy"],
+  "properties": {
+    "schemaVersion": { "const": "fog-of-sea.lattice-copy.runtime.v1" },
+    "snapshotId": {
+      "type": "string",
+      "pattern": "^lattice-copy-[a-f0-9]{24}$"
+    },
+    "copySha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "copy": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 26,
+      "maxProperties": 26,
+      "required": [
+        "academy.compare.intro",
+        "academy.sources.independentStatus",
+        "academy.sources.intro",
+        "academy.sources.languageSystem",
+        "academy.sources.modelBoundary",
+        "game.guide.commandTurns.interpretive",
+        "game.guide.commandTurns.operative",
+        "game.guide.missionCredit.interpretive",
+        "game.guide.missionCredit.operative",
+        "game.guide.missionLearning.interpretive",
+        "game.guide.missionLearning.operative",
+        "game.guide.modelBoundary.interpretive",
+        "game.guide.modelBoundary.operative",
+        "game.guide.scenarioAcceptance.interpretive",
+        "game.guide.scenarioAcceptance.operative",
+        "game.guide.strategicFit.interpretive",
+        "game.guide.strategicFit.operative",
+        "game.guide.uncrewedUndersea.interpretive",
+        "game.guide.uncrewedUndersea.operative",
+        "game.learning.outcome.adjustment",
+        "game.learning.outcome.clear",
+        "game.learning.outcome.pending",
+        "game.learning.outcome.uncertainty",
+        "game.learning.turn.clear",
+        "game.learning.turn.uncertainty",
+        "game.outcome.unscoredWriting"
+      ],
+      "properties": {
+        "academy.compare.intro": { "$ref": "#/$defs/copyText" },
+        "academy.sources.independentStatus": { "$ref": "#/$defs/copyText" },
+        "academy.sources.intro": { "$ref": "#/$defs/copyText" },
+        "academy.sources.languageSystem": { "$ref": "#/$defs/copyText" },
+        "academy.sources.modelBoundary": { "$ref": "#/$defs/copyText" },
+        "game.guide.commandTurns.interpretive": { "$ref": "#/$defs/copyText" },
+        "game.guide.commandTurns.operative": { "$ref": "#/$defs/copyText" },
+        "game.guide.missionCredit.interpretive": { "$ref": "#/$defs/copyText" },
+        "game.guide.missionCredit.operative": { "$ref": "#/$defs/copyText" },
+        "game.guide.missionLearning.interpretive": { "$ref": "#/$defs/copyText" },
+        "game.guide.missionLearning.operative": { "$ref": "#/$defs/copyText" },
+        "game.guide.modelBoundary.interpretive": { "$ref": "#/$defs/copyText" },
+        "game.guide.modelBoundary.operative": { "$ref": "#/$defs/copyText" },
+        "game.guide.scenarioAcceptance.interpretive": { "$ref": "#/$defs/copyText" },
+        "game.guide.scenarioAcceptance.operative": { "$ref": "#/$defs/copyText" },
+        "game.guide.strategicFit.interpretive": { "$ref": "#/$defs/copyText" },
+        "game.guide.strategicFit.operative": { "$ref": "#/$defs/copyText" },
+        "game.guide.uncrewedUndersea.interpretive": { "$ref": "#/$defs/copyText" },
+        "game.guide.uncrewedUndersea.operative": { "$ref": "#/$defs/copyText" },
+        "game.learning.outcome.adjustment": { "$ref": "#/$defs/copyText" },
+        "game.learning.outcome.clear": { "$ref": "#/$defs/copyText" },
+        "game.learning.outcome.pending": { "$ref": "#/$defs/copyText" },
+        "game.learning.outcome.uncertainty": { "$ref": "#/$defs/copyText" },
+        "game.learning.turn.clear": { "$ref": "#/$defs/copyText" },
+        "game.learning.turn.uncertainty": { "$ref": "#/$defs/copyText" },
+        "game.outcome.unscoredWriting": { "$ref": "#/$defs/copyText" }
+      }
+    }
+  },
+  "$defs": {
+    "copyText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50000
+    }
+  }
+}

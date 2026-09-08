@@ -30,7 +30,7 @@ This document complements the concise root [Security model](../../SECURITY.md). 
 - altered turn reports, deltas, probability commitments, draws, or outcomes;
 - stale or corrupt localStorage index/slot data;
 - accidental persistence of written analysis;
-- casual disclosure of future events in active TXT records;
+- casual disclosure of events beyond the active decision turn in TXT records;
 - external asset/network injection;
 - dependency or license drift;
 - accidental serving beyond loopback or through an unexpected Host header.
@@ -129,7 +129,7 @@ FOG OF SEA header and privacy statement
 saved time / exercise / difficulty / phase
 fixed environment and scenario narrative
 strategy and force selections
-current rigid state and disclosed turn reports
+current rigid state, typed staff judgments, and as-known intelligence log
 optional writing
 decision history and debrief records
 --- machine-data start marker ---
@@ -140,13 +140,19 @@ or encoded active resume payload
 
 The readable section is useful for review without importing. The machine section is required for restoration and should remain intact.
 
-### Active command export
+### Command export
 
-If a command is active, the complete resume state includes future precommitted draws and scheduled events. The machine JSON is therefore base64-encoded to avoid casual preview. This is obfuscation for fair play, not encryption or access control.
+Whenever a command matrix exists, the complete resume state includes concealed
+actions, matrix values, and possibly future precommitted draws or scheduled
+events. The machine JSON is therefore base64-encoded to avoid casual preview.
+This is obfuscation for fair play, not encryption or access control.
 
-### Completed export
-
-Completed records disclose resolved commitments in the readable turn record. The machine section remains versioned for restoration.
+The readable record follows the public intelligence projector in both active
+and completed states. It includes current observations, modeled inflictions,
+recorded staff judgments, and absolute facts grouped by occurrence and
+discovery turn. Completion does not promote concealed world state, hidden
+opposing cohesion, raw umpire notes, or internal disruption IDs into readable
+truth. The machine section remains versioned for restoration.
 
 ## 8. Import validation sequence
 
@@ -160,14 +166,23 @@ An import is accepted atomically only after:
 6. catalog allowlist and roster-count validation;
 7. bounded clean text and safe identifier checks;
 8. strategic selection and preference validation;
-9. result, history, orders, and rigid-state shape validation;
+9. result, history, orders, rigid-state, typed action/infliction/observation,
+   and post-first-turn assessment shape validation;
 10. scenario matrix recreation and exact equality check;
 11. force-readiness derivation from imported roster;
 12. canonical replay of the current command chain;
 13. exact outcome/result consistency check;
 14. reducer/state replacement only after complete success.
 
-For current-format saves, replay rejects altered committed draws, ranges, inputs, reports, deltas, state, and outcomes even when the altered values look internally consistent. Older archived history lacks all modern commitments; it is sanitized, bounded, non-authoritative review content and never controls restored current state.
+For current-format saves, replay rejects altered committed draws, ranges,
+inputs, reports, deltas, typed intelligence, state, and outcomes even when the
+altered values look internally consistent. A version-4 current command must
+use rigid-state version 2 and retain the intelligence arrays on every resolved
+turn. Pending partial staff judgments are accepted only when each value belongs
+to the candidate set derived from the restored public state. Supported
+version-3 transcripts replay and migrate before becoming version 4. Older
+archived history lacks all modern commitments; it is sanitized, bounded,
+non-authoritative review content and never controls restored current state.
 
 ## 9. Privacy interaction requirements
 
@@ -215,4 +230,3 @@ Do not say “corrupt” when the cause is only unsupported version, and do not 
 - Are runtime requests still local/bundled?
 - Are licenses, notices, SBOM, and vulnerability checks current?
 - Are residual limits stated without an absolute security claim?
-

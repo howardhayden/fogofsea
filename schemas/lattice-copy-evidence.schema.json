@@ -1,0 +1,1005 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fogofsea.app/schemas/lattice-copy-evidence.schema.json",
+  "title": "FOG OF SEA Lattice copy realization evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "snapshotId",
+    "lattice",
+    "implementationAuthority",
+    "source",
+    "boundary",
+    "assurance",
+    "hostAssertions",
+    "traceabilitySha256",
+    "traceability",
+    "realizationSha256",
+    "copySha256",
+    "generatedFile",
+    "runtimeFile",
+    "academyCorpus",
+    "academyLint",
+    "requests"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "fog-of-sea.lattice-copy.evidence.v2" },
+    "snapshotId": { "$ref": "#/$defs/snapshotId" },
+    "lattice": { "$ref": "#/$defs/lattice" },
+    "implementationAuthority": { "$ref": "#/$defs/implementationAuthority" },
+    "source": { "$ref": "#/$defs/source" },
+    "boundary": { "$ref": "#/$defs/boundary" },
+    "assurance": { "$ref": "#/$defs/assurance" },
+    "hostAssertions": { "$ref": "#/$defs/hostAssertions" },
+    "traceabilitySha256": { "$ref": "#/$defs/digest" },
+    "traceability": { "$ref": "#/$defs/traceability" },
+    "realizationSha256": { "$ref": "#/$defs/digest" },
+    "copySha256": { "$ref": "#/$defs/digest" },
+    "generatedFile": { "$ref": "#/$defs/generatedFile" },
+    "runtimeFile": { "$ref": "#/$defs/runtimeFile" },
+    "academyCorpus": { "$ref": "#/$defs/academyCorpus" },
+    "academyLint": { "$ref": "#/$defs/academyLint" },
+    "requests": { "$ref": "#/$defs/evidenceRequests" }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "implementationAuthorityFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "enum": [
+            "package-lock.json",
+            "package.json",
+            "requirements/lattice-adoption.schema.json",
+            "requirements/lattice-copy-inventory.schema.json",
+            "schemas/lattice-copy-evidence.schema.json",
+            "schemas/lattice-copy-generated.schema.json",
+            "schemas/lattice-copy-index.schema.json",
+            "schemas/lattice-copy-requests.schema.json",
+            "schemas/lattice-copy-runtime.schema.json",
+            "scripts/compile-lattice-copy.mjs",
+            "scripts/lattice-copy-corpus.mjs",
+            "scripts/validate-lattice-schemas.d.mts",
+            "scripts/validate-lattice-schemas.mjs",
+            "scripts/verify-lattice-copy.mts"
+          ]
+        },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "implementationAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "algorithm", "files", "sha256"],
+      "properties": {
+        "format": { "const": "fog-of-sea.lattice-implementation-authority.v1" },
+        "algorithm": { "const": "sha256-stable-json-v1" },
+        "files": {
+          "type": "array",
+          "minItems": 14,
+          "maxItems": 14,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/implementationAuthorityFile" }
+        },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "snapshotId": {
+      "type": "string",
+      "pattern": "^lattice-copy-[a-f0-9]{24}$"
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9._:@-]*$"
+    },
+    "requestId": {
+      "enum": [
+        "fos.academy.compare-intro",
+        "fos.academy.independent-status",
+        "fos.academy.language-system",
+        "fos.academy.model-boundary",
+        "fos.academy.sources-intro",
+        "fos.game.guide.command-turns",
+        "fos.game.guide.mission-credit",
+        "fos.game.guide.mission-learning",
+        "fos.game.guide.model-boundary",
+        "fos.game.guide.scenario-acceptance",
+        "fos.game.guide.strategic-fit",
+        "fos.game.guide.uncrewed-undersea",
+        "fos.game.learning.outcome-adjustment",
+        "fos.game.learning.outcome-clear",
+        "fos.game.learning.outcome-pending",
+        "fos.game.learning.outcome-uncertainty",
+        "fos.game.learning.turn-clear",
+        "fos.game.learning.turn-uncertainty",
+        "fos.game.outcome.unscored-writing"
+      ]
+    },
+    "publishId": {
+      "enum": [
+        "academy.compare.intro",
+        "academy.sources.independentStatus",
+        "academy.sources.intro",
+        "academy.sources.languageSystem",
+        "academy.sources.modelBoundary",
+        "game.guide.commandTurns.interpretive",
+        "game.guide.commandTurns.operative",
+        "game.guide.missionCredit.interpretive",
+        "game.guide.missionCredit.operative",
+        "game.guide.missionLearning.interpretive",
+        "game.guide.missionLearning.operative",
+        "game.guide.modelBoundary.interpretive",
+        "game.guide.modelBoundary.operative",
+        "game.guide.scenarioAcceptance.interpretive",
+        "game.guide.scenarioAcceptance.operative",
+        "game.guide.strategicFit.interpretive",
+        "game.guide.strategicFit.operative",
+        "game.guide.uncrewedUndersea.interpretive",
+        "game.guide.uncrewedUndersea.operative",
+        "game.learning.outcome.adjustment",
+        "game.learning.outcome.clear",
+        "game.learning.outcome.pending",
+        "game.learning.outcome.uncertainty",
+        "game.learning.turn.clear",
+        "game.learning.turn.uncertainty",
+        "game.outcome.unscoredWriting"
+      ]
+    },
+    "conformance": {
+      "enum": ["literal", "degraded"]
+    },
+    "lattice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engineName", "engineVersion", "profileId", "profileVersion", "profileDigest", "ownerPackageDigest"],
+      "properties": {
+        "engineName": { "const": "Lattice — Layered Register Engine" },
+        "engineVersion": { "const": "0.1.1" },
+        "profileId": { "const": "relational-systems" },
+        "profileVersion": { "const": "v1.0.0" },
+        "profileDigest": { "const": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a" },
+        "ownerPackageDigest": { "const": "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fogBaselineCommit", "latticeCommit", "requestAuthority"],
+      "properties": {
+        "fogBaselineCommit": { "const": "70907a77cba735c151e52929dd5a56d795c3d04f" },
+        "latticeCommit": { "const": "d6cc85b275e3f14163a5a547f626832fd21b27b0" },
+        "requestAuthority": { "const": "FOG OF SEA source-controlled authoring contract" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requestPath",
+        "requestSha256",
+        "academySourcePath",
+        "academySourceSha256",
+        "academyCorpusSha256",
+        "academyLintSha256",
+        "provenance"
+      ],
+      "properties": {
+        "requestPath": { "const": "authoring/lattice-copy.requests.json" },
+        "requestSha256": { "$ref": "#/$defs/digest" },
+        "academySourcePath": { "const": "app/academyData.ts" },
+        "academySourceSha256": { "$ref": "#/$defs/digest" },
+        "academyCorpusSha256": { "$ref": "#/$defs/digest" },
+        "academyLintSha256": { "$ref": "#/$defs/digest" },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ownerCompilerRequired", "runtimeEngineIncluded", "runtimeProfileIncluded", "receiptsIncluded", "ruleDecisionsIncluded"],
+      "properties": {
+        "ownerCompilerRequired": { "const": true },
+        "runtimeEngineIncluded": { "const": false },
+        "runtimeProfileIncluded": { "const": false },
+        "receiptsIncluded": { "const": false },
+        "ruleDecisionsIncluded": { "const": false }
+      }
+    },
+    "assurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic",
+        "networkIndependentAtRealization",
+        "authenticated",
+        "externallyAnchored",
+        "trustScope",
+        "conformance",
+        "conformanceCeiling",
+        "humanReviewStatus"
+      ],
+      "properties": {
+        "deterministic": { "const": true },
+        "networkIndependentAtRealization": { "const": true },
+        "authenticated": { "const": false },
+        "externallyAnchored": { "const": false },
+        "trustScope": { "const": "reproducibility-and-conformance-only" },
+        "conformance": { "$ref": "#/$defs/conformance" },
+        "conformanceCeiling": { "const": "degraded" },
+        "humanReviewStatus": { "const": "not-claimed" }
+      }
+    },
+    "hostAssertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "publishIds", "requiredPhraseCount", "prohibitedPhraseCount", "exactTextCount"],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/digest" },
+        "publishIds": {
+          "type": "array",
+          "maxItems": 26,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/publishId" }
+        },
+        "requiredPhraseCount": { "type": "integer", "minimum": 0 },
+        "prohibitedPhraseCount": { "type": "integer", "minimum": 0 },
+        "exactTextCount": { "type": "integer", "minimum": 0, "maximum": 26 }
+      }
+    },
+    "authorityFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "enum": ["requirements/lattice-adoption.json", "requirements/lattice-copy-inventory.json"] },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "sourceCatalogEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "symbol", "kind", "exported", "sha256"],
+      "properties": {
+        "id": {
+          "enum": [
+            "src.academy.comparison",
+            "src.academy.modules",
+            "src.academy.sources",
+            "src.catalog.aircraft",
+            "src.catalog.platforms",
+            "src.game.final-outcome",
+            "src.game.outcome-learning",
+            "src.game.turn-learning",
+            "src.model.armaments",
+            "src.model.mission-credit",
+            "src.model.scenario-coexistence",
+            "src.planning.readiness-gaps"
+          ]
+        },
+        "path": { "type": "string", "pattern": "^app/.+\\.tsx?$" },
+        "symbol": { "type": "string", "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*$" },
+        "kind": { "enum": ["variable", "function", "class", "interface", "type-alias", "enum", "namespace"] },
+        "exported": { "type": "boolean" },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "humanStatus", "claimScope"],
+      "properties": {
+        "authority": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "humanStatus": { "const": "not-claimed" },
+        "claimScope": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "traceabilityRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requestId", "requirementIds", "inventoryIds", "sourceRefs", "review"],
+      "properties": {
+        "requestId": { "$ref": "#/$defs/requestId" },
+        "requirementIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^FOS-LAT-[A-Z]+-[0-9]{3}$" }
+        },
+        "inventoryIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^FOS-COPY-[A-Z]+-[0-9]{3}$" }
+        },
+        "sourceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "src.academy.comparison",
+              "src.academy.modules",
+              "src.academy.sources",
+              "src.catalog.aircraft",
+              "src.catalog.platforms",
+              "src.game.final-outcome",
+              "src.game.outcome-learning",
+              "src.game.turn-learning",
+              "src.model.armaments",
+              "src.model.mission-credit",
+              "src.model.scenario-coexistence",
+              "src.planning.readiness-gaps"
+            ]
+          }
+        },
+        "review": { "$ref": "#/$defs/review" }
+      }
+    },
+    "traceability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorityFiles", "sourceCatalog", "requests"],
+      "properties": {
+        "authorityFiles": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "allOf": [
+                { "$ref": "#/$defs/authorityFile" },
+                { "properties": { "path": { "const": "requirements/lattice-adoption.json" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/authorityFile" },
+                { "properties": { "path": { "const": "requirements/lattice-copy-inventory.json" } } }
+              ]
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "sourceCatalog": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/sourceCatalogEntry" }
+        },
+        "requests": { "$ref": "#/$defs/traceabilityRequests" }
+      }
+    },
+    "traceabilityRequests": {
+      "type": "array",
+      "minItems": 19,
+      "maxItems": 19,
+      "prefixItems": [
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.compare-intro" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.independent-status" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.language-system" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.model-boundary" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.sources-intro" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.command-turns" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.mission-credit" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.mission-learning" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.model-boundary" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.scenario-acceptance" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.strategic-fit" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.uncrewed-undersea" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.outcome-adjustment" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.outcome-clear" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.outcome-pending" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.outcome-uncertainty" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.turn-clear" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.turn-uncertainty" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.outcome.unscored-writing" } } }] }
+      ],
+      "items": false
+    },
+    "artifactFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "generatedFile": {
+      "allOf": [
+        { "$ref": "#/$defs/artifactFile" },
+        { "properties": { "path": { "const": "app/generated/lattice-copy.json" } } }
+      ]
+    },
+    "runtimeFile": {
+      "allOf": [
+        { "$ref": "#/$defs/artifactFile" },
+        { "properties": { "path": { "const": "app/generated/lattice-copy.runtime.json" } } }
+      ]
+    },
+    "nonnegativeCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "countMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[\\s\\S]*$": { "$ref": "#/$defs/nonnegativeCount" }
+      }
+    },
+    "statusCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pass": { "$ref": "#/$defs/nonnegativeCount" },
+        "warn": { "$ref": "#/$defs/nonnegativeCount" },
+        "fail": { "$ref": "#/$defs/nonnegativeCount" },
+        "unknown": { "$ref": "#/$defs/nonnegativeCount" },
+        "not-applicable": { "$ref": "#/$defs/nonnegativeCount" }
+      }
+    },
+    "academyCorpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "entryCount", "characterCount", "roles", "sections", "sha256"],
+      "properties": {
+        "schemaVersion": { "const": "fog-of-sea.lattice-copy.academy-corpus.v1" },
+        "entryCount": { "const": 1011 },
+        "characterCount": { "type": "integer", "minimum": 1 },
+        "roles": { "$ref": "#/$defs/countMap" },
+        "sections": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 5,
+          "maxProperties": 5,
+          "required": ["PATHS", "ACADEMY_MODULE_DEFINITIONS", "THINKER_COMPARISON", "THINKER_CLUSTERS", "SOURCE_GROUPS"],
+          "properties": {
+            "PATHS": { "$ref": "#/$defs/nonnegativeCount" },
+            "ACADEMY_MODULE_DEFINITIONS": { "$ref": "#/$defs/nonnegativeCount" },
+            "THINKER_COMPARISON": { "$ref": "#/$defs/nonnegativeCount" },
+            "THINKER_CLUSTERS": { "$ref": "#/$defs/nonnegativeCount" },
+            "SOURCE_GROUPS": { "$ref": "#/$defs/nonnegativeCount" }
+          }
+        },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "academyBatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "entryIds", "entryCount", "textSha256", "findingCount", "statusCounts", "codeCounts"],
+      "properties": {
+        "id": { "enum": ["academy-lint-1-of-2", "academy-lint-2-of-2"] },
+        "entryIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^academy-copy-[0-9]{4}$" }
+        },
+        "entryCount": { "type": "integer", "minimum": 1, "maximum": 1011 },
+        "textSha256": { "$ref": "#/$defs/digest" },
+        "findingCount": { "$ref": "#/$defs/nonnegativeCount" },
+        "statusCounts": { "$ref": "#/$defs/statusCounts" },
+        "codeCounts": { "$ref": "#/$defs/countMap" }
+      }
+    },
+    "academyLint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "advisoryOnly",
+        "semanticGuarantee",
+        "corpusSha256",
+        "sourceSha256",
+        "entryCount",
+        "batchCount",
+        "findingCount",
+        "unresolvedFindingCount",
+        "statusCounts",
+        "codeCounts",
+        "batches"
+      ],
+      "properties": {
+        "status": { "const": "advisory" },
+        "advisoryOnly": { "const": true },
+        "semanticGuarantee": { "const": false },
+        "corpusSha256": { "$ref": "#/$defs/digest" },
+        "sourceSha256": { "$ref": "#/$defs/digest" },
+        "entryCount": { "const": 1011 },
+        "batchCount": { "const": 2 },
+        "findingCount": { "$ref": "#/$defs/nonnegativeCount" },
+        "unresolvedFindingCount": { "$ref": "#/$defs/nonnegativeCount" },
+        "statusCounts": { "$ref": "#/$defs/statusCounts" },
+        "codeCounts": { "$ref": "#/$defs/countMap" },
+        "batches": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {
+              "allOf": [
+                { "$ref": "#/$defs/academyBatch" },
+                {
+                  "properties": {
+                    "id": { "const": "academy-lint-1-of-2" },
+                    "entryCount": { "const": 506 },
+                    "entryIds": { "minItems": 506, "maxItems": 506 }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/academyBatch" },
+                {
+                  "properties": {
+                    "id": { "const": "academy-lint-2-of-2" },
+                    "entryCount": { "const": 505 },
+                    "entryIds": { "minItems": 505, "maxItems": 505 }
+                  }
+                }
+              ]
+            }
+          ],
+          "items": false
+        }
+      }
+    },
+    "evidenceOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publishId",
+        "key",
+        "candidateId",
+        "source",
+        "conformance",
+        "textSha256",
+        "requiredAtomCount",
+        "coveredAtomCount",
+        "requiredAtomIdsSha256",
+        "coverageRatio",
+        "findingCount",
+        "statusCounts",
+        "codeCounts"
+      ],
+      "properties": {
+        "publishId": { "$ref": "#/$defs/publishId" },
+        "key": {
+          "enum": [
+            "operative:standard",
+            "operative:accessibility-equivalent",
+            "experiential:standard",
+            "experiential:accessibility-equivalent",
+            "interpretive:standard",
+            "interpretive:accessibility-equivalent"
+          ]
+        },
+        "candidateId": { "$ref": "#/$defs/identifier" },
+        "source": { "enum": ["provided", "literal"] },
+        "conformance": { "$ref": "#/$defs/conformance" },
+        "textSha256": { "$ref": "#/$defs/digest" },
+        "requiredAtomCount": { "$ref": "#/$defs/nonnegativeCount" },
+        "coveredAtomCount": { "$ref": "#/$defs/nonnegativeCount" },
+        "requiredAtomIdsSha256": { "$ref": "#/$defs/digest" },
+        "coverageRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "findingCount": { "$ref": "#/$defs/nonnegativeCount" },
+        "statusCounts": { "$ref": "#/$defs/statusCounts" },
+        "codeCounts": { "$ref": "#/$defs/countMap" }
+      }
+    },
+    "evidenceRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requestId", "traceability", "review", "conformance", "inputDigest", "derivationDigest", "outputs"],
+      "properties": {
+        "requestId": { "$ref": "#/$defs/requestId" },
+        "traceability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["requirementIds", "inventoryIds", "sourceRefs"],
+          "properties": {
+            "requirementIds": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^FOS-LAT-[A-Z]+-[0-9]{3}$" }
+            },
+            "inventoryIds": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^FOS-COPY-[A-Z]+-[0-9]{3}$" }
+            },
+            "sourceRefs": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/identifier" }
+            }
+          }
+        },
+        "review": { "$ref": "#/$defs/review" },
+        "conformance": { "$ref": "#/$defs/conformance" },
+        "inputDigest": { "$ref": "#/$defs/digest" },
+        "derivationDigest": { "$ref": "#/$defs/digest" },
+        "outputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceOutput" }
+        }
+      }
+    },
+    "evidenceRequests": {
+      "type": "array",
+      "minItems": 19,
+      "maxItems": 19,
+      "prefixItems": [
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.academy.compare-intro" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "academy.compare.intro" }, "key": { "const": "interpretive:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.academy.independent-status" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "academy.sources.independentStatus" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.academy.language-system" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "academy.sources.languageSystem" }, "key": { "const": "interpretive:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.academy.model-boundary" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "academy.sources.modelBoundary" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.academy.sources-intro" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "academy.sources.intro" }, "key": { "const": "interpretive:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.guide.command-turns" },
+                "outputs": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.commandTurns.interpretive" }, "key": { "const": "interpretive:standard" } } }] },
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.commandTurns.operative" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.guide.mission-credit" },
+                "outputs": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.missionCredit.interpretive" }, "key": { "const": "interpretive:standard" } } }] },
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.missionCredit.operative" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.guide.mission-learning" },
+                "outputs": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.missionLearning.interpretive" }, "key": { "const": "interpretive:standard" } } }] },
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.missionLearning.operative" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.guide.model-boundary" },
+                "outputs": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.modelBoundary.interpretive" }, "key": { "const": "interpretive:standard" } } }] },
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.modelBoundary.operative" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.guide.scenario-acceptance" },
+                "outputs": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.scenarioAcceptance.interpretive" }, "key": { "const": "interpretive:standard" } } }] },
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.scenarioAcceptance.operative" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.guide.strategic-fit" },
+                "outputs": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.strategicFit.interpretive" }, "key": { "const": "interpretive:standard" } } }] },
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.strategicFit.operative" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.guide.uncrewed-undersea" },
+                "outputs": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.uncrewedUndersea.interpretive" }, "key": { "const": "interpretive:standard" } } }] },
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.guide.uncrewedUndersea.operative" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.learning.outcome-adjustment" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.learning.outcome.adjustment" }, "key": { "const": "interpretive:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.learning.outcome-clear" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.learning.outcome.clear" }, "key": { "const": "interpretive:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.learning.outcome-pending" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.learning.outcome.pending" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.learning.outcome-uncertainty" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.learning.outcome.uncertainty" }, "key": { "const": "interpretive:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.learning.turn-clear" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.learning.turn.clear" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.learning.turn-uncertainty" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.learning.turn.uncertainty" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/evidenceRequest" },
+            {
+              "properties": {
+                "requestId": { "const": "fos.game.outcome.unscored-writing" },
+                "outputs": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "prefixItems": [
+                    { "allOf": [{ "$ref": "#/$defs/evidenceOutput" }, { "properties": { "publishId": { "const": "game.outcome.unscoredWriting" }, "key": { "const": "operative:standard" } } }] }
+                  ],
+                  "items": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "items": false
+    }
+  }
+}

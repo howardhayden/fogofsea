@@ -1,0 +1,298 @@
+.command-intelligence-panel,
+.command-intelligence-panel * {
+  box-sizing: border-box;
+}
+
+.command-intelligence-panel {
+  min-width: 0;
+  padding: 14px;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--raised) 76%, var(--panel));
+  color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .055), 0 18px 54px rgba(3, 12, 18, .34);
+  backdrop-filter: blur(18px);
+}
+
+.command-intelligence-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.command-intelligence-header > span,
+.command-intelligence-section > h3,
+.intelligence-immediate > h4,
+.intelligence-history-turns h4,
+.intelligence-history-turns h5,
+.intelligence-last-known > b,
+.intelligence-recorded-assessment > b {
+  font-family: var(--font-data);
+  font-weight: 750;
+  letter-spacing: .07em;
+}
+
+.command-intelligence-header > span {
+  color: var(--faint);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.command-intelligence-header h2 {
+  margin: 3px 0 0;
+  color: var(--text);
+  font: 650 14px/1.3 var(--font-ui);
+}
+
+.command-intelligence-section {
+  min-width: 0;
+  margin-top: 10px;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--panel) 90%, transparent);
+}
+
+.command-intelligence-section > h3,
+.intelligence-immediate > h4,
+.intelligence-history-turns h4,
+.intelligence-history-turns h5 {
+  margin: 0;
+  color: var(--accent-strong);
+}
+
+.command-intelligence-section > h3 {
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.command-intelligence-section > p,
+.intelligence-immediate > small,
+.intelligence-assumption-field small,
+.intelligence-last-known small,
+.intelligence-empty {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.command-intelligence-section > p {
+  margin: 6px 0 0;
+}
+
+.intelligence-state-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin: 9px 0 0;
+}
+
+.intelligence-state-grid > div {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--raised);
+}
+
+.intelligence-state-grid dt {
+  color: var(--faint);
+  font: 700 9px/1.35 var(--font-data);
+  letter-spacing: .055em;
+}
+
+.intelligence-state-grid dd {
+  margin: 3px 0 0;
+  color: var(--text);
+  font: 650 11px/1.35 var(--font-data);
+}
+
+.intelligence-last-known {
+  margin-top: 8px;
+  padding: 9px;
+  border-left: 3px solid var(--accent-strong);
+  background: var(--raised);
+}
+
+.intelligence-last-known > b,
+.intelligence-recorded-assessment > b {
+  display: block;
+  color: var(--faint);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.intelligence-last-known p {
+  margin: 4px 0 0;
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.intelligence-last-known small {
+  display: block;
+  margin-top: 3px;
+}
+
+.intelligence-assumptions {
+  display: grid;
+  gap: 9px;
+  margin-top: 9px;
+}
+
+.intelligence-assumption-field {
+  min-width: 0;
+}
+
+.intelligence-assumption-field label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--faint);
+  font: 650 9px/1.35 var(--font-data);
+  letter-spacing: .055em;
+}
+
+.intelligence-assumption-field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 7px 28px 7px 9px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--raised);
+  color: var(--text);
+  font: 500 11px/1.35 var(--font-ui);
+}
+
+.intelligence-assumption-field small {
+  display: block;
+  margin-top: 4px;
+}
+
+.intelligence-immediate {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.intelligence-immediate > h4,
+.intelligence-history-turns h4 {
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.intelligence-immediate > ul,
+.intelligence-history-turns ul {
+  display: grid;
+  gap: 6px;
+  margin: 7px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.intelligence-immediate li,
+.intelligence-history-turns li {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-left: 3px double var(--accent-strong);
+  border-radius: 4px;
+  background: var(--raised);
+}
+
+.intelligence-immediate li > b,
+.intelligence-immediate li > span,
+.intelligence-history-turns li > b,
+.intelligence-history-turns li > span {
+  display: block;
+}
+
+.intelligence-immediate li > b,
+.intelligence-history-turns li > b {
+  color: var(--faint);
+  font: 750 9px/1.35 var(--font-data);
+  letter-spacing: .055em;
+}
+
+.intelligence-immediate li > span,
+.intelligence-history-turns li > span {
+  margin-top: 3px;
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.intelligence-empty {
+  margin: 7px 0 0;
+  padding: 8px;
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+  background: var(--raised);
+}
+
+.situation-history {
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.situation-history > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font: 750 10px/1.35 var(--font-data);
+  letter-spacing: .065em;
+}
+
+.intelligence-history-turns {
+  display: grid;
+  gap: 8px;
+}
+
+.intelligence-history-turns > section {
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--raised);
+}
+
+.intelligence-history-turns h5 {
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid var(--line);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.intelligence-recorded-assessment {
+  display: grid;
+  gap: 3px;
+  margin-top: 7px;
+  padding: 8px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 4px;
+}
+
+.intelligence-recorded-assessment span {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.command-intelligence-header h2:focus-visible,
+.intelligence-assumption-field select:focus-visible,
+.situation-history > summary:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+
+@media (max-width: 380px) {
+  .command-intelligence-panel {
+    padding: 11px;
+  }
+
+  .intelligence-state-grid {
+    grid-template-columns: 1fr;
+  }
+}

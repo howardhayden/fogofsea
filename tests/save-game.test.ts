@@ -22,6 +22,7 @@ import { createInitialRigidState, resolveRigidTurn, type RigidOrders, type Rigid
 import { deriveForceReadiness } from "../app/forceReadiness";
 import { estimateResolutionMatrix, isScenarioMatrix } from "../app/scenarioMatrix";
 import { createStarPlacements, getSkyVisibility, getSubsurfaceLifeProfile, headingToCompass, nextViewLayer, stableSeed, VIEW_CONFIG, viewTelemetryFromDirection } from "../app/viewModel";
+import { deriveCommandIntelligence } from "../app/commandIntelligence";
 
 const sampleEnvironment = deriveScenarioEnvironment({ id: 4, region: "Test Sector", climate: "ocean" });
 
@@ -45,7 +46,7 @@ const sampleScenarioEnvironment = deriveScenarioEnvironment({
 
 const sample: PortableSave = {
   format: "fog-of-sea-save",
-  version: 3,
+  version: 4,
   savedAt: "2026-08-04T12:00:00.000Z",
   game: {
     scenario: sampleScenario,
@@ -557,7 +558,7 @@ test("v3 rejects unknown domain values in current decisions and decision history
 test("portable-save trust boundary rejects code-shaped keys, unknown catalog entries, and hidden controls", () => {
   const encoded = JSON.stringify(sample);
   assert.throws(
-    () => parsePortableSave(encoded.replace('"version":3', '"version":3,"__proto__":{"polluted":true}')),
+    () => parsePortableSave(encoded.replace('"version":4', '"version":4,"__proto__":{"polluted":true}')),
     /unsafe object key/,
   );
   const unknownCatalog = structuredClone(sample);
@@ -739,6 +740,34 @@ test("compound imports reject rerolled matrices, edited report chains, and impos
   detached.game.result = { ...detached.game.result!, score: Math.max(0, detached.game.result!.score - 1) };
   detached.game.result.breakdown = { ...detached.game.result.breakdown, total: detached.game.result.score };
   assert.throws(() => parsePortableSave(JSON.stringify(detached)), /does not match the canonical umpire outcome/i);
+
+  const stalePresentation = structuredClone(completed);
+  stalePresentation.game.rigidState!.reports[0].phase = "Earlier display wording.";
+  stalePresentation.game.rigidState!.reports[0].contactReport = "Earlier safe contact wording.";
+  stalePresentation.game.rigidState!.reports[0].umpireNotes = stalePresentation.game.rigidState!.reports[0].umpireNotes.map((_, index) => `Earlier safe note ${index + 1}.`);
+  stalePresentation.game.rigidState!.outcome!.notes = ["Earlier safe outcome note."];
+  stalePresentation.game.rigidState!.outcome!.findings = stalePresentation.game.rigidState!.outcome!.findings.map((finding) => ({
+    ...finding,
+    cause: `Earlier cause for ${finding.code}.`,
+    evidence: `Earlier evidence for ${finding.code}.`,
+    adjustment: `Earlier adjustment for ${finding.code}.`,
+  }));
+  stalePresentation.game.result = structuredClone(stalePresentation.game.rigidState!.outcome);
+  const refreshed = parsePortableSave(JSON.stringify(stalePresentation));
+  assert.deepEqual(refreshed.game.rigidState, state);
+  assert.deepEqual(refreshed.game.result, state.outcome);
+
+  const preDiagnosticSave = structuredClone(completed);
+  for (const report of preDiagnosticSave.game.rigidState!.reports) delete report.diagnosticCodes;
+  const migratedDiagnostics = parsePortableSave(JSON.stringify(preDiagnosticSave));
+  assert.deepEqual(migratedDiagnostics.game.rigidState, state);
+
+  const rewrittenDiagnostic = structuredClone(completed);
+  const originalCodes = rewrittenDiagnostic.game.rigidState!.reports[0].diagnosticCodes ?? [];
+  rewrittenDiagnostic.game.rigidState!.reports[0].diagnosticCodes = originalCodes.includes("task-mismatch")
+    ? originalCodes.filter((code) => code !== "task-mismatch")
+    : [...originalCodes, "task-mismatch"];
+  assert.throws(() => parsePortableSave(JSON.stringify(rewrittenDiagnostic)), /committed matrix|report chain/i);
 });
 
 test("imported rigid impacts, matrix reports, and new debrief findings share the clean-text boundary", () => {
@@ -799,7 +828,7 @@ test("imported rigid impacts, matrix reports, and new debrief findings share the
   assert.throws(() => parsePortableSave(JSON.stringify(excessiveTurns)), /Decision data is invalid/i);
 });
 
-test("human-readable export explains compound events without inventing an illicit-network mission", () => {
+test("human-readable export preserves the as-known compound picture without inventing or disclosing latent categories", () => {
   const ordinary = structuredClone(sample);
   ordinary.game.scenario = deterministicScenario(40);
   while (ordinary.game.scenario.illicitNetworkType) ordinary.game.scenario = deterministicScenario(ordinary.game.scenario.id);
@@ -811,27 +840,47 @@ test("human-readable export explains compound events without inventing an illici
   while (!relevant.game.scenario.illicitNetworkType) relevant.game.scenario = deterministicScenario(relevant.game.scenario.id);
   const relevantText = formatPortableSave(relevant);
   assert.doesNotMatch(relevantText, /illicit-network category/i, "planning export conceals latent matrix categories");
-  assert.match(formatPortableSave(completedSave(relevant)), /illicit-network category/i, "completed export discloses the resolved compound frame");
+  const completedRelevant = formatPortableSave(completedSave(relevant));
+  assert.doesNotMatch(completedRelevant, /illicit-network category/i, "completion does not convert latent model truth into player knowledge");
+  assert.match(completedRelevant, /INTELLIGENCE LOG/);
 
   relevant.preferences.difficulty = "challenge";
   const readiness = savedReadiness(relevant);
   relevant.game.rigidState = createInitialRigidState(readiness, savedRules(relevant));
   const compoundText = formatPortableSave(relevant);
-  assert.match(compoundText, /Disruption schedule:/);
-  assert.match(compoundText, /No secondary objective has been disclosed at the current turn|Secondary objective: .*method /);
-  assert.match(compoundText, /Disclosed impact ledger:/);
+  assert.match(compoundText, /Absolutely known disruptions, impacts, actions, and inflictions are recorded in the intelligence log/i);
+  assert.match(compoundText, /No secondary objective has been disclosed at the current turn|Secondary objective:/);
+  assert.match(compoundText, /INTELLIGENCE LOG/);
 });
 
-test("mid-command human-readable TXT withholds future events and unrevealed objectives", () => {
+test("mid-command human-readable TXT discloses the turn being planned while withholding later commitments", () => {
   const midgame = structuredClone(sample);
   let scenario = deterministicScenario(1);
   for (let id = 2; id <= 300; id += 1) {
     const matrix = scenario.matrix;
-    if (matrix?.secondaryObjective && matrix.secondaryObjective.revealTurn > 1
-      && matrix.disruptions.some((event) => event.startsTurn > 1)) break;
+    const directTurnTwoEvent = matrix?.disruptions.find((event) => (
+      event.startsTurn === 2
+      && (event.kind === "severe-weather"
+        || event.kind === "objective-change"
+        || event.kind === "command-interference" && event.affectedSide !== "opposing-force")
+    ));
+    if (matrix?.secondaryObjective?.revealTurn === 2
+      && directTurnTwoEvent
+      && matrix.disruptions.some((event) => event.startsTurn > 2)) break;
     scenario = deterministicScenario(id);
   }
-  assert.ok(scenario.matrix?.secondaryObjective);
+  const matrix = scenario.matrix;
+  const secondaryObjective = matrix?.secondaryObjective;
+  const directTurnTwoEvent = matrix?.disruptions.find((event) => (
+    event.startsTurn === 2
+    && (event.kind === "severe-weather"
+      || event.kind === "objective-change"
+      || event.kind === "command-interference" && event.affectedSide !== "opposing-force")
+  ));
+  const laterEvents = matrix?.disruptions.filter((event) => event.startsTurn > 2) ?? [];
+  assert.equal(secondaryObjective?.revealTurn, 2);
+  assert.ok(directTurnTwoEvent);
+  assert.ok(laterEvents.length);
   midgame.game.scenario = scenario;
   midgame.preferences.difficulty = "challenge";
   const readiness = savedReadiness(midgame);
@@ -840,35 +889,51 @@ test("mid-command human-readable TXT withholds future events and unrevealed obje
   const readable = formatPortableSave(midgame);
   assert.match(readable, /BASE64-UTF8:/);
   assert.deepEqual(parsePortableSave(readable).game.rigidState, midgame.game.rigidState);
-  assert.doesNotMatch(readable, new RegExp(scenario.matrix.secondaryObjective!.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  assert.doesNotMatch(readable, new RegExp(secondaryObjective.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
   for (const event of midgame.game.rigidState.matrix!.activeDisruptions.filter((item) => item.startsTurn > 1)) {
     assert.doesNotMatch(readable, new RegExp(event.headline.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
   }
   assert.match(readable, /No secondary objective has been disclosed at the current turn/);
-  assert.match(readable, /disclosed history and current windows only/i);
+  assert.match(readable, /Undisclosed opposing details and future commitments are omitted/i);
 
   const orders: RigidOrders = {
     formation: "concentrated-screen", sensors: "cooperative-fusion", tempo: "measured-advance",
     engagement: "contain", task: scenario.required[0], coordination: "federated", riskTreatment: "prepare",
   };
-  let revealed = midgame.game.rigidState;
-  while (revealed && revealed.phase === "active" && revealed.turn + 1 < scenario.matrix.secondaryObjective!.revealTurn) {
-    revealed = resolveRigidTurn(revealed, orders, readiness, rules);
+  const turnTwoPlanningState = resolveRigidTurn(midgame.game.rigidState, orders, readiness, rules);
+  assert.equal(turnTwoPlanningState.turn, 1);
+  midgame.game.rigidState = turnTwoPlanningState;
+  const turnTwoText = formatPortableSave(midgame);
+  assert.match(turnTwoText, new RegExp(secondaryObjective.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  const immediateSection = turnTwoText.split("\nHISTORY\n", 1)[0];
+  const historySection = turnTwoText.includes("\nHISTORY\n") ? turnTwoText.split("\nHISTORY\n")[1] : "";
+  const directTurnTwoMatcher = new RegExp(directTurnTwoEvent.headline.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+  assert.match(immediateSection, directTurnTwoMatcher, "a directly observable condition for Turn 2 belongs in Immediate while Turn 2 is being planned");
+  assert.doesNotMatch(historySection, directTurnTwoMatcher, "the Turn 2 condition is not historical before Turn 2 resolves");
+  for (const event of laterEvents) {
+    assert.doesNotMatch(turnTwoText, new RegExp(event.headline.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
   }
-  assert.ok(revealed);
-  midgame.game.rigidState = revealed;
-  const revealedText = formatPortableSave(midgame);
-  assert.match(revealedText, new RegExp(scenario.matrix.secondaryObjective!.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
 
-  let complete = revealed;
+  const earlyTerminalState = { ...turnTwoPlanningState, phase: "complete" as const };
+  midgame.game.rigidState = earlyTerminalState;
+  const earlyTerminalText = formatPortableSave(midgame);
+  assert.doesNotMatch(earlyTerminalText, new RegExp(secondaryObjective.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  assert.doesNotMatch(earlyTerminalText, directTurnTwoMatcher, "an early terminal state cannot disclose a later committed condition");
+
+  let complete = turnTwoPlanningState;
   while (complete.phase === "active") complete = resolveRigidTurn(complete, orders, readiness, rules);
   midgame.game.rigidState = complete;
   midgame.game.result = complete.outcome;
   const completedText = formatPortableSave(midgame);
-  assert.doesNotMatch(completedText, /BASE64-UTF8:/);
-  assert.match(completedText, /Disruption schedule: complete history/i);
+  assert.match(completedText, /BASE64-UTF8:/);
+  assert.match(completedText, /INTELLIGENCE LOG/);
+  const knownHeadlines = new Set(deriveCommandIntelligence(complete).facts
+    .filter((fact) => fact.kind === "situation-change")
+    .map((fact) => fact.headline));
   for (const event of complete.matrix!.activeDisruptions) {
-    assert.match(completedText, new RegExp(event.headline.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+    const matcher = new RegExp(event.headline.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    if (knownHeadlines.has(event.headline)) assert.match(completedText, matcher);
+    else assert.doesNotMatch(completedText, matcher);
   }
 });
 
@@ -940,7 +1005,7 @@ test("legacy saves are normalized to the 100-point model", () => {
   legacy.game.history[0].score = 102;
   legacy.game.history[0].context.budget = 102;
   const parsed = parsePortableSave(JSON.stringify(legacy));
-  assert.equal(parsed.version, 3);
+  assert.equal(parsed.version, 4);
   assert.equal(parsed.game.rigidState, null);
   assert.equal(parsed.game.rigidOrders, null);
   assert.equal(parsed.game.scenario.budget, 100);
@@ -977,7 +1042,7 @@ test("legacy saves are normalized to the 100-point model", () => {
 
   (legacy as { version: number }).version = 2;
   const parsedV2 = parsePortableSave(JSON.stringify(legacy));
-  assert.equal(parsedV2.version, 3);
+  assert.equal(parsedV2.version, 4);
   assert.deepEqual(parsedV2.game.scenario, parsed.game.scenario);
   assert.deepEqual(parsedV2.game.history[0].context, parsed.game.history[0].context);
 });

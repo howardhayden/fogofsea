@@ -60,6 +60,14 @@ async function openSession(page: Page) {
   await expect(page.locator(".workspace")).toBeVisible();
 }
 
+async function completeAdversaryAssessment(page: Page) {
+  for (const selector of [
+    "#adversary-intent-assumption",
+    "#observed-pattern-assumption",
+    "#adversary-next-action-assumption",
+  ]) await page.locator(selector).selectOption("insufficient-evidence");
+}
+
 async function setInterfaceTheme(page: Page, theme: "dark" | "light") {
   const current = await page.locator(".app").evaluate((element) => element.classList.contains("theme-light") ? "light" : "dark");
   if (current !== theme) await page.getByRole("button", { name: `Switch to ${theme} interface` }).click();
@@ -541,6 +549,7 @@ test("force, command, and final review retain text and controls through the comp
 
   await page.setViewportSize({ width: 1024, height: 545 });
   for (let turn = 1; turn <= 6; turn += 1) {
+    if (turn > 1) await completeAdversaryAssessment(page);
     const resolve = page.getByRole("button", { name: `RESOLVE TURN ${turn}`, exact: true });
     await expect(resolve).toBeVisible();
     await resolve.click();

@@ -10,6 +10,19 @@ async function openSession(page: Page) {
   await expect(privacyDialog).toBeHidden();
 }
 
+async function completeAdversaryAssessmentWithKeyboard(page: Page) {
+  for (const selector of [
+    "#adversary-intent-assumption",
+    "#observed-pattern-assumption",
+    "#adversary-next-action-assumption",
+  ]) {
+    const select = page.locator(selector);
+    await select.focus();
+    await select.press("End");
+    await expect(select).toHaveValue("insufficient-evidence");
+  }
+}
+
 async function chooseMobileWorkspaceIfPresent(page: Page, name: string) {
   const gamebar = page.locator(".mobile-gamebar");
   if (!await gamebar.isVisible()) return;
@@ -527,17 +540,22 @@ test("screen-reader semantics and a keyboard-only lifecycle hold through strateg
 
   await expect(page.getByRole("heading", { name: "TURN 1 OF 6" })).toBeFocused();
   await expectSemanticDom(page, "command");
-  await expect(page.locator(".kriegsspiel-grid")).toHaveJSProperty("tagName", "DL");
+  await expect(page.locator(".intelligence-state-grid")).toHaveJSProperty("tagName", "DL");
+  await expectAriaSnapshotContains(page.locator(".command-intelligence-panel"), ["KNOWN PICTURE & LOG", "ABSOLUTELY KNOWN", "POTENTIALS · STAFF JUDGMENT", "IMMEDIATE", "HISTORY"]);
   for (const select of await page.locator(".kriegsspiel-orders select").all()) {
     await expect(select).toHaveAttribute("aria-describedby", /.+/);
   }
   await expectAriaSnapshotContains(page.locator(".kriegsspiel-panel"), ["TURN 1 OF 6", "combobox", "RESOLVE TURN 1"]);
 
   for (let turn = 1; turn <= 6; turn += 1) {
+    if (turn > 1) await completeAdversaryAssessmentWithKeyboard(page);
     const resolve = page.getByRole("button", { name: `RESOLVE TURN ${turn}` });
     await resolve.focus();
     await resolve.press("Enter");
-    if (turn < 6) await expect(page.getByRole("heading", { name: `TURN ${turn + 1} OF 6` })).toBeFocused();
+    if (turn < 6) {
+      await expect(page.getByRole("heading", { name: `TURN ${turn + 1} OF 6` })).toBeVisible();
+      await expect(page.locator("#command-intelligence-heading")).toBeFocused();
+    }
   }
 
   const debrief = page.locator(".result-card");

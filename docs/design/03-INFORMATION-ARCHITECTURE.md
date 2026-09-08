@@ -35,7 +35,9 @@ Primary workspace
 │  └─ Readiness review
 ├─ Command
 │  ├─ Planning recap
-│  ├─ Situation / disruptions / objectives
+│  ├─ Absolutely known picture
+│  ├─ Potentials · staff judgment (Turns 2–6)
+│  ├─ Immediate / occurrence-turn History
 │  ├─ Nine order dimensions + assigned task
 │  ├─ Resolve / exact one-turn undo
 │  └─ Six-turn record
@@ -113,7 +115,10 @@ Notional glass pane, and the same return-to-task focus behavior.
 - Global utilities occupy the top bar.
 - Privacy, security, and persistence details do not repeat in the play header;
   they live at the pre-play gate and in Save/Load.
-- The left planning/brief panel provides persistent scenario and workflow context.
+- The left planning/brief panel provides persistent scenario and workflow
+  context before command. During command, the left surface becomes the known
+  picture, bounded potentials, Immediate, and History; the orders surface
+  remains on the right.
 - The tactical scene occupies the main field.
 - View depth controls sit within the scene but outside narrative content.
 - Small scene disclosures anchor to edges and may be opened independently where space permits.
@@ -128,6 +133,9 @@ Notional glass pane, and the same return-to-task focus behavior.
 - Opening one creates only a bounded occupied card; its wrapper paints nothing.
 - The center of the scene remains visible and does not become one large glass rectangle.
 - Touch targets remain at least 44 by 44 CSS pixels.
+- During command, the tactical workspace becomes one vertical scroll owner.
+  The full intelligence surface precedes the full orders form; neither is
+  reduced to a desktop-only overlay or nested scroll trap.
 
 Routine session mode is not a persistent status message. Only a failure that
 requires recovery may interrupt play globally.
@@ -139,6 +147,8 @@ requires recovery may interrupt play globally.
 - A phase-aware skip link targets the current work region.
 - Native tab order follows reading and task order.
 - Phase changes move focus to the new heading.
+- Each nonfinal resolution moves focus to the updated command-intelligence
+  heading before the next orders.
 - Overlays trap focus and restore it to their opener.
 - Every canvas view has a labelled button route; gesture or pointer orbit is never required.
 - The debrief review region supports Page Up, Page Down, Home, and End.
@@ -154,6 +164,8 @@ requires recovery may interrupt play globally.
 | Status | Term followed by value | Visibility — 4 NM |
 | Blocked action | Reason + repair | Add a compatible host first |
 | Uncertainty | Assessed status, range, or concealment | Ultimate range 48–67%; event concealed |
+| Confirmed intelligence | Exact certainty plus chronology | Absolutely known; Discovered during Turn 4 |
+| Staff hypothesis | Conditional aggregate-opposition question | What may the observable pattern mean? |
 | Outcome | Effect and evidence, not moral verdict | Objective progress +12; supply −8 |
 
 ## 6. Content model
@@ -168,7 +180,10 @@ Warfare areas, end state, two theory lenses, guardrail, force roster, aviation, 
 
 ### Command record
 
-Turn, phase, state values, orders, active events/objectives, component ranges and commitments, deltas, report text, notes, and outcome.
+Turn, phase, state values, orders, active events/objectives, component ranges
+and commitments, deltas, typed opposing actions, modeled inflictions, credited
+observation domains, three-part staff judgments from Turns 2–6, regenerated
+report text, notes, occurrence/discovery chronology, and outcome.
 
 ### Learning record
 
@@ -187,10 +202,12 @@ Portable format/version/time, canonical game state, preferences, Academy complet
 | Force compatibility | On item inspection | Actionable validation | Preserved in roster |
 | Opposing identity/composition | Not exposed | Remains abstract | Only rule-permitted effects reported |
 | Unknown contacts | None without credited sensing | Count/domain only | Turn record retains disclosed state |
+| Working adversary judgment | Not requested before Turn 2 | Bounded intent/pattern/next-action hypotheses plus insufficient evidence | Recorded as unscored staff judgment, never promoted to fact |
+| Absolute turn fact | Absent until its confirmation basis exists | Immediate when newly discovered | Filed under occurrence turn with “Discovered during Turn N” |
 | Probability range | Not needed during strategy | Previewed during command | Committed chance/draw/result disclosed |
 | Future disruption/objective | Concealed if unrevealed | Revealed on scheduled turn | Fully recorded after resolution |
 | Optional writing | Available after guardrail | Editable, never scored | Saved/exported according to policy |
-| Machine resume data | Hidden from ordinary UI | Encoded in active TXT | Full completed record disclosed |
+| Machine resume data | Hidden from ordinary UI | Encoded in TXT whenever a command matrix exists | Readable completion remains as-known; full restorable state stays encoded |
 
 ## 8. Search and findability
 

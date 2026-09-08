@@ -1,0 +1,751 @@
+{
+  "format": "fog-of-sea-turn-intelligence-requirements-v1",
+  "registerId": "FOS-TI",
+  "version": "1.0.0",
+  "status": "active-specification",
+  "validation": {
+    "kind": "design-requirements-register",
+    "schemaGoverned": false,
+    "note": "This register is intentionally not one of the seven executable Lattice governance documents validated by verify:lattice-schemas. JSON parsing, identifier uniqueness, references, and evidence paths are review checks; requirement and evidence statuses remain explicit below."
+  },
+  "implementationCoverage": {
+    "implementedCore": "Turn 2–6 aggregate staff judgments, public-state-bounded options, absolute action/infliction projection, occurrence/discovery grouping on the active canonical branch, responsive presentation, v4 persistence, and legacy replay migration.",
+    "plannedExtensions": ["Cross-branch reveal provenance after undo or retry", "Correction and corroboration trails", "Per-confirmed-actor action attribution"],
+    "statusRule": "A requirement marked specified and evidence marked planned is design scope, not a claim that the implementation or cited test already satisfies it."
+  },
+  "precedenceRule": "A lower precedence number is stronger. PROV-TI-001 is the highest-precedence current product directive. This register extends, and does not silently supersede, existing deterministic-adjudication, information-boundary, privacy, accessibility, and bounded-Lattice requirements.",
+  "scope": {
+    "authorized": [
+      "Turn-two-through-turn-six working-assumption controls and current-turn intelligence review",
+      "Typed player-knowledge projection, Immediate and History logs, and retroactive discovery attribution",
+      "Desktop-left and equivalent compact/mobile presentation",
+      "Persistence, canonical replay, accessibility, and adversarial non-disclosure evidence for this feature"
+    ],
+    "excluded": [
+      "Any change to scoring, matrix resolution, force credit, contact gain, or other adjudication caused by a working-assumption selection",
+      "Disclosure of concealed world state, future commitments, exact hidden actor state, or unsupported intent",
+      "Free-form or prose-inferred knowledge classification",
+      "Lattice transformation of operative disclosure, control, safety, accessibility, persistence, scoring, or recovery copy",
+      "A claim that automated evidence establishes maritime truth, human comprehension, accessibility approval, or product-wide Lattice adoption"
+    ],
+    "statement": "After Turn 1, the command experience requires an explicit but unscored review of the opposition, current observations, and possible next action; it exposes only evidence-supported absolute knowledge, bounds potential assumptions to reasonable public-state hypotheses, and preserves when an event occurred separately from when the strike group discovered it."
+  },
+  "provenance": [
+    {
+      "id": "PROV-TI-001",
+      "kind": "user-directive",
+      "revision": "2026-09-08",
+      "precedence": 1,
+      "locator": "Current conversation directive",
+      "statement": "During turns after the first turn, the user should have to think about what their adversary(/ies) are thinking, what is observable, etc. Information that should be known by them absolutely, is to be visible in a panel on the left (matching UI); potentials, in dropdowns (limited to only assumptions that are reasonable). Any immediate last action that has been taken by the adversary that is Known absolutely, and any inflictions (from adversary(/ies) or friendly(/ies) should be available under Immediate in Log. History should bring up all prior logs, with any changes made that have been observed/understood Absolutely by the strike group placed in a “Discovered during Turn [Turn #]” accordingly, under the turn that they occurred during - not the turn that they were confirmed or otherwise realized in. Ensure that this is smooth across mobile, as well, adhering to the project's UI/UX, Lattice, etc. rules.",
+      "role": "Highest-precedence feature authority"
+    },
+    {
+      "id": "PROV-TI-002",
+      "kind": "atomization-decision",
+      "revision": "2026-09-08",
+      "precedence": 2,
+      "locator": "Current implementation instruction for the requirements audit",
+      "statement": "Turns 2–6 require three aggregate-opposition working-assumption selections—intent, observed pattern, and next action. Each selection includes an insufficient-evidence option, and no selection affects adjudication.",
+      "role": "Makes the requested reflection observable and testable without manufacturing certainty or changing mechanics"
+    },
+    {
+      "id": "PROV-TI-003",
+      "kind": "repository",
+      "revision": "70907a77cba735c151e52929dd5a56d795c3d04f plus current bounded-Lattice worktree",
+      "precedence": 3,
+      "locator": "FOG OF SEA source and tests",
+      "statement": "The baseline has deterministic six-turn resolution, typed reports, one-turn undo, portable saves, responsive command UI, and confirmed/assessed/concealed presentation concepts, but no time-indexed turn-intelligence ledger.",
+      "role": "Implementation baseline and ownership evidence"
+    },
+    {
+      "id": "PROV-TI-004",
+      "kind": "project-policy",
+      "revision": "current worktree",
+      "precedence": 2,
+      "locator": "ACCESSIBILITY.md; SECURITY.md; docs/design/01-DESIGN-SYSTEM-ARCHITECTURE.md; docs/design/03-INFORMATION-ARCHITECTURE.md; docs/design/04-INTERACTION-DESIGN.md; docs/design/09-SECURITY-PRIVACY-TXT.md; docs/design/10-GAMEPLAY-GRAPHICS-DECISION-LOGIC.md; docs/design/11-TRACEABILITY.md; docs/design/14-INFORMATIVE-MICROCOPY.md",
+      "statement": "New command state must preserve typed authority, deterministic replay, non-disclosure, local-first persistence, semantic keyboard access, finite announcements, 44-pixel targets, forced-colors support, and 320-pixel/200%-equivalent reflow.",
+      "role": "Cross-cutting trust, UX, and accessibility constraints"
+    },
+    {
+      "id": "PROV-TI-005",
+      "kind": "adversarial-audit",
+      "revision": "2026-08-30",
+      "precedence": 2,
+      "locator": "docs/red-team/2026-08-30-initial-pass.md: RT-INFO-003, RT-INFO-005..007, RT-SCN-003, RT-DATA-006..007",
+      "statement": "Opposing causes may not become confirmed from contact alone; visibility must use current capability; exact hidden state and repeated reports can become oracles; competing intelligence hypotheses and branch/reveal provenance remain explicit unresolved risks.",
+      "role": "Known attack paths and required negative controls"
+    },
+    {
+      "id": "PROV-TI-006",
+      "kind": "project-policy",
+      "revision": "FOS-LAT 1.0.0",
+      "precedence": 2,
+      "locator": "requirements/lattice-adoption.json; requirements/lattice-copy-inventory.json; docs/design/16-LATTICE-COPY-ARCHITECTURE.md",
+      "statement": "The current Lattice slice excludes contact-disclosure, controls, safety, accessibility, persistence, scoring, and recovery language from transformation; operative meaning stays literal and typed state remains authoritative.",
+      "role": "Bounded-Lattice scope and copy-routing constraint"
+    }
+  ],
+  "interpretations": [
+    {
+      "id": "FOS-TI-INT-001",
+      "source": "direct",
+      "statement": "Turns after the first turn means active command Turns 2 through 6."
+    },
+    {
+      "id": "FOS-TI-INT-002",
+      "source": "operationalized",
+      "statement": "Have to think means Resolve is gated on three current-turn aggregate-opposition selections: intent, observed pattern, and next action. An explicit insufficient-evidence choice completes any selector without claiming an unsupported assumption."
+    },
+    {
+      "id": "FOS-TI-INT-003",
+      "source": "operationalized",
+      "statement": "Dropdown means a labelled native select. The default placeholder is not a completed choice; insufficient evidence is a real typed option and is never penalized."
+    },
+    {
+      "id": "FOS-TI-INT-004",
+      "source": "bounded",
+      "statement": "All prior logs means all prior player-visible log records, not internal truth, concealed commitments, or facts that were not yet discoverable."
+    },
+    {
+      "id": "FOS-TI-INT-005",
+      "source": "bounded",
+      "statement": "A late absolute discovery is filed under its confirmed occurrence turn and labelled Discovered during Turn N, where N is the discovery turn; the earlier history is augmented, never rewritten to imply earlier knowledge."
+    },
+    {
+      "id": "FOS-TI-INT-006",
+      "source": "bounded",
+      "statement": "Immediate includes the latest presently confirmed opposing action and confirmed inflictions relevant to the current decision. Older entries remain in History; assessed or concealed causes do not enter Immediate as facts."
+    },
+    {
+      "id": "FOS-TI-INT-007",
+      "source": "adversarial-constraint",
+      "statement": "Undo, retry, and load may change the active branch, but they may not make previously revealed information appear never seen or allow a practiced branch to masquerade as an unassisted record."
+    }
+  ],
+  "terms": [
+    {
+      "term": "known-absolutely",
+      "definition": "A player-facing atomic claim whose content, disclosure granularity, and occurrence turn are supported by an explicit typed confirmation basis. Matrix truth or high contact alone is insufficient."
+    },
+    {
+      "term": "potential",
+      "definition": "A conditional working hypothesis derived only from the current player-visible projection, supported by at least one observable fact, not contradicted by absolute knowledge, and never presented as the opposition's true intent."
+    },
+    {
+      "term": "insufficient-evidence",
+      "definition": "A first-class working-assumption selection stating that the current visible record does not support a reasonable substantive choice. It satisfies the review gate and has no penalty."
+    },
+    {
+      "term": "occurredTurn",
+      "definition": "The canonical turn in which the event or change happened. It controls History grouping only after that timing is itself confirmed for the player-facing claim."
+    },
+    {
+      "term": "discoveredTurn",
+      "definition": "The turn in which the strike group first obtained absolute knowledge of the player-facing claim. It controls the Discovered during Turn N label and disclosure availability."
+    },
+    {
+      "term": "Immediate",
+      "definition": "The Log view for the latest confirmed opposing action and currently relevant confirmed inflictions; it is not a mirror of all prior history."
+    },
+    {
+      "term": "History",
+      "definition": "The complete bounded sequence of prior player-visible logs on the active canonical branch, grouped by occurrence turn and retaining assessments and discovery timing. Correction trails and cross-branch reveal provenance are planned extensions."
+    }
+  ],
+  "ownership": [
+    {
+      "id": "OWN-TI-PRODUCT",
+      "role": "Requirement meaning, disclosure policy, terminology, and traceability",
+      "paths": ["requirements/turn-intelligence.json", "docs/design/03-INFORMATION-ARCHITECTURE.md", "docs/design/04-INTERACTION-DESIGN.md", "docs/design/10-GAMEPLAY-GRAPHICS-DECISION-LOGIC.md", "docs/design/11-TRACEABILITY.md", "docs/design/14-INFORMATIVE-MICROCOPY.md"]
+    },
+    {
+      "id": "OWN-TI-DOMAIN",
+      "role": "Typed world events, atomic knowledge claims, reasonable-potential derivation, and deterministic public projection",
+      "paths": ["app/commandIntelligence.ts", "app/kriegsspiel.ts", "app/scenarioMatrix.ts", "app/contactVisualization.ts"]
+    },
+    {
+      "id": "OWN-TI-COMMAND",
+      "role": "Turn-two-through-turn-six review gate, typed selections, undo, retry, restore, and branch transitions",
+      "paths": ["app/commandPhase.ts", "app/useGameSession.ts", "app/kriegsspiel.ts"]
+    },
+    {
+      "id": "OWN-TI-UI",
+      "role": "Desktop-left panel, Log views, native selects, mobile equivalence, focus, and visual integration",
+      "paths": ["app/CommandIntelligencePanel.tsx", "app/CommandIntelligencePanel.css", "app/CommandPanel.tsx", "app/page.tsx", "app/globals.css"]
+    },
+    {
+      "id": "OWN-TI-SAVE",
+      "role": "Typed persistence, bounded import, canonical replay, readable TXT projection, and legacy migration",
+      "paths": ["app/saveGame.ts", "app/browserSaves.ts"]
+    },
+    {
+      "id": "OWN-TI-ACCESSIBILITY",
+      "role": "Semantic names, descriptions, live-update restraint, keyboard order, target size, reflow, and human-evidence limits",
+      "paths": ["app/CommandIntelligencePanel.tsx", "app/CommandIntelligencePanel.css", "app/globals.css", "ACCESSIBILITY.md"]
+    },
+    {
+      "id": "OWN-TI-LATTICE",
+      "role": "Keep operative disclosure/control copy outside transformation and record any future interpretive expansion through versioned governance",
+      "paths": ["requirements/lattice-adoption.json", "requirements/lattice-copy-inventory.json", "docs/design/16-LATTICE-COPY-ARCHITECTURE.md"]
+    },
+    {
+      "id": "OWN-TI-EVIDENCE",
+      "role": "Positive, negative, boundary, combination, browser, save/replay, and adversarial evidence",
+      "paths": ["tests/command-intelligence.test.ts", "tests/command-intelligence-layout.test.mjs", "tests/command-phase.test.ts", "tests/game-session.test.ts", "tests/save-game.test.ts", "tests/red-team/turn-intelligence-save.test.ts", "tests/red-team/event-disclosure.test.ts", "tests/red-team/information-leak.test.ts", "tests/red-team/canonical-determinism.test.ts", "tests/browser/turn-intelligence.spec.ts", "tests/browser/compound-command.spec.ts", "tests/browser/debrief-layout.spec.ts", "tests/browser/accessibility.spec.ts", "tests/browser/layout.spec.ts", "tests/browser/text-containment.spec.ts"]
+    }
+  ],
+  "requirements": [
+    {
+      "id": "FOS-TI-SCP-001",
+      "title": "Post-first-turn scope",
+      "statement": "The turn-intelligence review requirement applies to active command Turns 2 through 6 and does not block or pre-explain Turn 1.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-002"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": [],
+      "conflicts": ["Requiring assumptions before the first turn", "Creating a seventh command turn"],
+      "ownerIds": ["OWN-TI-COMMAND", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-SCP-001-AC-01", "assertion": "Turn 1 resolves under the established command contract; each of Turns 2–6 exposes and enforces the intelligence review before its Resolve action."}],
+      "tests": [
+        {"id": "FOS-TI-SCP-001-T-P01", "kind": "positive", "assertion": "After resolving Turn 1, Turn 2 exposes all three required working-assumption controls before Resolve.", "evidence": "tests/command-phase.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-SCP-001-T-N01", "kind": "negative", "assertion": "Turn 1 is not blocked by missing working-assumption selections and receives no pending-result explanation.", "evidence": "tests/command-phase.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-SCP-001-T-B01", "kind": "boundary", "assertion": "Turn 6 still requires the review; completed play exposes no Turn 7 review.", "evidence": "tests/command-phase.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-SCP-001-T-C01", "kind": "combination", "assertion": "A Turn 2 save with an incomplete review restores the same gate without affecting the recorded Turn 1 result.", "evidence": "tests/save-game.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "browser-test", "save-replay-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-COG-001",
+      "title": "Required three-part working assumption",
+      "statement": "Before resolving each of Turns 2–6, the player must select one typed aggregate-opposition option for intent, one for observed pattern, and one for likely next action. Each control always permits insufficient evidence.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-002"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-SCP-001", "FOS-TI-HYP-001", "FOS-TI-HYP-002"],
+      "conflicts": ["A forced substantive guess", "Free-form assumptions used as rule input", "A default option that silently counts as reviewed"],
+      "ownerIds": ["OWN-TI-COMMAND", "OWN-TI-UI", "OWN-TI-DOMAIN"],
+      "acceptanceCriteria": [{"id": "FOS-TI-COG-001-AC-01", "assertion": "Resolve remains unavailable until all three current-turn selectors have explicit typed values; insufficient evidence is valid in every selector and is never penalized."}],
+      "tests": [
+        {"id": "FOS-TI-COG-001-T-P01", "kind": "positive", "assertion": "Three substantive reasonable selections enable Resolve and are recorded under the current turn.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-COG-001-T-N01", "kind": "negative", "assertion": "Zero, one, or two completed selectors cannot resolve a post-first turn; the UI names the remaining controls without discarding orders.", "evidence": "tests/command-phase.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-COG-001-T-B01", "kind": "boundary", "assertion": "Selecting insufficient evidence for all three dimensions enables Resolve and produces no warning, score change, or hidden penalty.", "evidence": "tests/command-intelligence.test.ts; tests/kriegsspiel.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-COG-001-T-C01", "kind": "combination", "assertion": "One substantive choice plus two insufficient-evidence choices completes the gate, persists all three codes, and leaves adjudication equal to the same state/orders with different assumptions.", "evidence": "tests/command-intelligence.test.ts; tests/save-game.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "browser-test", "metamorphic-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-KNW-001",
+      "title": "Typed epistemic authority",
+      "statement": "Known, potential, assessed, concealed, discovery, and working-assumption states must be selected by closed typed codes and deterministic predicates; presentation prose must never be searched or parsed to classify knowledge.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-004", "PROV-TI-005", "PROV-TI-006"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": [],
+      "conflicts": ["Prose-regex classification", "CSS or copy acting as rule authority", "Unknown knowledge codes accepted on import"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-SAVE"],
+      "acceptanceCriteria": [{"id": "FOS-TI-KNW-001-AC-01", "assertion": "Every public intelligence item and selector option resolves from a declared code, while changing display wording cannot change disclosure, option eligibility, history placement, or adjudication."}],
+      "tests": [
+        {"id": "FOS-TI-KNW-001-T-P01", "kind": "positive", "assertion": "All declared knowledge and assumption codes validate and project deterministically.", "evidence": "tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-KNW-001-T-N01", "kind": "negative", "assertion": "An unknown code or prose-only keyword cannot create a known fact or a selector option.", "evidence": "tests/command-intelligence.test.ts; tests/save-game.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-KNW-001-T-B01", "kind": "boundary", "assertion": "A valid older record missing the new typed fields follows the explicit legacy migration path and does not infer codes from stored prose.", "evidence": "tests/save-game.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-KNW-001-T-C01", "kind": "combination", "assertion": "Two builds with different presentation strings but identical typed state produce identical disclosure and mechanics after import.", "evidence": "tests/save-game.test.ts; tests/lattice-copy.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "static-analysis", "save-replay-test", "red-team-mutation"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-KNW-002",
+      "title": "Claim-granular certainty",
+      "statement": "Confirmation attaches to atomic claims. Observing an effect or action does not automatically confirm its actor, cause, intent, quantity, coordination, or exact timing; the UI may state only the confirmed granularity.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-001"],
+      "conflicts": ["One event-level flag confirming every field", "Mind-reading", "Unattributed effects assigned to a named actor"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-KNW-002-AC-01", "assertion": "Each rendered fact is assembled only from confirmed claim fields; unconfirmed actor, cause, intent, amount, or timing is omitted or stated as unresolved."}],
+      "tests": [
+        {"id": "FOS-TI-KNW-002-T-P01", "kind": "positive", "assertion": "A confirmed course change with assessed intent renders the action as known and the intent only as a potential.", "evidence": "tests/command-intelligence.test.ts; tests/command-intelligence-layout.test.mjs", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-KNW-002-T-N01", "kind": "negative", "assertion": "A confirmed effect cannot promote its concealed source, actor identity, or amount to known.", "evidence": "tests/red-team/event-disclosure.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-KNW-002-T-B01", "kind": "boundary", "assertion": "A known opposing action with unknown actor identity is labelled unattributed rather than assigned to the aggregate opposition or a guessed actor.", "evidence": "tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-KNW-002-T-C01", "kind": "combination", "assertion": "Confirmed selected-force damage plus assessed opposing causation appears as a known own-force infliction and a separate conditional cause, never as a confirmed opposing attack.", "evidence": "tests/command-intelligence.test.ts; tests/red-team/information-leak.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "component-test", "red-team-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-KNW-003",
+      "title": "Time-indexed evidence and capability",
+      "statement": "Knowledge is evaluated from the observation and current credited capability available on the discovery turn, not from present-day contact, original readiness, or hidden matrix truth retroactively applied to earlier turns.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-001", "FOS-TI-KNW-002"],
+      "conflicts": ["Stale original-readiness visibility", "Later high contact rewriting earlier knowledge", "Matrix commitment treated as player evidence"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-COMMAND"],
+      "acceptanceCriteria": [{"id": "FOS-TI-KNW-003-AC-01", "assertion": "Every discovery records the exact turn-local evidence/capability basis, and replay reconstructs the same knowledge transition at the same turn."}],
+      "tests": [
+        {"id": "FOS-TI-KNW-003-T-P01", "kind": "positive", "assertion": "A typed corroborating observation on Turn 4 confirms a Turn 2 event on Turn 4 and no earlier.", "evidence": "tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-KNW-003-T-N01", "kind": "negative", "assertion": "Raising current contact after the fact cannot mark an earlier event discovered without a recorded current-turn observation.", "evidence": "tests/red-team/event-disclosure.test.ts; tests/red-team/canonical-determinism.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-KNW-003-T-B01", "kind": "boundary", "assertion": "Contact at or above the existing assessment threshold with credited sensing may support assessed, but not automatically known-absolutely, opposing causation.", "evidence": "tests/red-team/event-disclosure.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-KNW-003-T-C01", "kind": "combination", "assertion": "A force that loses sensing before an event and regains it later receives only the later explicitly supported discovery; render, accessible copy, and TXT agree.", "evidence": "tests/command-intelligence.test.ts; tests/red-team/information-leak.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "metamorphic-test", "browser-test", "export-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-ABS-001",
+      "title": "Absolute-knowledge panel",
+      "statement": "The current-turn left intelligence panel must show every current player-facing claim classified as known-absolutely and must show no assessed, potential, concealed, future, or internal claim as fact.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-004", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-001", "FOS-TI-KNW-002", "FOS-TI-KNW-003"],
+      "conflicts": ["Selective omission of confirmed current facts", "Assessed language presented in the known list", "Concealed content mounted in hidden DOM"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-ABS-001-AC-01", "assertion": "The visual panel and its nonvisual equivalent are exact projections of the same known-absolutely list, including a truthful empty state."}],
+      "tests": [
+        {"id": "FOS-TI-ABS-001-T-P01", "kind": "positive", "assertion": "Confirmed current observations render in the ABSOLUTELY KNOWN region with their confirmed timing and granularity.", "evidence": "tests/command-intelligence-layout.test.mjs; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-ABS-001-T-N01", "kind": "negative", "assertion": "Assessed coordination, hidden intent, future actions, and concealed losses are absent from visible text, DOM text, accessible names/descriptions, and live regions.", "evidence": "tests/red-team/information-leak.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-ABS-001-T-B01", "kind": "boundary", "assertion": "When no absolute claim exists, the panel says that no current absolute opposition fact is available and does not fabricate one.", "evidence": "tests/command-intelligence-layout.test.mjs", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-ABS-001-T-C01", "kind": "combination", "assertion": "A known action with assessed intent appears once as a fact while the intent appears only among reasonable potentials.", "evidence": "tests/command-intelligence.test.ts; tests/command-intelligence-layout.test.mjs", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["component-test", "browser-test", "accessibility-tree-test", "red-team-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-HYP-001",
+      "title": "Reasonable potential option set",
+      "statement": "Substantive options in the intent, observed-pattern, and next-action selectors must be generated solely from the player-visible projection, supported by at least one observation, compatible with disclosed actor/domain constraints, not contradicted by absolute knowledge, and phrased conditionally. Insufficient evidence is always included.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-002", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-001", "FOS-TI-KNW-002", "FOS-TI-KNW-003"],
+      "conflicts": ["Hidden truth choosing the option set", "Impossible or contradictory assumptions", "Exact opposition intent stated as fact", "Omitting insufficient evidence"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-HYP-001-AC-01", "assertion": "Any two internal states with identical player-visible projections produce byte-for-byte identical ordered options for all three selectors."}],
+      "tests": [
+        {"id": "FOS-TI-HYP-001-T-P01", "kind": "positive", "assertion": "Each substantive option cites or maps to a typed public observation and remains conditional working-assumption language.", "evidence": "tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HYP-001-T-N01", "kind": "negative", "assertion": "An option contradicted by an absolute fact, requiring an undisclosed capability, or derived only from a future/hidden field is omitted.", "evidence": "tests/command-intelligence.test.ts; tests/red-team/information-leak.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HYP-001-T-B01", "kind": "boundary", "assertion": "With no supporting observation, each selector offers only its placeholder plus insufficient evidence; no substantive guess is manufactured.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HYP-001-T-C01", "kind": "combination", "assertion": "Twin private states with different true intent, actor count, coordination, and next action but the same public record expose identical option values, labels, ordering, disabled states, IDs, and accessible descriptions.", "evidence": "tests/red-team/information-leak.test.ts; tests/red-team/canonical-determinism.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "metamorphic-noninterference-test", "red-team-test", "browser-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-HYP-002",
+      "title": "Working assumptions do not adjudicate",
+      "statement": "The three selected working assumptions are structured player reasoning records only. They may gate the review interaction and appear in Log/History, but they must not affect matrix inputs, committed draws, deltas, score, findings, contact, opposing state, or option eligibility on the same turn.",
+      "provenanceIds": ["PROV-TI-002", "PROV-TI-004", "PROV-TI-006"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-HYP-001", "FOS-TI-KNW-001"],
+      "conflicts": ["Rewarding a guessed hidden truth", "Penalizing insufficient evidence", "Assumption selection changing the world it describes"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-COMMAND", "OWN-TI-SAVE"],
+      "acceptanceCriteria": [{"id": "FOS-TI-HYP-002-AC-01", "assertion": "For fixed scenario, state, readiness, orders, and commitments, every valid combination of working assumptions yields an identical adjudication-bearing next state."}],
+      "tests": [
+        {"id": "FOS-TI-HYP-002-T-P01", "kind": "positive", "assertion": "Selected assumption codes are retained in the turn's non-adjudicative reasoning record and readable player log.", "evidence": "tests/command-intelligence.test.ts; tests/save-game.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HYP-002-T-N01", "kind": "negative", "assertion": "No assumption field is read by matrix estimation, rigid deltas, score, diagnostic, or contact-disclosure predicates.", "evidence": "tests/kriegsspiel.test.ts; tests/red-team/core-adjudication.test.ts; static dependency scan", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HYP-002-T-B01", "kind": "boundary", "assertion": "All-insufficient-evidence and all-substantive records with identical orders resolve to the same adjudication-bearing state.", "evidence": "tests/command-intelligence.test.ts; tests/kriegsspiel.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HYP-002-T-C01", "kind": "combination", "assertion": "Replay accepts different valid assumption records only when the saved non-adjudicative record matches its own transcript, while mechanical replay remains identical.", "evidence": "tests/save-game.test.ts; tests/red-team/canonical-determinism.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "metamorphic-test", "static-analysis", "save-replay-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-IMM-001",
+      "title": "Immediate latest opposing action",
+      "statement": "Immediate must expose the latest presently known-absolutely action taken by each distinctly known opposing actor, or an unattributed opposing action when only occurrence is confirmed. It must not fill the slot with an assessed or concealed action.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-002", "FOS-TI-KNW-003", "FOS-TI-MUL-001"],
+      "conflicts": ["Matrix truth shown as latest action", "Assessed action relabelled known", "Unknown actor guessed"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-IMM-001-AC-01", "assertion": "Immediate chooses latest by confirmed occurredTurn and stable event order from eligible absolute claims, while retaining truthful attribution and an explicit no-known-action state."}],
+      "tests": [
+        {"id": "FOS-TI-IMM-001-T-P01", "kind": "positive", "assertion": "The most recent confirmed action for each known opposing actor appears under Immediate.", "evidence": "tests/command-intelligence.test.ts; tests/command-intelligence-layout.test.mjs", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-IMM-001-T-N01", "kind": "negative", "assertion": "A more recent assessed or concealed action cannot displace an older confirmed action or appear as fact.", "evidence": "tests/red-team/event-disclosure.test.ts; tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-IMM-001-T-B01", "kind": "boundary", "assertion": "When no opposing action is absolutely known, Immediate states that none is confirmed and exposes no hidden placeholder metadata.", "evidence": "tests/command-intelligence-layout.test.mjs; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-IMM-001-T-C01", "kind": "combination", "assertion": "A Turn 2 action first confirmed on Turn 4 may become the latest known action, but History still files it under Turn 2 with Discovered during Turn 4; a later confirmed Turn 3 action remains the latest by occurrence.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "component-test", "browser-test", "red-team-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-IMM-002",
+      "title": "Immediate confirmed inflictions",
+      "statement": "Immediate must expose all currently relevant confirmed inflictions on friendly or opposing forces at the granularity actually known. Effect, source, actor, quantity, affected capability, and duration retain independent certainty.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-002", "FOS-TI-KNW-003"],
+      "conflicts": ["Assessed opposing loss shown as confirmed", "Known friendly damage assigned an unconfirmed cause", "Exact quantity inferred from hidden state"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-IMM-002-AC-01", "assertion": "Every eligible confirmed infliction appears once under Immediate, with each unconfirmed attribute omitted or explicitly unresolved and every assessed/concealed infliction withheld as fact."}],
+      "tests": [
+        {"id": "FOS-TI-IMM-002-T-P01", "kind": "positive", "assertion": "Confirmed selected-force and confirmed opposing-force inflictions both render with their supported affected capability and duration.", "evidence": "tests/command-intelligence.test.ts; tests/command-intelligence-layout.test.mjs", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-IMM-002-T-N01", "kind": "negative", "assertion": "An assessed opposing loss and concealed quantity do not appear as a confirmed infliction or exact number.", "evidence": "tests/red-team/event-disclosure.test.ts; tests/red-team/information-leak.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-IMM-002-T-B01", "kind": "boundary", "assertion": "A confirmed effect with unknown source renders as unattributed; a confirmed minimum quantity does not become an exact total.", "evidence": "tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-IMM-002-T-C01", "kind": "combination", "assertion": "Mixed friendly confirmed, opposing assessed, and opposing concealed impacts produce only the confirmed public subset in visual, accessible, and TXT projections.", "evidence": "tests/command-intelligence-layout.test.mjs; tests/red-team/information-leak.test.ts; tests/save-game.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "component-test", "export-test", "red-team-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-LOG-001",
+      "title": "Named Immediate and History log views",
+      "statement": "The Log must provide distinct, keyboard-reachable Immediate and History views. Immediate summarizes the current decision context; History retrieves prior player-visible records without turning explanatory disclosure into gameplay state.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-IMM-001", "FOS-TI-IMM-002"],
+      "conflicts": ["One undifferentiated log", "History changing simulation state", "Pointer-only view switching"],
+      "ownerIds": ["OWN-TI-UI", "OWN-TI-ACCESSIBILITY"],
+      "acceptanceCriteria": [{"id": "FOS-TI-LOG-001-AC-01", "assertion": "Immediate and History have stable semantic names, states, focus behavior, and equivalent mobile access; opening either view does not mutate adjudication."}],
+      "tests": [
+        {"id": "FOS-TI-LOG-001-T-P01", "kind": "positive", "assertion": "Keyboard and pointer users can open Immediate and History and obtain the same records.", "evidence": "tests/browser/turn-intelligence.spec.ts; tests/browser/accessibility.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-LOG-001-T-N01", "kind": "negative", "assertion": "Changing the Log view cannot change orders, assumptions, turn state, or adjudication and cannot expose concealed entries.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-LOG-001-T-B01", "kind": "boundary", "assertion": "At the first eligible review with no prior confirmed action, both views render truthful empty states without broken controls.", "evidence": "tests/command-intelligence-layout.test.mjs; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-LOG-001-T-C01", "kind": "combination", "assertion": "A late discovery may be summarized in Immediate and indexed in History once, with the two views agreeing on content, occurrence, discovery, and attribution.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["component-test", "browser-test", "keyboard-test", "state-invariance-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-HIS-001",
+      "title": "Complete player-visible prior logs",
+      "statement": "History must retain every prior player-visible turn-intelligence log and working-assumption record within the six-turn exercise, including the certainty that was visible at the time; it must never substitute the complete internal world record.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-004", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-LOG-001", "FOS-TI-KNW-001"],
+      "conflicts": ["Only latest log retained", "Completed truth rewriting prior player knowledge", "Concealed commitments appearing as prior logs"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-SAVE", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-HIS-001-AC-01", "assertion": "History reconstructs the complete ordered set of what was shown and selected on each prior turn, plus provenance-labelled late discoveries, without exposing never-disclosed internal entries."}],
+      "tests": [
+        {"id": "FOS-TI-HIS-001-T-P01", "kind": "positive", "assertion": "After Turn 6, History contains the player-visible records and three selections from each eligible Turn 2–6.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-001-T-N01", "kind": "negative", "assertion": "A concealed event that was never discovered does not appear merely because later turns or completion exist.", "evidence": "tests/red-team/information-leak.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-001-T-B01", "kind": "boundary", "assertion": "History has at most six occurrence-turn groups and no fabricated Turn 0 or Turn 7 group.", "evidence": "tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-001-T-C01", "kind": "combination", "assertion": "A Turn 2 potential later contradicted by a Turn 4 absolute discovery remains labelled as the Turn 2 working assessment; the Turn 4 discovery is added with provenance rather than rewriting the earlier assessment as fact.", "evidence": "tests/command-intelligence.test.ts; tests/save-game.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "browser-test", "save-test", "red-team-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-HIS-002",
+      "title": "Dual-turn retroactive attribution",
+      "statement": "Every absolute historical discovery must retain a stable claim ID, confirmed occurredTurn, and first discoveredTurn. History groups it under occurredTurn and renders the exact label Discovered during Turn N using discoveredTurn, never using discoveredTurn as its occurrence group.",
+      "provenanceIds": ["PROV-TI-001"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-002", "FOS-TI-KNW-003", "FOS-TI-HIS-001"],
+      "conflicts": ["Late discovery grouped under confirmation turn", "History implying the fact was known when it occurred", "Unconfirmed event timing presented as absolute"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-UI", "OWN-TI-SAVE"],
+      "acceptanceCriteria": [{"id": "FOS-TI-HIS-002-AC-01", "assertion": "An event occurring on Turn O and first confirmed on Turn D appears only after D, under the Turn O group, with Discovered during Turn D, while O and D remain independently replay-validated."}],
+      "tests": [
+        {"id": "FOS-TI-HIS-002-T-P01", "kind": "positive", "assertion": "A Turn 2 event first confirmed on Turn 4 renders under History Turn 2 with the exact text Discovered during Turn 4.", "evidence": "tests/command-intelligence.test.ts; tests/command-intelligence-layout.test.mjs; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-002-T-N01", "kind": "negative", "assertion": "The same event does not render under History Turn 4 as though it occurred when confirmed and does not lose its discovery label.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-002-T-B01", "kind": "boundary", "assertion": "An event occurring and discovered on Turn 3 appears under Turn 3 with Discovered during Turn 3; a claim without confirmed occurrence timing cannot enter absolute turn-grouped history.", "evidence": "tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-002-T-C01", "kind": "combination", "assertion": "Multiple late discoveries about different occurrence turns sort by occurredTurn then stable claim ID while retaining their distinct discoveredTurn labels across save/import.", "evidence": "tests/command-intelligence.test.ts; tests/save-game.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "component-test", "browser-test", "save-replay-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-HIS-003",
+      "title": "No pre-discovery leakage",
+      "statement": "A late-discovered claim must be absent from every ordinary player-facing path before discoveredTurn, including rendered text, hidden DOM text, accessible names/descriptions, live regions, option sets, and the readable part of active TXT. The encoded active resume block retains its documented casual-spoiler-resistance limit.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-004", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-003", "FOS-TI-HIS-002"],
+      "conflicts": ["CSS-only concealment", "Option-set side channel", "Readable active export leak", "Claiming Base64 is secrecy"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-UI", "OWN-TI-SAVE"],
+      "acceptanceCriteria": [{"id": "FOS-TI-HIS-003-AC-01", "assertion": "For every turn T before discoveredTurn, public projections and readable exports contain no claim text or metadata-derived clue; at discoveredTurn they expose only the confirmed projection."}],
+      "tests": [
+        {"id": "FOS-TI-HIS-003-T-P01", "kind": "positive", "assertion": "The claim becomes visible on its recorded discoveredTurn with the correct occurrence grouping and label.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-003-T-N01", "kind": "negative", "assertion": "A unique concealed sentinel is absent before discovery from textContent, accessibility snapshots, option labels/values/order, data attributes, live regions, and readable active TXT.", "evidence": "tests/red-team/information-leak.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-003-T-B01", "kind": "boundary", "assertion": "Imports reject an evidence event whose occurredTurn disagrees with its report, falls outside the transcript, or cannot reproduce a valid discovery basis during canonical replay.", "evidence": "tests/save-game.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-003-T-C01", "kind": "combination", "assertion": "Saving/exporting immediately before and after discovery preserves the visibility transition; the pre-discovery readable file stays redacted and both imports replay canonically.", "evidence": "tests/save-game.test.ts; tests/red-team/information-leak.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["red-team-test", "browser-accessibility-test", "export-test", "save-replay-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-HIS-004",
+      "title": "Stable discovery provenance",
+      "statement": "A claim is deduplicated by stable ID. Later corroboration, refinement, or correction must retain the first discoveredTurn and prior player-visible statement; it may add typed provenance but may not silently overwrite epistemic history.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-HIS-001", "FOS-TI-HIS-002"],
+      "conflicts": ["Duplicate history rows for the same claim", "Later evidence erasing the first discovery", "Correction presented as always known"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-SAVE", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-HIS-004-AC-01", "assertion": "Stable IDs produce one current claim with an ordered, bounded provenance trail; imports reject conflicting duplicates and the UI identifies corrections without rewriting prior visibility."}],
+      "tests": [
+        {"id": "FOS-TI-HIS-004-T-P01", "kind": "positive", "assertion": "Repeated identical corroboration keeps one claim and one first-discovery label.", "evidence": "tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-004-T-N01", "kind": "negative", "assertion": "Conflicting duplicate evidence IDs or a changed evidence occurredTurn are rejected on import; first discovery is re-derived rather than accepted as serialized authority.", "evidence": "tests/save-game.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-004-T-B01", "kind": "boundary", "assertion": "Later corroboration may add an evidence code while preserving the original Discovered during Turn N label.", "evidence": "tests/command-intelligence.test.ts; tests/save-game.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-HIS-004-T-C01", "kind": "combination", "assertion": "An assessed claim, later confirmation, and still-later correction remain three distinguishable epistemic steps without duplicate current facts or retroactive certainty.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "save-mutation-test", "browser-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-MUL-001",
+      "title": "Plural-adversary distinction and aggregate assumptions",
+      "statement": "The three required selectors describe an explicitly labelled aggregate-opposition working assumption, while known actions and inflictions remain attributed per actor only when identity is confirmed. Aggregate framing must not assert common intent, coordination, actor count, or unity as fact.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-002", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-002", "FOS-TI-HYP-001"],
+      "conflicts": ["Plural actors collapsed into one known mind", "Exact hidden actor count exposed", "Joint intent inferred from one actor's action"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-MUL-001-AC-01", "assertion": "Aggregate selectors remain conditional and evidence-bounded, and every factual actor attribution is independently supported or rendered unattributed."}],
+      "tests": [
+        {"id": "FOS-TI-MUL-001-T-P01", "kind": "positive", "assertion": "Two separately confirmed actors receive separate Immediate actions while the three selectors are named as aggregate working assumptions.", "evidence": "tests/command-intelligence.test.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-MUL-001-T-N01", "kind": "negative", "assertion": "A hidden second actor, assessed coordination, or exact hidden actor count cannot appear in known facts or alter aggregate options.", "evidence": "tests/red-team/information-leak.test.ts; tests/red-team/event-disclosure.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-MUL-001-T-B01", "kind": "boundary", "assertion": "With one known actor or no attributable actor, grammar and attribution remain truthful and insufficient evidence remains available.", "evidence": "tests/command-intelligence.test.ts; tests/command-intelligence-layout.test.mjs", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-MUL-001-T-C01", "kind": "combination", "assertion": "Three internal actors with mixed known/assessed/concealed actions expose only individually confirmed facts and an aggregate potential set derived from common public evidence, not private actor truth.", "evidence": "tests/command-intelligence.test.ts; tests/red-team/canonical-determinism.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "browser-test", "metamorphic-noninterference-test", "red-team-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-DET-001",
+      "title": "Deterministic intelligence ledger",
+      "statement": "Given the same scenario commitments, prior canonical state, turn-local capability, observations, orders, and typed working-assumption record, the knowledge ledger, public projection, discovery provenance, and mechanical next state must reproduce exactly.",
+      "provenanceIds": ["PROV-TI-003", "PROV-TI-004", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-001", "FOS-TI-KNW-003", "FOS-TI-HYP-002", "FOS-TI-HIS-004"],
+      "conflicts": ["Random potential ordering", "Discovery generated after observing player choice", "Presentation prose trusted during replay"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-COMMAND", "OWN-TI-SAVE"],
+      "acceptanceCriteria": [{"id": "FOS-TI-DET-001-AC-01", "assertion": "Exact replay reproduces typed intelligence and adjudication; semantic object-key reordering is accepted after validation, while value or array-order changes with meaning are rejected."}],
+      "tests": [
+        {"id": "FOS-TI-DET-001-T-P01", "kind": "positive", "assertion": "Resolving identical inputs twice produces deeply equal ledger, projection, report, and next state.", "evidence": "tests/command-intelligence.test.ts; tests/red-team/canonical-determinism.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-DET-001-T-N01", "kind": "negative", "assertion": "Altered action, evidence domain, occurredTurn, assumption record, or stable ID fails current-state canonical import; derived discoveredTurn cannot be supplied as trusted input.", "evidence": "tests/save-game.test.ts; tests/red-team/canonical-determinism.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-DET-001-T-B01", "kind": "boundary", "assertion": "Different valid working assumptions with identical mechanical inputs produce identical adjudication-bearing state while retaining their distinct non-adjudicative records.", "evidence": "tests/command-intelligence.test.ts; tests/kriegsspiel.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-DET-001-T-C01", "kind": "combination", "assertion": "Undo, repeat orders, restore assumptions, save, and import cannot reroll commitments or move a discovery to another turn.", "evidence": "tests/command-phase.test.ts; tests/save-game.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "canonical-replay-test", "red-team-mutation", "metamorphic-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-SAV-001",
+      "title": "Typed persistence and regenerated presentation",
+      "statement": "Browser saves and portable saves must retain the bounded typed turn-intelligence ledger, working-assumption records, and discovery provenance needed for continuity. Import must validate their shape, domain, size, chronology, IDs, and canonical replay, then regenerate display prose rather than trust serialized wording.",
+      "provenanceIds": ["PROV-TI-003", "PROV-TI-004", "PROV-TI-005", "PROV-TI-006"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-DET-001", "FOS-TI-HIS-002", "FOS-TI-HIS-003"],
+      "conflicts": ["Display strings as replay authority", "Unbounded log arrays", "Legacy migration fabricating discoveries", "Readable active export leaking concealed state"],
+      "ownerIds": ["OWN-TI-SAVE", "OWN-TI-DOMAIN", "OWN-TI-COMMAND"],
+      "acceptanceCriteria": [{"id": "FOS-TI-SAV-001-AC-01", "assertion": "A valid save restores the same current review, Immediate, History, selector values, and mechanics; tampered typed fields are rejected atomically and stale presentation prose is regenerated."}],
+      "tests": [
+        {"id": "FOS-TI-SAV-001-T-P01", "kind": "positive", "assertion": "A mid-command save/import round trip preserves current selector completion, prior selections, known facts, late-discovery grouping, and canonical state.", "evidence": "tests/save-game.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-SAV-001-T-N01", "kind": "negative", "assertion": "Unknown codes, duplicate IDs, impossible evidence chronology, oversized arrays, altered evidence, or a self-consistent fabricated transcript reject the entire import and preserve the current session.", "evidence": "tests/save-game.test.ts; tests/red-team/import-boundary.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-SAV-001-T-B01", "kind": "boundary", "assertion": "A supported legacy save reconstructs only what typed retained state proves; otherwise it starts with an explicit bounded empty legacy ledger and never derives knowledge from historical prose.", "evidence": "tests/save-game.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-SAV-001-T-C01", "kind": "combination", "assertion": "Replacing saved intelligence presentation strings while preserving typed fields imports successfully and regenerates current wording; changing a typed field with plausible prose fails.", "evidence": "tests/save-game.test.ts; tests/lattice-copy.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["save-roundtrip-test", "canonical-replay-test", "red-team-mutation", "migration-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-BRN-001",
+      "title": "Undo, retry, and reveal provenance",
+      "statement": "Undo, retry, return, and load must preserve an auditable distinction between the active canonical branch and information already revealed to the player. Previously revealed knowledge cannot be represented as unseen, and a practiced same-commitment branch cannot masquerade as an unassisted record.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-005"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-HIS-004", "FOS-TI-DET-001", "FOS-TI-SAV-001"],
+      "conflicts": ["dropHistory erasing reveal provenance", "Undo pretending human knowledge was reversed", "Retry retaining hidden knowledge without an assisted marker"],
+      "ownerIds": ["OWN-TI-COMMAND", "OWN-TI-DOMAIN", "OWN-TI-SAVE", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-BRN-001-AC-01", "assertion": "Every branch-changing action has deterministic typed reveal provenance; the UI and exports identify prior-attempt knowledge without injecting it into the historical claim that the strike group knew it earlier."}],
+      "tests": [
+        {"id": "FOS-TI-BRN-001-T-P01", "kind": "positive", "assertion": "Undo restores the exact prior mechanical state and current-turn selections while retaining a separate record that a later fact was previously revealed.", "evidence": "tests/command-phase.test.ts; tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-BRN-001-T-N01", "kind": "negative", "assertion": "Undo, retry, return, or load cannot delete reveal provenance and then label the branch clean or unassisted.", "evidence": "tests/red-team/canonical-determinism.test.ts; tests/red-team/information-leak.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-BRN-001-T-B01", "kind": "boundary", "assertion": "Undo before any discovery adds no false reveal record; retry into a fresh unseen commitment may establish a new clean branch only under an explicit typed rule.", "evidence": "tests/command-phase.test.ts; tests/command-intelligence.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-BRN-001-T-C01", "kind": "combination", "assertion": "Discover a Turn 2 action on Turn 4, undo, change assumptions, resolve again, save/export/import, and verify occurrence/discovery/branch labels, mechanics, and prior reveal audit remain canonical.", "evidence": "tests/command-phase.test.ts; tests/save-game.test.ts; tests/red-team/canonical-determinism.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["state-machine-test", "canonical-replay-test", "red-team-combination-test", "browser-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-UI-001",
+      "title": "Desktop-left matching panel",
+      "statement": "On layouts with sufficient width, the turn-intelligence surface occupies a left-side panel visually consistent with the canonical occupied-surface system, while the command panel remains on the right and the tactical plot retains a usable unobstructed corridor.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-ABS-001", "FOS-TI-LOG-001", "FOS-TI-COG-001"],
+      "conflicts": ["Left panel covering the command panel or required plot controls", "A painted positioning wrapper", "A second incompatible glass system"],
+      "ownerIds": ["OWN-TI-UI", "OWN-TI-ACCESSIBILITY"],
+      "acceptanceCriteria": [{"id": "FOS-TI-UI-001-AC-01", "assertion": "At supported wide breakpoints the intelligence and command panels are independently scrollable, non-overlapping canonical glass surfaces, and all HUD controls remain inside the computed safe corridor."}],
+      "tests": [
+        {"id": "FOS-TI-UI-001-T-P01", "kind": "positive", "assertion": "Wide desktop renders the named intelligence panel on the left and command panel on the right using the same canonical material tokens.", "evidence": "tests/browser/layout.spec.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-UI-001-T-N01", "kind": "negative", "assertion": "Bounding-box and hit-test checks find no panel/control overlap, off-viewport content, painted wrapper, or intercepted central corridor.", "evidence": "tests/browser/layout.spec.ts; tests/browser/text-containment.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-UI-001-T-B01", "kind": "boundary", "assertion": "At the responsive transition, the feature changes to its compact presentation before either side panel makes the central plot or required command controls unusable.", "evidence": "tests/browser/layout.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-UI-001-T-C01", "kind": "combination", "assertion": "Both themes, long localized-like labels, open History, and forced colors preserve containment, material hierarchy, focus, and the plot corridor.", "evidence": "tests/browser/layout.spec.ts; tests/browser/text-containment.spec.ts; tests/browser/accessibility.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["browser-geometry-test", "computed-style-test", "hit-test", "text-containment-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-MOB-001",
+      "title": "Equivalent compact and mobile flow",
+      "statement": "Compact and mobile command layouts must provide the same known facts, three required selectors, Immediate, History, discovery labels, and recovery behavior without relying on a desktop-only left position, horizontal scrolling, or pointer precision.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-UI-001", "FOS-TI-ACC-001"],
+      "conflicts": ["Desktop-only intelligence", "Stacking every workspace", "Page-level horizontal overflow", "Required information hidden behind an unreachable overlay"],
+      "ownerIds": ["OWN-TI-UI", "OWN-TI-ACCESSIBILITY"],
+      "acceptanceCriteria": [{"id": "FOS-TI-MOB-001-AC-01", "assertion": "At 320 pixels and 200%-equivalent reflow, the complete review can be read and completed by keyboard/touch, Resolve gating remains intelligible, and the page has no horizontal overflow."}],
+      "tests": [
+        {"id": "FOS-TI-MOB-001-T-P01", "kind": "positive", "assertion": "At 320×800 the command view exposes the intelligence review, all three selects, Immediate, History, and Resolve in a logical scroll order.", "evidence": "tests/browser/turn-intelligence.spec.ts; tests/browser/accessibility.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-MOB-001-T-N01", "kind": "negative", "assertion": "No intelligence text/control is clipped, offscreen-only, pointer-only, hidden behind the compact drawer, or responsible for page-level horizontal overflow.", "evidence": "tests/browser/layout.spec.ts; tests/browser/text-containment.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-MOB-001-T-B01", "kind": "boundary", "assertion": "A 640×450 effective viewport exercises the project's 200%-zoom analogue and preserves the full review and 44-pixel targets without horizontal overflow.", "evidence": "tests/browser/accessibility.spec.ts; tests/browser/layout.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-MOB-001-T-C01", "kind": "combination", "assertion": "At 320, 567, and 760 pixels in both themes, open long History, switch to Visualization and back, and verify state retention, atomic drawer closure, focus return, and containment.", "evidence": "tests/browser/layout.spec.ts; tests/browser/turn-intelligence.spec.ts; tests/browser/text-containment.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["mobile-browser-test", "reflow-test", "keyboard-test", "text-containment-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-ACC-001",
+      "title": "Accessible intelligence semantics",
+      "statement": "The feature must use named semantic regions, labelled native selects, keyboard-operable Log views, explicit certainty and discovery text, non-color-only state, logical focus order, at least 44-by-44-pixel compact targets, and one finite polite announcement for newly available knowledge.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-004", "PROV-TI-006"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-ABS-001", "FOS-TI-COG-001", "FOS-TI-LOG-001", "FOS-TI-BND-001"],
+      "conflicts": ["Certainty communicated only by color or position", "History dumped into a live region", "Unnamed dropdowns", "Focus moved on every passive update"],
+      "ownerIds": ["OWN-TI-ACCESSIBILITY", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-ACC-001-AC-01", "assertion": "Visual and assistive users receive equivalent facts, uncertainty, selector purpose/state, discovery provenance, and recovery; automated checks remain distinct from human accessibility approval."}],
+      "tests": [
+        {"id": "FOS-TI-ACC-001-T-P01", "kind": "positive", "assertion": "The intelligence region, known list, three selects, Log views, current state, and Resolve dependency have accessible names and descriptions in logical document order.", "evidence": "tests/browser/accessibility.spec.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-ACC-001-T-N01", "kind": "negative", "assertion": "No essential certainty, attribution, selection state, error, or discovery timing relies only on color, glass, icon, position, hover, sound, animation, or pointer action.", "evidence": "tests/browser/accessibility.spec.ts; source semantics audit", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-ACC-001-T-B01", "kind": "boundary", "assertion": "A large discovery set produces one deduplicated polite announcement shorter than the declared bound and leaves full History as ordinary review content.", "evidence": "tests/command-intelligence-layout.test.mjs; tests/browser/accessibility.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-ACC-001-T-C01", "kind": "combination", "assertion": "Keyboard-only play at 320 pixels with forced colors and reduced motion can complete the three selections, inspect both logs, resolve, and return focus without overflow or concealed-text exposure.", "evidence": "tests/browser/accessibility.spec.ts; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["semantic-browser-test", "keyboard-test", "forced-colors-test", "reflow-test", "manual-review-not-claimed"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-LAT-001",
+      "title": "Bounded Lattice-copy treatment",
+      "statement": "Known-absolutely, Potential, Intent, Observed pattern, Next action, Insufficient evidence, Log, Immediate, History, Discovered during Turn N, certainty, disclosure, gating, error, and recovery copy are operative control or information-boundary language and must remain controlled literals rendered from typed state outside the current Lattice transformation slice.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-006"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-KNW-001", "FOS-TI-ACC-001"],
+      "externalDependencies": ["FOS-LAT-SEM-002", "FOS-LAT-ACC-001", "FOS-LAT-ARC-002", "FOS-LAT-BLK-001"],
+      "conflicts": ["Dynamic Lattice copy deciding knowledge or option eligibility", "Silent expansion beyond 19 requests and 26 outputs", "Register imagery weakening certainty or recovery", "Claiming product-wide adoption"],
+      "ownerIds": ["OWN-TI-LATTICE", "OWN-TI-DOMAIN", "OWN-TI-UI"],
+      "acceptanceCriteria": [{"id": "FOS-TI-LAT-001-AC-01", "assertion": "All operative feature strings remain exact, accessible, and downstream of typed state; the current Lattice runtime stays at its governed 19-request/26-output boundary unless a separately versioned expansion is authorized and regenerated."}],
+      "tests": [
+        {"id": "FOS-TI-LAT-001-T-P01", "kind": "positive", "assertion": "The feature uses controlled literal labels and typed formatting for state, turn, certainty, discovery, dependency, and recovery messages.", "evidence": "tests/command-intelligence-layout.test.mjs; tests/browser/accessibility.spec.ts; requirements/lattice-copy-inventory.json review", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-LAT-001-T-N01", "kind": "negative", "assertion": "No new feature string is selected by a Lattice publish ID, and no Lattice/runtime prose is parsed to classify knowledge, generate reasonable options, gate Resolve, or place history.", "evidence": "tests/lattice-copy.test.ts; static dependency scan", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-LAT-001-T-B01", "kind": "boundary", "assertion": "Optional non-operative interpretive coaching may enter Lattice only through a new versioned inventory/request/output/evidence expansion; it cannot replace the operative layer.", "evidence": "requirements/lattice-adoption.json; docs/design/16-LATTICE-COPY-ARCHITECTURE.md; governance review", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-LAT-001-T-C01", "kind": "combination", "assertion": "Production artifact validation still finds exactly the governed runtime text map and no owner materials while the new operative feature remains fully usable and accessible.", "evidence": "tests/lattice-artifact.test.mjs; scripts/validate-artifact.mjs; tests/browser/turn-intelligence.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["static-analysis", "governance-review", "artifact-test", "browser-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-PRV-001",
+      "title": "Local-first privacy and minimization",
+      "statement": "The feature must introduce no telemetry, account, remote request, or pre-consent browser write. Structured selections and the bounded ledger may persist only under the existing chosen save mode and must follow the documented readable-TXT and encoded-active-resume boundaries.",
+      "provenanceIds": ["PROV-TI-004"],
+      "priority": "mandatory",
+      "precedence": 1,
+      "dependencies": ["FOS-TI-SAV-001", "FOS-TI-HIS-003"],
+      "conflicts": ["Analytics for assumption choices", "Browser storage before opt-in", "Hidden state in readable active TXT", "New free-form personal data"],
+      "ownerIds": ["OWN-TI-SAVE", "OWN-TI-COMMAND", "OWN-TI-EVIDENCE"],
+      "acceptanceCriteria": [{"id": "FOS-TI-PRV-001-AC-01", "assertion": "Session-only play keeps the feature in memory, opt-in saves retain only bounded structured state, active readable TXT contains only disclosed player records, and no application network request carries intelligence or selections."}],
+      "tests": [
+        {"id": "FOS-TI-PRV-001-T-P01", "kind": "positive", "assertion": "Opt-in browser and TXT saves restore the bounded structured review record under the existing save policy.", "evidence": "tests/browser-saves.test.ts; tests/save-game.test.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-PRV-001-T-N01", "kind": "negative", "assertion": "Session-only review creates no localStorage entry and no runtime request transmits facts, logs, or selections.", "evidence": "tests/browser/privacy-save.spec.ts; tests/browser/accessibility.spec.ts", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-PRV-001-T-B01", "kind": "boundary", "assertion": "The feature adds no free-form field; insufficient evidence is a code, and active machine data remains described as encoded rather than encrypted.", "evidence": "tests/save-game.test.ts; SECURITY.md review", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-PRV-001-T-C01", "kind": "combination", "assertion": "With browser saving enabled, a late discovery and assumptions autosave locally, readable TXT remains disclosure-safe, and disabling saving stops later writes without altering the live session.", "evidence": "tests/browser/privacy-save.spec.ts; tests/save-game.test.ts; tests/red-team/information-leak.test.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["browser-storage-test", "network-request-test", "save-test", "export-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    },
+    {
+      "id": "FOS-TI-BND-001",
+      "title": "Bounded cognitive and announcement load",
+      "statement": "Each selector may expose at most two substantive reasonable options plus insufficient evidence. Immediate must summarize without dropping canonical History, and a live update may announce at most three new items plus a remaining-count summary in at most 300 characters.",
+      "provenanceIds": ["PROV-TI-001", "PROV-TI-004"],
+      "priority": "mandatory",
+      "precedence": 2,
+      "dependencies": ["FOS-TI-HYP-001", "FOS-TI-LOG-001"],
+      "conflicts": ["Unbounded hypothesis menus", "Entire History announced live", "Silent omission from History to meet a visual budget"],
+      "ownerIds": ["OWN-TI-DOMAIN", "OWN-TI-UI", "OWN-TI-ACCESSIBILITY"],
+      "acceptanceCriteria": [{"id": "FOS-TI-BND-001-AC-01", "assertion": "Option and announcement bounds are deterministic and visible; overflow moves to ordinary scrollable History rather than being discarded or repeatedly announced."}],
+      "tests": [
+        {"id": "FOS-TI-BND-001-T-P01", "kind": "positive", "assertion": "A normal turn exposes a small deterministic option set and one concise discovery update.", "evidence": "tests/command-intelligence.test.ts; tests/command-intelligence-layout.test.mjs", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-BND-001-T-N01", "kind": "negative", "assertion": "No selector exceeds three total real options, no announcement exceeds 300 characters, and repeated render retains identical announcement text.", "evidence": "tests/command-intelligence.test.ts; tests/command-intelligence-layout.test.mjs", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-BND-001-T-B01", "kind": "boundary", "assertion": "Exactly two substantive options plus insufficient evidence remain operable and ordered; a fourth new announcement item becomes a remaining-count summary.", "evidence": "tests/command-intelligence.test.ts; tests/command-intelligence-layout.test.mjs", "evidenceStatus": "planned"},
+        {"id": "FOS-TI-BND-001-T-C01", "kind": "combination", "assertion": "A six-turn multi-actor history with late discoveries, corrections, and long labels stays complete in scrollable History while Immediate, live regions, mobile layout, and text containment remain bounded.", "evidence": "tests/browser/turn-intelligence.spec.ts; tests/browser/text-containment.spec.ts; tests/browser/accessibility.spec.ts", "evidenceStatus": "planned"}
+      ],
+      "evidenceMethods": ["unit-test", "component-test", "browser-test", "text-containment-test"],
+      "status": "specified",
+      "supersedes": [],
+      "supersession": null
+    }
+  ]
+}

@@ -73,6 +73,11 @@ export type GameSessionAction =
   | { type: "retry-command"; state: RigidGameState; dropHistory: boolean }
   | { type: "return-to-planning" };
 
+function clearAdversaryAssessment(orders: RigidOrders): RigidOrders {
+  const { adversaryAssessment: _assessment, ...rest } = orders;
+  return rest;
+}
+
 export function gameSessionReducer(state: GameSessionState, action: GameSessionAction): GameSessionState {
   switch (action.type) {
     case "restore-save":
@@ -107,6 +112,7 @@ export function gameSessionReducer(state: GameSessionState, action: GameSessionA
     case "resolve-turn":
       return {
         ...state,
+        rigidOrders: clearAdversaryAssessment(state.rigidOrders),
         rigidState: action.state,
         result: action.outcome,
         history: action.record ? [...state.history, action.record] : state.history,
@@ -114,6 +120,7 @@ export function gameSessionReducer(state: GameSessionState, action: GameSessionA
     case "undo-turn":
       return {
         ...state,
+        rigidOrders: clearAdversaryAssessment(state.rigidOrders),
         rigidState: action.state,
         result: null,
         history: action.dropHistory ? state.history.slice(0, -1) : state.history,
@@ -121,12 +128,13 @@ export function gameSessionReducer(state: GameSessionState, action: GameSessionA
     case "retry-command":
       return {
         ...state,
+        rigidOrders: clearAdversaryAssessment(state.rigidOrders),
         rigidState: action.state,
         result: null,
         history: action.dropHistory ? state.history.slice(0, -1) : state.history,
       };
     case "return-to-planning":
-      return { ...state, rigidState: null, result: null };
+      return { ...state, rigidOrders: clearAdversaryAssessment(state.rigidOrders), rigidState: null, result: null };
   }
 }
 

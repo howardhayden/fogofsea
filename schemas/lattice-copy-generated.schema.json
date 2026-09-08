@@ -1,0 +1,472 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fogofsea.app/schemas/lattice-copy-generated.schema.json",
+  "title": "FOG OF SEA generated Lattice copy snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "snapshotId",
+    "staticOnly",
+    "lattice",
+    "implementationAuthority",
+    "source",
+    "boundary",
+    "assurance",
+    "hostAssertions",
+    "traceabilitySha256",
+    "traceability",
+    "realizationSha256",
+    "copySha256",
+    "copy"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "fog-of-sea.lattice-copy.generated.v2" },
+    "snapshotId": { "$ref": "#/$defs/snapshotId" },
+    "staticOnly": { "const": true },
+    "lattice": { "$ref": "#/$defs/lattice" },
+    "implementationAuthority": { "$ref": "#/$defs/implementationAuthority" },
+    "source": { "$ref": "#/$defs/source" },
+    "boundary": { "$ref": "#/$defs/boundary" },
+    "assurance": { "$ref": "#/$defs/assurance" },
+    "hostAssertions": { "$ref": "#/$defs/hostAssertions" },
+    "traceabilitySha256": { "$ref": "#/$defs/digest" },
+    "traceability": { "$ref": "#/$defs/traceability" },
+    "realizationSha256": { "$ref": "#/$defs/digest" },
+    "copySha256": { "$ref": "#/$defs/digest" },
+    "copy": { "$ref": "#/$defs/copy" }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "implementationAuthorityFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "enum": [
+            "package-lock.json",
+            "package.json",
+            "requirements/lattice-adoption.schema.json",
+            "requirements/lattice-copy-inventory.schema.json",
+            "schemas/lattice-copy-evidence.schema.json",
+            "schemas/lattice-copy-generated.schema.json",
+            "schemas/lattice-copy-index.schema.json",
+            "schemas/lattice-copy-requests.schema.json",
+            "schemas/lattice-copy-runtime.schema.json",
+            "scripts/compile-lattice-copy.mjs",
+            "scripts/lattice-copy-corpus.mjs",
+            "scripts/validate-lattice-schemas.d.mts",
+            "scripts/validate-lattice-schemas.mjs",
+            "scripts/verify-lattice-copy.mts"
+          ]
+        },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "implementationAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "algorithm", "files", "sha256"],
+      "properties": {
+        "format": { "const": "fog-of-sea.lattice-implementation-authority.v1" },
+        "algorithm": { "const": "sha256-stable-json-v1" },
+        "files": {
+          "type": "array",
+          "minItems": 14,
+          "maxItems": 14,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/implementationAuthorityFile" }
+        },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "snapshotId": {
+      "type": "string",
+      "pattern": "^lattice-copy-[a-f0-9]{24}$"
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9._:@-]*$"
+    },
+    "requestId": {
+      "enum": [
+        "fos.academy.compare-intro",
+        "fos.academy.independent-status",
+        "fos.academy.language-system",
+        "fos.academy.model-boundary",
+        "fos.academy.sources-intro",
+        "fos.game.guide.command-turns",
+        "fos.game.guide.mission-credit",
+        "fos.game.guide.mission-learning",
+        "fos.game.guide.model-boundary",
+        "fos.game.guide.scenario-acceptance",
+        "fos.game.guide.strategic-fit",
+        "fos.game.guide.uncrewed-undersea",
+        "fos.game.learning.outcome-adjustment",
+        "fos.game.learning.outcome-clear",
+        "fos.game.learning.outcome-pending",
+        "fos.game.learning.outcome-uncertainty",
+        "fos.game.learning.turn-clear",
+        "fos.game.learning.turn-uncertainty",
+        "fos.game.outcome.unscored-writing"
+      ]
+    },
+    "publishId": {
+      "enum": [
+        "academy.compare.intro",
+        "academy.sources.independentStatus",
+        "academy.sources.intro",
+        "academy.sources.languageSystem",
+        "academy.sources.modelBoundary",
+        "game.guide.commandTurns.interpretive",
+        "game.guide.commandTurns.operative",
+        "game.guide.missionCredit.interpretive",
+        "game.guide.missionCredit.operative",
+        "game.guide.missionLearning.interpretive",
+        "game.guide.missionLearning.operative",
+        "game.guide.modelBoundary.interpretive",
+        "game.guide.modelBoundary.operative",
+        "game.guide.scenarioAcceptance.interpretive",
+        "game.guide.scenarioAcceptance.operative",
+        "game.guide.strategicFit.interpretive",
+        "game.guide.strategicFit.operative",
+        "game.guide.uncrewedUndersea.interpretive",
+        "game.guide.uncrewedUndersea.operative",
+        "game.learning.outcome.adjustment",
+        "game.learning.outcome.clear",
+        "game.learning.outcome.pending",
+        "game.learning.outcome.uncertainty",
+        "game.learning.turn.clear",
+        "game.learning.turn.uncertainty",
+        "game.outcome.unscoredWriting"
+      ]
+    },
+    "lattice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engineName", "engineVersion", "profileId", "profileVersion", "profileDigest", "ownerPackageDigest"],
+      "properties": {
+        "engineName": { "const": "Lattice — Layered Register Engine" },
+        "engineVersion": { "const": "0.1.1" },
+        "profileId": { "const": "relational-systems" },
+        "profileVersion": { "const": "v1.0.0" },
+        "profileDigest": { "const": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a" },
+        "ownerPackageDigest": { "const": "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fogBaselineCommit", "latticeCommit", "requestAuthority"],
+      "properties": {
+        "fogBaselineCommit": { "const": "70907a77cba735c151e52929dd5a56d795c3d04f" },
+        "latticeCommit": { "const": "d6cc85b275e3f14163a5a547f626832fd21b27b0" },
+        "requestAuthority": { "const": "FOG OF SEA source-controlled authoring contract" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requestPath",
+        "requestSha256",
+        "academySourcePath",
+        "academySourceSha256",
+        "academyCorpusSha256",
+        "academyLintSha256",
+        "provenance"
+      ],
+      "properties": {
+        "requestPath": { "const": "authoring/lattice-copy.requests.json" },
+        "requestSha256": { "$ref": "#/$defs/digest" },
+        "academySourcePath": { "const": "app/academyData.ts" },
+        "academySourceSha256": { "$ref": "#/$defs/digest" },
+        "academyCorpusSha256": { "$ref": "#/$defs/digest" },
+        "academyLintSha256": { "$ref": "#/$defs/digest" },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ownerCompilerRequired", "runtimeEngineIncluded", "runtimeProfileIncluded", "receiptsIncluded", "ruleDecisionsIncluded"],
+      "properties": {
+        "ownerCompilerRequired": { "const": true },
+        "runtimeEngineIncluded": { "const": false },
+        "runtimeProfileIncluded": { "const": false },
+        "receiptsIncluded": { "const": false },
+        "ruleDecisionsIncluded": { "const": false }
+      }
+    },
+    "assurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conformance", "conformanceCeiling", "academyLintStatus", "humanReviewStatus", "semanticScope", "sourceTruthEstablished"],
+      "properties": {
+        "conformance": { "$ref": "#/$defs/conformance" },
+        "conformanceCeiling": { "const": "degraded" },
+        "academyLintStatus": { "const": "advisory" },
+        "humanReviewStatus": { "const": "not-claimed" },
+        "semanticScope": { "const": "declared-contract-and-registered-claims" },
+        "sourceTruthEstablished": { "const": false }
+      }
+    },
+    "conformance": {
+      "enum": ["literal", "degraded"]
+    },
+    "hostAssertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "publishIds", "requiredPhraseCount", "prohibitedPhraseCount", "exactTextCount"],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/digest" },
+        "publishIds": {
+          "type": "array",
+          "maxItems": 26,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/publishId" }
+        },
+        "requiredPhraseCount": { "type": "integer", "minimum": 0 },
+        "prohibitedPhraseCount": { "type": "integer", "minimum": 0 },
+        "exactTextCount": { "type": "integer", "minimum": 0, "maximum": 26 }
+      }
+    },
+    "authorityFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "enum": ["requirements/lattice-adoption.json", "requirements/lattice-copy-inventory.json"]
+        },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "sourceCatalogEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "symbol", "kind", "exported", "sha256"],
+      "properties": {
+        "id": {
+          "enum": [
+            "src.academy.comparison",
+            "src.academy.modules",
+            "src.academy.sources",
+            "src.catalog.aircraft",
+            "src.catalog.platforms",
+            "src.game.final-outcome",
+            "src.game.outcome-learning",
+            "src.game.turn-learning",
+            "src.model.armaments",
+            "src.model.mission-credit",
+            "src.model.scenario-coexistence",
+            "src.planning.readiness-gaps"
+          ]
+        },
+        "path": { "type": "string", "pattern": "^app/.+\\.tsx?$" },
+        "symbol": { "type": "string", "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*$" },
+        "kind": { "enum": ["variable", "function", "class", "interface", "type-alias", "enum", "namespace"] },
+        "exported": { "type": "boolean" },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "humanStatus", "claimScope"],
+      "properties": {
+        "authority": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "humanStatus": { "const": "not-claimed" },
+        "claimScope": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "traceabilityRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requestId", "requirementIds", "inventoryIds", "sourceRefs", "review"],
+      "properties": {
+        "requestId": { "$ref": "#/$defs/requestId" },
+        "requirementIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^FOS-LAT-[A-Z]+-[0-9]{3}$" }
+        },
+        "inventoryIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^FOS-COPY-[A-Z]+-[0-9]{3}$" }
+        },
+        "sourceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "src.academy.comparison",
+              "src.academy.modules",
+              "src.academy.sources",
+              "src.catalog.aircraft",
+              "src.catalog.platforms",
+              "src.game.final-outcome",
+              "src.game.outcome-learning",
+              "src.game.turn-learning",
+              "src.model.armaments",
+              "src.model.mission-credit",
+              "src.model.scenario-coexistence",
+              "src.planning.readiness-gaps"
+            ]
+          }
+        },
+        "review": { "$ref": "#/$defs/review" }
+      }
+    },
+    "traceability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorityFiles", "sourceCatalog", "requests"],
+      "properties": {
+        "authorityFiles": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "allOf": [
+                { "$ref": "#/$defs/authorityFile" },
+                { "properties": { "path": { "const": "requirements/lattice-adoption.json" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/authorityFile" },
+                { "properties": { "path": { "const": "requirements/lattice-copy-inventory.json" } } }
+              ]
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "sourceCatalog": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/sourceCatalogEntry" }
+        },
+        "requests": { "$ref": "#/$defs/traceabilityRequests" }
+      }
+    },
+    "traceabilityRequests": {
+      "type": "array",
+      "minItems": 19,
+      "maxItems": 19,
+      "prefixItems": [
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.compare-intro" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.independent-status" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.language-system" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.model-boundary" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.academy.sources-intro" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.command-turns" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.mission-credit" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.mission-learning" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.model-boundary" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.scenario-acceptance" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.strategic-fit" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.guide.uncrewed-undersea" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.outcome-adjustment" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.outcome-clear" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.outcome-pending" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.outcome-uncertainty" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.turn-clear" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.learning.turn-uncertainty" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/traceabilityRequest" }, { "properties": { "requestId": { "const": "fos.game.outcome.unscored-writing" } } }] }
+      ],
+      "items": false
+    },
+    "copyEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "textSha256", "layer", "representation", "conformance", "requestId", "candidateId", "source"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1, "maxLength": 50000 },
+        "textSha256": { "$ref": "#/$defs/digest" },
+        "layer": { "enum": ["operative", "experiential", "interpretive"] },
+        "representation": { "enum": ["standard", "accessibility-equivalent"] },
+        "conformance": { "$ref": "#/$defs/conformance" },
+        "requestId": { "$ref": "#/$defs/requestId" },
+        "candidateId": { "$ref": "#/$defs/identifier" },
+        "source": { "enum": ["provided", "literal"] }
+      }
+    },
+    "copy": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 26,
+      "maxProperties": 26,
+      "required": [
+        "academy.compare.intro",
+        "academy.sources.independentStatus",
+        "academy.sources.intro",
+        "academy.sources.languageSystem",
+        "academy.sources.modelBoundary",
+        "game.guide.commandTurns.interpretive",
+        "game.guide.commandTurns.operative",
+        "game.guide.missionCredit.interpretive",
+        "game.guide.missionCredit.operative",
+        "game.guide.missionLearning.interpretive",
+        "game.guide.missionLearning.operative",
+        "game.guide.modelBoundary.interpretive",
+        "game.guide.modelBoundary.operative",
+        "game.guide.scenarioAcceptance.interpretive",
+        "game.guide.scenarioAcceptance.operative",
+        "game.guide.strategicFit.interpretive",
+        "game.guide.strategicFit.operative",
+        "game.guide.uncrewedUndersea.interpretive",
+        "game.guide.uncrewedUndersea.operative",
+        "game.learning.outcome.adjustment",
+        "game.learning.outcome.clear",
+        "game.learning.outcome.pending",
+        "game.learning.outcome.uncertainty",
+        "game.learning.turn.clear",
+        "game.learning.turn.uncertainty",
+        "game.outcome.unscoredWriting"
+      ],
+      "properties": {
+        "academy.compare.intro": { "$ref": "#/$defs/copyEntry" },
+        "academy.sources.independentStatus": { "$ref": "#/$defs/copyEntry" },
+        "academy.sources.intro": { "$ref": "#/$defs/copyEntry" },
+        "academy.sources.languageSystem": { "$ref": "#/$defs/copyEntry" },
+        "academy.sources.modelBoundary": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.commandTurns.interpretive": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.commandTurns.operative": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.missionCredit.interpretive": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.missionCredit.operative": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.missionLearning.interpretive": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.missionLearning.operative": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.modelBoundary.interpretive": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.modelBoundary.operative": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.scenarioAcceptance.interpretive": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.scenarioAcceptance.operative": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.strategicFit.interpretive": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.strategicFit.operative": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.uncrewedUndersea.interpretive": { "$ref": "#/$defs/copyEntry" },
+        "game.guide.uncrewedUndersea.operative": { "$ref": "#/$defs/copyEntry" },
+        "game.learning.outcome.adjustment": { "$ref": "#/$defs/copyEntry" },
+        "game.learning.outcome.clear": { "$ref": "#/$defs/copyEntry" },
+        "game.learning.outcome.pending": { "$ref": "#/$defs/copyEntry" },
+        "game.learning.outcome.uncertainty": { "$ref": "#/$defs/copyEntry" },
+        "game.learning.turn.clear": { "$ref": "#/$defs/copyEntry" },
+        "game.learning.turn.uncertainty": { "$ref": "#/$defs/copyEntry" },
+        "game.outcome.unscoredWriting": { "$ref": "#/$defs/copyEntry" }
+      }
+    }
+  }
+}

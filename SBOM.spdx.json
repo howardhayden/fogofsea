@@ -3,13 +3,13 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "fog-of-sea-full-dependency-sbom",
-  "documentNamespace": "https://fog-of-sea.invalid/sbom/full/c22c15a98cab01510621b229881d8546e2c53fe9a027b4463f4164f54438b7b4",
+  "documentNamespace": "https://fog-of-sea.invalid/sbom/full/75870267a43b0d80f661dd762dfc64cea98e2ed5522e6b33a6bd4ee5582c8bb7",
   "creationInfo": {
-    "created": "2026-08-24T16:53:38.553Z",
+    "created": "2026-09-08T00:14:35.894Z",
     "creators": [
       "Tool: scripts/generate-sbom.mjs"
     ],
-    "comment": "Generated deterministically from package-lock.json SHA-256 c22c15a98cab01510621b229881d8546e2c53fe9a027b4463f4164f54438b7b4."
+    "comment": "Generated deterministically from package-lock.json SHA-256 75870267a43b0d80f661dd762dfc64cea98e2ed5522e6b33a6bd4ee5582c8bb7."
   },
   "documentDescribes": [
     "SPDXRef-Package-root"
@@ -1295,6 +1295,54 @@
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
           "referenceLocator": "pkg:npm/%40eslint/eslintrc@3.3.5"
+        }
+      ]
+    },
+    {
+      "name": "ajv",
+      "SPDXID": "SPDXRef-Package-d5bef90db841f50d25d9",
+      "versionInfo": "6.15.0",
+      "downloadLocation": "https://registry.npmjs.org/ajv/-/ajv-6.15.0.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "7e0171ec77e8abad32b4ad9cec386717c8c8bf362038cc5fba08cb3923078cb20f81e9ea6bb4bba1a6a001352af7d995e8862f376b51982d309d3617ea23db33"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/ajv@6.15.0"
+        }
+      ]
+    },
+    {
+      "name": "json-schema-traverse",
+      "SPDXID": "SPDXRef-Package-4fb3be8d6ed4af77c32f",
+      "versionInfo": "0.4.1",
+      "downloadLocation": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "c5b6c21f9742614e53f0b704861ba1ec727cf075ee5b7aac237634cce64529f6441dca5688753f271ce4eb6f41aec69bfe63221d0b62f7030ffbce3944f7b756"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/json-schema-traverse@0.4.1"
         }
       ]
     },
@@ -3029,8 +3077,8 @@
     {
       "name": "ajv",
       "SPDXID": "SPDXRef-Package-b860c3f2dfc75e2d0b34",
-      "versionInfo": "6.15.0",
-      "downloadLocation": "https://registry.npmjs.org/ajv/-/ajv-6.15.0.tgz",
+      "versionInfo": "8.17.1",
+      "downloadLocation": "https://registry.npmjs.org/ajv/-/ajv-8.17.1.tgz",
       "filesAnalyzed": false,
       "licenseConcluded": "MIT",
       "licenseDeclared": "MIT",
@@ -3039,14 +3087,14 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "7e0171ec77e8abad32b4ad9cec386717c8c8bf362038cc5fba08cb3923078cb20f81e9ea6bb4bba1a6a001352af7d995e8862f376b51982d309d3617ea23db33"
+          "checksumValue": "07f801b8d8394a2313acf902f80dbe716d11b33c316269fa558c41fe29e5052b52e67c7ac4722dfde84a46120c86abac97b6bc2e34286678c2b39be1c31390d6"
         }
       ],
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:npm/ajv@6.15.0"
+          "referenceLocator": "pkg:npm/ajv@8.17.1"
         }
       ]
     },
@@ -3675,6 +3723,54 @@
       ]
     },
     {
+      "name": "ajv",
+      "SPDXID": "SPDXRef-Package-b4871f477f57f49b4920",
+      "versionInfo": "6.15.0",
+      "downloadLocation": "https://registry.npmjs.org/ajv/-/ajv-6.15.0.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "7e0171ec77e8abad32b4ad9cec386717c8c8bf362038cc5fba08cb3923078cb20f81e9ea6bb4bba1a6a001352af7d995e8862f376b51982d309d3617ea23db33"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/ajv@6.15.0"
+        }
+      ]
+    },
+    {
+      "name": "json-schema-traverse",
+      "SPDXID": "SPDXRef-Package-9a4e8071f304b34b551f",
+      "versionInfo": "0.4.1",
+      "downloadLocation": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "c5b6c21f9742614e53f0b704861ba1ec727cf075ee5b7aac237634cce64529f6441dca5688753f271ce4eb6f41aec69bfe63221d0b62f7030ffbce3944f7b756"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/json-schema-traverse@0.4.1"
+        }
+      ]
+    },
+    {
       "name": "espree",
       "SPDXID": "SPDXRef-Package-8c614c7d272f016153a9",
       "versionInfo": "10.4.0",
@@ -3863,6 +3959,30 @@
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
           "referenceLocator": "pkg:npm/fast-levenshtein@2.0.6"
+        }
+      ]
+    },
+    {
+      "name": "fast-uri",
+      "SPDXID": "SPDXRef-Package-5852b277bec49b249da4",
+      "versionInfo": "3.1.7",
+      "downloadLocation": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.7.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "74ebd95738dd65dcfba6177dbfa8c26f0c6b056ddf2ba9fc45cd02b5d98ce1bba6ccc9f1cb005886ea61e89f35f51470fe4bbeacb6de9707ccba792dbb35551e"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/fast-uri@3.1.7"
         }
       ]
     },
@@ -4397,8 +4517,8 @@
     {
       "name": "json-schema-traverse",
       "SPDXID": "SPDXRef-Package-bf0c880f98ee85fdb2d8",
-      "versionInfo": "0.4.1",
-      "downloadLocation": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz",
       "filesAnalyzed": false,
       "licenseConcluded": "MIT",
       "licenseDeclared": "MIT",
@@ -4407,14 +4527,14 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "c5b6c21f9742614e53f0b704861ba1ec727cf075ee5b7aac237634cce64529f6441dca5688753f271ce4eb6f41aec69bfe63221d0b62f7030ffbce3944f7b756"
+          "checksumValue": "34cf3f3fd9f75e35e12199f594b86415a0024ce5114178d6855e0103f4673aff31be0aadaa9017f483b89914314b1d51968e2dab37aa6f4b0e96bb9a3b2dddba"
         }
       ],
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:npm/json-schema-traverse@0.4.1"
+          "referenceLocator": "pkg:npm/json-schema-traverse@1.0.0"
         }
       ]
     },
@@ -5087,6 +5207,30 @@
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
           "referenceLocator": "pkg:npm/react-refresh@0.18.0"
+        }
+      ]
+    },
+    {
+      "name": "require-from-string",
+      "SPDXID": "SPDXRef-Package-e3af7aca7b9a3b946ed6",
+      "versionInfo": "2.0.2",
+      "downloadLocation": "https://registry.npmjs.org/require-from-string/-/require-from-string-2.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "checksums": [
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "5dfd2759ee91b1ece214cbbe029f5b8a251b9a996ae92f7fa7eef0ed85cffc904786b5030d48706bebc0372b9bbaa7d9593bde53ffc36151ac0c6ed128bfef13"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/require-from-string@2.0.2"
         }
       ]
     },
@@ -5837,6 +5981,11 @@
     {
       "spdxElementId": "SPDXRef-Package-root",
       "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-b860c3f2dfc75e2d0b34"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-root",
+      "relationshipType": "DEPENDS_ON",
       "relatedSpdxElement": "SPDXRef-Package-04dff60c072892b11026"
     },
     {
@@ -6162,7 +6311,7 @@
     {
       "spdxElementId": "SPDXRef-Package-7719e69474a4f537f4c9",
       "relationshipType": "DEPENDS_ON",
-      "relatedSpdxElement": "SPDXRef-Package-b860c3f2dfc75e2d0b34"
+      "relatedSpdxElement": "SPDXRef-Package-d5bef90db841f50d25d9"
     },
     {
       "spdxElementId": "SPDXRef-Package-7719e69474a4f537f4c9",
@@ -6203,6 +6352,26 @@
       "spdxElementId": "SPDXRef-Package-7719e69474a4f537f4c9",
       "relationshipType": "DEPENDS_ON",
       "relatedSpdxElement": "SPDXRef-Package-fbb32af49eeae75e1569"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d5bef90db841f50d25d9",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-1dc28023f3ef308de39d"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d5bef90db841f50d25d9",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-cbac88596d16d500742d"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d5bef90db841f50d25d9",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-4fb3be8d6ed4af77c32f"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d5bef90db841f50d25d9",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-ea962351981bdd8010e0"
     },
     {
       "spdxElementId": "SPDXRef-Package-035e4c58bf10a450a87f",
@@ -6552,7 +6721,7 @@
     {
       "spdxElementId": "SPDXRef-Package-b860c3f2dfc75e2d0b34",
       "relationshipType": "DEPENDS_ON",
-      "relatedSpdxElement": "SPDXRef-Package-cbac88596d16d500742d"
+      "relatedSpdxElement": "SPDXRef-Package-5852b277bec49b249da4"
     },
     {
       "spdxElementId": "SPDXRef-Package-b860c3f2dfc75e2d0b34",
@@ -6562,7 +6731,7 @@
     {
       "spdxElementId": "SPDXRef-Package-b860c3f2dfc75e2d0b34",
       "relationshipType": "DEPENDS_ON",
-      "relatedSpdxElement": "SPDXRef-Package-ea962351981bdd8010e0"
+      "relatedSpdxElement": "SPDXRef-Package-e3af7aca7b9a3b946ed6"
     },
     {
       "spdxElementId": "SPDXRef-Package-9d675b59a5b0ea9776cd",
@@ -6832,7 +7001,7 @@
     {
       "spdxElementId": "SPDXRef-Package-04dff60c072892b11026",
       "relationshipType": "DEPENDS_ON",
-      "relatedSpdxElement": "SPDXRef-Package-b860c3f2dfc75e2d0b34"
+      "relatedSpdxElement": "SPDXRef-Package-b4871f477f57f49b4920"
     },
     {
       "spdxElementId": "SPDXRef-Package-04dff60c072892b11026",
@@ -6978,6 +7147,26 @@
       "spdxElementId": "SPDXRef-Package-541a4a3ad3a955e80fc4",
       "relationshipType": "DEPENDS_ON",
       "relatedSpdxElement": "SPDXRef-Package-adb2efe58b4c1bfff2e6"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-b4871f477f57f49b4920",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-1dc28023f3ef308de39d"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-b4871f477f57f49b4920",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-cbac88596d16d500742d"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-b4871f477f57f49b4920",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-9a4e8071f304b34b551f"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-b4871f477f57f49b4920",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-ea962351981bdd8010e0"
     },
     {
       "spdxElementId": "SPDXRef-Package-8c614c7d272f016153a9",

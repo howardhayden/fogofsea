@@ -4,6 +4,7 @@ import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type
 import Academy from "./Academy";
 import ConfirmDialog from "./ConfirmDialog";
 import CommandPanel from "./CommandPanel";
+import CommandIntelligencePanel from "./CommandIntelligencePanel";
 import ResultDebrief from "./ResultDebrief";
 import PrivacyGate from "./PrivacyGate";
 import PlanningRecap from "./PlanningRecap";
@@ -41,7 +42,8 @@ import { beginCommandTransition, resolveCommandTransition, retryCommandTransitio
 import { containDialogTab } from "./dialogFocus";
 import { deriveContactVisibility } from "./contactVisualization";
 import { INPUT_LIMITS, sanitizeSearchQuery } from "./inputSecurity";
-import { deriveOperationalStrategy } from "./operationalStrategy";
+import { latticeCopy } from "./latticeCopy";
+import { FLEET_METHOD_LABELS, POSTURE_LABELS, deriveOperationalStrategy } from "./operationalStrategy";
 import { deriveForceReadiness } from "./forceReadiness";
 import { cloudCoverLabel, cloudCoverPhrase } from "./weatherPresentation";
 
@@ -222,6 +224,7 @@ export default function Home() {
   const forceViewRef = useRef<HTMLElement>(null);
   const visualizationViewRef = useRef<HTMLElement>(null);
   const rigidHeadingRef = useRef<HTMLHeadingElement>(null);
+  const intelligenceHeadingRef = useRef<HTMLHeadingElement>(null);
   const resultHeadingRef = useRef<HTMLElement>(null);
   const dataHeadingRef = useRef<HTMLHeadingElement>(null);
   const academyButtonRef = useRef<HTMLButtonElement>(null);
@@ -255,7 +258,7 @@ export default function Home() {
 
   const buildSave = useCallback((): PortableSave => ({
     format: "fog-of-sea-save",
-    version: 3,
+    version: 4,
     savedAt: new Date().toISOString(),
     game: { scenario, fleet, airWing, selectedArmaments, selectedWarfare, selectedEndState, selectedLens, selectedPartnerLens, selectedGuardrail, theorySynthesis, rationale, assumptions, termination, result, rigidState, rigidOrders, history },
     preferences: { theme, difficulty, planningStage, guidance: { checklistCollapsed: guidedChecklistCollapsed } },
@@ -442,7 +445,11 @@ export default function Home() {
     applySave(loaded.save);
     setDataOpen(false);
     window.setTimeout(() => loaded.save.game.rigidState
-      ? (loaded.save.game.result ? resultHeadingRef.current?.focus() : rigidHeadingRef.current?.focus())
+      ? (loaded.save.game.result
+        ? resultHeadingRef.current?.focus()
+        : loaded.save.game.rigidState.turn >= 1
+          ? intelligenceHeadingRef.current?.focus()
+          : rigidHeadingRef.current?.focus())
       : loaded.save.preferences.planningStage === "force" ? forceViewRef.current?.focus() : missionViewRef.current?.focus(), 0);
   };
 
@@ -586,7 +593,7 @@ export default function Home() {
     } else {
       setSaveStatus(storageMode === "enabled" ? `Turn ${transition.state.turn} resolved and queued for this browser save.` : `Turn ${transition.state.turn} resolved in session-only mode.`);
     }
-    window.setTimeout(() => transition.outcome ? resultHeadingRef.current?.focus() : rigidHeadingRef.current?.focus(), 0);
+    window.setTimeout(() => transition.outcome ? resultHeadingRef.current?.focus() : intelligenceHeadingRef.current?.focus(), 0);
   };
 
   const undoLastTurn = () => {
@@ -594,7 +601,9 @@ export default function Home() {
     if (!transition || !rigidState) return;
     sessionActions.undoTurn(transition.state, transition.dropHistory);
     setSaveStatus(storageMode === "enabled" ? `Turn ${rigidState.turn} removed and queued for this browser save.` : `Turn ${rigidState.turn} removed from this session.`);
-    window.setTimeout(() => rigidHeadingRef.current?.focus(), 0);
+    window.setTimeout(() => transition.state.turn >= 1
+      ? intelligenceHeadingRef.current?.focus()
+      : rigidHeadingRef.current?.focus(), 0);
   };
 
   const retrySameScenario = () => {
@@ -736,6 +745,11 @@ export default function Home() {
         : mobileView === "decisions"
           ? "Decisions"
           : "Force design";
+  const commandEntryRef = result
+    ? resultHeadingRef
+    : rigidState && rigidState.turn >= 1
+      ? intelligenceHeadingRef
+      : rigidHeadingRef;
   const chooseMobileView = (view: typeof mobileView) => {
     setMobileView(view);
     if (mobileDisclosureRef.current) mobileDisclosureRef.current.open = false;
@@ -743,7 +757,7 @@ export default function Home() {
       mission: missionViewRef,
       decisions: decisionsViewRef,
       force: forceViewRef,
-      command: rigidHeadingRef,
+      command: commandEntryRef,
       visualization: visualizationViewRef,
     };
     window.setTimeout(() => targets[view].current?.focus(), 0);
@@ -807,7 +821,7 @@ export default function Home() {
         { label: "Sea state / visibility", value: `${scenario.seaState} · ${scenario.visibility} invented nm` },
         { label: "Season / date", value: `${scenario.season} · ${scenario.scenarioDate}` },
         { label: "Wind / current", value: `${scenario.windHeading}° ${scenario.windSpeed} kn · ${scenario.currentHeading}° ${scenario.currentSpeed} kn` },
-        { label: "Operating method / posture", value: `${operationalStrategy.summary}` },
+        { label: "Friendly operating method / posture", value: `${FLEET_METHOD_LABELS[operationalStrategy.friendlyMethod]} under ${POSTURE_LABELS[operationalStrategy.friendlyPosture].toLowerCase()}.` },
       ]}
       decisions={[
         { label: "Warfare areas", value: warfareAreaNames(selectedWarfare) || "None recorded" },
@@ -827,8 +841,8 @@ export default function Home() {
       selectedForce={includeForce ? selectedForceSummary : undefined}
     />
   );
-  const skipTarget = result ? "#result-heading" : rigidState ? "#rigid-turn-heading" : planningStage === "force" ? "#force-heading-title" : "#mission-workflow";
-  const skipLabel = result ? "Skip to final debrief" : rigidState ? "Skip to command turn" : planningStage === "force" ? "Skip to force design" : "Skip to mission workflow";
+  const skipTarget = result ? "#result-heading" : rigidState ? rigidState.turn >= 1 ? "#command-intelligence-heading" : "#rigid-turn-heading" : planningStage === "force" ? "#force-heading-title" : "#mission-workflow";
+  const skipLabel = result ? "Skip to final debrief" : rigidState ? rigidState.turn >= 1 ? "Skip to intelligence review" : "Skip to command turn" : planningStage === "force" ? "Skip to force design" : "Skip to mission workflow";
   const phaseKey = result ? "debrief" : rigidState ? "command" : planningStage;
   const phaseAnnouncement = result
     ? "Final debrief is now active. Planning and command controls are unavailable until you choose a debrief action."
@@ -1090,21 +1104,27 @@ export default function Home() {
             </div>}
           </div>
           {rigidState && rigidState.phase === "active" && (
-            <CommandPanel
-              state={rigidState}
-              orders={rigidOrders}
-              warfareAreas={selectedWarfare}
-              warfareLabel={(area) => WARFARE.find((item) => item.id === area)?.label || area}
-              headingRef={rigidHeadingRef}
-              planningRecap={planningRecap(true)}
-              operationalStrategy={operationalStrategy}
-              adversaryCount={scenario.adversaryCount ?? 1}
-              contactVisibility={contactVisibility}
-              onOrdersChange={sessionActions.updateOrders}
-              onResolve={resolveCommandTurn}
-              onUndo={undoLastTurn}
-              onReturn={requestReturnToPlanning}
-            />
+            <>
+              <CommandIntelligencePanel
+                state={rigidState}
+                orders={rigidOrders}
+                headingRef={intelligenceHeadingRef}
+                onOrdersChange={sessionActions.updateOrders}
+              />
+              <CommandPanel
+                state={rigidState}
+                orders={rigidOrders}
+                warfareAreas={selectedWarfare}
+                warfareLabel={(area) => WARFARE.find((item) => item.id === area)?.label || area}
+                headingRef={rigidHeadingRef}
+                planningRecap={planningRecap(true)}
+                operationalStrategy={operationalStrategy}
+                onOrdersChange={sessionActions.updateOrders}
+                onResolve={resolveCommandTurn}
+                onUndo={undoLastTurn}
+                onReturn={requestReturnToPlanning}
+              />
+            </>
           )}
           </>}
           {result && rigidState && <ResultDebrief result={result} state={rigidState} headingRef={resultHeadingRef} planningRecap={planningRecap(true)} warfareLabel={(area) => WARFARE.find((item) => item.id === area)?.label || area} onOpenLesson={openDebriefLesson} onUndo={undoLastTurn} onRetry={retrySameScenario} onReturn={requestReturnToPlanning} onNewScenario={requestFreshGame} />}
@@ -1300,13 +1320,13 @@ export default function Home() {
               {DISPLAY_ARMAMENTS.map((item) => <p key={item.id}><b>{item.short}</b><span>{item.role} Notional reach: {item.reach}; tracks: {item.trackCapacity}; tracking: {item.trackingMethods.join(", ")}. Compatible hosts: {item.hostIds.map((id) => PLATFORMS.find((platform) => platform.id === id)?.short || AIRCRAFT.find((aircraft) => aircraft.id === id)?.short || id).join(", ")}.</span></p>)}
               <small>All packs remain in one alphabetized catalog rather than being grouped by vessel, aircraft, or submarine. Each count represents an abstract mission pack, not a weapon quantity. Every distance and track capacity is invented; names express generic functions and do not identify a manufacturer, real inventory, exact weapon, magazine, seeker, performance, or current loadout.</small>
             </details>
-            <details className="guide-rule"><summary>WHAT COUNTS TOWARD THE MISSION</summary><p>A selection earns credit only when it fits the mission and has the support it needs. Aircraft need suitable deck space, and mission packs need a compatible host. Unsupported selections can remain in the force, but they add no mission coverage. Environmental fit also matters: a force suited to open water may be a poor fit for restricted water, severe weather, or lane opening.</p></details>
-            <details className="guide-rule"><summary>HOW A SCENARIO IS ACCEPTED</summary><p>Each new scenario is built as a complete situation, then checked for consistency. Region, season, light, weather, sea, geography, mission, actors, force needs, and objectives must all be able to coexist. If they cannot, the entire candidate is discarded and another is generated.</p></details>
-            <details className="guide-rule"><summary>UNCREWED &amp; UNDERSEA EMPLOYMENT</summary><p>Uncrewed systems contribute only when their hosts and mission pairings receive credit. Distributed scouting, deception swarms, attritable massing, and autonomous lane control solve different problems. Independent patrols, coordinated wolfpacks, barrier ambushes, and protective screens likewise depend on force size, cueing, deconfliction, geography, season, light, weather, and political purpose. A wolfpack without at least two credited undersea elements incurs coordination and escalation penalties.</p></details>
-            <details className="guide-rule"><summary>HOW COMMAND TURNS WORK</summary><p>Choose how the force moves, senses, coordinates, manages risk, and acts. Range, contact, force condition, supply, objective progress, and escalation show the result. Faster or more forceful choices can help the mission while costing supply or increasing danger; cautious choices can preserve the force while losing time. The same saved state and orders always reproduce the same outcome, so Undo supports comparison rather than rerolling.</p></details>
-            <details className="guide-rule"><summary>STRATEGIC FIT</summary><p>The force and its purpose must agree with the brief. Choose an end state, approaches, and a guardrail that support one another. Optional writing is saved for you and never scored. Results describe this fictional model, not real-world odds.</p></details>
-            <details className="guide-disclaimer"><summary>MODEL &amp; PLAY BOUNDARIES</summary><p>This is a notional educational model. It does not provide current doctrine, readiness, disposition, targeting, or operational recommendations. The fictional abstraction is intentionally simplified; differences from real-world practice are not claims about current capability.</p></details>
-            <details className="guide-rule"><summary>MISSION CREDIT &amp; LEARNING</summary><p>Only connected, compatible selections tied to an identified warfare area earn mission credit. During play, the interface keeps this rule compact. After a decision resolves, the result explains the evidence and offers a focused adjustment when one is supported; when no clear mistake is indicated, it says so rather than inventing one. The full scoring and pairing explanation remains here.</p></details>
+            <details id="field-guide-mission-credit" className="guide-rule"><summary>WHAT COUNTS TOWARD THE MISSION</summary><p>{latticeCopy("game.guide.missionCredit.operative")}</p><p>{latticeCopy("game.guide.missionCredit.interpretive")}</p></details>
+            <details id="field-guide-scenario-acceptance" className="guide-rule"><summary>HOW A SCENARIO IS ACCEPTED</summary><p>{latticeCopy("game.guide.scenarioAcceptance.operative")}</p><p>{latticeCopy("game.guide.scenarioAcceptance.interpretive")}</p></details>
+            <details id="field-guide-uncrewed-undersea" className="guide-rule"><summary>UNCREWED &amp; UNDERSEA EMPLOYMENT</summary><p>{latticeCopy("game.guide.uncrewedUndersea.operative")}</p><p>{latticeCopy("game.guide.uncrewedUndersea.interpretive")}</p></details>
+            <details id="field-guide-command-turns" className="guide-rule"><summary>HOW COMMAND TURNS WORK</summary><p>{latticeCopy("game.guide.commandTurns.operative")}</p><p>{latticeCopy("game.guide.commandTurns.interpretive")}</p></details>
+            <details id="field-guide-strategic-fit" className="guide-rule"><summary>STRATEGIC FIT</summary><p>{latticeCopy("game.guide.strategicFit.operative")}</p><p>{latticeCopy("game.guide.strategicFit.interpretive")}</p></details>
+            <details id="field-guide-model-boundary" className="guide-disclaimer"><summary>MODEL &amp; PLAY BOUNDARIES</summary><p>{latticeCopy("game.guide.modelBoundary.operative")}</p><p>{latticeCopy("game.guide.modelBoundary.interpretive")}</p></details>
+            <details id="field-guide-mission-learning" className="guide-rule"><summary>MISSION CREDIT &amp; LEARNING</summary><p>{latticeCopy("game.guide.missionLearning.operative")}</p><p>{latticeCopy("game.guide.missionLearning.interpretive")}</p></details>
             <details className="guide-rule guide-documents"><summary>DOCUMENTATION</summary><p>Open a focused reference in a new tab. These documents explain play and trust boundaries without exposing internal design research.</p><nav aria-label="Field Guide documentation"><a href="./docs/HOW-THE-GAME-WORKS.md" target="_blank" rel="noreferrer">HOW THE GAME WORKS</a><a href="./docs/SECURITY-PRIVACY-AND-SAVES.md" target="_blank" rel="noreferrer">SECURITY, PRIVACY &amp; SAVES</a><a href="./docs/ACCESSIBILITY-AND-CONTROLS.md" target="_blank" rel="noreferrer">ACCESSIBILITY &amp; CONTROLS</a><a href="./third-party-notices.txt" target="_blank" rel="noreferrer">OPEN-SOURCE NOTICES</a></nav></details>
             <details className="guide-disclaimer"><summary>INDEPENDENT / NO ENDORSEMENT</summary><p>Not affiliated with, sponsored by, approved by, or endorsed by any government agency or manufacturer. Every platform, system, capacity, and personnel figure is fictionalized. Any discrepancy in realism reflects the developer&apos;s subject-matter inexperience and deliberate abstraction.</p></details>
           </section>

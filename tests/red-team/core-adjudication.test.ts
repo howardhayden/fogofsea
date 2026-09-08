@@ -6,6 +6,8 @@ import {
   outcomeLearningAssessment,
   resolveRigidTurn,
   RIGID_FINDING_CODES,
+  RIGID_TURN_DIAGNOSTIC_CODES,
+  turnLearningNote,
   type RigidGameState,
   type RigidOrders,
   type RigidReadiness,
@@ -308,6 +310,73 @@ test("RT-EDU-FINDING-001 every typed finding blocks false no-mistake absolution"
     };
     const learning = outcomeLearningAssessment(assessed);
     assert.equal(learning.kind, "adjustment", code);
-    assert.doesNotMatch(learning.heading, /NO CLEAR MISTAKE/, code);
+    assert.doesNotMatch(learning.heading, /NO TRACKED FINDING/, code);
+  }
+});
+
+test("RT-EDU-DIAGNOSTIC-001 presentation prose cannot create, hide, or reclassify a turn mismatch", () => {
+  const report = resolveRigidTurn(positionedState(), {
+    ...DEFAULT_RIGID_ORDERS,
+    task: "mine-countermeasures",
+  }, readyForce, scenario).reports[0];
+  assert.ok(report.diagnosticCodes?.includes("task-mismatch"));
+
+  for (const code of RIGID_TURN_DIAGNOSTIC_CODES) {
+    const typed = {
+      ...report,
+      diagnosticCodes: [code],
+      umpireNotes: report.umpireNotes.map((_, index) => `Neutral presentation sentence ${index + 1}.`),
+    };
+    assert.equal(turnLearningNote(typed).kind, "adjustment", code);
+  }
+
+  const proseOnly = {
+    ...report,
+    diagnosticCodes: [],
+    umpireNotes: report.umpireNotes.map(() => "The force remains outside every compatible effect."),
+  };
+  assert.notEqual(turnLearningNote(proseOnly).kind, "adjustment");
+});
+
+test("RT-EDU-DIAGNOSTIC-002 one supported method cannot hide another method's hard precondition failure", () => {
+  const report = resolveRigidTurn(positionedState(), {
+    ...DEFAULT_RIGID_ORDERS,
+    uncrewed: "distributed-scouting",
+    undersea: "coordinated-wolfpack",
+  }, {
+    ...readyForce,
+    uncrewedCount: 8,
+    submarineCount: 0,
+    uncrewedUnderseaCount: 0,
+  }, scenario).reports[0];
+
+  assert.ok(report.diagnosticCodes?.includes("employment-mismatch"));
+  assert.match(report.umpireNotes[3], /lacks the force or environmental conditions/i);
+  assert.equal(turnLearningNote(report).kind, "adjustment");
+});
+
+test("RT-EDU-DIAGNOSTIC-003 avoid posture does not invent an engagement contact prerequisite", () => {
+  const report = resolveRigidTurn(createInitialRigidState(readyForce, scenario), {
+    ...DEFAULT_RIGID_ORDERS,
+    engagement: "avoid",
+  }, readyForce, scenario).reports[0];
+
+  assert.ok(report.contactReport);
+  assert.ok(!report.diagnosticCodes?.includes("contact-gap"));
+  assert.match(report.umpireNotes[2], /does not require contact quality/i);
+});
+
+test("RT-EDU-DIAGNOSTIC-004 avoid and withdraw do not invent an effect-reach prerequisite", () => {
+  const shortReach: RigidReadiness = { ...readyForce, maxReachNm: 25 };
+  const initial = createInitialRigidState(shortReach, scenario);
+  const cases: Array<[string, RigidOrders]> = [
+    ["avoid", { ...DEFAULT_RIGID_ORDERS, engagement: "avoid" }],
+    ["withdraw", { ...DEFAULT_RIGID_ORDERS, engagement: "contain", tempo: "withdraw" }],
+  ];
+
+  for (const [label, orders] of cases) {
+    const report = resolveRigidTurn(initial, orders, shortReach, scenario).reports[0];
+    assert.ok(!report.diagnosticCodes?.includes("reach-gap"), label);
+    assert.match(report.umpireNotes[1], /do not attempt an effect that requires a reach check/i, label);
   }
 });

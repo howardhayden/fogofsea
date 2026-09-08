@@ -9,6 +9,7 @@ import {
   type RigidScenario,
 } from "./kriegsspiel";
 import type { DecisionRecord, SavedResult } from "./saveGame";
+import { isReasonableAdversaryAssessment } from "./commandIntelligence";
 
 const CANONICAL_COMMAND_TASK_ORDER: readonly Warfare[] = [
   "air-defense",
@@ -111,7 +112,8 @@ export function beginCommandTransition(input: {
     : input.scenario.required.find((area) => selected.has(area))
       || CANONICAL_COMMAND_TASK_ORDER.find((area) => selected.has(area))
       || "reconnaissance";
-  const orders = { ...input.orders, task };
+  const { adversaryAssessment: _priorAssessment, ...baseOrders } = input.orders;
+  const orders = { ...baseOrders, task };
   return {
     type: "begin-command",
     state: createInitialRigidState(input.readiness, commandScenario(input.scenario, input.difficulty, input.selectedLens)),
@@ -185,9 +187,22 @@ export function createCommandDecisionRecord(input: {
     selectedArmaments: { ...decision.selectedArmaments },
     rigidTurns: state.reports.map((report) => ({
       ...report,
-      orders: { ...report.orders },
+      orders: {
+        ...report.orders,
+        ...(report.orders.adversaryAssessment
+          ? { adversaryAssessment: { ...report.orders.adversaryAssessment } }
+          : {}),
+      },
       umpireNotes: [...report.umpireNotes],
       delta: { ...report.delta },
+      ...(report.diagnosticCodes === undefined ? {} : { diagnosticCodes: [...report.diagnosticCodes] }),
+      ...(report.adversaryActions === undefined ? {} : {
+        adversaryActions: report.adversaryActions.map((action) => ({ ...action, domains: [...action.domains] })),
+      }),
+      ...(report.inflictions === undefined ? {} : {
+        inflictions: report.inflictions.map((infliction) => ({ ...infliction, domains: [...infliction.domains] })),
+      }),
+      ...(report.observationDomains === undefined ? {} : { observationDomains: [...report.observationDomains] }),
     })),
     notes: [...outcome.notes],
   };
@@ -203,6 +218,7 @@ export function resolveCommandTransition(input: {
   recordedAt: string;
 }): ResolveCommandAction | null {
   if (!input.state || input.state.phase !== "active") return null;
+  if (input.state.turn >= 1 && !isReasonableAdversaryAssessment(input.state, input.orders.adversaryAssessment)) return null;
   const next = resolveRigidTurn(
     input.state,
     input.orders,

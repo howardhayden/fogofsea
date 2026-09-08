@@ -69,18 +69,33 @@ test("begin, resolve, undo, and return transitions remain coherent", () => {
   const begun = gameSessionReducer(start, { type: "begin-command", state: active, orders: DEFAULT_RIGID_ORDERS });
   assert.equal(begun.rigidState?.phase, "active");
 
+  const assessment = {
+    intent: "insufficient-evidence" as const,
+    observedPattern: "insufficient-evidence" as const,
+    nextAction: "insufficient-evidence" as const,
+  };
+  const assessed = gameSessionReducer(begun, { type: "update-orders", value: { adversaryAssessment: assessment } });
   const afterTurn = resolveRigidTurn(active, DEFAULT_RIGID_ORDERS, readiness, rigidScenario);
-  const resolved = gameSessionReducer(begun, { type: "resolve-turn", state: afterTurn, outcome: null });
+  const resolved = gameSessionReducer(assessed, { type: "resolve-turn", state: afterTurn, outcome: null });
   assert.equal(resolved.rigidState?.reports.length, 1);
+  assert.equal(resolved.rigidOrders.adversaryAssessment, undefined);
 
   const undoneState = { ...active, reports: [] };
-  const undone = gameSessionReducer(resolved, { type: "undo-turn", state: undoneState, dropHistory: false });
+  const reassessed = gameSessionReducer(resolved, { type: "update-orders", value: { adversaryAssessment: assessment } });
+  const undone = gameSessionReducer(reassessed, { type: "undo-turn", state: undoneState, dropHistory: false });
   assert.equal(undone.result, null);
   assert.equal(undone.rigidState?.reports.length, 0);
+  assert.equal(undone.rigidOrders.adversaryAssessment, undefined);
 
-  const planning = gameSessionReducer(undone, { type: "return-to-planning" });
+  const retryReady = gameSessionReducer(undone, { type: "update-orders", value: { adversaryAssessment: assessment } });
+  const retried = gameSessionReducer(retryReady, { type: "retry-command", state: active, dropHistory: false });
+  assert.equal(retried.rigidOrders.adversaryAssessment, undefined);
+
+  const planningReady = gameSessionReducer(retried, { type: "update-orders", value: { adversaryAssessment: assessment } });
+  const planning = gameSessionReducer(planningReady, { type: "return-to-planning" });
   assert.equal(planning.rigidState, null);
   assert.equal(planning.result, null);
+  assert.equal(planning.rigidOrders.adversaryAssessment, undefined);
 });
 
 test("restore-save and reset-session replace the session atomically", () => {

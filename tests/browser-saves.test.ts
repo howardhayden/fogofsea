@@ -6,7 +6,10 @@ import {
   resolveWrittenAnalysisPolicy,
   writeBrowserSave,
 } from "../app/browserSaves";
+import { adversaryAssessmentOptions } from "../app/commandIntelligence";
+import { deriveForceReadiness } from "../app/forceReadiness";
 import { generateScenario } from "../app/gameModel";
+import { DEFAULT_RIGID_ORDERS, createInitialRigidState, resolveRigidTurn } from "../app/kriegsspiel";
 import type { PortableSave } from "../app/saveGame";
 
 class MemoryStorage implements Storage {
@@ -22,7 +25,7 @@ class MemoryStorage implements Storage {
 function sampleSave(): PortableSave {
   return {
     format: "fog-of-sea-save",
-    version: 3,
+    version: 4,
     savedAt: "2026-08-10T12:00:00.000Z",
     game: {
       scenario: generateScenario(0, () => 0.31),
@@ -91,6 +94,45 @@ test("browser slots retain the exact strategy or force interface stage", () => {
     writeBrowserSave({ slotId: `${planningStage}-slot`, name: planningStage, save, includeWrittenAnalysis: false }, storage);
     assert.equal(readBrowserSave(`${planningStage}-slot`, storage).preferences.planningStage, planningStage);
   }
+});
+
+test("browser slots retain an active intelligence transcript and reasonable pending assessment", () => {
+  const storage = new MemoryStorage();
+  const save = sampleSave();
+  const task = save.game.scenario.required[0];
+  save.game.selectedWarfare = [task];
+  const { rigidReadiness } = deriveForceReadiness({
+    scenario: save.game.scenario,
+    difficulty: save.preferences.difficulty,
+    fleet: save.game.fleet,
+    airWing: save.game.airWing,
+    selectedArmaments: save.game.selectedArmaments || {},
+    selectedWarfare: save.game.selectedWarfare,
+    selectedEndState: save.game.selectedEndState,
+    selectedLens: save.game.selectedLens,
+    selectedPartnerLens: save.game.selectedPartnerLens || "",
+    selectedGuardrail: save.game.selectedGuardrail,
+  });
+  const rules = { ...save.game.scenario, difficulty: save.preferences.difficulty };
+  const afterTurnOne = resolveRigidTurn(
+    createInitialRigidState(rigidReadiness, rules),
+    { ...DEFAULT_RIGID_ORDERS, task },
+    rigidReadiness,
+    rules,
+  );
+  const options = adversaryAssessmentOptions(afterTurnOne);
+  save.game.rigidState = afterTurnOne;
+  save.game.rigidOrders = {
+    ...DEFAULT_RIGID_ORDERS,
+    task,
+    adversaryAssessment: { intent: options.intent[0].value },
+  };
+
+  writeBrowserSave({ slotId: "active-intelligence", name: "Active intelligence", save, includeWrittenAnalysis: false }, storage);
+  const restored = readBrowserSave("active-intelligence", storage);
+
+  assert.deepEqual(restored.game.rigidState, afterTurnOne);
+  assert.deepEqual(restored.game.rigidOrders?.adversaryAssessment, save.game.rigidOrders.adversaryAssessment);
 });
 
 test("hostile browser index metadata is rejected or normalized without prototype mutation", () => {
