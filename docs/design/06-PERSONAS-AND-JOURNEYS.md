@@ -107,6 +107,112 @@ These are hypothesis personas for design and research, not demographic claims. O
 6. **The first loss:** determines whether the player feels judged or equipped to improve.
 7. **The first import rejection:** proves whether local-first control is robust or fragile.
 
+## Hierarchical task analysis (HTA)
+
+**Question answered:** What does a player actually have to do, in dependency order, to complete the full decision-and-reflection service?
+
+The HTA describes user work, not implementation modules. Optional study, persistence, and export branches remain optional.
+
+```mermaid
+flowchart TB
+  T0[0 · Complete a FOG OF SEA exercise]
+  T0 --> T1[1 · Establish a trusted local session]
+  T0 --> T2[2 · Understand the exercise]
+  T0 --> T3[3 · Frame strategy]
+  T0 --> T4[4 · Construct and review the force]
+  T0 --> T5[5 · Command under uncertainty]
+  T0 --> T6[6 · Debrief and decide what to change]
+  T0 -. optional .-> T7[7 · Learn, persist, or export]
+
+  T1 --> T11[1.1 Read privacy boundary]
+  T1 --> T12[1.2 Choose difficulty]
+  T1 --> T13[1.3 Choose session-only or browser save]
+
+  T2 --> T21[2.1 Read mission and conditions]
+  T2 --> T22[2.2 Inspect the tactical world]
+  T2 --> T23[2.3 Separate known state from unrevealed state]
+
+  T3 --> T31[3.1 Select warfare areas]
+  T3 --> T32[3.2 Define desired end state]
+  T3 --> T33[3.3 Select theory and complement/challenge]
+  T3 --> T34[3.4 Set guardrail]
+
+  T4 --> T41[4.1 Select platforms]
+  T4 --> T42[4.2 Assign compatible aviation]
+  T4 --> T43[4.3 Select compatible mission packs]
+  T4 --> T44[4.4 Inspect mission credit and readiness gaps]
+  T4 --> T45[4.5 Commit or revise]
+
+  T5 --> T51[5.1 Read absolutely known state]
+  T5 --> T52[5.2 Turns 2–6: record bounded staff judgments]
+  T5 --> T53[5.3 Set orders]
+  T5 --> T54[5.4 Resolve deterministic turn]
+  T5 --> T55[5.5 Inspect consequences and history]
+  T55 --> T51
+
+  T6 --> T61[6.1 Read outcome and thresholds]
+  T6 --> T62[6.2 Trace Cause → Evidence → Adjustment]
+  T6 --> T63[6.3 Retry, return, or start new exercise]
+
+  T7 --> T71[7.1 Open related Academy material]
+  T7 --> T72[7.2 Save locally if opted in]
+  T7 --> T73[7.3 Export portable TXT]
+```
+
+<details>
+<summary>HTA plan and text equivalent</summary>
+
+**Plan 0:** perform tasks 1 → 2 → 3 → 4 → 5 → 6. Task 7 may occur when useful.  
+**Plan 3:** warfare areas precede the ordered strategic frame; later framing steps remain locked until their prerequisite is complete.  
+**Plan 4:** selection is iterative. A blocked dependency is repaired locally; the existing legal roster remains intact.  
+**Plan 5:** repeat 5.1 → 5.2 when applicable → 5.3 → 5.4 → 5.5 for each unresolved turn. Undo returns exactly one prior turn state and cannot reroll identical orders.  
+**Plan 6:** debrief precedes claims about what should change; the player may then retry the same scenario, return to planning, or generate another.
+
+Authoritative behavior: [interaction design](04-INTERACTION-DESIGN.md), [gameplay and decision logic](10-GAMEPLAY-GRAPHICS-DECISION-LOGIC.md), and [turn intelligence](17-TURN-INTELLIGENCE.md).
+
+</details>
+
+## Player skill map
+
+**Question answered:** What capabilities does play exercise, through which mechanics, without claiming that play certifies real-world proficiency?
+
+```mermaid
+flowchart LR
+  PLAY[FOG OF SEA play]
+  PLAY --> EPI[Epistemic discipline]
+  PLAY --> OPS[Operational reasoning]
+  PLAY --> SYS[Systems thinking]
+  PLAY --> ADV[Adversarial modeling]
+  PLAY --> UNC[Reasoning under uncertainty]
+  PLAY --> REF[Reflective correction]
+  PLAY --> INF[Information stewardship]
+
+  EPI --> E1[Known vs potential vs hidden]
+  OPS --> O1[Ends · ways · means · guardrails]
+  SYS --> S1[Hosting · credit · readiness · dependencies]
+  ADV --> A1[Intent · observable pattern · likely next action]
+  UNC --> U1[Precommitted ranges · consequence · no reroll]
+  REF --> R1[Cause → Evidence → Adjustment]
+  INF --> I1[Local save · TXT · trust boundaries]
+```
+
+<details>
+<summary>Mechanic-to-capability text equivalent</summary>
+
+| Capability exercised | Primary mechanic | What the player practices | Evidence boundary |
+| --- | --- | --- | --- |
+| Epistemic discipline | Absolutely Known, Potentials, Immediate/History | Distinguishing observed fact, reasonable hypothesis, and hidden truth | Records a choice; does not prove transfer outside the game |
+| Operational reasoning | End state, theories, guardrail, warfare areas | Connecting purpose, method, constraint, and resource choice | Fictional model only; not current doctrine |
+| Systems thinking | Hosting, capacity, mission credit, readiness | Following dependencies and second-order tradeoffs | Catalog and formulas are invented teaching abstractions |
+| Adversarial modeling | Turn 2–6 staff judgments | Forming bounded interpretations of intent, observable pattern, and likely next action | Judgments never alter adjudication and are not scored as hidden-truth guesses |
+| Reasoning under uncertainty | Precommitted matrix and deterministic turns | Acting when consequences are bounded but not fully revealed | Model uncertainty is pedagogical, not a forecast |
+| Reflective correction | Undo, timeline, Cause → Evidence → Adjustment | Comparing expectation, evidence, and feasible revision | Debrief diagnoses this model run only |
+| Information stewardship | Privacy gate, browser-save policy, TXT import/export | Distinguishing local persistence, portable record, encoding, and validation | Security documentation defines the actual technical boundary |
+
+Related sources: [service blueprint](07-SERVICE-BLUEPRINT.md), [security/privacy](09-SECURITY-PRIVACY-TXT.md), [turn intelligence](17-TURN-INTELLIGENCE.md), and [Lattice copy architecture](16-LATTICE-COPY-ARCHITECTURE.md).
+
+</details>
+
 ## Research recruitment matrix
 
 Future studies should include a mix of:
@@ -120,4 +226,3 @@ Future studies should include a mix of:
 - session-only, browser-save, and TXT-transfer journeys.
 
 Do not infer universal needs from one persona group or one successful visual browser run.
-
