@@ -160,3 +160,133 @@ An item is ready when:
 - claims match observed evidence;
 - documentation and release artifacts agree;
 - no existing functionality is silently removed.
+
+## 9. CSD matrix — Certainties, Suppositions, Doubts
+
+**Question answered:** Which product and user-experience statements are supported strongly enough to treat as current certainties, which remain plausible hypotheses, and which are explicit research questions?
+
+This uses the NN/g CSD framing of **Certainties, Suppositions, and Doubts**. “Certainty” here means supported by the current project evidence for the stated scope, not universal or permanent truth. Items move between columns as evidence changes.
+
+```mermaid
+flowchart LR
+  subgraph C[Certainties · current project evidence]
+    C1[Local-first static runtime and explicit persistence choice]
+    C2[Ordered strategy → force → readiness → command flow]
+    C3[Hosting / capacity gates selected aviation]
+    C4[Same state + same orders resolve deterministically]
+    C5[Keyboard · reduced-motion · forced-color paths are designed and checked]
+  end
+
+  subgraph S[Suppositions · plausible and testable]
+    S1[Progressive disclosure improves first-time comprehension]
+    S2[Cozy-sublime visuals sustain attention without masking decisions]
+    S3[Staff-judgment prompts improve adversarial reflection]
+    S4[Cause → Evidence → Adjustment supports useful correction]
+    S5[Players can understand local save vs portable TXT boundaries]
+  end
+
+  subgraph D[Doubts · evidence still required]
+    D1[Can assistive-tech users complete every critical journey?]
+    D2[Do first-time players understand mission credit and readiness?]
+    D3[Do compact layouts remain comprehensible under real assistive use?]
+    D4[Do players correctly distinguish encoding · encryption · browser save · TXT?]
+    D5[Which visual conditions improve or impair decision comprehension?]
+  end
+
+  S1 -. validate through N2 .-> C2
+  S5 -. validate through N4 .-> C1
+  D1 -. N1 research .-> C5
+  D3 -. N1 + N3 .-> C5
+  D2 -. N2 research .-> S1
+  D4 -. N4 research .-> S5
+```
+
+<details>
+<summary>Evidence-linked CSD matrix</summary>
+
+| Topic | Certainty | Supposition | Doubt / next evidence |
+| --- | --- | --- | --- |
+| Trust and persistence | The product offers session-only use, opt-in browser saving, and TXT portability; invalid imports are intended to be atomic | The boundary is understandable without technical expertise | **N4:** observe export/import and ask users to distinguish encoding, encryption, browser storage, and portable backup |
+| Decision sequence | Strategic framing gates force construction; force and readiness precede command | Progressive disclosure helps novices form the model rather than merely comply with it | **N2:** test mission fit, compatibility, strategic logic, and debrief comprehension with first-time and experienced players |
+| Force model | Aircraft require compatible selected hosting/capacity; selected items are not automatically mission-credited | Explainable readiness traces will improve causal understanding without overloading play | **X2:** prototype and test requirement → host → capacity → credit → readiness disclosure |
+| Determinism and uncertainty | Command resolution and exact undo are designed to prevent rerolling identical state/order pairs | Players experience committed uncertainty as fair rather than arbitrary | **N2:** collect explanation of what was known, uncertain, and committed before/after turns |
+| Accessibility | Semantic controls, keyboard paths, reduced motion, forced colors, fallback graphics, and reflow are release requirements | These technical paths provide equivalent task comprehension in real assistive use | **N1/N3:** complete critical tasks with screen reader, keyboard, magnification, speech/switch/mobile AT and compact layouts |
+| Visual world | Environmental systems preserve foreground hierarchy by design and have deterministic QA targets | The visual atmosphere sustains attention and situated reasoning without distracting from decisions | **X4 + human testing:** compare legibility, occlusion, comprehension, and performance across deterministic environment captures |
+| Adversarial reflection | Turn 2–6 staff judgments are recorded but excluded from adjudication | Requiring intent/pattern/next-action hypotheses improves adversarial modeling | **N2:** observe whether players distinguish evidence from hypothesis and revise beliefs after new observations |
+| Debrief learning | Debrief presents outcome, thresholds, timeline, and Cause → Evidence → Adjustment findings | Players can carry the correction into a better second plan rather than only optimize score | Compare same-scenario retries and participant explanations without claiming external transfer |
+
+Primary project sources: [interaction design](04-INTERACTION-DESIGN.md), [service blueprint](07-SERVICE-BLUEPRINT.md), [traceability](11-TRACEABILITY.md), [heuristic evaluation](15-HEURISTIC-EVALUATION.md), [turn intelligence](17-TURN-INTELLIGENCE.md), and this roadmap.
+
+Method reference: [NN/g — CSD Matrix: Framework and Template for Shared Understanding](https://www.nngroup.com/articles/csd-matrix/).
+
+</details>
+
+## 10. Evidence affinity diagram
+
+**Question answered:** What recurring themes emerge when current as-built behavior, design requirements, known risks, and near-term evidence gaps are clustered by similarity?
+
+This affinity view clusters **documented project evidence and open research work**, not invented user quotes. It should be regenerated when the evidence base materially changes.
+
+```mermaid
+flowchart TB
+  ROOT[Current evidence and roadmap items]
+
+  subgraph A[Trust · control · portability]
+    A1[Privacy-before-play]
+    A2[Session-only / opt-in saves]
+    A3[TXT validation and recovery]
+  end
+
+  subgraph B[Comprehension · progressive reasoning]
+    B1[Ordered strategic frame]
+    B2[Hosting / credit explanations]
+    B3[Readiness and debrief causality]
+  end
+
+  subgraph C[Inclusive completion]
+    C1[Keyboard and semantics]
+    C2[Reduced motion / forced colors]
+    C3[Compact reflow and disclosure]
+  end
+
+  subgraph D[Determinism · evidence discipline]
+    D1[Whole-candidate validation]
+    D2[Precommitted uncertainty]
+    D3[Replay / undo / traceability]
+  end
+
+  subgraph E[Situated environmental coherence]
+    E1[Five tactical layers]
+    E2[Atmosphere · sea · weather · celestial systems]
+    E3[Foreground legibility and visual QA]
+  end
+
+  subgraph F[Reflection · recovery · learning]
+    F1[Cause → Evidence → Adjustment]
+    F2[Same-scenario retry]
+    F3[Academy / Field Guide support]
+  end
+
+  ROOT --> A
+  ROOT --> B
+  ROOT --> C
+  ROOT --> D
+  ROOT --> E
+  ROOT --> F
+```
+
+<details>
+<summary>Cluster interpretation and linked evidence</summary>
+
+| Cluster | What grouped together | Design implication | Evidence still needed |
+| --- | --- | --- | --- |
+| Trust · control · portability | Privacy choice, minimized local saves, TXT boundary, atomic import rejection | Keep technical trust explanations at decision boundaries; do not occupy play chrome with repetitive assurances | N4 portability/recovery comprehension |
+| Comprehension · progressive reasoning | Ordered framing, blocked-dependency explanations, mission credit, readiness, debrief | Reveal the next meaningful decision and one repair before deeper formulas | N2 comprehension and X2 readiness drill-down |
+| Inclusive completion | Keyboard, semantics, fallback, reduced motion, forced colors, compact disclosure | Accessibility is behavioral parity, not visual accommodation after implementation | N1 human AT testing and N3 compact study |
+| Determinism · evidence discipline | Whole-candidate validation, committed uncertainty, replay, undo, traceability | Preserve reproducibility and distinguish hidden commitments from arbitrary rerolls | Human comprehension of uncertainty and evidence, not only test pass rate |
+| Situated environmental coherence | Tactical layers, low-poly environment, weather/celestial systems, foreground hierarchy | Visual richness must support orientation and attention while remaining subordinate to decision information | X4 deterministic visual QA plus human legibility review |
+| Reflection · recovery · learning | Diagnostic findings, same-scenario retry, Academy/Field Guide | Failure should produce inspectable correction paths rather than punishment or unsupported praise | Whether players make materially different, explainable second plans |
+
+The clustering is sourced from the as-built baseline in §2, research items N1–N4, improvement items X1–X5, and the design/release constraints in §§6–8. It is an organizing view of that evidence, not an additional source of truth.
+
+</details>

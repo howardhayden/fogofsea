@@ -29,7 +29,7 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 | @typescript-eslint/parser | 8.66.0 | development | MIT | <https://www.npmjs.com/package/%40typescript-eslint%2Fparser> |
 | @vitejs/plugin-react | 5.2.0 | development | MIT | <https://www.npmjs.com/package/%40vitejs%2Fplugin-react> |
 | ajv | 6.15.0 | development | MIT | <https://www.npmjs.com/package/ajv> |
-| ajv | 8.17.1 | development | MIT | <https://www.npmjs.com/package/ajv> |
+| ajv | 8.20.0 | development | MIT | <https://www.npmjs.com/package/ajv> |
 | astronomy-engine | 2.1.19 | runtime | MIT | <https://www.npmjs.com/package/astronomy-engine> |
 | eslint | 9.39.4 | development | MIT | <https://www.npmjs.com/package/eslint> |
 | eslint-plugin-react-hooks | 7.1.1 | development | MIT | <https://www.npmjs.com/package/eslint-plugin-react-hooks> |
@@ -209,7 +209,7 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 - acorn@8.16.0 — development
 - acorn-jsx@5.3.2 — development
 - ajv@6.15.0 — development
-- ajv@8.17.1 — development
+- ajv@8.20.0 — development
 - ansi-styles@4.3.0 — development
 - astronomy-engine@2.1.19 — runtime
 - balanced-match@1.0.2 — development
@@ -253,7 +253,7 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 - is-extglob@2.1.1 — development
 - is-glob@4.0.3 — development
 - js-tokens@4.0.0 — development
-- js-yaml@4.3.1 — development
+- js-yaml@4.3.2 — development
 - jsesc@3.1.0 — development
 - json-buffer@3.0.1 — development
 - json-schema-traverse@0.4.1 — development

@@ -15,6 +15,8 @@ FOG OF SEA is delivered as a self-contained static browser application. There is
 
 ## 3. End-to-end blueprint
 
+**Question answered:** What does the product do around the player’s work, from first launch through decision, recovery, learning, persistence, and release support?
+
 | Stage | Player actions | Frontstage | Backstage | Local / release support | Evidence and recovery |
 | --- | --- | --- | --- | --- | --- |
 | Acquire and start | Extract archive; run `npm run play`; open loopback URL | Printed local address; app shell | Static launcher validates path/method/host and serves `dist` | Node.js, loopback port 5173, bundled assets | Port-in-use stops safely; headers/build verified |
@@ -106,3 +108,235 @@ One person may perform several roles, but every release still reviews each respo
 - A hidden event cannot be exposed through TXT’s readable section before reveal.
 - A scenario is accepted only after the complete candidate passes the implemented structured coexistence checks; this does not establish complete feasibility.
 - A repeated state/order pair cannot produce a different result.
+
+## 9. Ecosystem map
+
+**Question answered:** Who and what surrounds the player-facing experience, and where are the real, local, fictional, and release-time boundaries?
+
+```mermaid
+flowchart LR
+  PLAYER[Player]
+  FAC[Educator / facilitator]
+  APP[Static FOG OF SEA application]
+  UI[Frontstage UI and tactical world]
+  CORE[Local domain models]
+  LEARN[Field Guide and Academy]
+  BROWSER[Browser capabilities]
+  STORE[Optional localStorage]
+  TXT[Portable TXT file]
+  HOST[Static / loopback hosting]
+  RELEASE[Build, tests, SBOM, docs]
+  FICTION[Fictional scenario ecosystem]
+  FRIEND[Friendly force and selected assets]
+  OPP[Opposing actors and concealed state]
+  CIV[Civil / neutral context]
+  ENV[Environment and geography]
+
+  PLAYER --> UI
+  FAC -. frames discussion around .-> PLAYER
+  UI --> APP --> CORE
+  UI --> LEARN
+  APP --> BROWSER
+  BROWSER --> STORE
+  BROWSER --> TXT
+  HOST --> APP
+  RELEASE --> APP
+  RELEASE --> LEARN
+  CORE --> FICTION
+  FICTION --> FRIEND
+  FICTION --> OPP
+  FICTION --> CIV
+  FICTION --> ENV
+  CORE --> UI
+```
+
+<details>
+<summary>Text equivalent and boundaries</summary>
+
+- **Real user/service boundary:** player ↔ semantic UI ↔ local application code.
+- **Local technical boundary:** browser memory, optional unencrypted `localStorage`, browser file download/upload, WebGL/Web Audio, and loopback/static serving.
+- **Portable boundary:** TXT is player-controlled untrusted input on import and validated before state mutation.
+- **Fictional boundary:** friendly assets, opposing actors, civilians/neutrals, environment, geography, and concealed commitments are scenario entities, not external services.
+- **Learning boundary:** Academy and Field Guide explain the model but do not become hidden scoring inputs.
+- **Release boundary:** build, tests, dependency controls, SBOM, documentation, and artifact checks produce evidence for the static release.
+- **Facilitation boundary:** an educator may structure discussion around exported/local records, but the product does not create an instructor account or telemetry service.
+
+Sources: [architecture](01-DESIGN-SYSTEM-ARCHITECTURE.md), [security/privacy](09-SECURITY-PRIVACY-TXT.md), [turn intelligence](17-TURN-INTELLIGENCE.md), and [release traceability](11-TRACEABILITY.md).
+
+</details>
+
+## 10. Catalog-grounded asset map
+
+**Question answered:** What modeled maritime and aviation assets exist in the authoritative catalog, and which aviation kinds can their selected hosts support?
+
+This view is generated conceptually from [`app/catalog.ts`](../../app/catalog.ts). It maps the current `PLATFORMS` and `AIRCRAFT` catalog; mission-pack definitions remain separate compatibility data rather than being invented here.
+
+```mermaid
+flowchart LR
+  subgraph P[11 maritime platforms]
+    FAS[Fleet aviation ship]
+    SDS[Short-deck aviation ship]
+    EAD[Expeditionary aviation dock]
+    UAS[Low-signature uncrewed aviation ship]
+    ESC[Destroyer · frigate · corvette]
+    SPEC[Mine-support ship · undersea tender]
+    SUB[2 patrol / attack submarines]
+  end
+
+  CAT[Assisted-launch fixed wing · 7]
+  SHORT[Short-deck fixed wing · 2]
+  ROT[Rotary wing · 5]
+  UFW[Uncrewed fixed wing · 4]
+  UV[Uncrewed vertical flight · 2]
+
+  FAS --> CAT
+  FAS --> SHORT
+  FAS --> ROT
+  FAS --> UFW
+  FAS --> UV
+  SDS --> SHORT
+  SDS --> ROT
+  SDS --> UFW
+  SDS --> UV
+  EAD --> ROT
+  EAD --> UV
+  UAS --> UFW
+  UAS --> UV
+  ESC --> ROT
+  ESC --> UV
+  SPEC --> ROT
+  SPEC --> UV
+  SUB -. no aviation capacity .-> P
+```
+
+<details>
+<summary>Exact catalog roster</summary>
+
+### Maritime platforms — 11
+
+| Domain | Current catalog entries |
+| --- | --- |
+| Aviation / command surface ships | Fleet aviation ship; Short-deck aviation ship; Expeditionary aviation dock; Low-signature uncrewed aviation ship |
+| Escort / specialist surface ships | Area-defence destroyer; Multi-role frigate; Stealth littoral corvette; Autonomous mine-support ship; Undersea systems tender |
+| Submarines | Air-independent patrol submarine; Long-endurance attack submarine |
+
+### Aircraft — 20
+
+| Aviation kind | Count | Current catalog entries |
+| --- | ---: | --- |
+| Assisted-launch fixed wing | 7 | Deck-launched multirole aircraft; Assisted-launch long-range strike aircraft; Assisted-launch fleet interceptor; Electromagnetic-support aircraft; Fixed-wing surveillance aircraft; Deck-launched maritime patrol aircraft; Airborne command-relay aircraft |
+| Short-deck fixed wing | 2 | Short-takeoff multirole aircraft; Low-signature short-deck strike aircraft |
+| Rotary wing | 5 | Rotary-wing surveillance aircraft; Maritime mission helicopter; Mine-countermeasure rotorcraft; Shipborne rescue rotorcraft; Heavy utility rotorcraft |
+| Uncrewed fixed wing | 4 | Shipborne uncrewed combat aircraft; Long-endurance uncrewed strike aircraft; Low-signature uncrewed reconnaissance aircraft; Uncrewed airborne refuelling aircraft |
+| Uncrewed vertical flight | 2 | Uncrewed surveillance rotorcraft; Uncrewed vertical logistics aircraft |
+
+### Host rules
+
+- Fleet aviation ship supports all five modeled aviation kinds.
+- Short-deck aviation ship supports every modeled kind except assisted-launch fixed wing.
+- Expeditionary aviation dock supports rotary and uncrewed vertical flight.
+- Low-signature uncrewed aviation ship supports uncrewed fixed and uncrewed vertical flight.
+- Area-defence destroyer, multi-role frigate, stealth littoral corvette, autonomous mine-support ship, and undersea systems tender support rotary and uncrewed vertical flight within their individual shared capacity.
+- Both submarine categories have no aviation capacity.
+
+The assignment algorithm still requires a compatible **selected** host and remaining shared capacity; this map does not make aircraft available merely because a compatible platform exists in the catalog. See [force design](04-INTERACTION-DESIGN.md#5-force-design) and [`app/catalog.ts`](../../app/catalog.ts).
+
+</details>
+
+## 11. Operational relationship map
+
+**Question answered:** How do current platform roles, aviation hosting, mission credit, sensing, screening, and detached operating semantics connect without imposing a canned strike-group template?
+
+This is an as-built **relationship vocabulary**, not a claim that an automatic spatial-placement engine is already implemented. Relationships below come from current catalog roles/capabilities and force-credit rules.
+
+```mermaid
+flowchart LR
+  WF[Selected warfare areas] --> PF[Selected platforms]
+  PF --> HOST[Compatible selected hosts + capacity]
+  HOST --> AIR[Selected aircraft]
+  PF --> PACK[Compatible platform mission packs]
+  AIR --> APACK[Compatible airborne mission packs]
+  PACK --> CREDIT[Mission credit / readiness]
+  APACK --> CREDIT
+  AIR --> CREDIT
+
+  FAS[Fleet / short-deck aviation nodes] --> HOST
+  DD[Area-defence destroyer] --> AD[Air-picture / defence contribution]
+  FF[Multi-role frigate] --> ASW[Escort + undersea search contribution]
+  COR[Stealth littoral corvette] --> LIT[Littoral / confined-water work]
+  MINE[Autonomous mine-support ship] --> LANE[Mine lane / remote-system work]
+  AIP[Air-independent patrol submarine] --> CONFINED[Quiet confined-water patrol / barrier]
+  SSN[Long-endurance attack submarine] --> OUTER[Ocean patrol beyond surface screen]
+  TENDER[Undersea systems tender] --> UUV[Undersea deployment / analysis]
+
+  AD --> CREDIT
+  ASW --> CREDIT
+  LIT --> CREDIT
+  LANE --> CREDIT
+  CONFINED --> CREDIT
+  OUTER --> CREDIT
+  UUV --> CREDIT
+```
+
+<details>
+<summary>Relationship vocabulary and source anchors</summary>
+
+| Relationship | Current meaning | Authoritative basis |
+| --- | --- | --- |
+| `hosts` | A selected platform accepts the aircraft aviation kind and has remaining shared capacity | [`app/catalog.ts`](../../app/catalog.ts), force-assignment logic |
+| `accepts mission pack` | Platform/aircraft IDs and slots permit that pack | Catalog + force-credit logic |
+| `contributes air defence` | Current `airDefenseValue` and role contribute to the modeled force assessment | Area-defence destroyer; multi-role frigate catalog entries |
+| `contributes undersea screen/search` | Current `aswValue`, warfare tags, and capabilities contribute undersea coverage | Destroyer, frigate, corvette, mine-support, submarines, tender catalog entries |
+| `operates littorally` | Role/capability emphasizes coastal, shallow, or confined-water work | Stealth littoral corvette; AIP submarine |
+| `operates beyond surface screen` | Long-endurance submarine capability explicitly describes ocean patrol beyond the surface screen | Long-endurance attack submarine catalog entry |
+| `supports mission-space work` | Specialist ship/aircraft role is anchored to mine, rescue, relay, logistics, surveillance, or undersea work rather than generic proximity | Catalog roles and capabilities |
+| `credits mission/readiness` | Selection alone is insufficient; hosting, capacity, affiliation, reach, tracking, and mission relevance determine credited contribution | [interaction design](04-INTERACTION-DESIGN.md#5-force-design), [gameplay/decision logic](10-GAMEPLAY-GRAPHICS-DECISION-LOGIC.md) |
+
+This vocabulary is intentionally composition-neutral. It describes what selected assets can support; it does not require a carrier, a fixed escort ratio, a submarine, or a canonical formation.
+
+</details>
+
+## 12. Interactive blueprint navigator
+
+**Question answered:** How can a reader inspect the service blueprint by phase without losing the complete lane table above?
+
+<details>
+<summary>Trust and exercise creation</summary>
+
+**Player:** acquire/start → establish trust → generate exercise.  
+**Frontstage:** local address, privacy choice, difficulty/storage, atomic accepted brief.  
+**Backstage:** static serving, hydration, safe slot parsing, whole-candidate synthesis and validation.  
+**Recovery/evidence:** safe port failure, no pre-opt-in write, rejected partial/incompatible candidates.
+
+</details>
+
+<details>
+<summary>Reasoning and force construction</summary>
+
+**Player:** understand mission → frame strategy → build force → review readiness.  
+**Frontstage:** progressive brief, five views, ordered framing, catalog feedback, readiness recap.  
+**Backstage:** derived environment/contact state, reducer actions, text sanitization, host/slot/reach/tracking/credit calculation.  
+**Recovery/evidence:** blocked dependencies retain legal state; return from review is non-destructive.
+
+</details>
+
+<details>
+<summary>Command, debrief, and learning</summary>
+
+**Player:** form orders and bounded staff judgments → resolve → inspect evidence → debrief → optionally learn.  
+**Frontstage:** absolutely known state, potentials, Immediate/History, deterministic reports, Cause → Evidence → Adjustment, Academy links.  
+**Backstage:** precommitted uncertainty, typed public intelligence projection, deterministic turn transition, canonical outcome/history.  
+**Recovery/evidence:** exact one-turn undo, same-order replay stability, supported learning links, no prose scoring.
+
+</details>
+
+<details>
+<summary>Persistence, portability, and release</summary>
+
+**Player:** optionally save/load → export/import TXT.  
+**Frontstage:** named local slots, explicit writing policy, human-readable record, import status.  
+**Backstage:** minimized save, canonical parser/replay, version migration.  
+**Support:** browser storage/file APIs plus build/test/license/SBOM/documentation processes.  
+**Recovery/evidence:** failed load/import leaves current session intact; invalid release evidence is reported rather than converted into a pass claim.
+
+</details>

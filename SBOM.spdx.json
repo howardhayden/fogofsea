@@ -3,13 +3,13 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "fog-of-sea-full-dependency-sbom",
-  "documentNamespace": "https://fog-of-sea.invalid/sbom/full/75870267a43b0d80f661dd762dfc64cea98e2ed5522e6b33a6bd4ee5582c8bb7",
+  "documentNamespace": "https://fog-of-sea.invalid/sbom/full/e933875b533f95c74691ed261f40cf3e3ec482ee113a6e818a458c400336cbe5",
   "creationInfo": {
-    "created": "2026-09-08T00:14:35.894Z",
+    "created": "2026-09-08T23:29:35.027Z",
     "creators": [
       "Tool: scripts/generate-sbom.mjs"
     ],
-    "comment": "Generated deterministically from package-lock.json SHA-256 75870267a43b0d80f661dd762dfc64cea98e2ed5522e6b33a6bd4ee5582c8bb7."
+    "comment": "Generated deterministically from package-lock.json SHA-256 e933875b533f95c74691ed261f40cf3e3ec482ee113a6e818a458c400336cbe5."
   },
   "documentDescribes": [
     "SPDXRef-Package-root"
@@ -3077,8 +3077,8 @@
     {
       "name": "ajv",
       "SPDXID": "SPDXRef-Package-b860c3f2dfc75e2d0b34",
-      "versionInfo": "8.17.1",
-      "downloadLocation": "https://registry.npmjs.org/ajv/-/ajv-8.17.1.tgz",
+      "versionInfo": "8.20.0",
+      "downloadLocation": "https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz",
       "filesAnalyzed": false,
       "licenseConcluded": "MIT",
       "licenseDeclared": "MIT",
@@ -3087,14 +3087,14 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "07f801b8d8394a2313acf902f80dbe716d11b33c316269fa558c41fe29e5052b52e67c7ac4722dfde84a46120c86abac97b6bc2e34286678c2b39be1c31390d6"
+          "checksumValue": "4e16e58be3a53a3fa230f60505505f2773a60809da4b2367e0cd6fcfd4fa1a46b926df5b6bf1c8479ea3a32eb9b58ea4c7f142179557341f35f58eff194ac118"
         }
       ],
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:npm/ajv@8.17.1"
+          "referenceLocator": "pkg:npm/ajv@8.20.0"
         }
       ]
     },
@@ -4445,8 +4445,8 @@
     {
       "name": "js-yaml",
       "SPDXID": "SPDXRef-Package-aa3759500feb2e2f8b4c",
-      "versionInfo": "4.3.1",
-      "downloadLocation": "https://registry.npmjs.org/js-yaml/-/js-yaml-4.3.1.tgz",
+      "versionInfo": "4.3.2",
+      "downloadLocation": "https://registry.npmjs.org/js-yaml/-/js-yaml-4.3.2.tgz",
       "filesAnalyzed": false,
       "licenseConcluded": "MIT",
       "licenseDeclared": "MIT",
@@ -4455,14 +4455,14 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "098e9cac6ab7d77317f06930bc1eedce0a7df6f8d0c58d7efb9cb5d3f04a37f1947c7a9668e19030d66406fa92cec64a5a4fe28f01e55b3ce42ee96c18786359"
+          "checksumValue": "48534ebd227e0e07fff409fdd38631f828129483c2908a5aa38aa8e7596979edb94c845e8dd1f7ae1478119306a0dc77fd33f73bec335ae893165e2ca9b96dcc"
         }
       ],
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:npm/js-yaml@4.3.1"
+          "referenceLocator": "pkg:npm/js-yaml@4.3.2"
         }
       ]
     },

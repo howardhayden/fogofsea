@@ -18,7 +18,7 @@ const DIALECT_URIS = Object.freeze({
 
 export const LATTICE_SCHEMA_VALIDATOR = Object.freeze({
   engine: "ajv",
-  version: "8.17.1",
+  version: "8.20.0",
   dialects: Object.freeze(Object.keys(DIALECT_URIS)),
   options: Object.freeze({
     allErrors: true,
