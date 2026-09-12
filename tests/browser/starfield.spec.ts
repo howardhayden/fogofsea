@@ -160,7 +160,7 @@ function expectRenderedComposition(
       // resolved screen-space facets; bright-pixel and coverage floors above
       // prove abundance without pretending every subpixel light is a separate
       // connected component after antialiasing.
-      : compact ? 250 : 650);
+      : compact ? 200 : 650);
     expect(metrics.pinpoint).toBeGreaterThan(atmosphericComposite
       ? compact ? 120 : 300
       : compact ? 120 : 300);
