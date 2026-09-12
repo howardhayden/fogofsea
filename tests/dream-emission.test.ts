@@ -56,7 +56,7 @@ test("adverse-weather visibility support is bounded and cannot defeat occlusion"
   assert.equal(createDreamEmissionProfile(17, "day", "ship", 999).haloStrength, 0);
 });
 
-test("sparse causal emitters preserve dark structure and propagate without lights", () => {
+test("multiscale aura visibly surrounds the subject while hard structure stays dark", () => {
   const group = new THREE.Group();
   const material = new THREE.MeshStandardMaterial({ color: 0x74b9ad });
   const core = new THREE.Mesh(new THREE.BoxGeometry(1, 0.3, 0.4), material);
@@ -68,29 +68,28 @@ test("sparse causal emitters preserve dark structure and propagate without light
   const profile = createDreamEmissionProfile(7, "dawn", "ship");
   attachDreamEmission(group, profile);
 
-  const innerHalo = group.getObjectByName("dream-emission-halo-inner");
-  const outerHalo = group.getObjectByName("dream-emission-halo-outer");
-  const source = group.getObjectByName("dream-emission-source-0");
-  const emittedCore = group.getObjectByName("dream-emission-core");
-  assert.ok(source instanceof THREE.Group);
-  assert.ok(emittedCore instanceof THREE.Mesh);
+  const innerHalo = group.getObjectByName("dream-emission-aura-tight");
+  const outerHalo = group.getObjectByName("dream-emission-aura-atmospheric");
+  const broadHalo = group.getObjectByName("dream-emission-aura-broad");
   assert.ok(innerHalo instanceof THREE.Mesh);
   assert.ok(outerHalo instanceof THREE.Mesh);
-  for (const halo of [innerHalo, outerHalo]) {
+  assert.ok(broadHalo instanceof THREE.Mesh);
+  for (const halo of [innerHalo, broadHalo, outerHalo]) {
     assert.notEqual(halo.geometry, core.geometry);
     assert.ok(halo.material instanceof THREE.ShaderMaterial);
-    assert.equal(halo.material.side, THREE.BackSide);
+    assert.equal(halo.material.side, THREE.FrontSide);
     assert.equal(halo.material.depthTest, true);
     assert.equal(halo.material.depthWrite, false);
-    assert.equal(halo.material.blending, THREE.NormalBlending);
+    assert.equal(halo.material.blending, THREE.AdditiveBlending);
     assert.equal(halo.material.fog, true);
     assert.equal(halo.material.toneMapped, false);
   }
-  assert.equal(innerHalo.scale.x, profile.haloScale);
-  assert.equal(outerHalo.scale.x, profile.outerHaloScale);
+  assert.ok(innerHalo.scale.x > 1);
+  assert.ok(outerHalo.scale.x > innerHalo.scale.x);
   assert.equal(group.userData.dreamEmissionHaloMeshes, DREAM_EMISSION_LIMITS.haloMeshesPerSubject);
   assert.equal(DREAM_EMISSION_LIMITS.maxHaloMeshes, DREAM_EMISSION_LIMITS.maxSubjects * DREAM_EMISSION_LIMITS.haloMeshesPerSubject);
-  assert.ok((innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value > (outerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value);
+  assert.ok((innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value > (broadHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value);
+  assert.ok((broadHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value > (outerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value);
   assert.equal(material.emissive.getHex(), 0);
   assert.equal(material.emissiveIntensity, 1);
   assert.equal(towerMaterial.emissive.getHex(), 0);
@@ -111,7 +110,8 @@ test("sparse causal emitters preserve dark structure and propagate without light
   const submarineHull = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial({ color: 0x405b61 }));
   submarine.add(submarineHull);
   attachDreamEmission(submarine, createDreamEmissionProfile(7, "night", "submarine"));
-  assert.equal(submarine.userData.dreamEmission, undefined);
+  assert.ok(submarine.userData.dreamEmission);
+  assert.equal(submarine.userData.dreamEmissionHaloMeshes, DREAM_EMISSION_LIMITS.haloMeshesPerSubject);
   assert.equal(submarineHull.material.emissive.getHex(), 0);
 
   const daylight = new THREE.Group();

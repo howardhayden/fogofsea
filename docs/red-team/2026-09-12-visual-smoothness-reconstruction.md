@@ -14,7 +14,7 @@ Date: 2026-09-12 · status: active, failures preserved
 | 60 Hz-friendly modulo scheduler aliases at 90/120 Hz | Rejected | Monotonic deadline scheduler with skipped-deadline advancement. |
 | Governor oscillates | Rejected | Adjacent tiers, 3-poor/8-good hysteresis, 20-second cooldown. |
 | Reduced motion still runs RAF | Open | Requirement remains specified until event-driven renderer integration and execution evidence. |
-| Whole-model Dream emission reveals/softens hard structure | Baseline defect corrected | Structural materials remain non-emissive; one tiny causal source per visible surface/air subject carries sharp core plus two bounded propagation layers. Submarines receive none. |
+| Whole-model Dream emission reveals/softens hard structure | Baseline defect corrected, then first correction rejected as not a glow | Structural materials remain non-emissive; authorized subjects now carry visible tight, broad, and atmospheric world-space aura layers. The tiny-navigation-light substitution was preserved as a failed interpretation and removed. |
 | Renderer mounted behind privacy modal | Open | Must gate the lazy tactical module on accepted storage choice; browser evidence pending. |
 | Emulator described as thermal evidence | Rejected | Physical-device thermal evidence remains a doubt. |
 | Blender added because available | Rejected | No qualified need; no dependency added. |

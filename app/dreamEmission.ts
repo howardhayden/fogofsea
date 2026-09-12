@@ -26,7 +26,6 @@ export type DreamEmissionSample = {
 
 type DreamEmissionRuntime = {
   profile: DreamEmissionProfile;
-  cores: Array<{ material: THREE.MeshBasicMaterial; baseOpacity: number }>;
   halos: Array<{
     mesh: THREE.Mesh;
     material: THREE.ShaderMaterial;
@@ -36,11 +35,9 @@ type DreamEmissionRuntime = {
 };
 
 export const DREAM_EMISSION_LIMITS = {
-  emittersPerSubject: 1,
-  haloMeshesPerEmitter: 2,
-  haloMeshesPerSubject: 2,
+  haloMeshesPerSubject: 3,
   maxSubjects: 42,
-  maxHaloMeshes: 84,
+  maxHaloMeshes: 126,
 } as const;
 
 const STRENGTH_BY_TIME = {
@@ -116,11 +113,9 @@ function haloMaterial(color: THREE.Color, strength: number, falloff: number) {
       #include <common>
       #include <fog_pars_vertex>
       varying vec3 vViewNormal;
-      varying vec3 vViewPosition;
       void main() {
         vViewNormal = normalize(normalMatrix * normal);
         vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        vViewPosition = -mvPosition.xyz;
         gl_Position = projectionMatrix * mvPosition;
         #include <fog_vertex>
       }
@@ -132,10 +127,9 @@ function haloMaterial(color: THREE.Color, strength: number, falloff: number) {
       uniform float uFalloff;
       uniform vec3 uColor;
       varying vec3 vViewNormal;
-      varying vec3 vViewPosition;
       void main() {
-        float rim = 1.0 - abs(dot(normalize(vViewNormal), normalize(vViewPosition)));
-        float alpha = uStrength * pow(smoothstep(0.02, 0.98, max(0.0, rim)), uFalloff);
+        float facing = abs(vViewNormal.z);
+        float alpha = uStrength * pow(smoothstep(0.0, 1.0, facing), uFalloff);
         gl_FragColor = vec4(uColor, alpha);
         #include <fog_fragment>
       }
@@ -143,8 +137,8 @@ function haloMaterial(color: THREE.Color, strength: number, falloff: number) {
     transparent: true,
     depthTest: true,
     depthWrite: false,
-    side: THREE.BackSide,
-    blending: THREE.NormalBlending,
+    side: THREE.FrontSide,
+    blending: THREE.AdditiveBlending,
     // The aura keeps the subject's own hue instead of being driven toward the
     // scene's white exposure point. Its low alpha provides the restraint.
     toneMapped: false,
@@ -152,49 +146,40 @@ function haloMaterial(color: THREE.Color, strength: number, falloff: number) {
   });
 }
 
-const EMITTERS: Readonly<Record<DreamEmissionKind, readonly { position: readonly [number, number, number]; color: number }[]>> = {
-  ship: [
-    { position: [0.12, 0.92, -0.18], color: 0xd8f5ed },
-  ],
-  aircraft: [
-    { position: [-0.12, 0.08, 0], color: 0xc6f5e9 },
-  ],
-  // Submerged craft do not acquire fantasy bioluminescence merely because
-  // Dream emission is enabled for other operational subjects.
-  submarine: [],
+const AURA_COLOR: Readonly<Record<DreamEmissionKind, number>> = {
+  ship: 0x79dbc8,
+  aircraft: 0xa0e9dd,
+  submarine: 0x648fa8,
 };
 
-/** Adds sparse, causal sources instead of making the structural model glow. */
+const AURA_SHAPE: Readonly<Record<DreamEmissionKind, readonly [number, number, number]>> = {
+  ship: [2.6, 1.35, 1.25],
+  aircraft: [1.45, 0.78, 1.45],
+  submarine: [1.8, 0.86, 0.9],
+};
+
+/** A three-scale world-space aura surrounds the authorized subject without
+ * turning its hard geometry emissive. Depth and fog continue to occlude it. */
 export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionProfile) {
   if (!profile.enabled) return;
-  const cores: DreamEmissionRuntime["cores"] = [];
   const halos: DreamEmissionRuntime["halos"] = [];
-  EMITTERS[profile.kind].slice(0, DREAM_EMISSION_LIMITS.emittersPerSubject).forEach((specification, emitterIndex) => {
-    const color = new THREE.Color(specification.color);
-    const emitter = new THREE.Group();
-    emitter.name = `dream-emission-source-${emitterIndex}`;
-    emitter.position.fromArray(specification.position);
-    const coreMaterial = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: profile.coreStrength, depthTest: true, depthWrite: false, toneMapped: false, fog: true });
-    const core = new THREE.Mesh(new THREE.OctahedronGeometry(profile.kind === "aircraft" ? 0.035 : 0.045, 0), coreMaterial);
-    core.name = "dream-emission-core";
-    emitter.add(core);
-    cores.push({ material: coreMaterial, baseOpacity: profile.coreStrength });
-    [
-      { name: "dream-emission-halo-inner", radius: profile.kind === "aircraft" ? 0.13 : 0.16, scale: profile.haloScale, strength: profile.haloStrength * 0.48, falloff: 1.35, renderOrder: 2 },
-      { name: "dream-emission-halo-outer", radius: profile.kind === "aircraft" ? 0.34 : 0.42, scale: profile.outerHaloScale, strength: profile.outerHaloStrength * 0.42, falloff: 2.4, renderOrder: 1 },
-    ].forEach((layer) => {
-      const material = haloMaterial(color, layer.strength, layer.falloff);
-      const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(layer.radius, 1), material);
-      mesh.name = layer.name;
-      mesh.scale.setScalar(layer.scale);
-      mesh.renderOrder = layer.renderOrder;
-      emitter.add(mesh);
-      halos.push({ mesh, material, baseScale: layer.scale, baseStrength: layer.strength });
-    });
-    group.add(emitter);
+  const color = new THREE.Color(AURA_COLOR[profile.kind]);
+  const shape = AURA_SHAPE[profile.kind];
+  [
+    { name: "dream-emission-aura-tight", radius: 0.72, scale: 1, strength: profile.coreStrength * 0.72, falloff: 0.72, renderOrder: -3 },
+    { name: "dream-emission-aura-broad", radius: 1.18, scale: 1.34, strength: profile.haloStrength * 0.28, falloff: 1.4, renderOrder: -4 },
+    { name: "dream-emission-aura-atmospheric", radius: 1.72, scale: 1.72, strength: profile.outerHaloStrength * 0.48, falloff: 2.25, renderOrder: -5 },
+  ].forEach((layer) => {
+    const material = haloMaterial(color, layer.strength, layer.falloff);
+    const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(layer.radius, 2), material);
+    mesh.name = layer.name;
+    mesh.scale.set(shape[0] * layer.scale, shape[1] * layer.scale, shape[2] * layer.scale);
+    mesh.position.y = profile.kind === "ship" ? 0.34 : 0;
+    mesh.renderOrder = layer.renderOrder;
+    group.add(mesh);
+    halos.push({ mesh, material, baseScale: layer.scale, baseStrength: layer.strength });
   });
-  if (!cores.length) return;
-  group.userData.dreamEmission = { profile, cores, halos } satisfies DreamEmissionRuntime;
+  group.userData.dreamEmission = { profile, halos } satisfies DreamEmissionRuntime;
   group.userData.dreamEmissionHaloMeshes = halos.length;
 }
 
@@ -203,12 +188,11 @@ export function updateDreamEmission(targets: readonly THREE.Group[], elapsed: nu
     const runtime = target.userData.dreamEmission as DreamEmissionRuntime | undefined;
     if (!runtime) return;
     const sample = sampleDreamEmission(runtime.profile, elapsed, reducedMotion);
-    runtime.cores.forEach(({ material, baseOpacity }) => {
-      material.opacity = baseOpacity * sample.coreFactor;
-    });
     runtime.halos.forEach(({ mesh, material, baseScale, baseStrength }) => {
       material.uniforms.uStrength.value = baseStrength * sample.haloFactor;
-      mesh.scale.setScalar(baseScale + (sample.haloScale - runtime.profile.haloScale));
+      const shape = AURA_SHAPE[runtime.profile.kind];
+      const animatedScale = baseScale + (sample.haloScale - runtime.profile.haloScale);
+      mesh.scale.set(shape[0] * animatedScale, shape[1] * animatedScale, shape[2] * animatedScale);
     });
   });
 }
