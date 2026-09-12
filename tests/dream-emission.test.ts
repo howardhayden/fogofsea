@@ -56,7 +56,7 @@ test("adverse-weather visibility support is bounded and cannot defeat occlusion"
   assert.equal(createDreamEmissionProfile(17, "day", "ship", 999).haloStrength, 0);
 });
 
-test("same-geometry halo keeps a crisp, fog-aware, native-color core without lights", () => {
+test("sparse causal emitters preserve dark structure and propagate without lights", () => {
   const group = new THREE.Group();
   const material = new THREE.MeshStandardMaterial({ color: 0x74b9ad });
   const core = new THREE.Mesh(new THREE.BoxGeometry(1, 0.3, 0.4), material);
@@ -68,14 +68,16 @@ test("same-geometry halo keeps a crisp, fog-aware, native-color core without lig
   const profile = createDreamEmissionProfile(7, "dawn", "ship");
   attachDreamEmission(group, profile);
 
-  const innerHalo = group.children.find((child) => child.name === "dream-emission-halo-inner");
-  const outerHalo = group.children.find((child) => child.name === "dream-emission-halo-outer");
+  const innerHalo = group.getObjectByName("dream-emission-halo-inner");
+  const outerHalo = group.getObjectByName("dream-emission-halo-outer");
+  const source = group.getObjectByName("dream-emission-source-0");
+  const emittedCore = group.getObjectByName("dream-emission-core");
+  assert.ok(source instanceof THREE.Group);
+  assert.ok(emittedCore instanceof THREE.Mesh);
   assert.ok(innerHalo instanceof THREE.Mesh);
   assert.ok(outerHalo instanceof THREE.Mesh);
   for (const halo of [innerHalo, outerHalo]) {
     assert.notEqual(halo.geometry, core.geometry);
-    assert.equal(halo.geometry, innerHalo.geometry);
-    assert.ok(halo.geometry.getAttribute("color") instanceof THREE.BufferAttribute);
     assert.ok(halo.material instanceof THREE.ShaderMaterial);
     assert.equal(halo.material.side, THREE.BackSide);
     assert.equal(halo.material.depthTest, true);
@@ -89,19 +91,28 @@ test("same-geometry halo keeps a crisp, fog-aware, native-color core without lig
   assert.equal(group.userData.dreamEmissionHaloMeshes, DREAM_EMISSION_LIMITS.haloMeshesPerSubject);
   assert.equal(DREAM_EMISSION_LIMITS.maxHaloMeshes, DREAM_EMISSION_LIMITS.maxSubjects * DREAM_EMISSION_LIMITS.haloMeshesPerSubject);
   assert.ok((innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value > (outerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value);
-  assert.equal(material.emissive.getHex(), material.color.getHex());
-  assert.equal(towerMaterial.emissive.getHex(), towerMaterial.color.getHex());
+  assert.equal(material.emissive.getHex(), 0);
+  assert.equal(material.emissiveIntensity, 1);
+  assert.equal(towerMaterial.emissive.getHex(), 0);
+  assert.equal(towerMaterial.emissiveIntensity, 1);
   assert.equal(tacticalRing.children.length, 0);
   assert.equal(group.getObjectsByProperty("isLight", true).length, 0);
 
   updateDreamEmission([group], 12, false);
-  assert.ok(material.emissiveIntensity > 0);
+  assert.equal(material.emissive.getHex(), 0);
   const frozenStrength = (innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value;
   updateDreamEmission([group], 999, true);
   const reducedStrength = (innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value;
   updateDreamEmission([group], 0, true);
   assert.equal((innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value, reducedStrength);
   assert.notEqual(frozenStrength, 0);
+
+  const submarine = new THREE.Group();
+  const submarineHull = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial({ color: 0x405b61 }));
+  submarine.add(submarineHull);
+  attachDreamEmission(submarine, createDreamEmissionProfile(7, "night", "submarine"));
+  assert.equal(submarine.userData.dreamEmission, undefined);
+  assert.equal(submarineHull.material.emissive.getHex(), 0);
 
   const daylight = new THREE.Group();
   daylight.add(new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial({ color: 0xff00aa })));

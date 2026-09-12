@@ -41,7 +41,7 @@ Average FPS alone is not acceptance evidence. Capture interval distributions, p5
 | TSUNAMI | absent in baseline | explicit committed hazard and signed N-wave; never inferred | sea state looks extreme without event |
 | Camera | orbit, keyboard, five views | stable saved pose and truthful telemetry | rapid rotate/zoom/resize/context loss |
 | Overlays | glass panels and modals | renderer pauses behind occlusion | compositor load, privacy gate |
-| Dream light | whole-structure emission baseline | selective authorized accents, bounded halos | accessors, geometry bombs, revoke/regrant |
+| Dream light | whole-structure emission baseline | one sparse causal source, bounded tight/broad propagation, hard non-emissive structure | accessors, geometry bombs, revoke/regrant |
 | Contacts | capability-seeded population baseline | canonical disclosed estimates filtered by capability | perfect sensing with no observations |
 
 ## Slice and evidence rules
@@ -58,4 +58,3 @@ The machine-readable source is [`requirements/visual-smoothness.json`](../../req
 ## Blender qualification
 
 Blender is not qualified for this reconstruction. No mesh cleanup, animation preparation, baking, or offline asset optimization need has yet been demonstrated. It is therefore neither a runtime nor architectural dependency.
-
