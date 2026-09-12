@@ -37,7 +37,7 @@ test("uncredited or unknown selections reveal no opposing contact markers", () =
     { "airborne-acoustic-pack": -3 },
   ), none);
 
-  const plan = createContactVisualizationPlan(27, none);
+  const plan = createContactVisualizationPlan(27, none, []);
   assert.deepEqual(plan.counts, { air: 0, surface: 0, subsurface: 0 });
   assert.deepEqual(plan.contacts, []);
 });
@@ -76,20 +76,26 @@ test("credited systems reveal only domains supported by their tracking role and 
   });
 });
 
-test("unknown-contact populations are deterministic, abstract, and strictly bounded", () => {
+test("contact plans project canonical estimates and sensing never manufactures them", () => {
   const all: ContactVisibility = { air: true, surface: true, subsurface: true };
-  const first = createContactVisualizationPlan(0x51a7, all);
-  const repeated = createContactVisualizationPlan(0x51a7, all);
-  const different = createContactVisualizationPlan(0x51a8, all);
+  const estimates = [
+    { id: "air-1", domain: "air" as const, x: 2, y: 7, z: -4, scale: 1, heading: 0.4 },
+    { id: "surface-1", domain: "surface" as const, x: -3, y: 0.58, z: 6, scale: 0.9, heading: 1.2 },
+    { id: "subsurface-1", domain: "subsurface" as const, x: 4, y: -4, z: 1, scale: 1.1, heading: 2.1 },
+  ];
+  const first = createContactVisualizationPlan(0x51a7, all, estimates);
+  const repeated = createContactVisualizationPlan(0x51a7, all, estimates);
+  const different = createContactVisualizationPlan(0x51a8, all, estimates);
 
   assert.deepEqual(repeated, first);
-  assert.notDeepEqual(different.contacts, first.contacts);
-  assert.ok(first.counts.air >= 1 && first.counts.air <= CONTACT_LIMITS.air);
-  assert.ok(first.counts.surface >= 1 && first.counts.surface <= CONTACT_LIMITS.surface);
-  assert.ok(first.counts.subsurface >= 1 && first.counts.subsurface <= CONTACT_LIMITS.subsurface);
+  assert.deepEqual(different.contacts, first.contacts);
+  assert.deepEqual(createContactVisualizationPlan(1, all, []).contacts, []);
+  assert.ok(first.counts.air <= CONTACT_LIMITS.air);
+  assert.ok(first.counts.surface <= CONTACT_LIMITS.surface);
+  assert.ok(first.counts.subsurface <= CONTACT_LIMITS.subsurface);
   assert.ok(first.contacts.length <= CONTACT_LIMITS.total);
   first.contacts.forEach((contact) => {
-    assert.deepEqual(Object.keys(contact).sort(), ["domain", "heading", "scale", "x", "y", "z"]);
+    assert.deepEqual(Object.keys(contact).sort(), ["domain", "heading", "id", "scale", "x", "y", "z"]);
     assert.ok(Number.isFinite(contact.x));
     assert.ok(Number.isFinite(contact.y));
     assert.ok(Number.isFinite(contact.z));
@@ -97,7 +103,11 @@ test("unknown-contact populations are deterministic, abstract, and strictly boun
 });
 
 test("view gating puts detectable air contacts in sky and air, with no cross-domain leakage", () => {
-  const plan = createContactVisualizationPlan(91, { air: true, surface: true, subsurface: true });
+  const plan = createContactVisualizationPlan(91, { air: true, surface: true, subsurface: true }, [
+    { id: "air", domain: "air", x: 0, y: 7, z: 0, scale: 1, heading: 0 },
+    { id: "surface", domain: "surface", x: 0, y: 0.58, z: 0, scale: 1, heading: 0 },
+    { id: "subsurface", domain: "subsurface", x: 0, y: -4, z: 0, scale: 1, heading: 0 },
+  ]);
 
   assert.equal(contactDomainForView("stars"), null);
   assert.equal(contactDomainForView("sky"), "air");
@@ -110,6 +120,15 @@ test("view gating puts detectable air contacts in sky and air, with no cross-dom
   assert.ok(contactsForView(plan, "air").every((contact) => contact.domain === "air"));
   assert.ok(contactsForView(plan, "surface").every((contact) => contact.domain === "surface"));
   assert.ok(contactsForView(plan, "subsurface").every((contact) => contact.domain === "subsurface"));
+});
+
+test("contact estimate accessors and inherited values fail closed", () => {
+  const inherited = Object.create({ id: "leak", domain: "air", x: 0, y: 7, z: 0, scale: 1, heading: 0 });
+  let getterReads = 0;
+  const accessor = Object.defineProperty({}, "id", { get() { getterReads += 1; return "leak"; }, enumerable: true });
+  const plan = createContactVisualizationPlan(4, { air: true, surface: true, subsurface: true }, [inherited, accessor] as never);
+  assert.deepEqual(plan.contacts, []);
+  assert.equal(getterReads, 0);
 });
 
 test("opposing impact assessments require contact quality and sensing in the affected domain", () => {

@@ -1,6 +1,13 @@
 import type { Climate, Difficulty, Season } from "./gameModel";
 import { isBoundedCleanText, isSafeIdentifier } from "./inputSecurity";
 import { jsonSemanticEqual } from "./jsonSemantic";
+import {
+  activeEnvironmentalHazards,
+  createEnvironmentalHazardTimeline,
+  environmentalHazardsForDifficulty,
+  isEnvironmentalHazardState,
+  type EnvironmentalHazardState,
+} from "./environmentalHazard";
 
 export type ForceScale = "tiny" | "small" | "medium" | "large" | "massive";
 export type IllicitNetworkType =
@@ -76,6 +83,7 @@ export type ScenarioMatrix = {
   secondaryObjective: SecondaryObjective | null;
   disruptions: ScenarioDisruption[];
   committedTurnDraws: number[];
+  environmentalHazards: EnvironmentalHazardState[];
 };
 
 export type ActivatedScenarioMatrix = ScenarioMatrix & {
@@ -347,8 +355,9 @@ export function createScenarioMatrix(input: {
     ? "none"
     : pick(COORDINATION, random);
   const institutionalConstraint = pick(CONSTRAINTS, random);
+  const weather = weatherDisruption(input.climate, input.regionId, input.season, random);
   const disruptions = [
-    weatherDisruption(input.climate, input.regionId, input.season, random),
+    weather,
     institutionalDisruption(institutionalConstraint, random),
     cooperationDisruption(opponentCoordination, random),
     opportunisticActorDisruption(seed),
@@ -365,6 +374,16 @@ export function createScenarioMatrix(input: {
     secondaryObjective: objectiveChange(random),
     disruptions,
     committedTurnDraws: Array.from({ length: 6 }, () => integer(1, 100, random)),
+    environmentalHazards: createEnvironmentalHazardTimeline({
+      exerciseId: input.exerciseId,
+      climate: input.climate,
+      regionId: input.regionId,
+      season: input.season,
+      weatherStartsTurn: weather.startsTurn,
+      weatherEndsTurn: weather.endsTurn,
+      weatherExtreme: weather.severity === "extreme",
+      weatherMinimumDifficulty: weather.minimumDifficulty,
+    }),
   };
 }
 
@@ -390,7 +409,7 @@ export function activeCapabilityFactors(matrix: ActivatedScenarioMatrix, turn: n
   const opposing = baseline();
   const active = matrix.activeDisruptions.filter((event) => event.startsTurn <= turn && event.endsTurn >= turn);
   const occurred = matrix.activeDisruptions.filter((event) => event.startsTurn <= turn);
-  for (const event of occurred) {
+  for (const event of occurred.filter((candidate) => candidate.kind !== "severe-weather")) {
     for (const domain of event.affectedDomains) {
       const currentlyActive = event.endsTurn >= turn;
       const multiplier = (currentlyActive ? event.availabilityMultiplier : 1) * (1 - event.permanentLossFraction);
@@ -398,7 +417,20 @@ export function activeCapabilityFactors(matrix: ActivatedScenarioMatrix, turn: n
       if (event.affectedSide === "opposing-force" || event.affectedSide === "both") opposing[domain] *= multiplier;
     }
   }
+  for (const hazard of environmentalHazardsForDifficulty(matrix.environmentalHazards, matrix.difficulty).filter((candidate) => candidate.startsTurn <= turn)) {
+    const currentlyActive = hazard.endsTurn >= turn;
+    const multiplier = (currentlyActive ? hazard.mechanics.availabilityMultiplier : 1) * (1 - hazard.mechanics.permanentLossFraction);
+    for (const domain of hazard.affectedDomains) {
+      selected[domain] *= multiplier;
+      opposing[domain] *= multiplier;
+    }
+  }
   return { selected, opposing, active };
+}
+
+export function environmentalHazardStateAtTurn(matrix: ActivatedScenarioMatrix, turn: number) {
+  const active = activeEnvironmentalHazards(matrix.environmentalHazards, matrix.difficulty, turn);
+  return { active, dominant: active.find((item) => item.kind === "tsunami") ?? active[0] ?? null };
 }
 
 function componentRange(base: number, adverseBias: number): readonly [number, number] {
@@ -474,6 +506,7 @@ export function isScenarioMatrix(value: unknown): value is ScenarioMatrix {
     && ILLICIT_TYPES.includes(value.illicitNetworkType as IllicitNetworkType)
     && Array.isArray(value.disruptions) && value.disruptions.length <= 5 && value.disruptions.every(isScenarioDisruption)
     && Array.isArray(value.committedTurnDraws) && value.committedTurnDraws.length === 6 && value.committedTurnDraws.every((item) => Number.isInteger(item) && item >= 1 && item <= 100)
+    && Array.isArray(value.environmentalHazards) && value.environmentalHazards.length >= 1 && value.environmentalHazards.length <= 2 && value.environmentalHazards.every(isEnvironmentalHazardState)
     && (value.secondaryObjective === null || isSecondaryObjective(value.secondaryObjective));
 }
 

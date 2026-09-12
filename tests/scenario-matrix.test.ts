@@ -5,6 +5,7 @@ import {
   activeCapabilityFactors,
   createScenarioMatrix,
   estimateResolutionMatrix,
+  environmentalHazardStateAtTurn,
   isActivatedScenarioMatrix,
   isScenarioMatrix,
   type ForceScale,
@@ -137,8 +138,17 @@ test("temporary disruption recovers while permanent loss persists symmetrically"
     minimumDifficulty: "guided" as const,
   };
   const permanent = { ...temporary, id: "permanent-test", permanentLossFraction: 0.1 };
-  const temporaryMatrix = activateMatrixForDifficulty({ ...base, disruptions: [temporary] }, "challenge");
-  const permanentMatrix = activateMatrixForDifficulty({ ...base, disruptions: [permanent] }, "challenge");
+  const hazard = {
+    ...base.environmentalHazards[0],
+    startsTurn: 2,
+    endsTurn: 3,
+    minimumDifficulty: "guided" as const,
+    affectedDomains: ["air" as const],
+    mechanics: { availabilityMultiplier: 0.6, permanentLossFraction: 0, opposingPressureMultiplier: 0.9 },
+  };
+  const permanentHazard = { ...hazard, id: "permanent-hazard-test", mechanics: { ...hazard.mechanics, permanentLossFraction: 0.1 } };
+  const temporaryMatrix = activateMatrixForDifficulty({ ...base, disruptions: [temporary], environmentalHazards: [hazard] }, "challenge");
+  const permanentMatrix = activateMatrixForDifficulty({ ...base, disruptions: [permanent], environmentalHazards: [permanentHazard] }, "challenge");
   assert.equal(activeCapabilityFactors(temporaryMatrix, 2).selected.air, 0.6);
   assert.equal(activeCapabilityFactors(temporaryMatrix, 4).selected.air, 1);
   assert.equal(activeCapabilityFactors(temporaryMatrix, 4).opposing.air, 1);
@@ -213,4 +223,27 @@ test("regional severe-weather names remain climate coherent", () => {
     assert.ok(event);
     assert.match(event.headline, sample.allowed);
   }
+});
+
+test("environmental hazards are committed state and TSUNAMI is never inferred from severe seas", () => {
+  let tsunamiMatrix: ReturnType<typeof createScenarioMatrix> | undefined;
+  let tsunamiExerciseId = 0;
+  for (let exerciseId = 1; exerciseId <= 2_000 && !tsunamiMatrix; exerciseId += 1) {
+    const candidate = createScenarioMatrix({ exerciseId, ...environment });
+    if (candidate.environmentalHazards.some((hazard) => hazard.kind === "tsunami")) {
+      tsunamiMatrix = candidate;
+      tsunamiExerciseId = exerciseId;
+    }
+  }
+  assert.ok(tsunamiMatrix);
+  assert.deepEqual(tsunamiMatrix, createScenarioMatrix({ exerciseId: tsunamiExerciseId, ...environment }));
+  const tsunami = tsunamiMatrix.environmentalHazards.find((hazard) => hazard.kind === "tsunami")!;
+  const guided = environmentalHazardStateAtTurn(activateMatrixForDifficulty(tsunamiMatrix, "guided"), tsunami.startsTurn);
+  const challenge = environmentalHazardStateAtTurn(activateMatrixForDifficulty(tsunamiMatrix, "challenge"), tsunami.startsTurn);
+  assert.equal(guided.active.some((hazard) => hazard.kind === "tsunami"), false);
+  assert.equal(challenge.dominant?.kind, "tsunami");
+  assert.deepEqual(tsunami.nWave?.map(Math.sign), [-1, 1, -1]);
+
+  const noTsunami = { ...tsunamiMatrix, environmentalHazards: tsunamiMatrix.environmentalHazards.filter((hazard) => hazard.kind !== "tsunami") };
+  assert.equal(environmentalHazardStateAtTurn(activateMatrixForDifficulty(noTsunami, "challenge"), tsunami.startsTurn).active.some((hazard) => hazard.kind === "tsunami"), false);
 });

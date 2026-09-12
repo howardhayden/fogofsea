@@ -45,6 +45,7 @@ import {
   createContactVisualizationPlan,
   type ContactDomain,
   type ContactVisibility,
+  type DisclosedContactEstimate,
 } from "./contactVisualization";
 import {
   createStarPlacements,
@@ -88,6 +89,8 @@ type Props = {
   result: boolean | null;
   theme: "light" | "dark";
   contactVisibility: ContactVisibility;
+  disclosedContacts?: readonly DisclosedContactEstimate[];
+  visualActive?: boolean;
   currentPhaseContentActive?: boolean;
 };
 
@@ -101,7 +104,7 @@ type HudDisclosureState = { identity: string; disclosure: HudDisclosure | null }
 
 function describeContactState(domain: ContactDomain | null, count: number) {
   if (!domain) return "No contact markers are shown in this view.";
-  if (!count) return `Selected force has no credited ${domain}-detection capability; no unknown markers are shown.`;
+  if (!count) return `No canonical disclosed ${domain} estimate is available to render; sensing capability alone never creates a contact marker.`;
   return `${count} unidentified ${domain} contact marker${count === 1 ? " is" : "s are"} shown because the selected force has credited ${domain}-detection capability. Markers communicate uncertainty, not exact identity or opposing composition.`;
 }
 
@@ -157,7 +160,7 @@ function unitIntervalFromIndex(index: number) {
   return value - Math.floor(value);
 }
 
-function Battlefield({ climate, time, clouds, precipitation, seaState, visibility, season, scenarioDate, observerLatitude, observerLongitude, storming, lightningCapable, windHeading, windSpeed, currentHeading, currentSpeed, waveHeading, region, regionId, fleet, airWing, lowSignatureFleet, lowSignatureAircraft, exerciseId, result, theme, contactVisibility, currentPhaseContentActive = false }: Props) {
+function Battlefield({ climate, time, clouds, precipitation, seaState, visibility, season, scenarioDate, observerLatitude, observerLongitude, storming, lightningCapable, windHeading, windSpeed, currentHeading, currentSpeed, waveHeading, region, regionId, fleet, airWing, lowSignatureFleet, lowSignatureAircraft, exerciseId, result, theme, contactVisibility, disclosedContacts = [], visualActive = true, currentPhaseContentActive = false }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const wildlifeReactRef = useRef<(memberId: string) => void>(() => {});
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -301,7 +304,8 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
   const contactPlan = useMemo(() => createContactVisualizationPlan(
     stableSeed(exerciseId, region, climate, "unknown-contacts"),
     contactVisibility,
-  ), [climate, contactVisibility, exerciseId, region]);
+    disclosedContacts,
+  ), [climate, contactVisibility, disclosedContacts, exerciseId, region]);
   const contactDomain = useMemo(() => contactDomainForView(viewLayer), [viewLayer]);
   const visibleUnknownContacts = useMemo(() => contactsForView(contactPlan, viewLayer), [contactPlan, viewLayer]);
   const contactDescription = useMemo(() => describeContactState(contactDomain, visibleUnknownContacts.length), [contactDomain, visibleUnknownContacts.length]);
@@ -328,6 +332,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
   };
 
   useEffect(() => {
+    if (!visualActive) return;
     if (!host.current || !celestial || !activeBody || !celestialProminence) return;
     const container = host.current;
     const colors = BATTLEFIELD_PALETTES[theme][time];
@@ -733,7 +738,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       });
       renderer.renderLists.dispose();
     };
-  }, [climate, time, region, visualFleet, visualAirWing, exerciseId, result, theme, viewLayer, celestial, activeBody, activeBodyKind, activeBodyBrightness, celestialProminence, celestialReflectionVisible, reducedMotion, starfieldPlan, contactPlan, lifeProfile, wildlifePlan, wavePlan, auroraPlan, atmospherePlan]);
+  }, [climate, time, region, visualFleet, visualAirWing, exerciseId, result, theme, viewLayer, celestial, activeBody, activeBodyKind, activeBodyBrightness, celestialProminence, celestialReflectionVisible, reducedMotion, starfieldPlan, contactPlan, lifeProfile, wildlifePlan, wavePlan, auroraPlan, atmospherePlan, visualActive]);
 
   useEffect(() => () => {
     const renderer = rendererRef.current;
