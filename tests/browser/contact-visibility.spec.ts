@@ -28,7 +28,7 @@ async function expectNoContacts(page: Page, layer: "sky" | "air" | "surface" | "
   await expect(plot).toHaveAttribute("data-visible-unknown-contacts", "0");
   await expect(plot.locator(".fallback-contact")).toHaveCount(0);
   await expect(page.locator("#contact-visual-note")).toHaveText(
-    `Selected force has no credited ${domain}-detection capability; no unknown markers are shown.`,
+    `No canonical disclosed ${domain} estimate is available to render; sensing capability alone never creates a contact marker.`,
   );
 }
 
