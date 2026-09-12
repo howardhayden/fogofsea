@@ -380,6 +380,16 @@ test("direct current-turn conditions enter Immediate before orders but not resol
       },
     ],
     committedTurnDraws: [11, 22, 33, 44, 55, 66],
+    environmentalHazards: [{
+      id: "hazard-weather-current-turn",
+      kind: "severe-weather",
+      startsTurn: 2,
+      endsTurn: 3,
+      minimumDifficulty: "guided",
+      intensity: "major",
+      affectedDomains: ["air", "surface"],
+      mechanics: { availabilityMultiplier: 0.8, permanentLossFraction: 0, opposingPressureMultiplier: 0.9 },
+    }],
   };
   const state: RigidGameState = {
     ...stateWithReports([report({ turn: 1 })], 100),

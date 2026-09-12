@@ -1,11 +1,11 @@
 import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { seededRandom, stableSeed } from "./viewModel";
 
 export type DreamEmissionTime = "dawn" | "day" | "dusk" | "night";
 export type DreamEmissionKind = "ship" | "aircraft" | "submarine";
 
 export type DreamEmissionProfile = {
+  kind: DreamEmissionKind;
   enabled: boolean;
   coreStrength: number;
   haloStrength: number;
@@ -26,7 +26,6 @@ export type DreamEmissionSample = {
 
 type DreamEmissionRuntime = {
   profile: DreamEmissionProfile;
-  coreMaterials: THREE.MeshStandardMaterial[];
   halos: Array<{
     mesh: THREE.Mesh;
     material: THREE.ShaderMaterial;
@@ -36,9 +35,9 @@ type DreamEmissionRuntime = {
 };
 
 export const DREAM_EMISSION_LIMITS = {
-  haloMeshesPerSubject: 2,
+  haloMeshesPerSubject: 3,
   maxSubjects: 42,
-  maxHaloMeshes: 84,
+  maxHaloMeshes: 126,
 } as const;
 
 const STRENGTH_BY_TIME = {
@@ -75,6 +74,7 @@ export function createDreamEmissionProfile(
   const scale = HALO_SCALE_BY_KIND[kind];
   const boundedLift = Math.max(1, Math.min(1.22, Number.isFinite(visibilityLift) ? visibilityLift : 1));
   return {
+    kind,
     enabled: time !== "day",
     coreStrength: strength.core * boundedLift,
     haloStrength: strength.halo * boundedLift,
@@ -101,25 +101,21 @@ export function sampleDreamEmission(profile: DreamEmissionProfile, elapsed: numb
   };
 }
 
-function haloMaterial(strength: number, falloff: number) {
+function haloMaterial(color: THREE.Color, strength: number, falloff: number) {
   return new THREE.ShaderMaterial({
     uniforms: {
       ...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),
       uStrength: { value: strength },
       uFalloff: { value: falloff },
+      uColor: { value: color.clone() },
     },
     vertexShader: `
       #include <common>
       #include <fog_pars_vertex>
-      attribute vec3 color;
       varying vec3 vViewNormal;
-      varying vec3 vViewPosition;
-      varying vec3 vNativeColor;
       void main() {
         vViewNormal = normalize(normalMatrix * normal);
-        vNativeColor = color;
         vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        vViewPosition = -mvPosition.xyz;
         gl_Position = projectionMatrix * mvPosition;
         #include <fog_vertex>
       }
@@ -129,21 +125,20 @@ function haloMaterial(strength: number, falloff: number) {
       #include <fog_pars_fragment>
       uniform float uStrength;
       uniform float uFalloff;
+      uniform vec3 uColor;
       varying vec3 vViewNormal;
-      varying vec3 vViewPosition;
-      varying vec3 vNativeColor;
       void main() {
-        float rim = 1.0 - abs(dot(normalize(vViewNormal), normalize(vViewPosition)));
-        float alpha = uStrength * pow(smoothstep(0.02, 0.98, max(0.0, rim)), uFalloff);
-        gl_FragColor = vec4(vNativeColor, alpha);
+        float facing = abs(vViewNormal.z);
+        float alpha = uStrength * pow(smoothstep(0.0, 1.0, facing), uFalloff);
+        gl_FragColor = vec4(uColor, alpha);
         #include <fog_fragment>
       }
     `,
     transparent: true,
     depthTest: true,
     depthWrite: false,
-    side: THREE.BackSide,
-    blending: THREE.NormalBlending,
+    side: THREE.FrontSide,
+    blending: THREE.AdditiveBlending,
     // The aura keeps the subject's own hue instead of being driven toward the
     // scene's white exposure point. Its low alpha provides the restraint.
     toneMapped: false,
@@ -151,81 +146,40 @@ function haloMaterial(strength: number, falloff: number) {
   });
 }
 
-/** Combines the structural parts into one unit-local silhouette while retaining
- * each part's native color as a vertex attribute. Two whole-subject shells then
- * cost exactly two halo draw calls, regardless of the unit's part count. */
-function mergedStructuralHaloGeometry(group: THREE.Group, structuralMeshes: readonly THREE.Mesh[]) {
-  group.updateWorldMatrix(true, true);
-  const groupInverse = group.matrixWorld.clone().invert();
-  const sources = structuralMeshes.map((mesh) => {
-    mesh.updateWorldMatrix(true, false);
-    const geometry = mesh.geometry.clone();
-    geometry.applyMatrix4(groupInverse.clone().multiply(mesh.matrixWorld));
-    const position = geometry.getAttribute("position");
-    const nativeColor = (mesh.material as THREE.MeshStandardMaterial).color;
-    const colors = new Float32Array(position.count * 3);
-    for (let index = 0; index < position.count; index++) {
-      colors[index * 3] = nativeColor.r;
-      colors[index * 3 + 1] = nativeColor.g;
-      colors[index * 3 + 2] = nativeColor.b;
-    }
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    return geometry;
-  });
-  const merged = mergeGeometries(sources, false);
-  sources.forEach((geometry) => geometry.dispose());
-  if (!merged) throw new Error("Dream-emission silhouette geometry could not be merged.");
-  merged.computeBoundingBox();
-  merged.computeBoundingSphere();
-  return merged;
-}
+const AURA_COLOR: Readonly<Record<DreamEmissionKind, number>> = {
+  ship: 0x79dbc8,
+  aircraft: 0xa0e9dd,
+  submarine: 0x648fa8,
+};
 
-/** Adds two tightly nested same-geometry rim shells. The inner edge stays
- * legible while the much fainter outer shell feathers it by only a few pixels;
- * neither shell emits a point light or changes conventional illumination. */
+const AURA_SHAPE: Readonly<Record<DreamEmissionKind, readonly [number, number, number]>> = {
+  ship: [2.6, 1.35, 1.25],
+  aircraft: [1.45, 0.78, 1.45],
+  submarine: [1.8, 0.86, 0.9],
+};
+
+/** A three-scale world-space aura surrounds the authorized subject without
+ * turning its hard geometry emissive. Depth and fog continue to occlude it. */
 export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionProfile) {
   if (!profile.enabled) return;
-  const structuralMeshes: THREE.Mesh[] = [];
-  group.traverse((object) => {
-    if (object instanceof THREE.Mesh && object.material instanceof THREE.MeshStandardMaterial) structuralMeshes.push(object);
-  });
-  const coreMaterials = [...new Set(structuralMeshes.map((mesh) => mesh.material as THREE.MeshStandardMaterial))];
-  coreMaterials.forEach((material) => {
-    material.emissive.copy(material.color);
-    material.emissiveIntensity = profile.coreStrength;
-  });
-  if (!structuralMeshes.length) return;
-  const haloGeometry = mergedStructuralHaloGeometry(group, structuralMeshes);
-  const halos = [
-    {
-      name: "dream-emission-halo-inner",
-      scale: profile.haloScale,
-      strength: profile.haloStrength,
-      falloff: 1.22,
-      renderOrder: 2,
-    },
-    {
-      name: "dream-emission-halo-outer",
-      scale: profile.outerHaloScale,
-      strength: profile.outerHaloStrength,
-      falloff: 2.15,
-      renderOrder: 1,
-    },
-  ].map((layer) => {
-    const material = haloMaterial(layer.strength, layer.falloff);
-    const mesh = new THREE.Mesh(haloGeometry, material);
+  const halos: DreamEmissionRuntime["halos"] = [];
+  const color = new THREE.Color(AURA_COLOR[profile.kind]);
+  const shape = AURA_SHAPE[profile.kind];
+  [
+    { name: "dream-emission-aura-tight", radius: 0.72, scale: 1, strength: profile.coreStrength * 0.72, falloff: 0.72, renderOrder: -3 },
+    { name: "dream-emission-aura-broad", radius: 1.18, scale: 1.34, strength: profile.haloStrength * 0.28, falloff: 1.4, renderOrder: -4 },
+    { name: "dream-emission-aura-atmospheric", radius: 1.72, scale: 1.72, strength: profile.outerHaloStrength * 0.48, falloff: 2.25, renderOrder: -5 },
+  ].forEach((layer) => {
+    const material = haloMaterial(color, layer.strength, layer.falloff);
+    const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(layer.radius, 2), material);
     mesh.name = layer.name;
-    mesh.scale.setScalar(layer.scale);
+    mesh.scale.set(shape[0] * layer.scale, shape[1] * layer.scale, shape[2] * layer.scale);
+    mesh.position.y = profile.kind === "ship" ? 0.34 : 0;
     mesh.renderOrder = layer.renderOrder;
     group.add(mesh);
-    return {
-      mesh,
-      material,
-      baseScale: layer.scale,
-      baseStrength: layer.strength,
-    };
+    halos.push({ mesh, material, baseScale: layer.scale, baseStrength: layer.strength });
   });
-  group.userData.dreamEmission = { profile, coreMaterials, halos } satisfies DreamEmissionRuntime;
+  group.userData.dreamEmission = { profile, halos } satisfies DreamEmissionRuntime;
   group.userData.dreamEmissionHaloMeshes = halos.length;
 }
 
@@ -234,12 +188,11 @@ export function updateDreamEmission(targets: readonly THREE.Group[], elapsed: nu
     const runtime = target.userData.dreamEmission as DreamEmissionRuntime | undefined;
     if (!runtime) return;
     const sample = sampleDreamEmission(runtime.profile, elapsed, reducedMotion);
-    runtime.coreMaterials.forEach((material) => {
-      material.emissiveIntensity = runtime.profile.coreStrength * sample.coreFactor;
-    });
     runtime.halos.forEach(({ mesh, material, baseScale, baseStrength }) => {
       material.uniforms.uStrength.value = baseStrength * sample.haloFactor;
-      mesh.scale.setScalar(baseScale + (sample.haloScale - runtime.profile.haloScale));
+      const shape = AURA_SHAPE[runtime.profile.kind];
+      const animatedScale = baseScale + (sample.haloScale - runtime.profile.haloScale);
+      mesh.scale.set(shape[0] * animatedScale, shape[1] * animatedScale, shape[2] * animatedScale);
     });
   });
 }

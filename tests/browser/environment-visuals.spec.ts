@@ -514,8 +514,8 @@ test("night dream emission produces a real, bounded, native-color WebGL aura", a
 
   await page.getByRole("button", { name: "Add one Fleet aviation ship" }).click();
   await expect.poll(async () => plot.locator(".fallback-ship").count()).toBeGreaterThan(0);
-  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-max-halo-meshes"))).toBe(84);
-  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-halo-meshes"))).toBe(2);
+  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-max-halo-meshes"))).toBe(126);
+  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-halo-meshes"))).toBe(3);
   const emittedNight = await cleanCanvasCapture(canvas);
   const metrics = await canvasDifferenceMetrics(page, emptyNight, emittedNight);
 

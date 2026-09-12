@@ -35,6 +35,8 @@ The documentation distinguishes three kinds of statement:
 | [15 — Heuristic evaluation](15-HEURISTIC-EVALUATION.md) | Where does the current experience meet or risk violating established usability and product-specific heuristics? |
 | [16 — Lattice copy architecture](16-LATTICE-COPY-ARCHITECTURE.md) | How is the bounded in-game and Academy copy slice compiled, routed, traced, separated from runtime, and prevented from changing mechanics? |
 | [17 — Turn intelligence and discovery chronology](17-TURN-INTELLIGENCE.md) | How are post-first-turn staff judgments, absolute facts, Immediate, late discovery, responsive layout, and typed persistence kept separate from hidden truth and adjudication? |
+| [18 — Visual smoothness and authoritative state](18-VISUAL-SMOOTHNESS.md) | What owns visual truth, what are the budgets, and how are visual systems tested without affecting adjudication? |
+| [19 — Visual authority concept map and CSD](19-VISUAL-AUTHORITY-CONCEPT-CSD.md) | What is certain, supposed, or still doubtful about the visual reconstruction? |
 
 ## Interactive analytical-view contract
 
