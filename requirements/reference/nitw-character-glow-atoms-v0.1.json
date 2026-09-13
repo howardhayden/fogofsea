@@ -1,0 +1,1776 @@
+{
+  "title": "Night in the Woods character-glow mathematical reconstruction and atomic requirements",
+  "namespace": "NDCG",
+  "version": "0.1",
+  "date": "2026-09-13",
+  "status": "Proposed; mathematical consistency checked; original shader and visual fidelity not verified.",
+  "scope": "Character/source-local glow only. Environmental art, existing project code, and deployment are not changed.",
+  "original_shader_recovered": false,
+  "reference_parameters_pixel_fitted": false,
+  "temporal_reference_measured": false,
+  "renderer_implemented_or_verified": false,
+  "atom_count": 48,
+  "metadata_defaults": {
+    "owners": "Logical responsibility boundaries only; not claims about current repository paths.",
+    "supersession": "None. This proposal does not replace existing authoritative requirements.",
+    "tests": "Positive, negative, and boundary tests are plans unless an executed mathematical evidence item is explicitly linked.",
+    "numeric_thresholds": "Provisional acceptance gates for this selected reconstruction profile, not original game measurements.",
+    "precedence": "Preserve inherited constraints; source authorization and accessibility cannot be bypassed by style. Exact implementation strategy is not prescribed if output invariants are qualified."
+  },
+  "provenance_sources": {
+    "USR-CURRENT": {
+      "type": "user_request",
+      "text": "mathematically capture night in the woods' dream sequence character glow, then turn that math into atoms",
+      "date": "2026-09-13"
+    },
+    "USR-PRIOR": {
+      "type": "recalled_user_constraints",
+      "text": "Crisp silhouette; short soft low-intensity glow; native-color-preserving adaptations; no giant orb, white wash, flashing, or conventional illumination as a substitute; optional slow shallow asynchronous breathing; reduced-effects equivalence; atomic provenance and adversarial verification. Recalled context is not a substitute for later reconciliation with an authoritative project register."
+    },
+    "OBS-01": {
+      "type": "primary_game_imagery",
+      "url": "https://steamuserimages-a.akamaihd.net/ugc/925922202521360432/D88B160297304FBBDDB8127462463FD143008271/?fit=inside%7C1024%3A%2A&interpolation=lanczos-none&output-format=jpeg&output-quality=95",
+      "observed": "Crisp cyan/blue character regions and magenta eye accents against a dark scene; a much larger circular luminous world feature must not be mistaken for the character halo radius.",
+      "limitation": "Still imagery; no recovered shader, pixel-fitted parameters, or reference motion timing."
+    },
+    "REF-COLOR": {
+      "type": "primary_technical_reference",
+      "url": "https://www.w3.org/TR/css-color-4/",
+      "supports": "Linear-light color addition, alpha compositing, and not making essential information depend solely on color."
+    },
+    "REF-BLOOM": {
+      "type": "primary_technical_reference",
+      "url": "https://docs.unity3d.com/6000.0/Documentation/Manual/urp/post-processing-bloom.html",
+      "supports": "Bloom as outward light fringes and the distinction between threshold, intensity, and scatter/radius.",
+      "limitation": "Does not identify the original game's shader or establish that this game used this renderer."
+    },
+    "REF-MOTION": {
+      "type": "primary_accessibility_reference",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html",
+      "supports": "Respecting preferences and controls for nonessential animation.",
+      "limitation": "Used as a design principle, not a claim that the optional luminance waveform alone establishes WCAG conformance."
+    },
+    "DEC-SCOPE": {
+      "type": "new_design_decision",
+      "text": "Scoped mathematical reconstruction and requirements proposal only. No repository implementation or deployment is performed."
+    },
+    "DEC-SEED": {
+      "type": "new_provisional_design_decision",
+      "text": "The v0.1 numerical seed is selected for a visible near field and weak compact tail, not extracted from the original game."
+    },
+    "MODEL-EQ01": {
+      "type": "new_mathematical_definition",
+      "definition": "Decode encoded sRGB c to linear light: c/12.92 for c<=0.04045; ((c+0.055)/1.055)^2.4 otherwise."
+    },
+    "MODEL-EQ02": {
+      "type": "new_mathematical_definition",
+      "definition": "A=sum_r A_r<=1; P=sum_r A_r C_r; E=sum_r A_r e_r C_emit,r. Region masks partition effective visible coverage; P and E are premultiplied fields."
+    },
+    "MODEL-EQ03": {
+      "type": "new_mathematical_definition",
+      "definition": "q=|u|/sigma; W(q)=1 for q<=2.5, 1-(3s^2-2s^3) for 2.5<q<3 with s=(q-2.5)/0.5, 0 for q>=3. K_sigma(u)=exp(-q^2/2) W(q)/Z_sigma with Z_sigma the 2D integral. sigma_k=rho_k h."
+    },
+    "MODEL-EQ04": {
+      "type": "new_mathematical_definition",
+      "definition": "G_raw=g p(t) sum_k w_k (K_sigma_k * E). Seed rho=(0.012,0.035,0.075), w=(0.65,0.30,0.05), g=0.28. Sum source fields before the overlap limiter."
+    },
+    "MODEL-EQ05": {
+      "type": "new_mathematical_definition",
+      "definition": "For y=Y(G_raw), f(y)=y if y<=b else b+(c-b)(1-exp(-(y-b)/(c-b))), 0<=b<c. G=0 if y=0, otherwise G_raw*f(y)/y. Seed b=0.3Y0, c=0.5Y0 for declared reference luminance unit Y0."
+    },
+    "MODEL-EQ06": {
+      "type": "new_mathematical_definition",
+      "definition": "I_linear=P+(1-A)(B+G); I_display=Encode(T(I_linear)). B contains no copy of this subject. In a multisubject renderer use the crisp already-composited scene J and its protected-core coverage A_protected: I_linear=J+(1-A_protected)G."
+    },
+    "MODEL-EQ07": {
+      "type": "new_mathematical_definition",
+      "definition": "Depth-aware extension: G_i(x)=g_i p_i sum_k w_k integral K_sigma_ik(x-y) chi_i(x,y) E_i(y) dy. E_i already excludes unauthorized and occluded source fragments. chi=0 for nearer opaque foreground destinations, else 1 (fractional coverage permitted). Do not renormalize after chi."
+    },
+    "MODEL-EQ08": {
+      "type": "new_mathematical_definition",
+      "definition": "Default p=1. Optional adaptation: p_i(t)=1+0.02 sin(2pi t/31+phi_i)+0.01 sin(2pi t/47+psi_i), stable phases; p in [0.97,1.03], |dp/dt|<=0.005390516/s. Reduced motion p=1."
+    },
+    "MODEL-EQ09": {
+      "type": "new_mathematical_definition",
+      "definition": "For an untruncated Gaussian and an isolated straight edge: G(d)/E0=(g/2) sum_k w_k erfc(d/(sqrt(2)sigma_k)), d>=0. The compact-kernel seed is evaluated using its actual normalized radial integral, not by treating this formula as exact after truncation."
+    }
+  },
+  "profile": {
+    "color_space": "linear-light RGB",
+    "rho": [
+      0.012,
+      0.035,
+      0.075
+    ],
+    "weights": [
+      0.65,
+      0.3,
+      0.05
+    ],
+    "gain": 0.28,
+    "normalization": "Reference body emission multiplier = 1",
+    "taper_start_sigma": 2.5,
+    "cutoff_sigma": 3.0,
+    "support_over_h": 0.22499999999999998,
+    "overlap_shoulder_b_over_Y0": 0.3,
+    "overlap_shoulder_c_over_Y0": 0.5,
+    "temporal_default": "static",
+    "optional_breathing": {
+      "amplitudes": [
+        0.02,
+        0.01
+      ],
+      "periods_seconds": [
+        31,
+        47
+      ],
+      "bound": [
+        0.97,
+        1.03
+      ],
+      "slope_bound_per_second": 0.005390515877813647
+    },
+    "flat_edge_fixtures": [
+      {
+        "distance_over_h": 0,
+        "compact_halo_over_source": 0.14,
+        "infinite_gaussian_halo_over_source": 0.14
+      },
+      {
+        "distance_over_h": 0.005,
+        "compact_halo_over_source": 0.10484528795861962,
+        "infinite_gaussian_halo_over_source": 0.1054567795181571
+      },
+      {
+        "distance_over_h": 0.01,
+        "compact_halo_over_source": 0.0745312136274832,
+        "infinite_gaussian_halo_over_source": 0.0756353461148838
+      },
+      {
+        "distance_over_h": 0.02,
+        "compact_halo_over_source": 0.03655101425441291,
+        "infinite_gaussian_halo_over_source": 0.03806970984043744
+      },
+      {
+        "distance_over_h": 0.03,
+        "compact_halo_over_source": 0.02113058712193017,
+        "infinite_gaussian_halo_over_source": 0.022391624115663908
+      },
+      {
+        "distance_over_h": 0.05,
+        "compact_halo_over_source": 0.009362446109533228,
+        "infinite_gaussian_halo_over_source": 0.009969061150515622
+      },
+      {
+        "distance_over_h": 0.08,
+        "compact_halo_over_source": 0.0024206927845941352,
+        "infinite_gaussian_halo_over_source": 0.002938237809406179
+      },
+      {
+        "distance_over_h": 0.1,
+        "compact_halo_over_source": 0.0011891726216568708,
+        "infinite_gaussian_halo_over_source": 0.001456495902489405
+      },
+      {
+        "distance_over_h": 0.15,
+        "compact_halo_over_source": 0.0002348869241112323,
+        "infinite_gaussian_halo_over_source": 0.00031926688975476576
+      },
+      {
+        "distance_over_h": 0.2,
+        "compact_halo_over_source": 6.213819342540957e-06,
+        "infinite_gaussian_halo_over_source": 5.3625790642494335e-05
+      },
+      {
+        "distance_over_h": 0.225,
+        "compact_halo_over_source": 0.0,
+        "infinite_gaussian_halo_over_source": 1.8898577852787692e-05
+      },
+      {
+        "distance_over_h": 0.3,
+        "compact_halo_over_source": 0.0,
+        "infinite_gaussian_halo_over_source": 4.433973856641089e-07
+      }
+    ]
+  },
+  "conflicts_and_resolutions": [
+    {
+      "id": "CF-01",
+      "tension": "A protected dark scene versus a glow too weak to see",
+      "resolution": "Apply both a positive near-edge residual requirement and a small far-tail limit; zero glow is not full-profile conformance.",
+      "atoms": [
+        "NDCG-Q01",
+        "NDCG-Q02"
+      ]
+    },
+    {
+      "id": "CF-02",
+      "tension": "Crisp character detail versus spatial diffusion",
+      "resolution": "Filter only the separate emission field and preserve the opaque core in composition.",
+      "atoms": [
+        "NDCG-S02",
+        "NDCG-C02",
+        "NDCG-H01"
+      ]
+    },
+    {
+      "id": "CF-03",
+      "tension": "Reference imitation versus native-color preservation in another project",
+      "resolution": "Use separate named palette profiles rather than overriding the target project's palette.",
+      "atoms": [
+        "NDCG-S03",
+        "NDCG-I01"
+      ]
+    },
+    {
+      "id": "CF-04",
+      "tension": "Finite darkness support versus an infinite Gaussian tail",
+      "resolution": "Use a normalized compact tapered kernel; retain the erfc formula only as the untruncated explanatory analogue.",
+      "atoms": [
+        "NDCG-H07",
+        "NDCG-Q02"
+      ]
+    },
+    {
+      "id": "CF-05",
+      "tension": "Stable glow energy versus partial occlusion",
+      "resolution": "Occlusion removes light; do not restore removed energy by renormalizing the surviving kernel.",
+      "atoms": [
+        "NDCG-H04",
+        "NDCG-V04"
+      ]
+    },
+    {
+      "id": "CF-06",
+      "tension": "A mathematically specified profile versus an unverified visual match",
+      "resolution": "Keep numerical seeds provisional and require native-size reference approval.",
+      "atoms": [
+        "NDCG-E02",
+        "NDCG-Q06"
+      ]
+    }
+  ],
+  "atoms": [
+    {
+      "id": "NDCG-E01",
+      "requirement": "Label each reference-derived assertion as observed, inferred, proposed, or measured.",
+      "provenance": [
+        "USR-CURRENT",
+        "DEC-SCOPE"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "specification/provenance",
+      "dependencies": [],
+      "acceptance": {
+        "positive": "Spatial observations and new numerical seeds have different provenance labels.",
+        "negative": "Reject documentation describing the seed constants or breathing periods as recovered game values.",
+        "boundary": "An unavailable source remains unverified rather than becoming an observed fact.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-E02",
+      "requirement": "Keep the v0.1 numerical profile provisional until calibration and native-size visual approval.",
+      "provenance": [
+        "DEC-SEED"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "specification/calibration",
+      "dependencies": [
+        "NDCG-E01"
+      ],
+      "acceptance": {
+        "positive": "The profile carries provisional status and a version.",
+        "negative": "Reject an original-shader or visual-match claim based only on these equations.",
+        "boundary": "Passing mathematical consistency checks does not change reference-fidelity status.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-06"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-E03",
+      "requirement": "Exclude unrelated scene lights from the character-glow reference mask.",
+      "provenance": [
+        "OBS-01",
+        "DEC-SCOPE"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "qa/reference-curation",
+      "dependencies": [
+        "NDCG-E01"
+      ],
+      "acceptance": {
+        "positive": "The ring, stars, and background haze have separate exclusion masks.",
+        "negative": "Reject a fit that expands the character halo to reproduce the large circular ring.",
+        "boundary": "Mixed pixels near another light are excluded or have recorded uncertainty.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-E04",
+      "requirement": "Integrate this register without silently superseding existing project requirements.",
+      "provenance": [
+        "USR-PRIOR",
+        "DEC-SCOPE"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "specification/integration",
+      "dependencies": [],
+      "acceptance": {
+        "positive": "Any later adoption records its scope and reconciliation with the authoritative project register.",
+        "negative": "Reject replacing existing accepted effects or geometry merely because this model was written.",
+        "boundary": "Unrelated environment, simulation, and deployment requirements remain unchanged.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-S01",
+      "requirement": "Preserve the original geometric coverage of the character core.",
+      "provenance": [
+        "OBS-01",
+        "USR-PRIOR",
+        "MODEL-EQ02"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/core",
+      "dependencies": [
+        "NDCG-E01"
+      ],
+      "acceptance": {
+        "positive": "The core coverage mask equals the no-halo mask.",
+        "negative": "Reject expanding the core mesh or sprite to create an apparent glow.",
+        "boundary": "Anti-aliased edge coverage is preserved, not thresholded into a larger silhouette.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-S02",
+      "requirement": "Keep the crisp luminous core independently renderable from the halo.",
+      "provenance": [
+        "OBS-01",
+        "MODEL-EQ02"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/core",
+      "dependencies": [
+        "NDCG-S01"
+      ],
+      "acceptance": {
+        "positive": "Setting halo gain to zero leaves the authored core intact.",
+        "negative": "Reject a blurred copy as the only rendered character.",
+        "boundary": "An opaque core pixel is unchanged when the halo is toggled.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-08"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-02"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-S03",
+      "requirement": "Retain the authored color of each emitting source region.",
+      "provenance": [
+        "OBS-01",
+        "MODEL-EQ02"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/source-field",
+      "dependencies": [
+        "NDCG-S02"
+      ],
+      "acceptance": {
+        "positive": "Cyan/blue regions and magenta accents remain distinct in the reference profile.",
+        "negative": "Reject replacing every source region with a single white or cyan fill.",
+        "boundary": "Small authored white highlights are allowed; wholesale whitening is not.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-03"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-S04",
+      "requirement": "Premultiply emission by source coverage before filtering.",
+      "provenance": [
+        "MODEL-EQ02",
+        "REF-COLOR"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/source-field",
+      "dependencies": [
+        "NDCG-S03"
+      ],
+      "acceptance": {
+        "positive": "Emission is the sum of region coverage times regional emission color and gain.",
+        "negative": "Reject a nonzero glow from RGB stored beneath zero alpha.",
+        "boundary": "Zero coverage produces exactly zero source emission.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-09"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-S05",
+      "requirement": "Select character emission independently of a whole-scene brightness threshold.",
+      "provenance": [
+        "REF-BLOOM",
+        "MODEL-EQ02"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/source-selection",
+      "dependencies": [
+        "NDCG-S04"
+      ],
+      "acceptance": {
+        "positive": "A selected colored character can glow without raising its core to white.",
+        "negative": "Reject making unrelated stars or UI emit simply because their pixels are bright.",
+        "boundary": "A selected source below the scene's ordinary bloom threshold still participates.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-S06",
+      "requirement": "Do not make character emission depend solely on a view-angle rim term.",
+      "provenance": [
+        "USR-PRIOR",
+        "MODEL-EQ02"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/material",
+      "dependencies": [
+        "NDCG-S02"
+      ],
+      "acceptance": {
+        "positive": "The subject retains luminous colored interior regions when facing the viewer.",
+        "negative": "Reject a Fresnel-only outline as the complete effect.",
+        "boundary": "A front-facing flat source remains emissive.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-H01",
+      "requirement": "Derive the glow field from the visible filled emission field rather than a centroid disk.",
+      "provenance": [
+        "MODEL-EQ03",
+        "MODEL-EQ04"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/halo",
+      "dependencies": [
+        "NDCG-S04"
+      ],
+      "acceptance": {
+        "positive": "Ears, limbs, gaps, and separate emitting regions affect local spill.",
+        "negative": "Reject an identical circular aura for differently shaped sources.",
+        "boundary": "A missing source produces no glow.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-02"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-H02",
+      "requirement": "Use centered isotropic kernels in the default spatial profile.",
+      "provenance": [
+        "DEC-SEED",
+        "MODEL-EQ03"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/halo-kernel",
+      "dependencies": [
+        "NDCG-H01"
+      ],
+      "acceptance": {
+        "positive": "The impulse response is symmetric about its source.",
+        "negative": "Reject drop-shadow offsets, velocity trails, or unrequested directional streaks.",
+        "boundary": "A static source has no directional drift.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-H03",
+      "requirement": "Keep all default kernel coefficients nonnegative.",
+      "provenance": [
+        "MODEL-EQ03"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/halo-kernel",
+      "dependencies": [
+        "NDCG-H02"
+      ],
+      "acceptance": {
+        "positive": "An isolated positive source cannot generate a negative dark ring.",
+        "negative": "Reject sharpening lobes that create dark halos.",
+        "boundary": "Zero-valued kernel support remains zero.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-H04",
+      "requirement": "Normalize each spatial kernel to unit mass before applying visibility gates.",
+      "provenance": [
+        "MODEL-EQ03"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/halo-kernel",
+      "dependencies": [
+        "NDCG-H03"
+      ],
+      "acceptance": {
+        "positive": "The integral of each unobstructed kernel equals one.",
+        "negative": "Reject peak-normalized blurs whose integrated energy grows with radius squared.",
+        "boundary": "Changing sigma alone preserves the kernel's total mass.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-01"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-05"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-H05",
+      "requirement": "Retain ordered near, middle, and far spatial scales in the full reference model.",
+      "provenance": [
+        "MODEL-EQ04",
+        "DEC-SEED"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "config/spatial-profile",
+      "dependencies": [
+        "NDCG-H04"
+      ],
+      "acceptance": {
+        "positive": "The seed uses sigma/h = 0.012, 0.035, 0.075 with strictly increasing radii.",
+        "negative": "Reject collapsing the full profile to one undifferentiated large blur.",
+        "boundary": "An approximation must qualify against the full profile rather than claim mathematical identity.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-02"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-H06",
+      "requirement": "Normalize the nonnegative scale-mixture weights to one.",
+      "provenance": [
+        "MODEL-EQ04",
+        "DEC-SEED"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "config/spatial-profile",
+      "dependencies": [
+        "NDCG-H05"
+      ],
+      "acceptance": {
+        "positive": "The seed weights 0.65, 0.30, 0.05 sum to one.",
+        "negative": "Reject adding an unbudgeted far layer on top of already normalized weights.",
+        "boundary": "Zero weights are allowed only in a separately identified reduced profile.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-02"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-H07",
+      "requirement": "Taper every kernel continuously to zero between 2.5 sigma and 3 sigma.",
+      "provenance": [
+        "MODEL-EQ03"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/halo-kernel",
+      "dependencies": [
+        "NDCG-H04"
+      ],
+      "acceptance": {
+        "positive": "The compact kernel has zero value and zero radial slope at its support boundary.",
+        "negative": "Reject a hard truncation edge or treating an infinite Gaussian as exactly zero.",
+        "boundary": "No source contribution exists beyond its largest 3-sigma support.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-03",
+        "MATH-04"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-04"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-H08",
+      "requirement": "Keep glow gain independent of glow radius.",
+      "provenance": [
+        "MODEL-EQ04",
+        "DEC-SEED"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "config/spatial-profile",
+      "dependencies": [
+        "NDCG-H06"
+      ],
+      "acceptance": {
+        "positive": "The seed uses gain 0.28 with body emission multiplier fixed to one for identification.",
+        "negative": "Reject expanding the halo to compensate for insufficient brightness.",
+        "boundary": "A zero-gain control is valid for disabling the effect but fails full-effect visibility gates.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-C01",
+      "requirement": "Perform emission filtering and light addition in linear-light RGB.",
+      "provenance": [
+        "REF-COLOR",
+        "MODEL-EQ01"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/color-pipeline",
+      "dependencies": [
+        "NDCG-S04"
+      ],
+      "acceptance": {
+        "positive": "Encoded color inputs are decoded before filtering.",
+        "negative": "Reject using sRGB code values as linear light amplitudes.",
+        "boundary": "The sRGB transfer-function branch boundary is continuous within numeric precision.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-C02",
+      "requirement": "Composite the opaque crisp core without adding the exterior halo over it.",
+      "provenance": [
+        "MODEL-EQ06",
+        "USR-PRIOR"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/compositor",
+      "dependencies": [
+        "NDCG-C01",
+        "NDCG-S02",
+        "NDCG-H08"
+      ],
+      "acceptance": {
+        "positive": "For coverage A=1, the result is exactly the premultiplied core.",
+        "negative": "Reject face details or surface markings washed out by the external glow.",
+        "boundary": "For coverage A=0, the background receives the halo normally.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-08"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-02"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-C03",
+      "requirement": "Keep unrelated scene content out of the character emission input.",
+      "provenance": [
+        "MODEL-EQ02",
+        "DEC-SCOPE"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/source-selection",
+      "dependencies": [
+        "NDCG-S05"
+      ],
+      "acceptance": {
+        "positive": "A character-only emission buffer excludes stars, rings, labels, and background haze.",
+        "negative": "Reject blurring the entire screenshot as a character-glow implementation.",
+        "boundary": "A no-character scene produces no character-glow output.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-C04",
+      "requirement": "Apply the selected display transform and output encoding exactly once.",
+      "provenance": [
+        "REF-COLOR",
+        "MODEL-EQ06"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/color-pipeline",
+      "dependencies": [
+        "NDCG-C01"
+      ],
+      "acceptance": {
+        "positive": "The scene uses one recorded tone/display transform and one output encoding.",
+        "negative": "Reject double-gamma output or a glow toggle that changes exposure.",
+        "boundary": "A reference fixture uses identity tone mapping with declared encoding.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-C05",
+      "requirement": "Limit overlapping halo luminance with a continuous scalar shoulder.",
+      "provenance": [
+        "MODEL-EQ05"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/compositor",
+      "dependencies": [
+        "NDCG-C01",
+        "NDCG-H08"
+      ],
+      "acceptance": {
+        "positive": "The limiter is nondecreasing, bounded, and multiplies all RGB channels by one scalar.",
+        "negative": "Reject per-channel clipping as the overlap-control mechanism.",
+        "boundary": "Zero input returns zero without division by zero; the shoulder joins continuously.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-10",
+        "MATH-11"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-C06",
+      "requirement": "Leave the core-only scene unchanged outside all authorized glow supports.",
+      "provenance": [
+        "MODEL-EQ03",
+        "MODEL-EQ06"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/compositor",
+      "dependencies": [
+        "NDCG-C02",
+        "NDCG-H07"
+      ],
+      "acceptance": {
+        "positive": "Pixels beyond the padded source supports equal the core-only scene.",
+        "negative": "Reject a fullscreen brightness lift used to imply glow.",
+        "boundary": "With no sources, the entire character-glow pass is neutral.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-04"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-R01",
+      "requirement": "Scale radii from the unclipped projected authored reference size.",
+      "provenance": [
+        "MODEL-EQ03"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/projection",
+      "dependencies": [
+        "NDCG-H05"
+      ],
+      "acceptance": {
+        "positive": "Sigma/h stays fixed when the subject scales.",
+        "negative": "Reject deriving h from a viewport-clipped or pose-jittering bounding box.",
+        "boundary": "A partially offscreen character retains the same radius as before clipping.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-R02",
+      "requirement": "Convert source size and kernel radii into the same pixel coordinate system once.",
+      "provenance": [
+        "MODEL-EQ03"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/resolution",
+      "dependencies": [
+        "NDCG-R01"
+      ],
+      "acceptance": {
+        "positive": "CSS-pixel measurements are multiplied by device-pixel ratio once when targeting physical pixels.",
+        "negative": "Reject mixing CSS h with physical-pixel sigma or double-applying device-pixel ratio.",
+        "boundary": "Normalized profiles agree across device-pixel ratios within declared sampling tolerance.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-R03",
+      "requirement": "Pad source processing by the full maximum kernel support.",
+      "provenance": [
+        "MODEL-EQ03",
+        "MODEL-EQ04"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/target-allocation",
+      "dependencies": [
+        "NDCG-H07",
+        "NDCG-R02"
+      ],
+      "acceptance": {
+        "positive": "Each source receives at least ceil(3 sigma_max) processing padding in render-target pixels.",
+        "negative": "Reject rectangular halo clipping at sprite, atlas, or viewport boundaries.",
+        "boundary": "An offscreen source may contribute into the viewport only from its authorized support.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-R04",
+      "requirement": "Handle subpixel sources without artificially enlarging their glow footprint.",
+      "provenance": [
+        "USR-PRIOR",
+        "MODEL-EQ03"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/sampling",
+      "dependencies": [
+        "NDCG-R02"
+      ],
+      "acceptance": {
+        "positive": "Use area-aware sampling or a separately qualified small-source profile.",
+        "negative": "Reject enforcing an arbitrary fixed minimum radius that turns tiny objects into beads.",
+        "boundary": "An unresolved source is not claimed to preserve unavailable geometric detail.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-V01",
+      "requirement": "Remove unauthorized sources before constructing emission.",
+      "provenance": [
+        "USR-PRIOR",
+        "MODEL-EQ07"
+      ],
+      "applicability": "FOG OF SEA or another restricted-information adaptation",
+      "logical_owner": "render/authorized-view",
+      "dependencies": [
+        "NDCG-S04"
+      ],
+      "acceptance": {
+        "positive": "The emission source set is derived only from information available to the viewer.",
+        "negative": "Reject hidden contacts appearing as halos through fog of war.",
+        "boundary": "A wholly unauthorized source contributes zero at every output pixel.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-V02",
+      "requirement": "Remove fully occluded source fragments before spatial filtering.",
+      "provenance": [
+        "MODEL-EQ07"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/visibility",
+      "dependencies": [
+        "NDCG-S04"
+      ],
+      "acceptance": {
+        "positive": "Only visible source coverage supplies emission.",
+        "negative": "Reject hiding the core after blurring its still-present hidden geometry.",
+        "boundary": "Full occlusion produces exactly zero character glow.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-V03",
+      "requirement": "Block halo contributions onto nearer opaque foreground destinations.",
+      "provenance": [
+        "MODEL-EQ07"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/depth-compositor",
+      "dependencies": [
+        "NDCG-V02"
+      ],
+      "acceptance": {
+        "positive": "Each contribution uses the declared layer/depth visibility gate.",
+        "negative": "Reject treating one blurred depth value as sufficient for sources at different depths.",
+        "boundary": "Equal-depth and anti-aliased boundaries use a fixed declared tolerance.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-V04",
+      "requirement": "Do not renormalize a kernel after visibility removes contributions.",
+      "provenance": [
+        "MODEL-EQ07"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/visibility",
+      "dependencies": [
+        "NDCG-V03",
+        "NDCG-H04"
+      ],
+      "acceptance": {
+        "positive": "Blocking part of a source path only removes its contribution.",
+        "negative": "Reject a surviving half-kernel being scaled back to full energy.",
+        "boundary": "Fully blocked support returns zero rather than a division error.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-12"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-05"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-T01",
+      "requirement": "Keep the uncalibrated reference-reconstruction profile static.",
+      "provenance": [
+        "DEC-SCOPE",
+        "MODEL-EQ08"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "config/temporal-profile",
+      "dependencies": [
+        "NDCG-E01"
+      ],
+      "acceptance": {
+        "positive": "The default multiplier is p(t)=1.",
+        "negative": "Reject claiming a breathing period was inferred from the available still images.",
+        "boundary": "A still reference does not establish temporal behavior.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-T02",
+      "requirement": "Confine optional breathing to the specified shallow gain-only function.",
+      "provenance": [
+        "USR-PRIOR",
+        "MODEL-EQ08",
+        "DEC-SEED"
+      ],
+      "applicability": "optional adaptation profile; not an observed Night in the Woods timing",
+      "logical_owner": "render/temporal-profile",
+      "dependencies": [
+        "NDCG-H08",
+        "NDCG-T01"
+      ],
+      "acceptance": {
+        "positive": "Optional p(t)=1+0.02 sin(2 pi t/31+phi)+0.01 sin(2 pi t/47+psi).",
+        "negative": "Reject radius pulsing, core-opacity pulsing, flashes, or unbounded noise.",
+        "boundary": "The multiplier remains within [0.97,1.03] and its slope bound is 0.005390516 per second.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-13"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-T03",
+      "requirement": "Evaluate optional breathing from stable per-object phases and elapsed time.",
+      "provenance": [
+        "MODEL-EQ08",
+        "USR-PRIOR"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/clock",
+      "dependencies": [
+        "NDCG-T02"
+      ],
+      "acceptance": {
+        "positive": "Object identity determines repeatable phases; time is not a frame counter.",
+        "negative": "Reject per-frame random phase changes or synchronized scene-wide pulse resets.",
+        "boundary": "Different refresh rates at equal elapsed time produce the same multiplier.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-T04",
+      "requirement": "Disable decorative modulation when reduced motion is active.",
+      "provenance": [
+        "USR-PRIOR",
+        "REF-MOTION",
+        "MODEL-EQ08"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "accessibility/effects",
+      "dependencies": [
+        "NDCG-T02"
+      ],
+      "acceptance": {
+        "positive": "Reduced motion sets p(t)=1.",
+        "negative": "Reject a control that disables movement but leaves decorative glow pulsing.",
+        "boundary": "Switching the preference does not alter authorized state or identification.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-Q01",
+      "requirement": "Produce a nontrivial exterior halo in the declared flat-edge fixture.",
+      "provenance": [
+        "MODEL-EQ09",
+        "USR-CURRENT"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "qa/appearance",
+      "dependencies": [
+        "NDCG-C02",
+        "NDCG-H08"
+      ],
+      "acceptance": {
+        "positive": "At d=0.01h, decoded linear halo residual/source luminance is in [0.05,0.10].",
+        "negative": "A zero halo or rim confined to the core fails even if every darkness limit passes.",
+        "boundary": "The fixture uses a nonzero unit-luminance source and excludes anti-aliased core pixels.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-05"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-01"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-Q02",
+      "requirement": "Meet the declared far-tail darkness limit in the flat-edge fixture.",
+      "provenance": [
+        "MODEL-EQ09"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "qa/appearance",
+      "dependencies": [
+        "NDCG-H07",
+        "NDCG-C06"
+      ],
+      "acceptance": {
+        "positive": "At d=0.10h, the linear halo residual/source luminance is no more than 0.002.",
+        "negative": "Reject a broad bright fog bank that satisfies only the near-edge minimum.",
+        "boundary": "Beyond d=0.225h, the compact seed has zero theoretical contribution.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-06",
+        "MATH-04",
+        "MATH-14"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-01",
+        "CF-04"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-Q03",
+      "requirement": "Preserve a dark separation in the declared two-source gap fixture.",
+      "provenance": [
+        "MODEL-EQ09"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "qa/shape-fidelity",
+      "dependencies": [
+        "NDCG-H01",
+        "NDCG-C02"
+      ],
+      "acceptance": {
+        "positive": "Two opposing equal half-plane sources separated by 0.10h give midpoint residual at most 0.025 source luminance.",
+        "negative": "Reject a centroid aura that fills the gap as a solid luminous mass.",
+        "boundary": "This bound is specific to the declared fixture, not every possible tiny gap.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [
+        "MATH-07"
+      ],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-Q04",
+      "requirement": "Verify source-color fidelity through the final display pipeline.",
+      "provenance": [
+        "OBS-01",
+        "USR-PRIOR",
+        "MODEL-EQ06"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "qa/color",
+      "dependencies": [
+        "NDCG-S03",
+        "NDCG-C04",
+        "NDCG-C05"
+      ],
+      "acceptance": {
+        "positive": "Compare palette regions and isolated glow residuals against the approved color-managed profile.",
+        "negative": "Reject whole-core white clipping or swapped material-color identity.",
+        "boundary": "Natural mixing of different emitters is not confused with clipping-induced whitening.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-Q05",
+      "requirement": "Verify scale equivalence at native sampling resolutions.",
+      "provenance": [
+        "MODEL-EQ03",
+        "MODEL-EQ09"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "qa/resolution",
+      "dependencies": [
+        "NDCG-R01",
+        "NDCG-R02",
+        "NDCG-R04"
+      ],
+      "acceptance": {
+        "positive": "At h of 32, 64, and 128 reference pixels and device-pixel ratios 1, 2, and 3, normalized profile error is at most 5% of the flat-edge reference peak.",
+        "negative": "Reject a profile that only works in enlarged or high-resolution screenshots.",
+        "boundary": "Subpixel-source cases use the separately declared sampling profile, not the resolved-source claim.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-Q06",
+      "requirement": "Require native-size visual comparison before declaring the reference effect captured.",
+      "provenance": [
+        "USR-CURRENT",
+        "DEC-SCOPE"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "qa/reference-review",
+      "dependencies": [
+        "NDCG-E02",
+        "NDCG-E03",
+        "NDCG-Q01",
+        "NDCG-Q02",
+        "NDCG-Q03",
+        "NDCG-Q04",
+        "NDCG-Q05"
+      ],
+      "acceptance": {
+        "positive": "Record aligned reference/render crops and explicit visual approval at ordinary viewing size.",
+        "negative": "Reject substituting a low global image error or passing scalar tests for perceptual approval.",
+        "boundary": "Numerically valid but visually unconvincing output remains unapproved.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-06"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-Q07",
+      "requirement": "Preserve essential identification and information with decorative glow disabled.",
+      "provenance": [
+        "USR-PRIOR",
+        "REF-COLOR"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "accessibility/state-equivalence",
+      "dependencies": [
+        "NDCG-S02",
+        "NDCG-T04"
+      ],
+      "acceptance": {
+        "positive": "Core geometry and existing non-glow labels/cues remain available.",
+        "negative": "Reject using halo presence as the sole required state indicator.",
+        "boundary": "Reduced effects reveal no additional hidden information.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-Q08",
+      "requirement": "Validate the numeric domain of every glow-profile input before evaluation.",
+      "provenance": [
+        "MODEL-EQ03",
+        "MODEL-EQ05",
+        "MODEL-EQ08"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "config/validation",
+      "dependencies": [
+        "NDCG-H06",
+        "NDCG-C05"
+      ],
+      "acceptance": {
+        "positive": "Require finite nonnegative gains/weights, valid scale ordering, positive sigma, positive periods, and 0<=b<c.",
+        "negative": "Reject NaN, infinity, invalid dimensions, all-zero mixture weights, and invalid caps.",
+        "boundary": "An empty or zero-size subject is a defined zero-contribution case without evaluating a zero-sigma kernel.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-I01",
+      "requirement": "Keep the reference palette distinct from a native-color-preserving project adaptation.",
+      "provenance": [
+        "USR-PRIOR",
+        "OBS-01"
+      ],
+      "applicability": "adaptation to another project",
+      "logical_owner": "config/palette-profile",
+      "dependencies": [
+        "NDCG-S03",
+        "NDCG-E04"
+      ],
+      "acceptance": {
+        "positive": "The Night in the Woods reconstruction and FOG OF SEA use separately named color policies.",
+        "negative": "Reject repainting every vessel cyan merely to imitate Mae.",
+        "boundary": "Existing semantic or operational colors remain governed by the target project's policy.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [
+        "CF-03"
+      ],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-I02",
+      "requirement": "Do not automatically convert cosmetic character glow into conventional scene illumination.",
+      "provenance": [
+        "USR-PRIOR",
+        "DEC-SCOPE"
+      ],
+      "applicability": "adaptation to a world renderer",
+      "logical_owner": "render/scene-integration",
+      "dependencies": [
+        "NDCG-E04",
+        "NDCG-C03"
+      ],
+      "acceptance": {
+        "positive": "Any point lights, reflections, or environmental scatter have their own authorized source and requirement.",
+        "negative": "Reject a new floodlight, large environment wash, or simulation effect inferred solely from this halo.",
+        "boundary": "Existing legitimate lighting remains unchanged.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-I03",
+      "requirement": "Qualify implementation approximations against output invariants rather than a required number of GPU passes.",
+      "provenance": [
+        "MODEL-EQ04",
+        "DEC-SCOPE"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/implementation-qualification",
+      "dependencies": [
+        "NDCG-H05",
+        "NDCG-Q06"
+      ],
+      "acceptance": {
+        "positive": "A fused filter, cached field, or other approximation passes the same approved profile tests.",
+        "negative": "Reject claiming that three GPU passes are necessary or that a cheap rim is automatically equivalent.",
+        "boundary": "An unqualified approximation remains a different profile.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    },
+    {
+      "id": "NDCG-I04",
+      "requirement": "Label effect degradation as a reduced profile rather than full-reference conformance.",
+      "provenance": [
+        "USR-PRIOR",
+        "DEC-SCOPE"
+      ],
+      "applicability": "character-glow model",
+      "logical_owner": "render/quality-profiles",
+      "dependencies": [
+        "NDCG-I03",
+        "NDCG-Q07"
+      ],
+      "acceptance": {
+        "positive": "A measured constrained-hardware profile may reduce the far layer before sacrificing core readability.",
+        "negative": "Reject silently dropping all outward spread while reporting the full effect as present.",
+        "boundary": "Performance and visual evidence are collected on named hardware before a budget claim.",
+        "execution_status": "planned; only explicitly linked mathematical checks have been executed"
+      },
+      "evidence_refs": [],
+      "status": "specified; renderer conformance and reference fidelity unverified",
+      "conflicts": [],
+      "precedence": "inherited scope and visibility/accessibility constraints govern; numeric seeds are provisional",
+      "supersedes": [],
+      "superseded_by": []
+    }
+  ],
+  "mathematical_evidence": {
+    "execution_date": "2026-09-13",
+    "method": "Independent scalar/quadrature checks in Python using NumPy and SciPy; no game renderer, screenshots, video, or device performance was tested.",
+    "pass_count": 14,
+    "fail_count": 0,
+    "checks": [
+      {
+        "id": "MATH-01",
+        "name": "Unit-mass compact kernels",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "integrals": [
+            1.0000000000000002,
+            0.9999999999999999,
+            1.0
+          ]
+        }
+      },
+      {
+        "id": "MATH-02",
+        "name": "Ordered scales and normalized nonnegative weights",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "sigma_over_h": [
+            0.012,
+            0.035,
+            0.075
+          ],
+          "weights": [
+            0.65,
+            0.3,
+            0.05
+          ],
+          "weight_sum": 1.0
+        }
+      },
+      {
+        "id": "MATH-03",
+        "name": "Continuous compact taper with zero endpoint slope",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "taper_2_5": 1.0,
+          "taper_3": 0.0,
+          "endpoint_slope_estimate": -1.2012613126444194e-06
+        }
+      },
+      {
+        "id": "MATH-04",
+        "name": "Finite support",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "at_0_225h": 0.0,
+          "at_0_3h": 0.0,
+          "infinite_gaussian_counterexample_at_0_225h": 1.8898577852787692e-05
+        }
+      },
+      {
+        "id": "MATH-05",
+        "name": "Positive visible-spread fixture bound",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "residual_at_0_01h": 0.0745312136274832,
+          "required_interval": [
+            0.05,
+            0.1
+          ],
+          "zero_gain_counterexample": 0.0
+        }
+      },
+      {
+        "id": "MATH-06",
+        "name": "Far-tail fixture bound",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "residual_at_0_1h": 0.0011891726216568708,
+          "maximum": 0.002
+        }
+      },
+      {
+        "id": "MATH-07",
+        "name": "Two-source gap",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "gap_width_over_h": 0.1,
+          "midpoint_residual": 0.018724892219066456,
+          "maximum": 0.025
+        }
+      },
+      {
+        "id": "MATH-08",
+        "name": "Opaque-core invariance",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "correct_core_delta": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "naive_overlay_counterexample_delta": [
+            0.010000000000000002,
+            0.030000000000000027,
+            0.040000000000000036
+          ]
+        }
+      },
+      {
+        "id": "MATH-09",
+        "name": "Transparent-RGB source exclusion",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "premultiplied_source": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unpremultiplied_counterexample": [
+            0.1,
+            1.0,
+            0.8
+          ]
+        }
+      },
+      {
+        "id": "MATH-10",
+        "name": "Scalar shoulder monotonicity, bound, and join",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "b": 0.3,
+          "c": 0.5,
+          "max_sampled_output": 0.5,
+          "join_value": 0.3
+        }
+      },
+      {
+        "id": "MATH-11",
+        "name": "Limiter preserves aggregate RGB ratios",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "normalized_RGB_ratio_error": 1.1102230246251565e-16
+        }
+      },
+      {
+        "id": "MATH-12",
+        "name": "Occlusion must not renormalize surviving support",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "correct_remaining_energy": 0.5,
+          "renormalized_counterexample": 1.0
+        }
+      },
+      {
+        "id": "MATH-13",
+        "name": "Optional breathing amplitude and derivative bounds",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "multiplier_interval": [
+            0.97,
+            1.03
+          ],
+          "absolute_slope_bound_per_second": 0.005390515877813647
+        }
+      },
+      {
+        "id": "MATH-14",
+        "name": "Nonnegative monotone flat-edge falloff",
+        "status": "pass",
+        "scope": "mathematical model only; not a game-renderer or perceptual test",
+        "detail": {
+          "sample_count": 100,
+          "largest_positive_increment": 0.0
+        }
+      }
+    ]
+  },
+  "constructed_adversarial_review": [
+    {
+      "id": "RT-01",
+      "kind": "constructed mathematical counterexample, not an observed repository bug",
+      "failed_candidate": "Darkness-only acceptance permits gain=0.",
+      "counterexample": 0.0,
+      "required_lower_bound": 0.05,
+      "correction": "Add a positive exterior residual gate at 0.01h alongside the tail ceiling.",
+      "verification": "MATH-05"
+    },
+    {
+      "id": "RT-02",
+      "kind": "constructed mathematical counterexample, not an observed repository bug",
+      "failed_candidate": "An infinite Gaussian is described as having exact finite support.",
+      "counterexample_at_0_225h": 1.8898577852787692e-05,
+      "correction": "Use a normalized smooth compact taper; keep the infinite Gaussian formula explanatory.",
+      "verification": "MATH-03, MATH-04"
+    },
+    {
+      "id": "RT-03",
+      "kind": "constructed mathematical counterexample, not an observed repository bug",
+      "failed_candidate": "Unpremultiplied transparent RGB is filtered as an emitter.",
+      "counterexample": [
+        0.1,
+        1.0,
+        0.8
+      ],
+      "correction": "Multiply emission by coverage before filtering.",
+      "verification": "MATH-09"
+    },
+    {
+      "id": "RT-04",
+      "kind": "constructed mathematical counterexample, not an observed repository bug",
+      "failed_candidate": "Halo is simply added over an opaque detailed core.",
+      "counterexample_core_delta": [
+        0.01,
+        0.03,
+        0.04
+      ],
+      "correction": "Protect the opaque core with the compositing coverage factor.",
+      "verification": "MATH-08"
+    },
+    {
+      "id": "RT-05",
+      "kind": "constructed mathematical counterexample, not an observed repository bug",
+      "failed_candidate": "A partially blocked blur is renormalized back to full energy.",
+      "counterexample": {
+        "remaining_mass": 0.5,
+        "incorrect_renormalized_mass": 1.0
+      },
+      "correction": "Normalize before visibility only; blocked contributions remain removed.",
+      "verification": "MATH-12"
+    }
+  ],
+  "open_evidence": {
+    "reference_calibration": "Pending aligned, color-managed, background-separated reference crops.",
+    "perceptual_approval": "Pending at ordinary/native viewing size.",
+    "temporal_capture": "No reference-timed breathing claim.",
+    "renderer_validation": "Not performed.",
+    "hardware_performance": "Not measured.",
+    "target_project_reconciliation": "Required only when this proposal is adopted into a project."
+  }
+}

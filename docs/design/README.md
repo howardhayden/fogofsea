@@ -245,3 +245,5 @@ When documents and implementation differ, investigate and resolve the difference
 5. descriptive marketing copy.
 
 Any intentional change must update all affected layers in the same release.
+
+- [20 — Source-local dream glow](20-DREAM-GLOW-FIELD.md): native geometry emission, bounded mathematical field, all entity families, explicit profile and preserved occlusion correction.

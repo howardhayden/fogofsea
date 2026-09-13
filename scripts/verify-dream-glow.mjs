@@ -19,6 +19,10 @@ try {
     { kind: "edge", dpr: 2 }, { kind: "edge", width: 320, height: 240 },
     { kind: "ship", occluder: "full" }, { kind: "penguin", occluder: "full" },
     { kind: "aircraft", occluder: "half" }, { kind: "ship", hidden: true },
+    { kind: "aircraft", occluder: "half", dpr: 2 },
+    { kind: "aircraft", occluder: "half", width: 320, height: 240 },
+    { kind: "penguin", occluder: "half" },
+    { kind: "submarine", occluder: "half" },
   ];
   for (let index = 0; index < cases.length; index++) {
     const result = await page.evaluate((options) => globalThis.GlowFixture.run(options), cases[index]);

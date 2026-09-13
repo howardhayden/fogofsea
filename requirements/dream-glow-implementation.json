@@ -1,0 +1,879 @@
+{
+  "version": "0.1",
+  "source_commit": "78fd15225a763f6d535a96da2501b97e685ad6c9",
+  "authority": "User application request, 2026-09-13",
+  "reference_file": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+  "reference_sha256": "0ed5c5a09e45832c59ffa5a170dca26c624c07028acdd61eaadcc7713f0c884d",
+  "continuous_model_pixel_fitted": false,
+  "perceptual_approval": false,
+  "representative_device_performance_verified": false,
+  "implementation_profile": "48-pixel-reference compact radial discrete kernel; full-resolution core mask",
+  "atoms": [
+    {
+      "id": "NDCG-E01",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-E02",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-E03",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-E04",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-S01",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-S02",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-S03",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-S04",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-S05",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-S06",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-H01",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-H02",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-H03",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-H04",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-H05",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-H06",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-H07",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-H08",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-C01",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-C02",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-C03",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-C04",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-C05",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-C06",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-R01",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-R02",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-R03",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-R04",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-V01",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-V02",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-V03",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-V04",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-T01",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-T02",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-T03",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-T04",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-Q01",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-Q02",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-Q03",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-Q04",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-Q05",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-Q06",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-Q07",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-Q08",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-I01",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-I02",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-I03",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "NDCG-I04",
+      "provenance": "requirements/reference/nitw-character-glow-atoms-v0.1.json",
+      "status": "implemented-candidate; qualification pending",
+      "owners": [
+        "app/dreamEmission.ts",
+        "app/dreamGlowMath.ts",
+        "app/dreamGlowRenderer.ts",
+        "app/battlefieldScene.ts",
+        "app/Battlefield.tsx"
+      ],
+      "verification": [
+        "tests/dream-emission.test.ts",
+        "tests/dream-glow-render-fixture.ts",
+        "scripts/verify-dream-glow.mjs"
+      ],
+      "supersedes": []
+    }
+  ],
+  "scope_note": "Implemented bounded-raster profile. Reference likeness, full scale-equivalence matrix, physical-device pacing and all accessibility combinations are not approved by unit/pixel tests alone.",
+  "correction": "Full-resolution destination guard follows field resampling; conservative far-source bound may trim mixed-depth spill. Initial 40-pixel aircraft occlusion failure is preserved; zero-leak threshold unchanged."
+}

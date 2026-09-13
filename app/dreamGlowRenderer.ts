@@ -172,13 +172,29 @@ export class DreamGlowRenderer {
     });
     this.scatter = new THREE.ShaderMaterial({
       name: "dream-glow-source-local-accumulation",
-      uniforms: { uRect: rect(), uField: { value: this.filtered.texture }, uUvScale: { value: new THREE.Vector2() } },
+      uniforms: {
+        uRect: rect(), uField: { value: this.filtered.texture }, uUvScale: { value: new THREE.Vector2() },
+        uSceneDepth: { value: this.base.depthTexture }, uNearFar: { value: nearFar.clone() },
+        uPerspective: { value: perspective }, uFrameSize: { value: new THREE.Vector2() },
+        uSourceFarDistance: { value: 0 },
+      },
       vertexShader: quadVertex,
       fragmentShader: `
+        ${depthFunctions}
         uniform sampler2D uField;
         uniform vec2 uUvScale;
+        uniform vec2 uFrameSize;
+        uniform float uSourceFarDistance;
         varying vec2 vUv;
-        void main() { gl_FragColor = vec4(texture2D(uField, vUv * uUvScale).rgb, 0.0); }
+        void main() {
+          // Resampling may straddle a foreground edge even when every capture
+          // texel passed its own depth test. Guard the final physical pixel.
+          // The farthest source bound is conservative: it may trim mixed-depth
+          // spill but never admits light from a contributor behind foreground.
+          float destination = viewDistance(texture2D(uSceneDepth, gl_FragCoord.xy / uFrameSize).x);
+          if (uSourceFarDistance > destination + max(0.001, uSourceFarDistance * 0.0001)) discard;
+          gl_FragColor = vec4(texture2D(uField, vUv * uUvScale).rgb, 0.0);
+        }
       `,
       transparent: true, depthTest: false, depthWrite: false, toneMapped: false,
       blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor,
@@ -292,11 +308,12 @@ export class DreamGlowRenderer {
     const referencePixels = worldReference * height * camera.projectionMatrix.elements[5] * 0.5
       / (camera instanceof THREE.PerspectiveCamera ? distance : 1);
     if (!Number.isFinite(referencePixels) || referencePixels <= 0) return null;
-    let left = Infinity; let right = -Infinity; let bottom = Infinity; let top = -Infinity;
+    let left = Infinity; let right = -Infinity; let bottom = Infinity; let top = -Infinity; let farDistance = 0;
     for (let index = 0; index < 8; index++) {
       this.corner.set(index & 1 ? this.worldBox.max.x : this.worldBox.min.x, index & 2 ? this.worldBox.max.y : this.worldBox.min.y, index & 4 ? this.worldBox.max.z : this.worldBox.min.z);
       this.corner.applyMatrix4(camera.matrixWorldInverse);
       if (-this.corner.z <= camera.near) return null;
+      farDistance = Math.max(farDistance, -this.corner.z);
       this.corner.applyMatrix4(camera.projectionMatrix);
       const x = (this.corner.x * 0.5 + 0.5) * width;
       const y = (this.corner.y * 0.5 + 0.5) * height;
@@ -312,7 +329,7 @@ export class DreamGlowRenderer {
     // Extend the far edges to preserve exactly REF capture pixels/reference.
     right = left + captureWidth * pixelsPerCapturePixel;
     top = bottom + captureHeight * pixelsPerCapturePixel;
-    return { rect: new THREE.Vector4(left / width, bottom / height, (right - left) / width, (top - bottom) / height), captureWidth, captureHeight };
+    return { rect: new THREE.Vector4(left / width, bottom / height, (right - left) / width, (top - bottom) / height), captureWidth, captureHeight, farDistance };
   }
 
   render(scene: THREE.Scene, camera: Camera) {
@@ -373,6 +390,10 @@ export class DreamGlowRenderer {
         this.draw(this.filtered, this.convolution);
         this.scatter.uniforms.uRect.value.copy(rect);
         this.scatter.uniforms.uUvScale.value.set(cw / SIZE, ch / SIZE);
+        this.scatter.uniforms.uFrameSize.value.set(width, height);
+        this.scatter.uniforms.uNearFar.value.set(camera.near, camera.far);
+        this.scatter.uniforms.uPerspective.value = camera instanceof THREE.PerspectiveCamera;
+        this.scatter.uniforms.uSourceFarDistance.value = footprint.farDistance;
         renderer.autoClear = false;
         this.draw(this.accumulation, this.scatter);
         this.renderedSubjects++;
