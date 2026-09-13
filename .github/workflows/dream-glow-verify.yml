@@ -1,0 +1,79 @@
+name: Dream glow implementation verification
+on:
+  push:
+    branches: [codex/dream-glow-field-2026-09-13]
+    paths: [.github/dream-glow-transfer.ready]
+permissions:
+  contents: write
+concurrency:
+  group: dream-glow-implementation
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Apply checksum-verified source patch
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, lzma, pathlib
+          paths = sorted(pathlib.Path('.github').glob('dream-glow-transfer.part*'))
+          assert len(paths) == 4, 'Expected exactly four payload parts'
+          patch = lzma.decompress(base64.b64decode(''.join(p.read_text().strip() for p in paths), validate=True))
+          assert hashlib.sha256(patch).hexdigest() == '464ae359ea55f47abcb6d6d7f5336247bc7e81204d4ca45cc5d255ebb3ea9f70'
+          pathlib.Path('/tmp/dream-glow.patch').write_bytes(patch)
+          PY
+          git apply --check /tmp/dream-glow.patch
+          git apply --index /tmp/dream-glow.patch
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Check TypeScript and lint
+        run: npm run typecheck && npm run lint
+      - name: Test glow invariants
+        run: node --import tsx --test tests/dream-emission.test.ts
+      - name: Commit applied implementation on feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Replace aura shells with native shape-derived glow for all entity families'
+          git push origin HEAD:codex/dream-glow-field-2026-09-13
+      - name: Install Chromium for real WebGL checks
+        run: npx playwright install --with-deps chromium
+      - name: Verify rendered glow and occlusion
+        id: pixels
+        continue-on-error: true
+        run: node scripts/verify-dream-glow.mjs
+      - name: Run complete non-browser gate
+        id: release
+        continue-on-error: true
+        run: npm run check
+      - name: Run existing environment browser checks
+        id: browser
+        continue-on-error: true
+        run: npx playwright test tests/browser/environment-visuals.spec.ts
+      - name: Preserve verification evidence
+        if: always()
+        run: |
+          mkdir -p evidence/dream-glow
+          git rev-parse HEAD > evidence/dream-glow/commit.txt
+          printf '%s\n' 'pixels=${{ steps.pixels.outcome }}' 'release=${{ steps.release.outcome }}' 'browser=${{ steps.browser.outcome }}' > evidence/dream-glow/outcomes.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dream-glow-verification
+          path: |
+            evidence/dream-glow
+            test-results
+          if-no-files-found: error
+          retention-days: 7
+      - name: Require all verification gates
+        if: always()
+        run: |
+          test '${{ steps.pixels.outcome }}' = success
+          test '${{ steps.release.outcome }}' = success
+          test '${{ steps.browser.outcome }}' = success
