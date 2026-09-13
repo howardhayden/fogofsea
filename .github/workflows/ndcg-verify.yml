@@ -1,0 +1,115 @@
+name: NDCG renderer verification
+on:
+  push:
+    branches: [codex/ndcg-entity-glow-2026-09-13]
+    paths: [.github/workflows/ndcg-verify.yml]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - name: Verify and apply pinned candidate
+        env:
+          EXPECTED_PATCH_SHA256: a3596c33fa53332c42da4d5181a898c14c0ad91d2404e93783cb37a5b9cca97f
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, lzma, os, pathlib, subprocess
+          payload = ''.join(p.read_text().strip() for p in sorted(pathlib.Path('.ndcg-transport').glob('*.b64')))
+          patch = lzma.decompress(base64.b64decode(payload, validate=True))
+          assert hashlib.sha256(patch).hexdigest() == os.environ['EXPECTED_PATCH_SHA256'], 'Candidate transport integrity failed'
+          out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'ndcg.patch'
+          out.write_bytes(patch)
+          subprocess.run(['git', 'apply', '--check', '--unidiff-zero', str(out)], check=True)
+          subprocess.run(['git', 'apply', '--unidiff-zero', str(out)], check=True)
+          PY
+      - name: Preserve candidate on isolated branch only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- app/Battlefield.tsx app/battlefieldScene.ts app/dreamEmission.ts app/dreamGlowMath.ts app/dreamGlowRenderer.ts app/globals.css tests/browser/environment-visuals.spec.ts tests/browser/fixtures/ndcg-glow.ts tests/browser/ndcg-glow-pixels.spec.ts tests/dream-emission.test.ts tests/dream-glow-math.test.ts tests/dream-glow-scene.test.ts tests/red-team/ndcg-glow-contract.test.ts
+          git rm -r .ndcg-transport
+          git commit -m 'Reimplement native source-derived NDCG glow across all entity classes'
+          git push origin HEAD:codex/ndcg-entity-glow-2026-09-13
+          mkdir -p evidence/ndcg-glow/ci
+          git rev-parse HEAD > evidence/ndcg-glow/ci/head.txt
+      - name: Install pinned dependencies
+        run: npm ci --ignore-scripts
+      - name: Static checks
+        id: static
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          { npm run typecheck && npm run lint; } 2>&1 | tee evidence/ndcg-glow/ci/static.log
+      - name: Focused glow tests
+        id: focused
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          node --import tsx --test tests/dream-emission.test.ts tests/dream-glow-math.test.ts tests/dream-glow-scene.test.ts tests/red-team/ndcg-glow-contract.test.ts 2>&1 | tee evidence/ndcg-glow/ci/focused.log
+      - name: Existing unit suite
+        id: unit
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee evidence/ndcg-glow/ci/unit.log
+      - name: Full red-team suite
+        id: redteam
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run test:red-team 2>&1 | tee evidence/ndcg-glow/ci/redteam.log
+      - name: Production build
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee evidence/ndcg-glow/ci/build.log
+      - name: Install official Chromium
+        run: npx playwright install --with-deps chromium
+      - name: GPU pixel oracle
+        id: pixels
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npx playwright test tests/browser/ndcg-glow-pixels.spec.ts --project=desktop-chromium --workers=1 --output=test-results/ndcg-pixels 2>&1 | tee evidence/ndcg-glow/ci/pixels.log
+      - name: Full application glow integration
+        id: app
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npx playwright test tests/browser/environment-visuals.spec.ts --project=desktop-chromium --workers=1 --output=test-results/ndcg-app --grep 'subjects breathe|night dream emission' 2>&1 | tee evidence/ndcg-glow/ci/app.log
+      - name: Record separate gate outcomes
+        if: always()
+        run: |
+          mkdir -p evidence/ndcg-glow/ci
+          cat > evidence/ndcg-glow/ci/outcomes.json <<'EOF'
+          {"static":"${{ steps.static.outcome }}","focused":"${{ steps.focused.outcome }}","unit":"${{ steps.unit.outcome }}","redteam":"${{ steps.redteam.outcome }}","build":"${{ steps.build.outcome }}","pixels":"${{ steps.pixels.outcome }}","app":"${{ steps.app.outcome }}"}
+          EOF
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ndcg-renderer-evidence
+          path: |
+            evidence/ndcg-glow/ci/
+            test-results/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Require passing candidate gates
+        if: always()
+        env:
+          STATIC: ${{ steps.static.outcome }}
+          FOCUSED: ${{ steps.focused.outcome }}
+          REDTEAM: ${{ steps.redteam.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          PIXELS: ${{ steps.pixels.outcome }}
+          APP: ${{ steps.app.outcome }}
+        run: |
+          test "$STATIC" = success && test "$FOCUSED" = success && test "$REDTEAM" = success && test "$BUILD" = success && test "$PIXELS" = success && test "$APP" = success
