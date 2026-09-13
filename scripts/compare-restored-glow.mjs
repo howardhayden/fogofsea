@@ -6,13 +6,13 @@ const out='test-results/glow-performance';await mkdir(out,{recursive:true});
 const browser=await webkit.launch({headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:800},deviceScaleFactor:1.8,reducedMotion:'reduce'});
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
-const records=[];
+const records=[];let motion=null;
 try{
  await page.goto('http://127.0.0.1:4174/');
  await page.evaluate(async()=>{
   const {DreamGlowRenderer}=await import('/app/dreamGlowRenderer.ts');
   const render=DreamGlowRenderer.prototype.render;window.__instances=new Set();
-  DreamGlowRenderer.prototype.render=function(scene,camera){window.__instances.add(this);window.__glow={pipeline:this,scene,camera};return render.call(this,scene,camera);};
+  DreamGlowRenderer.prototype.render=function(scene,camera){window.__instances.add(this);window.__glow={pipeline:this,scene,camera};if(window.__times)window.__times.push(performance.now());return render.call(this,scene,camera);};
  });
  await page.getByRole('button',{name:'PLAY WITHOUT BROWSER SAVING'}).click();
  await page.locator('.warfare-grid').getByRole('button',{name:/Intelligence and reconnaissance/i}).click();
@@ -22,6 +22,9 @@ try{
  await page.getByRole('button',{name:'EMBARKED AVIATION',exact:true}).click();
  for(const label of ['Deck-launched multirole aircraft','Maritime mission helicopter'])for(let i=0;i<3;i++)await page.getByRole('button',{name:'Add one '+label,exact:true}).click();
  await page.waitForTimeout(600);
+ // Phase navigation can genuinely unmount the canvas. Lifetime retention is
+ // required within this active canvas, not across a destroyed WebGL context.
+ await page.evaluate(()=>{window.__instances=new Set([window.__glow.pipeline]);});
  for(const time of ['dawn','day','dusk','night']){
   await page.locator('.time-control').getByRole('button',{name:time,exact:true}).click();
   for(const view of ['air-side','air-overhead','surface','subsurface']){
@@ -46,10 +49,18 @@ try{
    for(const key of ['beforeCapture','afterCapture']){await writeFile(`${out}/${time}-${view}-${key}.png`,Buffer.from(record[key].split(',')[1],'base64'));delete record[key];}
    records.push({time,view,...record});console.log(time,view,JSON.stringify(record));
    assert.equal(record.bad,0,'complete frame must preserve approved pixels within one byte');
-   assert.equal(record.darkened,0,'no lost scene shading');assert.equal(record.glError,0);assert.equal(record.instances,1,'scene switches must retain one pipeline');
+   assert.equal(record.darkened,0,'no lost scene shading');assert.equal(record.glError,0);assert.equal(record.instances,1,'scene switches must retain one pipeline on the active canvas');
    assert.deepEqual(record.sources,[record.sources[0],record.sources[0]],'no emitters may be dropped');
    assert.equal(record.status,time==='day'?'off':'sampled-radial-native-color');
   }
  }
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.locator('.depth-control').getByRole('button',{name:'air',exact:true}).click();
+ await page.waitForTimeout(1500);
+ await page.evaluate(()=>{window.__times=[];window.__start=performance.now();});
+ await page.waitForTimeout(5000);
+ motion=await page.evaluate(()=>{const times=window.__times;window.__times=null;return {duration:performance.now()-window.__start,times,intervals:times.slice(1).map((t,i)=>t-times[i]),instances:window.__instances.size,sources:window.__glow.pipeline.renderedSubjects};});
+ console.log('live-motion',JSON.stringify(motion));
+ assert.equal(motion.instances,1);assert.ok(motion.times.length>0,'animated renderer must not be disabled');
  assert.deepEqual(errors,[]);
-}finally{await writeFile(out+'/comparison.json',JSON.stringify({browser:'macOS WebKit',records,errors},null,2));await browser.close();}
+}finally{await writeFile(out+'/comparison.json',JSON.stringify({browser:'macOS WebKit',records,motion,errors},null,2));await browser.close();}
