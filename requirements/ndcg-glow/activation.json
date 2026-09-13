@@ -1,0 +1,65 @@
+{
+  "format": "fog-of-sea-ndcg-activation-v1",
+  "date": "2026-09-13",
+  "baselineCommit": "78fd15225a763f6d535a96da2501b97e685ad6c9",
+  "testedCodeCommit": "7a3f1bc3a3ae07e9deec5e8f7355b31da0a46f66",
+  "reference": {
+    "name": "nitw_character_glow_atoms_v0_1.json",
+    "sha256": "0ed5c5a09e45832c59ffa5a170dca26c624c07028acdd61eaadcc7713f0c884d",
+    "source": "User-approved preceding conversation artifact; byte-identical original and full per-atom implementation/evidence crosswalk accompany the delivery bundle.",
+    "bundlePaths": ["requirements/ndcg-glow/reference-v0.1.json", "requirements/ndcg-glow/model-v0.1.md", "requirements/ndcg-glow/implementation-v0.1.json"],
+    "atomIds": ["NDCG-E01","NDCG-E02","NDCG-E03","NDCG-E04","NDCG-S01","NDCG-S02","NDCG-S03","NDCG-S04","NDCG-S05","NDCG-S06","NDCG-H01","NDCG-H02","NDCG-H03","NDCG-H04","NDCG-H05","NDCG-H06","NDCG-H07","NDCG-H08","NDCG-C01","NDCG-C02","NDCG-C03","NDCG-C04","NDCG-C05","NDCG-C06","NDCG-R01","NDCG-R02","NDCG-R03","NDCG-R04","NDCG-V01","NDCG-V02","NDCG-V03","NDCG-V04","NDCG-T01","NDCG-T02","NDCG-T03","NDCG-T04","NDCG-Q01","NDCG-Q02","NDCG-Q03","NDCG-Q04","NDCG-Q05","NDCG-Q06","NDCG-Q07","NDCG-Q08","NDCG-I01","NDCG-I02","NDCG-I03","NDCG-I04"]
+  },
+  "precedence": ["state-authority","information-safety","accessibility","semantic-correctness","performance","aesthetic-fidelity"],
+  "supersession": {
+    "scope": "Only dream-entity rendering; this activation supersedes incompatible VS-DREAM-001 details in the historical visual-smoothness register and design 18.",
+    "replaced": ["three enlarged halo meshes", "non-emissive core restriction", "radius-breathing glow", "42-subject/126-halo mesh budget"],
+    "replacement": ["actual visible source regions", "fixed native luminous core", "bounded gain-only modulation", "128-subject/zero-halo-mesh budget with explicit reductions"],
+    "retained": ["all compatible visual-smoothness requirements", "state authority", "disclosed-contact boundaries", "wake semantics", "accessibility", "physical-device performance floors", "historical requirements and failed evidence"]
+  },
+  "owners": {
+    "admission": "app/battlefieldScene.ts",
+    "sourceAndCore": "app/dreamEmission.ts",
+    "math": "app/dreamGlowMath.ts",
+    "renderer": "app/dreamGlowRenderer.ts",
+    "lifecycleAndFallback": "app/Battlefield.tsx"
+  },
+  "families": ["ship","submarine","aircraft","wildlife","sea-creature"],
+  "profile": {
+    "sigmaRatios": [0.012,0.035,0.075],
+    "weights": [0.65,0.30,0.05],
+    "nightGain": 0.28,
+    "taperBeginsAtSigma": 2.5,
+    "supportSigma": 3,
+    "radialSamplesPerScale": 128,
+    "sourceTargetPixels": 256,
+    "maximumReferencePixels": 512,
+    "maximumSubjects": 128,
+    "maximumHaloMeshes": 0,
+    "reduction": "Explicit core-only capability/range/budget profiles, not full-reference conformance."
+  },
+  "verification": {
+    "run": 34784071814,
+    "report": "evidence/ndcg-glow/REPORT.md",
+    "focusedPassed": 30,
+    "redTeamPassed": 77,
+    "countsOverlap": true,
+    "gpuPassed": 23,
+    "applicationPassed": 2,
+    "typecheck": "pass",
+    "lint": "pass",
+    "productionBuild": "pass",
+    "fullNpmTest": "Two reproduced baseline astronomy-engine Body import failures; not green.",
+    "scope": "Executed fixtures on official Chromium/SwiftShader, not universal conformance.",
+    "Q05": "Nine 32/64/128 CSS-pixel by DPR 1/2/3 fixtures pass <=0.007 normalized curve error over 0.015h..0.20h."
+  },
+  "openQualification": {
+    "E02_Q06": "Native-size reference calibration and author approval.",
+    "R04": "Exhaustive subpixel qualification beyond tested sizes.",
+    "C05": "Dense overlapping translucent-source stress beyond current fixtures.",
+    "Q07": "Complete assistive-technology regression; existing non-color controls retained.",
+    "physicalPerformance": "Strong/weak physical-device frame-pacing budgets remain in force and unverified.",
+    "extendedMatrix": "Alpha-texture, complex transparency, hostile weather and context recovery not exhaustive.",
+    "originalGameShaderRecovered": false
+  }
+}

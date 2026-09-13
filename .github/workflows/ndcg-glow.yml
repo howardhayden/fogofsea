@@ -1,0 +1,46 @@
+name: Native dream glow regression
+on:
+  pull_request:
+    paths: ['app/**', 'tests/**', 'requirements/ndcg-glow/**', '.github/workflows/ndcg-glow.yml']
+  push:
+    branches: [codex/ndcg-entity-glow-2026-09-13]
+    paths: ['app/**', 'tests/**', '.github/workflows/ndcg-glow.yml']
+permissions:
+  contents: read
+concurrency:
+  group: ndcg-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  glow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - name: Static, source, anatomical, mathematical and adversarial gates
+        run: |
+          npm run typecheck
+          npm run lint
+          node --import tsx --test tests/dream-emission.test.ts tests/dream-glow-math.test.ts tests/dream-glow-scene.test.ts tests/red-team/ndcg-glow-contract.test.ts
+          npm run test:red-team
+          npm run build
+      - name: GPU pixel gates
+        run: npx playwright test tests/browser/ndcg-glow-pixels.spec.ts --project=desktop-chromium --workers=1 --output=test-results/ndcg-pixels
+      - name: Application integration
+        run: npx playwright test tests/browser/environment-visuals.spec.ts --project=desktop-chromium --workers=1 --output=test-results/ndcg-app --grep 'subjects breathe|night dream emission'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-dream-glow-evidence
+          path: |
+            evidence/ndcg-glow/gpu/
+            evidence/ndcg-glow/app/
+            test-results/
+          retention-days: 7
+          if-no-files-found: warn
