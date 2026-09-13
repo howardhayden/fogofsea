@@ -2,7 +2,7 @@
  * The constants are reconstruction parameters, not recovered game shaders.
  */
 export const DREAM_GLOW_MODEL = Object.freeze({
-  version: "ndcg-0.1-native-color",
+  version: "ndcg-0.2-view-conditioned-native-color",
   sigmaRatios: Object.freeze([0.012, 0.035, 0.075]),
   weights: Object.freeze([0.65, 0.30, 0.05]),
   gain: 0.28,
@@ -15,6 +15,7 @@ export const DREAM_GLOW_MODEL = Object.freeze({
 });
 
 export type GlowTap = Readonly<{ x: number; y: number; weight: number }>;
+export type GlowPoint2 = Readonly<{ x: number; y: number }>;
 
 export function compactGlowKernel(radiusInSigmas: number): number {
   if (!Number.isFinite(radiusInSigmas) || radiusInSigmas < 0) return 0;
@@ -63,6 +64,70 @@ export function projectedGlowReference(worldDiameter: number, viewDepth: number,
   if (![worldDiameter, viewDepth, projectionY, viewportHeight].every((value) => Number.isFinite(value) && value > 0)) return 0;
   const projected = worldDiameter * projectionY * viewportHeight / (2 * viewDepth);
   return Number.isFinite(projected) ? projected : 0;
+}
+
+function cross(origin: GlowPoint2, a: GlowPoint2, b: GlowPoint2): number {
+  return (a.x - origin.x) * (b.y - origin.y) - (a.y - origin.y) * (b.x - origin.x);
+}
+
+/** Area of the projected canonical emitter bounds. The convex hull makes this
+ * invariant to image-plane rotation while remaining sensitive to genuine
+ * out-of-plane foreshortening. Points are deliberately not viewport-clipped.
+ */
+export function projectedConvexHullArea(points: readonly GlowPoint2[]): number {
+  if (points.length < 3 || points.some(({ x, y }) => !Number.isFinite(x) || !Number.isFinite(y))) return 0;
+  const sorted = [...points].sort((a, b) => a.x - b.x || a.y - b.y);
+  const unique = sorted.filter((point, index) => index === 0 || point.x !== sorted[index - 1].x || point.y !== sorted[index - 1].y);
+  if (unique.length < 3) return 0;
+  const lower: GlowPoint2[] = [];
+  for (const point of unique) {
+    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], point) <= 0) lower.pop();
+    lower.push(point);
+  }
+  const upper: GlowPoint2[] = [];
+  for (let index = unique.length - 1; index >= 0; index--) {
+    const point = unique[index];
+    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], point) <= 0) upper.pop();
+    upper.push(point);
+  }
+  const hull = lower.slice(0, -1).concat(upper.slice(0, -1));
+  let doubledArea = 0;
+  for (let index = 0; index < hull.length; index++) {
+    const a = hull[index];
+    const b = hull[(index + 1) % hull.length];
+    doubledArea += a.x * b.y - a.y * b.x;
+  }
+  const area = Math.abs(doubledArea) * 0.5;
+  return Number.isFinite(area) ? area : 0;
+}
+
+/**
+ * Adapt the original sphere-derived upper bound to the emitter's actual
+ * projected broadness. A broadside/top view therefore keeps the already-good
+ * radius, while an edge-on/side view contracts it by the square root of the
+ * projected-area ratio instead of carrying the invisible third dimension into
+ * screen space.
+ *
+ * For an orthographic broadside of the largest canonical box face:
+ *   projectedArea = maxFaceArea * pixelsPerWorldUnit^2
+ * so the area-derived result exactly equals sphereReference. The min() makes
+ * the sphere value a ceiling when perspective exposes more than one face.
+ */
+export function viewConditionedGlowReference(
+  sphereReference: number,
+  projectedArea: number,
+  worldSizeX: number,
+  worldSizeY: number,
+  worldSizeZ: number,
+  sphereDiameterWorld: number,
+): number {
+  const values = [sphereReference, projectedArea, worldSizeX, worldSizeY, worldSizeZ, sphereDiameterWorld];
+  if (!values.every((value) => Number.isFinite(value) && value > 0)) return 0;
+  const maximumFaceArea = Math.max(worldSizeX * worldSizeY, worldSizeX * worldSizeZ, worldSizeY * worldSizeZ);
+  if (!Number.isFinite(maximumFaceArea) || maximumFaceArea <= 0) return 0;
+  const areaReference = sphereDiameterWorld * Math.sqrt(projectedArea / maximumFaceArea);
+  if (!Number.isFinite(areaReference) || areaReference <= 0) return 0;
+  return Math.min(sphereReference, areaReference);
 }
 
 /** Test oracle: integrate the radial field outside a uniform straight edge.
