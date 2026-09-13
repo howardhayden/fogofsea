@@ -277,22 +277,7 @@ button { font: inherit; }
 .fallback-aircraft.rotor::before, .fallback-aircraft.rotor::after { content: ""; position: absolute; background: #c4d1cc; }
 .fallback-aircraft.rotor::before { left: 13px; top: 5px; width: 8px; height: 16px; border-radius: 45%; }
 .fallback-aircraft.rotor::after { left: 0; right: 0; top: 9px; height: 2px; }
-.fallback-dream-halo { --dream-opacity: .22; --dream-view: 1; --dream-scale: 1.09; position: absolute; z-index: 0; display: block; margin: 0; padding: 0; pointer-events: none; color: #8ebbb3; opacity: calc(var(--dream-opacity) * var(--dream-view)); background: currentColor; filter: drop-shadow(0 0 2px color-mix(in srgb, currentColor 48%, transparent)) drop-shadow(0 0 5px color-mix(in srgb, currentColor 28%, transparent)); animation: dream-emission-breathe var(--dream-duration, 31s) ease-in-out var(--dream-delay, 0s) infinite; transform-origin: center; }
-.fallback-dream-halo.ship { width: 54px; height: 13px; transform: rotate(-12deg); clip-path: polygon(0 21%, 90% 0, 100% 74%, 78% 100%, 12% 90%); scale: var(--dream-scale); }
-.fallback-dream-halo.ship.aviation { width: 88px; height: 17px; }
-.fallback-dream-halo.ship.submarine { --dream-scale: 1.11; width: 43px; border-radius: 50%; color: #638f96; }
-.fallback-dream-halo.aircraft { --dream-scale: 1.16; width: 33px; height: 22px; transform: rotate(-9deg); color: #9ccdc5; scale: var(--dream-scale); }
-.fallback-dream-halo.aircraft.wing { clip-path: polygon(0 47%, 37% 35%, 46% 0, 55% 0, 63% 35%, 100% 47%, 100% 57%, 59% 57%, 55% 100%, 45% 100%, 41% 57%, 0 57%); }
-.fallback-dream-halo.aircraft.rotor { clip-path: polygon(0 42%, 38% 42%, 42% 7%, 58% 7%, 62% 42%, 100% 42%, 100% 55%, 62% 55%, 58% 94%, 42% 94%, 38% 55%, 0 55%); }
-.battlefield-canvas[data-time="dusk"] .fallback-dream-halo { --dream-opacity: .27; }
-.battlefield-canvas[data-time="night"] .fallback-dream-halo { --dream-opacity: .32; }
-.battlefield-canvas[data-time="day"] .fallback-dream-halo { display: none; }
-@keyframes dream-emission-breathe {
-  0% { opacity: calc(var(--dream-opacity) * var(--dream-view) * .92); scale: var(--dream-scale); filter: drop-shadow(0 0 2px color-mix(in srgb, currentColor 42%, transparent)) drop-shadow(0 0 4px color-mix(in srgb, currentColor 22%, transparent)); }
-  31% { opacity: calc(var(--dream-opacity) * var(--dream-view) * 1.06); scale: calc(var(--dream-scale) + .004); }
-  67% { opacity: calc(var(--dream-opacity) * var(--dream-view) * .96); scale: calc(var(--dream-scale) + .001); }
-  100% { opacity: calc(var(--dream-opacity) * var(--dream-view) * 1.1); scale: calc(var(--dream-scale) + .006); filter: drop-shadow(0 0 3px color-mix(in srgb, currentColor 48%, transparent)) drop-shadow(0 0 6px color-mix(in srgb, currentColor 28%, transparent)); }
-}
+/* NDCG-I04: non-WebGL fallback is explicitly core-only; no enlarged CSS aura. */
 .fallback-stars, .fallback-sea-life, .fallback-wildlife { display: none; position: absolute; inset: 0; overflow: hidden; }
 .fallback-stars { z-index: 0; isolation: isolate; }
 .layer-stars .fallback-scene { background: linear-gradient(148deg, transparent 0 43%, rgba(188,170,218,.12) 44% 47%, transparent 48%), linear-gradient(28deg, transparent 0 58%, rgba(121,200,198,.1) 59% 62%, transparent 63%), linear-gradient(155deg, #302d50 0%, #3d4364 42%, #604b62 69%, #31535e 100%); }
@@ -468,25 +453,18 @@ button { font: inherit; }
   100% { transform: translate3d(var(--cloud-drift-x), .2%, 0) scale(.99, 1.025); clip-path: polygon(0 68%, 12% 56%, 26% 45%, 32% 28%, 44% 8%, 57% 5%, 67% 32%, 72% 45%, 88% 58%, 100% 69%, 92% 94%, 70% 84%, 51% 98%, 31% 84%, 10% 95%); }
 }
 @keyframes fallback-fog-drift { to { translate: 14% 1.5%; } }
-.layer-stars .fallback-horizon, .layer-stars .fallback-grid, .layer-stars .fallback-ship, .layer-stars .fallback-aircraft, .layer-stars .fallback-dream-halo, .layer-stars .fallback-contact, .layer-stars .fallback-weather, .layer-stars .ice-floe { display: none; }
+.layer-stars .fallback-horizon, .layer-stars .fallback-grid, .layer-stars .fallback-ship, .layer-stars .fallback-aircraft, .layer-stars .fallback-contact, .layer-stars .fallback-weather, .layer-stars .ice-floe { display: none; }
 .layer-air .fallback-ship { opacity: .2; }
-.layer-air .fallback-dream-halo.ship { --dream-view: .2; }
 .layer-air .fallback-aircraft { opacity: .95; }
 .layer-sky .fallback-scene { background: linear-gradient(180deg, #203747 0%, #426477 58%, #567e89 78%, #284e5f 79%, #203f4f 100%); }
 .theme-light .layer-sky .fallback-scene { background: linear-gradient(180deg, #aecbd0 0%, #c7dedd 58%, #dfebe6 78%, #74a6ad 79%, #5e8f99 100%); }
 .layer-sky .fallback-horizon { top: 78%; }
 .layer-sky .fallback-ship { opacity: .1; }
-.layer-sky .fallback-dream-halo.ship { --dream-view: .1; }
 .layer-sky .fallback-aircraft { opacity: .62; }
-.layer-sky .fallback-dream-halo.aircraft { --dream-view: .62; }
 .layer-sky .fallback-grid { display: none; }
 .layer-surface .fallback-aircraft { opacity: .3; }
-.layer-surface .fallback-dream-halo.aircraft { --dream-view: .3; }
 .layer-surface .fallback-air-independent-submarine, .layer-surface .fallback-long-endurance-submarine { opacity: .34; }
-.layer-surface .fallback-dream-halo.submarine { --dream-view: .34; }
 .layer-subsurface .fallback-ship { opacity: .16; }
-.layer-subsurface .fallback-dream-halo { display: none; }
-.layer-subsurface .fallback-dream-halo.submarine { display: block; --dream-view: 1; }
 .layer-subsurface .fallback-air-independent-submarine, .layer-subsurface .fallback-long-endurance-submarine { opacity: 1; filter: drop-shadow(0 0 12px rgba(157,214,204,.45)); }
 .layer-subsurface .fallback-aircraft { opacity: .1; }
 .layer-subsurface .fallback-scene { background: linear-gradient(180deg, #406d76 0%, #224d5b 18%, #133846 64%, #0d2731 100%); filter: none; }
@@ -1507,7 +1485,7 @@ details:not([open]) > .legend-items { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
-  .fallback-weather, .fallback-weather i, .fallback-fog i, .fallback-clouds i, .fallback-dream-halo, .fallback-sea-life i, .fallback-wildlife i, .fallback-waves, .fallback-waves i, .fallback-stars i, .fallback-aurora i { animation: none !important; }
+  .fallback-weather, .fallback-weather i, .fallback-fog i, .fallback-clouds i, .fallback-sea-life i, .fallback-wildlife i, .fallback-waves, .fallback-waves i, .fallback-stars i, .fallback-aurora i { animation: none !important; }
   .fallback-wildlife .wildlife-penguin.wildlife-resting {
     transform: translate3d(0, 2px, 0) rotate(-84deg) scale(var(--wildlife-scale));
   }

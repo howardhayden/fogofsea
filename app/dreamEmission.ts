@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { seededRandom, stableSeed } from "./viewModel";
-import { DREAM_GLOW_MODEL, dreamGlowBreathing } from "./dreamGlowMath";
+import { finite, NDCG_SEED } from "./dreamGlowMath";
 
 export type DreamEmissionTime = "dawn" | "day" | "dusk" | "night";
-export type DreamEmissionKind = "ship" | "aircraft" | "submarine" | "creature";
+export type DreamEmissionKind = "ship" | "aircraft" | "submarine" | "wildlife" | "sea-creature";
 export type DreamEmissionProfile = Readonly<{
   kind: DreamEmissionKind;
   enabled: boolean;
@@ -14,141 +14,130 @@ export type DreamEmissionProfile = Readonly<{
   primaryPhase: number;
   secondaryPhase: number;
 }>;
-export type DreamEmissionSample = Readonly<{ coreFactor: number; haloFactor: number }>;
+export type DreamEmissionSample = { coreFactor: number; haloFactor: number; haloScale: number };
 export type DreamSourceMaterial = THREE.MeshStandardMaterial | THREE.MeshBasicMaterial;
-export type DreamSourcePart = { mesh: THREE.Mesh; material: DreamSourceMaterial; original: DreamSourceMaterial };
+export type DreamEmissionSource = { mesh: THREE.Mesh; materials: DreamSourceMaterial[] };
 export type DreamEmissionRuntime = {
   profile: DreamEmissionProfile;
-  parts: DreamSourcePart[];
-  referenceSphere: THREE.Sphere;
+  sources: DreamEmissionSource[];
+  referenceSize: number;
+  referenceCenter: THREE.Vector3;
   haloFactor: number;
 };
 
-/** No per-entity shell geometry. Sources include environmental creatures, so
- * the former 42-subject cap must not silently exclude the additional families.
- */
+/** These are zero because the new renderer does not add aura meshes to subjects.
+ * A shared, bounded source texture is reused across every subject instead. */
 export const DREAM_EMISSION_LIMITS = Object.freeze({
   haloMeshesPerSubject: 0,
   maxHaloMeshes: 0,
-  maxSourceTextureSize: 2048,
-  maxBufferPixels: 8_388_608,
+  maxSubjects: 512,
+  sourceTextureSize: 256,
+  maxReferencePixels: 512,
 });
 
-/** Existing caller compatibility: fog is attenuation, never an excuse to
- * increase emission. Kept as a neutral function rather than reversing fog.
- */
-export function dreamEmissionVisibilityLift(_fogDensity: number, _precipitationTier: number): number {
-  return 1;
+const STRENGTH_BY_TIME = Object.freeze({ dawn: .70, day: 0, dusk: .85, night: 1 });
+const KINDS: readonly DreamEmissionKind[] = ["ship", "aircraft", "submarine", "wildlife", "sea-creature"];
+
+export function dreamEmissionVisibilityLift(fogDensity: number, precipitationTier: number) {
+  finite(fogDensity, "fog density", 0); finite(precipitationTier, "precipitation tier", 0);
+  const fog = Math.max(0, Math.min(1, (fogDensity - .003) / .045));
+  return Math.min(1.22, 1 + fog * .14 + Math.min(1, precipitationTier / 5) * .08);
 }
 
-export function createDreamEmissionProfile(
-  seed: number,
-  time: DreamEmissionTime,
-  kind: DreamEmissionKind,
-  _visibilityLift = 1,
-): DreamEmissionProfile {
-  if (!["ship", "submarine", "aircraft", "creature"].includes(kind)) throw new RangeError("Unknown dream-emission kind");
-  if (!["dawn", "day", "dusk", "night"].includes(time)) throw new RangeError("Unknown dream-emission time");
-  if (!Number.isFinite(seed)) throw new RangeError("Invalid dream-emission seed");
-  const random = seededRandom(stableSeed(seed, kind, "dream-emission"));
-  const enabled = time !== "day";
-  // Native faceted shading remains; this static component is not a point light.
-  const coreStrength = time === "night" ? 0.22 : time === "dusk" ? 0.18 : time === "dawn" ? 0.14 : 0;
-  return Object.freeze({ kind, enabled, coreStrength,
-    haloStrength: enabled ? DREAM_GLOW_MODEL.gain : 0,
-    primaryPeriod: DREAM_GLOW_MODEL.primaryPeriod,
-    secondaryPeriod: DREAM_GLOW_MODEL.secondaryPeriod,
-    primaryPhase: random() * Math.PI * 2,
-    secondaryPhase: random() * Math.PI * 2,
+export function createDreamEmissionProfile(seed: number, time: DreamEmissionTime, kind: DreamEmissionKind, visibilityLift = 1): DreamEmissionProfile {
+  if (!Number.isSafeInteger(seed)) throw new RangeError("dream emission seed must be a safe integer");
+  if (!Object.hasOwn(STRENGTH_BY_TIME, time) || !KINDS.includes(kind)) throw new RangeError("unknown dream emission time or kind");
+  finite(visibilityLift, "visibility lift", 0);
+  const random = seededRandom(stableSeed(seed, kind, "ndcg-v0.1-native"));
+  const strength = STRENGTH_BY_TIME[time] * Math.max(1, Math.min(1.22, visibilityLift));
+  return Object.freeze({
+    kind, enabled: time !== "day",
+    coreStrength: .18 * strength,
+    haloStrength: NDCG_SEED.gain * strength,
+    primaryPeriod: 31, secondaryPeriod: 47,
+    primaryPhase: random() * Math.PI * 2, secondaryPhase: random() * Math.PI * 2,
   });
+}
+
+function validateProfile(profile: DreamEmissionProfile) {
+  if (!KINDS.includes(profile.kind) || typeof profile.enabled !== "boolean") throw new RangeError("invalid emission profile");
+  finite(profile.coreStrength, "core strength", 0); finite(profile.haloStrength, "halo strength", 0);
+  finite(profile.primaryPeriod, "primary period", Number.MIN_VALUE); finite(profile.secondaryPeriod, "secondary period", Number.MIN_VALUE);
+  finite(profile.primaryPhase, "primary phase"); finite(profile.secondaryPhase, "secondary phase");
 }
 
 export function sampleDreamEmission(profile: DreamEmissionProfile, elapsed: number, reducedMotion: boolean): DreamEmissionSample {
-  return { coreFactor: 1, haloFactor: dreamGlowBreathing(elapsed, profile.primaryPhase, profile.secondaryPhase, reducedMotion) };
+  validateProfile(profile); finite(elapsed, "elapsed time", 0);
+  return {
+    coreFactor: 1,
+    haloFactor: reducedMotion ? 1 : 1 + .02 * Math.sin(elapsed * Math.PI * 2 / profile.primaryPeriod + profile.primaryPhase)
+      + .01 * Math.sin(elapsed * Math.PI * 2 / profile.secondaryPeriod + profile.secondaryPhase),
+    haloScale: 1,
+  };
 }
 
-export function dreamSourceVisible(object: THREE.Object3D): boolean {
-  let current: THREE.Object3D | null = object;
-  while (current) {
-    if (!current.visible || current.userData.dreamEmissionAuthorized === false) return false;
-    current = current.parent;
-  }
-  return true;
+export function getDreamEmissionRuntime(group: THREE.Group): DreamEmissionRuntime | undefined {
+  return group.userData.dreamEmission as DreamEmissionRuntime | undefined;
 }
 
-function excludedPart(mesh: THREE.Mesh, root: THREE.Group): boolean {
-  if (mesh === root.userData.ring || mesh === root.userData.wake || mesh.geometry instanceof THREE.RingGeometry) return true;
-  let current: THREE.Object3D | null = mesh;
-  while (current && current !== root) {
-    if (current.userData.dreamEmissionExcluded === true || /(?:wake|reaction|dream-emission-aura|contact-marker)/i.test(current.name)) return true;
-    current = current.parent;
-  }
-  return false;
-}
-
-/** Register already-authorized scene geometry. No traversal of undisclosed
- * world-state entities, no copied aura mesh, no material-dependent bright pass.
+/** Explicit source enrollment, after the authoritative view has admitted the
+ * subject. It neither inserts geometry nor discovers undisclosed world objects.
+ * Fixed native emissive fill preserves authored shading and never casts light.
  */
-export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionProfile): void {
-  detachDreamEmission(group);
-  if (!profile.enabled || group.userData.dreamEmissionAuthorized === false) return;
-  if (![profile.coreStrength, profile.haloStrength, profile.primaryPhase, profile.secondaryPhase].every(Number.isFinite)
-    || profile.coreStrength < 0 || profile.coreStrength > 1 || profile.haloStrength < 0 || profile.haloStrength > 1) return;
+export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionProfile) {
+  validateProfile(profile);
+  if (!profile.enabled || getDreamEmissionRuntime(group)) return;
   group.updateWorldMatrix(true, true);
-  const inverseRoot = group.matrixWorld.clone().invert();
-  const localBounds = new THREE.Box3();
-  const relative = new THREE.Matrix4();
-  const parts: DreamSourcePart[] = [];
-  const materialCopies = new Map<DreamSourceMaterial, DreamSourceMaterial>();
+  const inverse = group.matrixWorld.clone().invert();
+  const bounds = new THREE.Box3();
+  const local = new THREE.Box3();
+  const transform = new THREE.Matrix4();
+  const sources: DreamEmissionSource[] = [];
+  const copies = new Map<DreamSourceMaterial, DreamSourceMaterial>();
   group.traverse((object) => {
-    if (!(object instanceof THREE.Mesh) || object instanceof THREE.InstancedMesh || object instanceof THREE.SkinnedMesh || excludedPart(object, group)) return;
-    const original = object.material;
-    if (!(original instanceof THREE.MeshStandardMaterial || original instanceof THREE.MeshBasicMaterial)) return;
-    // Deformed/multi-material renderers need their own explicitly qualified
-    // extraction path; the current generated entity families use this path.
-    if (object.morphTargetInfluences?.length) return;
-    let material = materialCopies.get(original);
-    if (!material) {
-      material = original.clone();
-      if (material instanceof THREE.MeshStandardMaterial) {
-        material.emissive.add(material.color.clone().multiplyScalar(profile.coreStrength / Math.max(1, material.emissiveIntensity)));
-      }
-      materialCopies.set(original, material);
+    if (!(object instanceof THREE.Mesh) || object instanceof THREE.InstancedMesh || object instanceof THREE.SkinnedMesh) return;
+    if (object === group.userData.ring || object === group.userData.wake || object.geometry.type === "RingGeometry") return;
+    for (let parent: THREE.Object3D | null = object; parent && parent !== group.parent; parent = parent.parent) {
+      if (parent.userData.dreamEmissionExclude === true) return;
     }
-    object.material = material;
-    parts.push({ mesh: object, material, original });
+    const authored = Array.isArray(object.material) ? object.material : [object.material];
+    if (!authored.every((material) => material instanceof THREE.MeshStandardMaterial || material instanceof THREE.MeshBasicMaterial)) return;
+    const materials = authored.map((material) => {
+      const native = material as DreamSourceMaterial;
+      let copy = copies.get(native);
+      if (!copy) {
+        copy = native.clone(); copies.set(native, copy);
+        if (copy instanceof THREE.MeshStandardMaterial) {
+          copy.emissive.copy(copy.color);
+          copy.emissiveIntensity = profile.coreStrength;
+        }
+      }
+      return copy;
+    });
+    object.material = Array.isArray(object.material) ? materials : materials[0];
+    sources.push({ mesh: object, materials });
     object.geometry.computeBoundingBox();
     if (object.geometry.boundingBox) {
-      relative.multiplyMatrices(inverseRoot, object.matrixWorld);
-      localBounds.union(object.geometry.boundingBox.clone().applyMatrix4(relative));
+      transform.multiplyMatrices(inverse, object.matrixWorld);
+      local.copy(object.geometry.boundingBox).applyMatrix4(transform); bounds.union(local);
     }
   });
-  if (!parts.length || localBounds.isEmpty()) {
-    for (const part of parts) part.mesh.material = part.original;
-    for (const material of materialCopies.values()) material.dispose();
-    return;
-  }
-  group.userData.dreamEmission = {
-    profile, parts, referenceSphere: localBounds.getBoundingSphere(new THREE.Sphere()), haloFactor: 1,
-  } satisfies DreamEmissionRuntime;
+  if (!sources.length || bounds.isEmpty()) return;
+  const size = bounds.getSize(new THREE.Vector3());
+  const runtime: DreamEmissionRuntime = {
+    profile, sources,
+    referenceSize: Math.max(size.x, size.y, size.z),
+    referenceCenter: bounds.getCenter(new THREE.Vector3()),
+    haloFactor: 1,
+  };
+  if (!(runtime.referenceSize > 0) || !Number.isFinite(runtime.referenceSize)) return;
+  group.userData.dreamEmission = runtime;
   group.userData.dreamEmissionHaloMeshes = 0;
 }
 
-export function detachDreamEmission(group: THREE.Group): void {
-  const runtime = group.userData.dreamEmission as DreamEmissionRuntime | undefined;
-  if (!runtime) return;
-  const disposed = new Set<THREE.Material>();
-  for (const { mesh, original, material } of runtime.parts) {
-    if (mesh.material === material) mesh.material = original;
-    if (!disposed.has(material)) { material.dispose(); disposed.add(material); }
-  }
-  delete group.userData.dreamEmission;
-  delete group.userData.dreamEmissionHaloMeshes;
-}
-
-export function updateDreamEmission(targets: readonly THREE.Group[], elapsed: number, reducedMotion: boolean): void {
+export function updateDreamEmission(targets: readonly THREE.Group[], elapsed: number, reducedMotion: boolean) {
   for (const target of targets) {
-    const runtime = target.userData.dreamEmission as DreamEmissionRuntime | undefined;
+    const runtime = getDreamEmissionRuntime(target);
     if (runtime) runtime.haloFactor = sampleDreamEmission(runtime.profile, elapsed, reducedMotion).haloFactor;
   }
 }

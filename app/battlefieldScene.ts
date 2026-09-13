@@ -1250,6 +1250,12 @@ export function buildSceneContents(input: SceneContentsInput): SceneContents {
     atmospherePlan.fog.horizonDensity,
     atmospherePlan.precipitation.tier,
   );
+  // Register only the individuals admitted by the existing view/knowledge plan.
+  // Articulated source meshes keep their native colors and animated transforms.
+  wildlife.forEach((animal, index) => attachDreamEmission(animal,
+    createDreamEmissionProfile(stableSeed(exerciseId, "wildlife", index), time, "wildlife", dreamVisibilityLift)));
+  seaCreatures.forEach((creature, index) => attachDreamEmission(creature,
+    createDreamEmissionProfile(stableSeed(exerciseId, "sea-creature", index), time, "sea-creature", dreamVisibilityLift)));
   const ships: THREE.Group[] = [];
   listedUnits(displayedFleet, 8, 22).forEach((type, index) => {
     if (viewLayer === "stars") return;
