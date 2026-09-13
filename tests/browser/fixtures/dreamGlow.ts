@@ -29,6 +29,16 @@ export function runDreamGlowFixture(kind: DreamEmissionKind, pixelRatio: number)
   const geometry = new THREE.PlaneGeometry(2, 3);
   const core = new THREE.Mesh(geometry, native);
   group.add(core); scene.add(group);
+  // A legacy custom shader with display-authored output must remain bit-identical
+  // outside the glow support. It deliberately has no colorspace shader chunk.
+  const sentinelGeometry = new THREE.PlaneGeometry(0.5, 1);
+  const sentinelMaterial = new THREE.ShaderMaterial({
+    vertexShader: "void main(){gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
+    fragmentShader: "void main(){gl_FragColor=vec4(0.12,0.18,0.25,1.0);}",
+    toneMapped: false,
+  });
+  const sentinel = new THREE.Mesh(sentinelGeometry, sentinelMaterial);
+  sentinel.position.set(-3, 0, -1); scene.add(sentinel);
   attachDreamEmission(group, createDreamEmissionProfile(41, "night", kind));
   updateDreamEmission([group], 0, true);
   const pipeline = new DreamGlowRenderer(renderer, [group]);
@@ -62,6 +72,10 @@ export function runDreamGlowFixture(kind: DreamEmissionKind, pixelRatio: number)
   const centerBefore = pixel(baseline, size.x / 2, size.y / 2);
   const centerAfter = pixel(illuminated, size.x / 2, size.y / 2);
   const centerDifference = Math.max(...centerBefore.map((value, index) => Math.abs(value - centerAfter[index])));
+  const sentinelX = (sentinel.position.clone().project(camera).x * 0.5 + 0.5) * size.x;
+  const sentinelBefore = pixel(baseline, sentinelX, size.y / 2);
+  const sentinelAfter = pixel(illuminated, sentinelX, size.y / 2);
+  const outsideDifference = Math.max(...sentinelBefore.map((value, index) => Math.abs(value - sentinelAfter[index])));
   const nearChannels = sample(0.01); const near = nearChannels[1]; const far = sample(0.10)[1];
   const hueSpread = Math.max(...nearChannels) - Math.min(...nearChannels);
   group.userData.dreamEmissionAuthorized = false;
@@ -82,7 +96,8 @@ export function runDreamGlowFixture(kind: DreamEmissionKind, pixelRatio: number)
   const framebufferError = gl.getError();
   pipeline.dispose(); detachDreamEmission(group);
   geometry.dispose(); native.dispose(); blockerGeometry.dispose(); blockerMaterial.dispose();
+  sentinelGeometry.dispose(); sentinelMaterial.dispose();
   renderer.dispose(); renderer.forceContextLoss(); canvas.remove();
-  return { kind, pixelRatio, status, renderedSubjects, reference, near, far, hueSpread, centerDifference,
+  return { kind, pixelRatio, status, renderedSubjects, reference, near, far, hueSpread, centerDifference, outsideDifference,
     unauthorizedExteriorMaximum: Math.max(...forbiddenPixel), occludedMaximum, framebufferError, capture };
 }

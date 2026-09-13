@@ -21,9 +21,10 @@ test("all entity glow profiles produce exterior light without core washout or hi
     expect(result.renderedSubjects).toBe(1);
     expect(result.near).toBeGreaterThanOrEqual(0.05);
     expect(result.near).toBeLessThanOrEqual(0.10);
-    expect(result.far).toBeLessThanOrEqual(0.003); // 8-bit screenshot quantization allowance.
+    expect(result.far).toBeLessThanOrEqual(0.003);
     expect(result.hueSpread).toBeLessThanOrEqual(0.01);
     expect(result.centerDifference).toBeLessThanOrEqual(1);
+    expect(result.outsideDifference).toBe(0);
     expect(result.unauthorizedExteriorMaximum).toBe(0);
     expect(result.occludedMaximum).toBe(0);
     expect(result.framebufferError).toBe(0);

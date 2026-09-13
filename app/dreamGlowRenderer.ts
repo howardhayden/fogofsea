@@ -90,7 +90,17 @@ const COMPOSITE_FRAGMENT = `
   uniform float uKnee;
   uniform float uCeiling;
   varying vec2 vUv;
+  vec3 decodeDisplay(vec3 c) {
+    return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(vec3(0.04045), c));
+  }
+  vec3 encodeDisplay(vec3 c) {
+    return mix(c * 12.92, 1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055,
+      step(vec3(0.0031308), c));
+  }
   void main() {
+    // This is the actual original display framebuffer, including custom scene
+    // shaders. Treat it as encoded data rather than encoding the whole scene
+    // again merely because an unrelated animal has registered emission.
     vec4 base = texture2D(uBase, vUv);
     vec4 glow = texture2D(uGlow, vUv);
     float luminance = dot(glow.rgb, vec3(0.2126, 0.7152, 0.0722));
@@ -100,9 +110,12 @@ const COMPOSITE_FRAGMENT = `
     }
     // Alpha stores the maximum crisp-core coverage, not halo opacity.
     // Opaque source pixels remain exactly the baseline core, including detail.
-    gl_FragColor = vec4(base.rgb + glow.rgb * (1.0 - clamp(glow.a, 0.0, 1.0)), base.a);
-    #include <tonemapping_fragment>
-    #include <colorspace_fragment>
+    vec3 exterior = glow.rgb * (1.0 - clamp(glow.a, 0.0, 1.0));
+    if (max(exterior.r, max(exterior.g, exterior.b)) <= 0.0) {
+      gl_FragColor = base;
+      return;
+    }
+    gl_FragColor = vec4(encodeDisplay(decodeDisplay(base.rgb) + exterior), base.a);
   }
 `;
 
@@ -138,6 +151,7 @@ export class DreamGlowRenderer {
   private readonly base: THREE.WebGLRenderTarget;
   private readonly emission: THREE.WebGLRenderTarget;
   private readonly accumulation: THREE.WebGLRenderTarget;
+  private displayBase = new THREE.FramebufferTexture(1, 1);
   private readonly triangle: THREE.BufferGeometry;
   private readonly screenScene = new THREE.Scene();
   private readonly screenCamera = new THREE.Camera();
@@ -163,6 +177,7 @@ export class DreamGlowRenderer {
     this.base = renderTarget(true, samples);
     this.emission = renderTarget(true, samples);
     this.accumulation = renderTarget(false, 0);
+    this.displayBase.colorSpace = THREE.NoColorSpace;
     this.triangle = new THREE.BufferGeometry();
     this.triangle.setAttribute("position", new THREE.Float32BufferAttribute([-1, -1, 0, 3, -1, 0, -1, 3, 0], 3));
     this.glowMaterial = new THREE.ShaderMaterial({
@@ -184,10 +199,10 @@ export class DreamGlowRenderer {
     this.compositeMaterial = new THREE.ShaderMaterial({
       vertexShader: FULLSCREEN_VERTEX, fragmentShader: COMPOSITE_FRAGMENT,
       uniforms: {
-        uBase: { value: this.base.texture }, uGlow: { value: this.accumulation.texture },
+        uBase: { value: this.displayBase }, uGlow: { value: this.accumulation.texture },
         uKnee: { value: DREAM_GLOW_MODEL.luminanceKnee }, uCeiling: { value: DREAM_GLOW_MODEL.luminanceCeiling },
       },
-      depthTest: false, depthWrite: false, blending: THREE.NoBlending, toneMapped: true,
+      depthTest: false, depthWrite: false, blending: THREE.NoBlending, toneMapped: false,
     });
     this.screenMesh = new THREE.Mesh(this.triangle, this.glowMaterial);
     this.screenMesh.frustumCulled = false;
@@ -288,8 +303,9 @@ export class DreamGlowRenderer {
     this.skippedForBudget = 0;
     renderer.getDrawingBufferSize(this.fullSize);
     if (this.fullSize.x < 1 || this.fullSize.y < 1) { this.status = "off"; return; }
-    if (!this.subjects.length || !this.supported || this.fullSize.x * this.fullSize.y > DREAM_EMISSION_LIMITS.maxBufferPixels) {
-      this.status = !this.subjects.length ? "off" : !this.supported ? "core-only-capability" : "core-only-budget";
+    const supportedOutput = renderer.getRenderTarget() === null && renderer.outputColorSpace === THREE.SRGBColorSpace;
+    if (!this.subjects.length || !this.supported || !supportedOutput || this.fullSize.x * this.fullSize.y > DREAM_EMISSION_LIMITS.maxBufferPixels) {
+      this.status = !this.subjects.length ? "off" : !this.supported || !supportedOutput ? "core-only-capability" : "core-only-budget";
       renderer.render(scene, camera);
       return;
     }
@@ -302,6 +318,12 @@ export class DreamGlowRenderer {
     this.status = "sampled-radial-native-color";
     this.base.setSize(this.fullSize.x, this.fullSize.y);
     this.accumulation.setSize(this.fullSize.x, this.fullSize.y);
+    if (this.displayBase.image.width !== this.fullSize.x || this.displayBase.image.height !== this.fullSize.y) {
+      this.displayBase.dispose();
+      this.displayBase = new THREE.FramebufferTexture(this.fullSize.x, this.fullSize.y);
+      this.displayBase.colorSpace = THREE.NoColorSpace;
+      this.compositeMaterial.uniforms.uBase.value = this.displayBase;
+    }
     this.nearFar.set(camera.near, camera.far);
     try {
       renderer.autoClear = true;
@@ -345,6 +367,14 @@ export class DreamGlowRenderer {
       renderer.setRenderTarget(previous.target);
       renderer.setViewport(previous.viewport);
       renderer.toneMapping = previous.toneMapping;
+      // Preserve the existing display pipeline as authority. The first scene
+      // pass supplies depth only; legacy custom shaders are not assumed to
+      // follow the same output-transfer convention as standard materials.
+      renderer.autoClear = true;
+      renderer.render(scene, camera);
+      if (this.renderedSubjects === 0) return;
+      renderer.copyFramebufferToTexture(this.displayBase, new THREE.Vector2(0, 0));
+      renderer.autoClear = false;
       this.screenMesh.material = this.compositeMaterial;
       renderer.render(this.screenScene, this.screenCamera);
     } finally {
@@ -361,7 +391,7 @@ export class DreamGlowRenderer {
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
-    this.base.dispose(); this.emission.dispose(); this.accumulation.dispose();
+    this.base.dispose(); this.emission.dispose(); this.accumulation.dispose(); this.displayBase.dispose();
     this.glowMaterial.dispose(); this.compositeMaterial.dispose(); this.triangle.dispose();
     for (const subject of this.subjects) {
       for (const part of subject.parts) part.material.dispose();
