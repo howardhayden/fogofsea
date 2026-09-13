@@ -1,13 +1,38 @@
-name: Dream glow correction verification
+name: Dream glow regression gate
 on:
   push:
     branches: [codex/dream-glow-field-2026-09-13]
-    paths: [.github/workflows/dream-glow-verify.yml]
+    paths:
+      - app/dream*.ts
+      - app/Battlefield.tsx
+      - app/battlefieldScene.ts
+      - app/wildlife*.ts
+      - app/catalog.ts
+      - tests/dream*.ts
+      - tests/browser/environment-visuals.spec.ts
+      - scripts/verify-dream-glow.mjs
+      - package.json
+      - package-lock.json
+  pull_request:
+    branches: [main]
+    paths:
+      - app/dream*.ts
+      - app/Battlefield.tsx
+      - app/battlefieldScene.ts
+      - app/wildlife*.ts
+      - app/catalog.ts
+      - tests/dream*.ts
+      - tests/browser/environment-visuals.spec.ts
+      - scripts/verify-dream-glow.mjs
+      - package.json
+      - package-lock.json
+      - .github/workflows/dream-glow-verify.yml
+  workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
-  group: dream-glow-implementation
-  cancel-in-progress: false
+  group: dream-glow-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -15,82 +40,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           cache: npm
-      - name: Apply scoped checksum-verified correction and provenance
-        run: |
-          git merge-base --is-ancestor 71d0c4a5d8eac60aea8094de55b0a3e323af23ae HEAD
-          python3 - <<'PY'
-          import base64, hashlib, json, lzma, pathlib, subprocess
-          parts = sorted(pathlib.Path('.github').glob('dream-glow-finalize.part*'))
-          assert len(parts) == 5, 'Expected exactly five correction parts'
-          raw = lzma.decompress(base64.b64decode(''.join(p.read_text().strip() for p in parts), validate=True))
-          assert hashlib.sha256(raw).hexdigest() == '0ec7ab4cbce1efcfc44ca76c7ad8b7ec52d6aa9f0079eb198798bd4570279492', 'Correction payload mismatch'
-          manifest = json.loads(raw)
-          allowed = {'app/dreamGlowRenderer.ts', 'scripts/verify-dream-glow.mjs', 'requirements/visual-smoothness.json', 'docs/design/README.md', 'tests/dream-glow-integration.test.ts', 'docs/design/20-DREAM-GLOW-FIELD.md', 'requirements/dream-glow-implementation.json', 'requirements/reference/nitw-character-glow-model-v0.1.md', 'requirements/reference/nitw-character-glow-atoms-v0.1.json', 'evidence/dream-glow/initial-results.json'}
-          assert {r['path'] for r in manifest['files']} == allowed
-          for row in manifest['files']:
-              path = pathlib.Path(row['path'])
-              expected = row['before_sha256']
-              actual = hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
-              assert actual == expected, f'Concurrent change at {path}'
-          for row in manifest['files']:
-              path = pathlib.Path(row['path'])
-              path.parent.mkdir(parents=True, exist_ok=True)
-              path.write_text(row['content'])
-          subprocess.run(['git', 'add', '--', *sorted(allowed)], check=True)
-          PY
-          git rm .github/dream-glow-transfer.part[1-4] .github/dream-glow-transfer.ready .github/dream-glow-finalize.part[1-5]
-      - name: Install locked dependencies
-        run: npm ci
-      - name: Check TypeScript, lint and all glow registrations
-        run: npm run typecheck && npm run lint && node --import tsx --test tests/dream-emission.test.ts tests/dream-glow-integration.test.ts
-      - name: Commit corrected source on feature branch
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Guard final glow pixels against foreground leakage and preserve all 48 reference atoms'
-          git push origin HEAD:codex/dream-glow-field-2026-09-13
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-      - name: Verify all rendered glow fixtures
-        id: pixels
-        continue-on-error: true
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Mathematical field and rendered occlusion
         run: node scripts/verify-dream-glow.mjs
-      - name: Complete non-browser release gate
-        id: release
-        continue-on-error: true
+      - name: Complete non-browser gate
         run: npm run check
-      - name: Existing environment browser regression gate
-        id: browser
-        continue-on-error: true
+      - name: Existing environment browser regressions
         run: npx playwright test tests/browser/environment-visuals.spec.ts
-      - name: Preserve raw outcomes
+      - name: Record checked revision
         if: always()
         run: |
           mkdir -p evidence/dream-glow
-          git rev-parse HEAD > evidence/dream-glow/commit.txt
-          printf '%s\n' 'pixels=${{ steps.pixels.outcome }}' 'release=${{ steps.release.outcome }}' 'browser=${{ steps.browser.outcome }}' > evidence/dream-glow/outcomes.txt
+          git rev-parse HEAD > evidence/dream-glow/checked-commit.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: dream-glow-corrected-verification
+          name: dream-glow-verification-${{ github.sha }}
           path: |
             evidence/dream-glow
             test-results
-          if-no-files-found: error
           retention-days: 14
-      - name: Require actual command outcomes, not normalized step conclusions
-        if: always()
-        run: |
-          test '${{ steps.pixels.outcome }}' = success
-          test '${{ steps.release.outcome }}' = success
-          test '${{ steps.browser.outcome }}' = success
-      - name: Record verified evidence and rebuilt static application
-        run: |
-          git add dist evidence/dream-glow/rendered/results.json evidence/dream-glow/commit.txt evidence/dream-glow/outcomes.txt
-          git commit -m 'Record corrected WebGL evidence and rebuild the dream-glow application'
-          git push origin HEAD:codex/dream-glow-field-2026-09-13
+          if-no-files-found: error
