@@ -1,3 +1,4 @@
+import { mkdirSync, writeFileSync } from "node:fs";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 async function openSession(page: Page) {
@@ -500,13 +501,17 @@ test("night dream emission produces a real, bounded, native-color WebGL aura", a
   expect(Number(await plot.getAttribute("data-ndcg-rendered-subjects"))).toBeGreaterThan(0);
   const emittedNight = await cleanCanvasCapture(canvas);
   const metrics = await canvasDifferenceMetrics(page, emptyNight, emittedNight);
+  mkdirSync("evidence/ndcg-glow/app", { recursive: true });
+  writeFileSync("evidence/ndcg-glow/app/native-vessel.png", Buffer.from(emittedNight, "base64"));
+  writeFileSync("evidence/ndcg-glow/app/without-vessel.png", Buffer.from(emptyNight, "base64"));
+  writeFileSync("evidence/ndcg-glow/app/metrics.json", JSON.stringify(metrics, null, 2));
 
   // A crisp core and a lower-energy perimeter both change real canvas pixels.
   expect(metrics.strongCore).toBeGreaterThan(180);
   expect(metrics.softEdge).toBeGreaterThan(120);
   expect(metrics.nativeCool).toBeGreaterThan(60);
   expect(metrics.changed).toBeGreaterThan(320);
-  // One unit must remain a local outline—not become a screen-sized light orb.
+  // One unit must remain a local source field—not become a screen-sized light orb.
   expect(metrics.footprintWidth).toBeLessThan(metrics.width * 0.32);
   expect(metrics.footprintHeight).toBeLessThan(metrics.height * 0.32);
 });

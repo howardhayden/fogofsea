@@ -4,7 +4,7 @@ import { DreamGlowRenderer } from "../../../app/dreamGlowRenderer";
 
 export type FixtureOptions = {
   height?: number; dpr?: number; kind?: DreamEmissionKind; block?: "source" | "destination"; hidden?: boolean;
-  x?: number; parts?: boolean; gap?: boolean; transparent?: boolean; elapsed?: number; reduced?: boolean;
+  x?: number; parts?: boolean; gap?: boolean; transparent?: boolean; elapsed?: number; reduced?: boolean; revoked?: boolean; opacity?: number;
 };
 
 export function fixture(options: FixtureOptions = {}) {
@@ -21,13 +21,14 @@ export function fixture(options: FixtureOptions = {}) {
   const group = new THREE.Group(); group.position.x = options.x ?? 0;
   const color = new THREE.Color(.4, .2, .1);
   const make = (width: number, x: number, c = color) => {
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, h), new THREE.MeshBasicMaterial({ color: c, transparent: options.transparent, opacity: options.transparent ? .5 : 1 }));
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, h), new THREE.MeshBasicMaterial({ color: c, transparent: options.transparent || options.opacity !== undefined, opacity: options.opacity ?? (options.transparent ? .5 : 1) }));
     mesh.position.x = x; return mesh;
   };
   if (options.parts) group.add(make(h / 2, -h / 4), make(h / 2, h / 4, new THREE.Color(.05, .2, .4)));
   else group.add(make(h, 0));
   attachDreamEmission(group, createDreamEmissionProfile(7, "night", options.kind ?? "ship")); scene.add(group);
   if (options.hidden) group.visible = false;
+  if (options.revoked) group.userData.dreamEmissionAuthorized = false;
   const groups = [group];
   if (options.gap) {
     group.position.x = -h * .55;
@@ -72,7 +73,14 @@ export function fixture(options: FixtureOptions = {}) {
   const center = at(0, 0); const destination = at(h * .55, 0);
   renderer.setRenderTarget(null); glow.render(scene, camera);
   const screenshot = canvas.toDataURL(); const diagnostics = { ...glow.diagnostics };
-  glow.dispose(); glow.dispose(); target.dispose(); renderer.dispose(); renderer.forceContextLoss();
+  let sourceGeometryDisposed = false;
+  groups[0].children[0].addEventListener("removed", () => { sourceGeometryDisposed = true; });
+  (groups[0].children[0] as THREE.Mesh).geometry.addEventListener("dispose", () => { sourceGeometryDisposed = true; });
+  glow.dispose(); glow.dispose();
+  const resourceSafety = !sourceGeometryDisposed && !renderer.getContext().isContextLost();
+  let rejectedAfterDispose = false;
+  try { glow.render(scene, camera); } catch { rejectedAfterDispose = true; }
+  target.dispose(); renderer.dispose(); renderer.forceContextLoss();
   scene.traverse(object => { if (object instanceof THREE.Mesh) { object.geometry.dispose(); (object.material as THREE.Material).dispose(); } });
-  return { samples, error, interiorMax, outsideMax, sum, center, destination, diagnostics, screenshot };
+  return { samples, error, interiorMax, outsideMax, sum, center, destination, diagnostics, screenshot, resourceSafety, rejectedAfterDispose };
 }

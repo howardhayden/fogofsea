@@ -3,7 +3,7 @@
  * pass, enlarged hulls, aura spheres, light objects, or per-frame random noise.
  */
 import * as THREE from "three";
-import { DREAM_EMISSION_LIMITS, getDreamEmissionRuntime, type DreamEmissionRuntime, type DreamSourceMaterial } from "./dreamEmission";
+import { DREAM_EMISSION_LIMITS, dreamSourceVisible, getDreamEmissionRuntime, type DreamEmissionRuntime, type DreamSourceMaterial } from "./dreamEmission";
 import { finite, NDCG_KERNEL_TAPS, NDCG_SEED } from "./dreamGlowMath";
 
 type Camera = THREE.PerspectiveCamera | THREE.OrthographicCamera;
@@ -182,11 +182,6 @@ function target(width: number, height: number, withDepth: boolean, samples = 0) 
   return value;
 }
 
-function visible(object: THREE.Object3D): boolean {
-  for (let current: THREE.Object3D | null = object; current; current = current.parent) if (!current.visible) return false;
-  return true;
-}
-
 /** Does not own the source geometry, scene, renderer, or original materials. */
 export class DreamGlowRenderer {
   readonly diagnostics: DreamGlowDiagnostics;
@@ -299,7 +294,7 @@ export class DreamGlowRenderer {
   }
 
   private prepare(subject: Subject, camera: Camera, scene: THREE.Scene, width: number, height: number): number {
-    if (!visible(subject.original) || !subject.runtime.profile.enabled) return 0;
+    if (!dreamSourceVisible(subject.original) || !subject.runtime.profile.enabled) return 0;
     this.center.copy(subject.runtime.referenceCenter).applyMatrix4(subject.original.matrixWorld).applyMatrix4(camera.matrixWorldInverse);
     subject.original.getWorldScale(this.worldScale);
     const referenceWorld = subject.runtime.referenceSize * Math.max(Math.abs(this.worldScale.x), Math.abs(this.worldScale.y), Math.abs(this.worldScale.z));
@@ -309,7 +304,7 @@ export class DreamGlowRenderer {
     let minX = Infinity; let minY = Infinity; let maxX = -Infinity; let maxY = -Infinity;
     let nearDepth = Infinity; let farDepth = -Infinity;
     for (const proxy of subject.proxies) {
-      proxy.mesh.visible = visible(proxy.original) && proxy.original.layers.test(camera.layers);
+      proxy.mesh.visible = dreamSourceVisible(proxy.original) && proxy.original.layers.test(camera.layers);
       if (!proxy.mesh.visible) continue;
       proxy.mesh.matrix.copy(proxy.original.matrixWorld);
       const bounds = proxy.original.geometry.boundingBox;
@@ -393,6 +388,7 @@ export class DreamGlowRenderer {
         const h = this.prepare(subject, expanded, scene, fullWidth, fullHeight);
         if (h < 0) { this.diagnostics.reducedSubjects++; continue; }
         if (!h) continue;
+        if (this.diagnostics.rendered >= DREAM_EMISSION_LIMITS.maxSubjects) { this.diagnostics.reducedSubjects++; continue; }
         this.configureCamera(expanded, localCamera, fullWidth / this.rect.z, fullHeight / this.rect.w,
           (fullWidth - 2 * this.rect.x - this.rect.z) / this.rect.z, (fullHeight - 2 * this.rect.y - this.rect.w) / this.rect.w);
         renderer.setScissorTest(false); renderer.setRenderTarget(this.sourceTarget); renderer.clear();

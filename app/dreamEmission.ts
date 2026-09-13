@@ -30,7 +30,8 @@ export type DreamEmissionRuntime = {
 export const DREAM_EMISSION_LIMITS = Object.freeze({
   haloMeshesPerSubject: 0,
   maxHaloMeshes: 0,
-  maxSubjects: 512,
+  // Existing scene caps: 22 ships + 20 aircraft + 48 wildlife + 41 sea life.
+  maxSubjects: 128,
   sourceTextureSize: 256,
   maxReferencePixels: 512,
 });
@@ -40,8 +41,9 @@ const KINDS: readonly DreamEmissionKind[] = ["ship", "aircraft", "submarine", "w
 
 export function dreamEmissionVisibilityLift(fogDensity: number, precipitationTier: number) {
   finite(fogDensity, "fog density", 0); finite(precipitationTier, "precipitation tier", 0);
-  const fog = Math.max(0, Math.min(1, (fogDensity - .003) / .045));
-  return Math.min(1.22, 1 + fog * .14 + Math.min(1, precipitationTier / 5) * .08);
+  // Preserve the newer checkpoint decision: weather attenuates radiance.
+  // It does not authorize counter-brightening a hidden source.
+  return 1;
 }
 
 export function createDreamEmissionProfile(seed: number, time: DreamEmissionTime, kind: DreamEmissionKind, visibilityLift = 1): DreamEmissionProfile {
@@ -49,7 +51,7 @@ export function createDreamEmissionProfile(seed: number, time: DreamEmissionTime
   if (!Object.hasOwn(STRENGTH_BY_TIME, time) || !KINDS.includes(kind)) throw new RangeError("unknown dream emission time or kind");
   finite(visibilityLift, "visibility lift", 0);
   const random = seededRandom(stableSeed(seed, kind, "ndcg-v0.1-native"));
-  const strength = STRENGTH_BY_TIME[time] * Math.max(1, Math.min(1.22, visibilityLift));
+  const strength = STRENGTH_BY_TIME[time];
   return Object.freeze({
     kind, enabled: time !== "day",
     coreStrength: .18 * strength,
@@ -76,6 +78,15 @@ export function sampleDreamEmission(profile: DreamEmissionProfile, elapsed: numb
   };
 }
 
+/** Retained checkpoint admission flag: revocation also invalidates the source
+ * on the next frame. This never traverses undisclosed simulation state. */
+export function dreamSourceVisible(object: THREE.Object3D): boolean {
+  for (let current: THREE.Object3D | null = object; current; current = current.parent) {
+    if (!current.visible || current.userData.dreamEmissionAuthorized === false) return false;
+  }
+  return true;
+}
+
 export function getDreamEmissionRuntime(group: THREE.Group): DreamEmissionRuntime | undefined {
   return group.userData.dreamEmission as DreamEmissionRuntime | undefined;
 }
@@ -86,7 +97,7 @@ export function getDreamEmissionRuntime(group: THREE.Group): DreamEmissionRuntim
  */
 export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionProfile) {
   validateProfile(profile);
-  if (!profile.enabled || getDreamEmissionRuntime(group)) return;
+  if (!profile.enabled || group.userData.dreamEmissionAuthorized === false || getDreamEmissionRuntime(group)) return;
   group.updateWorldMatrix(true, true);
   const inverse = group.matrixWorld.clone().invert();
   const bounds = new THREE.Box3();
@@ -98,10 +109,13 @@ export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionPr
     if (!(object instanceof THREE.Mesh) || object instanceof THREE.InstancedMesh || object instanceof THREE.SkinnedMesh) return;
     if (object === group.userData.ring || object === group.userData.wake || object.geometry.type === "RingGeometry") return;
     for (let parent: THREE.Object3D | null = object; parent && parent !== group.parent; parent = parent.parent) {
-      if (parent.userData.dreamEmissionExclude === true) return;
+      if (parent.userData.dreamEmissionExclude === true || parent.userData.dreamEmissionExcluded === true
+        || parent === group.userData.reactionRoot || /(?:wake|reaction|dream-emission-aura|contact-marker)/i.test(parent.name)) return;
     }
     const authored = Array.isArray(object.material) ? object.material : [object.material];
     if (!authored.every((material) => material instanceof THREE.MeshStandardMaterial || material instanceof THREE.MeshBasicMaterial)) return;
+    // Invisible interaction bounds must not enlarge the authored glow scale.
+    if (authored.every(material => !material.colorWrite)) return;
     const materials = authored.map((material) => {
       const native = material as DreamSourceMaterial;
       let copy = copies.get(native);

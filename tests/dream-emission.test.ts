@@ -18,12 +18,12 @@ test("NDCG profiles are deterministic and gain-only for all five classes", () =>
   }
 });
 
-test("weather gain stays bounded and rejects nonfinite source state", () => {
+test("weather attenuation is not countered with brightness and rejects nonfinite source state", () => {
   assert.equal(dreamEmissionVisibilityLift(0, 0), 1);
-  assert.equal(dreamEmissionVisibilityLift(999, 999), 1.22);
+  assert.equal(dreamEmissionVisibilityLift(999, 999), 1);
   assert.throws(() => dreamEmissionVisibilityLift(Infinity, 99), RangeError);
   const profile = createDreamEmissionProfile(1, "night", "ship", 999);
-  assert.equal(profile.haloStrength, .28 * 1.22);
+  assert.equal(profile.haloStrength, .28);
 });
 
 test("animated child geometry is registered without modifying native geometry or core opacity", () => {

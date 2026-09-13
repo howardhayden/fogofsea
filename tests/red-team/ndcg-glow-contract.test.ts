@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import * as THREE from "three";
-import { attachDreamEmission, createDreamEmissionProfile, sampleDreamEmission, type DreamEmissionKind } from "../../app/dreamEmission";
+import { attachDreamEmission, createDreamEmissionProfile, dreamSourceVisible, sampleDreamEmission, type DreamEmissionKind } from "../../app/dreamEmission";
 
 function subject() {
   const group = new THREE.Group();
@@ -82,4 +82,25 @@ test("NDCG-Q07: daylight policy preserves geometry without an exterior field", (
   attachDreamEmission(group, createDreamEmissionProfile(17, "day", "ship"));
   assert.equal(group.children.length, 2);
   assert.equal(group.userData.dreamEmission, undefined);
+});
+
+
+test("NDCG-V01: denial and revocation exclude complete descendant source trees", () => {
+  const { group, body } = subject();
+  group.userData.dreamEmissionAuthorized = false;
+  attachDreamEmission(group, createDreamEmissionProfile(17, "night", "submarine"));
+  assert.equal(group.userData.dreamEmission, undefined); assert.equal(dreamSourceVisible(body), false);
+  group.userData.dreamEmissionAuthorized = true;
+  attachDreamEmission(group, createDreamEmissionProfile(17, "night", "submarine"));
+  assert.ok(group.userData.dreamEmission); assert.equal(dreamSourceVisible(body), true);
+  group.userData.dreamEmissionAuthorized = false; assert.equal(dreamSourceVisible(body), false);
+});
+
+test("NDCG-S05: reaction particles and explicit exclusion flags cannot enter the character source", () => {
+  const { group } = subject(); const reaction = new THREE.Group(); reaction.name = "wildlife-happy-reaction";
+  reaction.add(new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial())); group.add(reaction);
+  const excluded = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial());
+  excluded.userData.dreamEmissionExcluded = true; group.add(excluded);
+  attachDreamEmission(group, createDreamEmissionProfile(17, "night", "wildlife"));
+  assert.equal(group.userData.dreamEmission.sources.length, 2);
 });
