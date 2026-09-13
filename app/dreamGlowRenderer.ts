@@ -348,8 +348,10 @@ export class DreamGlowRenderer {
   render(scene: THREE.Scene, camera: Camera): void {
     if (this.disposed) throw new Error("DreamGlowRenderer has been disposed");
     const renderer = this.renderer;
-    if (!this.capable || !this.enabled || !this.subjects.length) {
+    const admitted = this.subjects.some(subject => subject.runtime.profile.enabled && dreamSourceVisible(subject.original));
+    if (!this.capable || !this.enabled || !admitted) {
       this.diagnostics.rendered = 0;
+      this.diagnostics.reducedSubjects = 0;
       this.diagnostics.profile = !this.capable ? "core-only-no-float-target" : !this.enabled ? "core-only-effects-disabled" : "core-only-no-emitting-subjects";
       renderer.render(scene, camera); return;
     }

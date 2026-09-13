@@ -28,7 +28,6 @@ export function fixture(options: FixtureOptions = {}) {
   else group.add(make(h, 0));
   attachDreamEmission(group, createDreamEmissionProfile(7, "night", options.kind ?? "ship")); scene.add(group);
   if (options.hidden) group.visible = false;
-  if (options.revoked) group.userData.dreamEmissionAuthorized = false;
   const groups = [group];
   if (options.gap) {
     group.position.x = -h * .55;
@@ -50,6 +49,12 @@ export function fixture(options: FixtureOptions = {}) {
     const data = new Float32Array(physical * physical * 4);
     renderer.readRenderTargetPixels(target, 0, 0, physical, physical, data); return data;
   };
+  if (options.revoked) {
+    // First populate the pass with an authorized frame, then revoke it. This
+    // catches both stale glow and unnecessary core quantization on the next frame.
+    read(true);
+    group.userData.dreamEmissionAuthorized = false;
+  }
   const baseline = read(false); const pixels = read(true);
   const gl = renderer.getContext(); const error = gl.getError();
   const samples = Array.from({ length: Math.ceil(h * .25 * dpr) }, (_, i) => {
