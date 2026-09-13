@@ -1,0 +1,73 @@
+--- a/app/Battlefield.tsx
++++ b/app/Battlefield.tsx
+@@ -367,7 +367,9 @@
+     let renderer = rendererRef.current;
+     if (!renderer) {
+       const renderCanvas = document.createElement("canvas");
+-      const renderingContext = renderCanvas.getContext("webgl2", { antialias: true, alpha: false });
++      // WebKit cannot copy an opaque RGB drawing buffer into the RGBA glow
++      // snapshot. Keep RGBA storage; the scene background still paints alpha 1.
++      const renderingContext = renderCanvas.getContext("webgl2", { antialias: true, alpha: true });
+       if (!renderingContext) {
+         rendererUnavailable.current = true;
+         container.dataset.webgl = "unavailable";
+--- a/app/dreamGlowRenderer.ts
++++ b/app/dreamGlowRenderer.ts
+@@ -183,9 +183,14 @@
+   private readonly scratchBox = new THREE.Box3();
+   private readonly referencePoints: THREE.Vector2[] = Array.from({ length: 8 }, () => new THREE.Vector2());
+   private disposed = false;
++  private displayCopyVerified = false;
++  private displayCopyFailed = false;
+ 
+   constructor(private readonly renderer: THREE.WebGLRenderer, roots: readonly THREE.Group[]) {
+-    this.supported = renderer.extensions.has("EXT_color_buffer_float");
++    // RGBA storage is required by the display-copy path on WebKit. An
++    // externally supplied opaque context must retain its native scene instead.
++    this.supported = renderer.extensions.has("EXT_color_buffer_float")
++      && renderer.getContext().getContextAttributes()?.alpha === true;
+     const samples = Math.min(4, renderer.capabilities.maxSamples);
+     this.base = renderTarget(true, samples);
+     this.emission = renderTarget(true, samples);
+@@ -347,8 +352,8 @@
+     renderer.getDrawingBufferSize(this.fullSize);
+     if (this.fullSize.x < 1 || this.fullSize.y < 1) { this.status = "off"; return; }
+     const supportedOutput = renderer.getRenderTarget() === null && renderer.outputColorSpace === THREE.SRGBColorSpace;
+-    if (!this.subjects.length || !this.supported || !supportedOutput || this.fullSize.x * this.fullSize.y > DREAM_EMISSION_LIMITS.maxBufferPixels) {
+-      this.status = !this.subjects.length ? "off" : !this.supported || !supportedOutput ? "core-only-capability" : "core-only-budget";
++    if (!this.subjects.length || !this.supported || this.displayCopyFailed || !supportedOutput || this.fullSize.x * this.fullSize.y > DREAM_EMISSION_LIMITS.maxBufferPixels) {
++      this.status = !this.subjects.length ? "off" : !this.supported || this.displayCopyFailed || !supportedOutput ? "core-only-capability" : "core-only-budget";
+       renderer.render(scene, camera);
+       return;
+     }
+@@ -366,6 +371,7 @@
+       this.displayBase = new THREE.FramebufferTexture(this.fullSize.x, this.fullSize.y);
+       this.displayBase.colorSpace = THREE.NoColorSpace;
+       this.compositeMaterial.uniforms.uBase.value = this.displayBase;
++      this.displayCopyVerified = false;
+     }
+     this.nearFar.set(camera.near, camera.far);
+     try {
+@@ -414,9 +420,22 @@
+       // pass supplies depth only; legacy custom shaders are not assumed to
+       // follow the same output-transfer convention as standard materials.
+       renderer.autoClear = true;
++      renderer.setClearColor(previous.clearColor, previous.clearAlpha);
+       renderer.render(scene, camera);
+       if (this.renderedSubjects === 0) return;
+       renderer.copyFramebufferToTexture(this.displayBase, new THREE.Vector2(0, 0));
++      // Validate each new snapshot allocation once, not on every frame. If
++      // capture fails, the just-rendered lit scene remains the output; never
++      // cover it with an empty texture. Retry only with a new renderer instance.
++      if (!this.displayCopyVerified) {
++        const context = renderer.getContext();
++        if (context.getError() !== context.NO_ERROR) {
++          this.displayCopyFailed = true;
++          this.status = "core-only-capability";
++          return;
++        }
++        this.displayCopyVerified = true;
++      }
+       renderer.autoClear = false;
+       this.screenMesh.material = this.compositeMaterial;
+       renderer.render(this.screenScene, this.screenCamera);

@@ -1,11 +1,11 @@
-name: Glow scene preservation investigation
+name: Glow scene preservation verification
 on:
   push:
     branches: [codex/glow-scene-preservation-2026-09-13]
 permissions:
   contents: read
 jobs:
-  probe:
+  verify:
     strategy:
       fail-fast: false
       matrix:
@@ -15,7 +15,7 @@ jobs:
           - os: macos-latest
             browser: webkit
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,17 +24,46 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+      - name: Apply exact bounded repair candidate
+        run: |
+          git apply --check tests/fixtures/glow-scene-repair.patch
+          git apply tests/fixtures/glow-scene-repair.patch
       - run: npm ci
+      - name: Typecheck, material preservation, existing glow mathematics, and build
+        run: |
+          npm run typecheck
+          node --import tsx --test tests/dream-glow-math.test.ts tests/dream-emission.test.ts tests/dream-reflectivity.test.ts
+          npm run build
       - run: npx playwright install --with-deps ${{ matrix.browser }}
-      - name: Compare real opaque context with RGBA context in every time of day
+      - name: Verify all times, native scene, reflective core, side and overhead views
         run: |
           npm run dev -- --port 4174 > /tmp/fog-vite.log 2>&1 &
-          for i in $(seq 1 30); do curl -sf http://127.0.0.1:4174/ >/dev/null && break; sleep 1; done
+          npm run preview -- --port 4175 > /tmp/fog-preview.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:4175/ >/dev/null && break; sleep 1; done
           node scripts/probe-glow-scene.mjs ${{ matrix.browser }}
+      - name: Preserve tested source, excluding dependencies, build output, and font binaries
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import subprocess,pathlib,zipfile,hashlib,json
+          files=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          records={}
+          with zipfile.ZipFile('tested-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in files:
+                  if not name or name.startswith(('node_modules/','dist/','.ndcg-transport/')):continue
+                  p=pathlib.Path(name)
+                  if p.suffix.lower() in ('.woff','.woff2','.ttf','.otf','.ttc'):continue
+                  if not p.is_file():continue
+                  raw=p.read_bytes();records[name]=hashlib.sha256(raw).hexdigest();z.writestr(name,raw)
+          pathlib.Path('test-results').mkdir(exist_ok=True)
+          pathlib.Path('test-results/tested-source-sha256.json').write_text(json.dumps(records,indent=2))
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: glow-scene-probe-${{ matrix.browser }}-${{ github.sha }}
-          path: test-results/
+          name: glow-scene-verified-${{ matrix.browser }}-${{ github.sha }}
+          path: |
+            test-results/
+            tested-source.zip
           if-no-files-found: warn
           retention-days: 7
