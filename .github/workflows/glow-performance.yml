@@ -2,6 +2,8 @@ name: Restored glow performance verification
 on:
   push:
     branches: [codex/restored-glow-performance-2026-09-13]
+    paths: ['app/**', 'tests/**', 'scripts/**']
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -16,7 +18,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - name: Preserve approved baseline then apply bounded candidates
+      - name: Preserve approved baseline then apply adopted candidates
         run: |
           git apply tests/fixtures/glow-scene-repair.patch
           cp app/dreamGlowRenderer.ts app/dreamGlowBaseline.ts
@@ -30,8 +32,6 @@ jobs:
           PY
           git apply --check tests/fixtures/glow-performance-batch.patch
           git apply tests/fixtures/glow-performance-batch.patch
-          git apply --check tests/fixtures/glow-performance-sampling.patch
-          git apply tests/fixtures/glow-performance-sampling.patch
       - run: npm ci
       - name: Check source, lifetime, source pool, timing, materials, and original glow mathematics
         run: |
