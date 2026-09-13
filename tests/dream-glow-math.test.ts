@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   DREAM_GLOW_MODEL, DREAM_GLOW_TAPS, compactGlowKernel, createGlowTaps,
-  dreamGlowBreathing, glowLuminanceShoulder, projectedGlowReference, referenceGlowEdge,
+  dreamGlowBreathing, glowLuminanceShoulder, projectedConvexHullArea,
+  projectedGlowReference, referenceGlowEdge, viewConditionedGlowReference,
 } from "../app/dreamGlowMath";
 
 test("NDCG/H03-H07: normalized positive finite kernel with centered symmetric support", () => {
@@ -76,6 +77,36 @@ test("NDCG/R01-R04: projected scale changes with distance and pixel density, not
   assert.equal(projectedGlowReference(0.00001, 10, 2, 1000), 0.001);
   assert.equal(projectedGlowReference(1e308, 1, 1e308, 1000), 0);
   for (const value of [NaN, Infinity, 0, -1]) assert.equal(projectedGlowReference(2, value, 2, 1000), 0);
+});
+
+test("NDCG/R05: projected footprint area is invariant to image-plane rotation", () => {
+  const rectangle = [{ x: -2, y: -0.5 }, { x: 2, y: -0.5 }, { x: 2, y: 0.5 }, { x: -2, y: 0.5 }];
+  const angle = Math.PI / 3;
+  const rotated = rectangle.map(({ x, y }) => ({
+    x: x * Math.cos(angle) - y * Math.sin(angle),
+    y: x * Math.sin(angle) + y * Math.cos(angle),
+  }));
+  assert.ok(Math.abs(projectedConvexHullArea(rectangle) - 4) < 1e-12);
+  assert.ok(Math.abs(projectedConvexHullArea(rotated) - 4) < 1e-12);
+});
+
+test("NDCG/R06: broadside preserves the accepted radius while side-on foreshortening contracts it", () => {
+  // Canonical aircraft-like box: 4 long × 2 broad × 0.5 thick, viewed at
+  // 10 physical pixels per world unit. Largest broadside area is 8 wu².
+  const diameter = 4.5;
+  const sphereReference = 45;
+  const broadsideAreaPixels = 8 * 100;
+  const sideAreaPixels = 2 * 100;
+  assert.equal(viewConditionedGlowReference(sphereReference, broadsideAreaPixels, 4, 2, 0.5, diameter), 45);
+  assert.equal(viewConditionedGlowReference(sphereReference, sideAreaPixels, 4, 2, 0.5, diameter), 22.5);
+  assert.ok(viewConditionedGlowReference(sphereReference, sideAreaPixels, 4, 2, 0.5, diameter) < sphereReference);
+});
+
+test("NDCG/R06 boundary: perspective may not inflate the accepted broadside radius", () => {
+  assert.equal(viewConditionedGlowReference(45, 1600, 4, 2, 0.5, 4.5), 45);
+  assert.equal(viewConditionedGlowReference(45, 200, 4, 2, 0, 4.5), 22.5);
+  assert.equal(viewConditionedGlowReference(45, 0, 4, 2, 0.5, 4.5), 0);
+  assert.equal(projectedConvexHullArea([{ x: 0, y: 0 }, { x: 1, y: 1 }]), 0);
 });
 
 test("NDCG/C05: luminance shoulder is bounded, continuous and preserves low intensities", () => {
