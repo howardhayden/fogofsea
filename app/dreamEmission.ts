@@ -20,6 +20,7 @@ export type DreamSourcePart = { mesh: THREE.Mesh; material: DreamSourceMaterial;
 export type DreamEmissionRuntime = {
   profile: DreamEmissionProfile;
   parts: DreamSourcePart[];
+  referenceBox: THREE.Box3;
   referenceSphere: THREE.Sphere;
   haloFactor: number;
 };
@@ -128,8 +129,15 @@ export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionPr
     for (const material of materialCopies.values()) material.dispose();
     return;
   }
+  const referenceBox = localBounds.clone();
   group.userData.dreamEmission = {
-    profile, parts, referenceSphere: localBounds.getBoundingSphere(new THREE.Sphere()), haloFactor: 1,
+    profile,
+    parts,
+    // Canonical local bounds are frozen at registration. Root/camera projection
+    // may change their screen footprint; articulated subparts cannot pump it.
+    referenceBox,
+    referenceSphere: referenceBox.getBoundingSphere(new THREE.Sphere()),
+    haloFactor: 1,
   } satisfies DreamEmissionRuntime;
   group.userData.dreamEmissionHaloMeshes = 0;
 }
