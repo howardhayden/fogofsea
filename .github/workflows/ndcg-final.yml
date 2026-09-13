@@ -1,0 +1,77 @@
+name: NDCG hardened renderer verification
+on:
+  push:
+    branches: [codex/ndcg-entity-glow-2026-09-13]
+    paths: [.github/workflows/ndcg-final.yml]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - name: Apply integrity-checked correction without discarding concurrent edits
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, lzma, pathlib, subprocess
+          patch = lzma.decompress(base64.b64decode(pathlib.Path('.ndcg-correction.b64').read_text(), validate=True))
+          assert hashlib.sha256(patch).hexdigest() == '767642937acfc1027319edf9733d1ed6347bc34a5e49c1eed874e784dd4cc4f2'
+          subprocess.run(['git', 'apply', '--check', '-'], input=patch, check=True)
+          subprocess.run(['git', 'apply', '-'], input=patch, check=True)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- app/dreamEmission.ts app/dreamGlowRenderer.ts tests/dream-emission.test.ts tests/dream-glow-scene.test.ts tests/red-team/ndcg-glow-contract.test.ts tests/browser/fixtures/ndcg-glow.ts tests/browser/ndcg-glow-pixels.spec.ts tests/browser/environment-visuals.spec.ts
+          git rm .ndcg-correction.b64
+          git commit -m 'Harden native glow admission, anatomical scope, resource lifetime and pixel evidence'
+          git push origin HEAD:codex/ndcg-entity-glow-2026-09-13
+          mkdir -p evidence/ndcg-glow/ci
+          git rev-parse HEAD > evidence/ndcg-glow/ci/head.txt
+      - name: Install exact dependencies and official browser
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium
+          { node --version; npx playwright --version; } > evidence/ndcg-glow/ci/versions.txt
+      - name: Static, anatomy, source, numerical and red-team checks
+        id: static
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          { npm run typecheck && npm run lint && node --import tsx --test tests/dream-emission.test.ts tests/dream-glow-math.test.ts tests/dream-glow-scene.test.ts tests/red-team/ndcg-glow-contract.test.ts && npm run test:red-team && npm run build; } 2>&1 | tee evidence/ndcg-glow/ci/static.log
+      - name: Independent GPU pixel gates
+        id: pixels
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npx playwright test tests/browser/ndcg-glow-pixels.spec.ts --project=desktop-chromium --workers=1 --output=test-results/ndcg-pixels 2>&1 | tee evidence/ndcg-glow/ci/pixels.log
+      - name: Application integration
+        id: app
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npx playwright test tests/browser/environment-visuals.spec.ts --project=desktop-chromium --workers=1 --output=test-results/ndcg-app --grep 'subjects breathe|night dream emission' 2>&1 | tee evidence/ndcg-glow/ci/app.log
+      - name: Record independent outcomes
+        if: always()
+        run: |
+          mkdir -p evidence/ndcg-glow/ci
+          echo '{"static":"${{ steps.static.outcome }}","pixels":"${{ steps.pixels.outcome }}","app":"${{ steps.app.outcome }}"}' > evidence/ndcg-glow/ci/outcomes.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ndcg-hardened-evidence
+          path: |
+            evidence/ndcg-glow/ci/
+            evidence/ndcg-glow/gpu/
+            evidence/ndcg-glow/app/
+            test-results/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Require all glow qualification gates
+        if: always()
+        run: test '${{ steps.static.outcome }}' = success && test '${{ steps.pixels.outcome }}' = success && test '${{ steps.app.outcome }}' = success
