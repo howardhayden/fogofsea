@@ -30,6 +30,8 @@ jobs:
           PY
           git apply --check tests/fixtures/glow-performance-batch.patch
           git apply tests/fixtures/glow-performance-batch.patch
+          git apply --check tests/fixtures/glow-performance-sampling.patch
+          git apply tests/fixtures/glow-performance-sampling.patch
       - run: npm ci
       - name: Check source, lifetime, source pool, timing, materials, and original glow mathematics
         run: |

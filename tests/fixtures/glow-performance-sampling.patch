@@ -1,0 +1,51 @@
+diff --git a/app/dreamGlowRenderer.ts b/app/dreamGlowRenderer.ts
+index 395a0cd..ba6411c 100644
+--- a/app/dreamGlowRenderer.ts
++++ b/app/dreamGlowRenderer.ts
+@@ -62,13 +62,15 @@ const GLOW_FRAGMENT = `
+   uniform float uReference;
+   uniform float uGain;
+   uniform vec4 uSourceBounds;
++  uniform vec4 uSourceUvBounds;
+   uniform vec3 uSigmaRatios;
+   uniform vec3 uWeights;
+   uniform vec3 uTaps[${DREAM_GLOW_TAPS.length}];
+   ${DEPTH_FUNCTION}
+   vec4 sourceAt(vec2 uv) {
+-    vec2 limit = uCaptureRect.zw / uSourceSize;
+-    if (any(lessThan(uv, vec2(0.0))) || any(greaterThanEqual(uv, limit))) return vec4(0.0);
++    // Every sample outside the conservative geometry bounds is already zero.
++    // Reject it before a texture read, not after fetching the padded clear area.
++    if (any(lessThan(uv, uSourceUvBounds.xy)) || any(greaterThanEqual(uv, uSourceUvBounds.zw))) return vec4(0.0);
+     return texture2D(uEmission, uv);
+   }
+   void main() {
+@@ -199,6 +201,7 @@ export class DreamGlowRenderer {
+   private readonly nearFar = new THREE.Vector2();
+   private readonly captureRect = new THREE.Vector4();
+   private readonly sourceBounds = new THREE.Vector4();
++  private readonly sourceUvBounds = new THREE.Vector4();
+   private readonly point = new THREE.Vector3();
+   private readonly center = new THREE.Vector3();
+   private readonly worldScale = new THREE.Vector3();
+@@ -233,6 +236,7 @@ export class DreamGlowRenderer {
+         uSceneDepth: { value: this.base.depthTexture }, uFullSize: { value: this.fullSize },
+         uSourceSize: { value: this.sourceSize }, uNearFar: { value: this.nearFar },
+         uSourceBounds: { value: this.sourceBounds },
++        uSourceUvBounds: { value: this.sourceUvBounds },
+         uCaptureRect: { value: this.captureRect }, uReference: { value: 0 }, uGain: { value: 0 },
+         uSigmaRatios: { value: new THREE.Vector3().fromArray(DREAM_GLOW_MODEL.sigmaRatios) },
+         uWeights: { value: new THREE.Vector3().fromArray(DREAM_GLOW_MODEL.weights) },
+@@ -437,6 +441,12 @@ export class DreamGlowRenderer {
+       this.captureRect.copy(entry.captureRect);
+       this.sourceBounds.copy(entry.sourceBounds);
+       this.sourceSize.set(entry.target.width, entry.target.height);
++      this.sourceUvBounds.set(
++        Math.max(0, this.sourceBounds.x - this.captureRect.x) / entry.target.width,
++        Math.max(0, this.sourceBounds.y - this.captureRect.y) / entry.target.height,
++        Math.min(this.captureRect.z, this.sourceBounds.z - this.captureRect.x) / entry.target.width,
++        Math.min(this.captureRect.w, this.sourceBounds.w - this.captureRect.y) / entry.target.height,
++      );
+       this.glowMaterial.uniforms.uEmission.value = entry.target.texture;
+       this.glowMaterial.uniforms.uSourceDepth.value = entry.target.depthTexture;
+       this.glowMaterial.uniforms.uReference.value = entry.reference;
