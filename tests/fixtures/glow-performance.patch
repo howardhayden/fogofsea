@@ -1,0 +1,189 @@
+diff --git a/app/Battlefield.tsx b/app/Battlefield.tsx
+index c3236dc..cbd7c57 100644
+--- a/app/Battlefield.tsx
++++ b/app/Battlefield.tsx
+@@ -31,6 +31,7 @@ import { cloudCoverPhrase } from "./weatherPresentation";
+ import { createWildlifePlan, describeWildlifeForView, wildlifeForView, wildlifeReactionMessage, type VisibleWildlife } from "./wildlife";
+ import { attachDreamEmission, createDreamEmissionProfile, detachDreamEmission, DREAM_EMISSION_LIMITS, updateDreamEmission } from "./dreamEmission";
+ import { DreamGlowRenderer } from "./dreamGlowRenderer";
++import { advanceRenderDeadline } from "./visualPerformance";
+ import {
+   createStarfieldPlan,
+   describeStarfield,
+@@ -165,6 +166,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
+   const host = useRef<HTMLDivElement>(null);
+   const wildlifeReactRef = useRef<(memberId: string) => void>(() => {});
+   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
++  const dreamGlowRef = useRef<DreamGlowRenderer | null>(null);
+   const rendererUnavailable = useRef(false);
+   const viewPoses = useRef<Partial<Record<ViewLayer, ViewPose>>>({});
+   const [viewLayer, setViewLayer] = useState<ViewLayer>("surface");
+@@ -535,7 +537,11 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
+       ));
+     });
+     const dreamSubjects = [...ships, ...aircraft, ...seaCreatures, ...wildlife];
+-    const dreamGlow = new DreamGlowRenderer(renderer, dreamSubjects);
++    // Scene changes must not repeatedly allocate the glow buffers or discard
++    // the expensive convolution programs. The renderer owns their lifetime.
++    const dreamGlow = dreamGlowRef.current ?? new DreamGlowRenderer(renderer, []);
++    dreamGlowRef.current = dreamGlow;
++    dreamGlow.setSubjects(dreamSubjects);
+     const clock3d = new THREE.Clock();
+     const wildlifeRaycaster = new THREE.Raycaster();
+     const wildlifePointer = new THREE.Vector2();
+@@ -588,7 +594,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
+     renderer.domElement.addEventListener("pointerup", onWildlifePointerUp);
+     renderer.domElement.addEventListener("pointermove", onWildlifePointerMove);
+     let frame = 0;
+-    let lastFrameAt = -Infinity;
++    let nextFrameAt = 0;
+     let lastNormalsAt = -Infinity;
+     const foamMatrix = new THREE.Matrix4();
+     const foamQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0));
+@@ -598,9 +604,12 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
+     const waveBaseColor = new THREE.Color(colors[2]);
+     const renderFrame = (frameAt: number) => {
+       if (document.hidden) return;
+-      const frameInterval = 1000 / 30;
+-      if (!reducedMotion && frameAt - lastFrameAt < frameInterval) return;
+-      lastFrameAt = frameAt;
++      if (!reducedMotion) {
++        // Browser timestamps may be quantized to whole milliseconds. Keep the
++        // 30 Hz phase instead of repeatedly turning 33 ms into a skipped frame.
++        if (frameAt + 1 < nextFrameAt) return;
++        nextFrameAt = advanceRenderDeadline(nextFrameAt, Math.max(frameAt, nextFrameAt), 30);
++      }
+       const elapsed = clock3d.getElapsedTime();
+       const motionTime = reducedMotion ? 0 : elapsed;
+       ships.forEach((ship, index) => {
+@@ -742,7 +751,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
+         delete container.dataset.renderedLayer;
+         delete container.dataset.renderedTheme;
+       }
+-      dreamGlow.dispose();
++      dreamGlow.clearSubjects();
+       dreamSubjects.forEach(detachDreamEmission);
+       delete container.dataset.dreamGlowProfile;
+       delete container.dataset.dreamGlowSources;
+@@ -761,6 +770,8 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
+   useEffect(() => () => {
+     const renderer = rendererRef.current;
+     const container = host.current;
++    dreamGlowRef.current?.dispose();
++    dreamGlowRef.current = null;
+     if (renderer) {
+       renderer.renderLists.dispose();
+       renderer.dispose();
+diff --git a/app/dreamGlowRenderer.ts b/app/dreamGlowRenderer.ts
+index b3208c1..270444e 100644
+--- a/app/dreamGlowRenderer.ts
++++ b/app/dreamGlowRenderer.ts
+@@ -61,6 +61,7 @@ const GLOW_FRAGMENT = `
+   uniform vec4 uCaptureRect;
+   uniform float uReference;
+   uniform float uGain;
++  uniform vec4 uSourceBounds;
+   uniform vec3 uSigmaRatios;
+   uniform vec3 uWeights;
+   uniform vec3 uTaps[${DREAM_GLOW_TAPS.length}];
+@@ -74,9 +75,22 @@ const GLOW_FRAGMENT = `
+     vec2 fullUv = gl_FragCoord.xy / uFullSize;
+     vec2 centerUv = (gl_FragCoord.xy - uCaptureRect.xy) / uSourceSize;
+     float destinationDepth = texture2D(uSceneDepth, fullUv).r;
++    float coverage = sourceAt(centerUv).a;
++    // The final composite discards every halo contribution at an opaque core.
++    // Preserve that mask but do not evaluate 327 samples that cannot be shown.
++    if (coverage >= 1.0) {
++      gl_FragColor = vec4(0.0, 0.0, 0.0, coverage);
++      return;
++    }
+     vec3 spread = vec3(0.0);
+     for (int scaleIndex = 0; scaleIndex < 3; scaleIndex++) {
+-      vec2 sigma = uReference * uSigmaRatios[scaleIndex] / uSourceSize;
++      float radius = uReference * uSigmaRatios[scaleIndex];
++      // A conservative projected source rectangle plus the exact finite
++      // kernel support. The two-pixel source margin includes raster/filter edges.
++      float support = 3.0 * radius;
++      if (any(lessThan(gl_FragCoord.xy, uSourceBounds.xy - support)) ||
++          any(greaterThan(gl_FragCoord.xy, uSourceBounds.zw + support))) continue;
++      vec2 sigma = radius / uSourceSize;
+       for (int tapIndex = 0; tapIndex < ${DREAM_GLOW_TAPS.length}; tapIndex++) {
+         vec3 tap = uTaps[tapIndex];
+         vec2 sampleUv = centerUv + tap.xy * sigma;
+@@ -87,7 +101,6 @@ const GLOW_FRAGMENT = `
+         spread += source.rgb * (tap.z * uWeights[scaleIndex]);
+       }
+     }
+-    float coverage = sourceAt(centerUv).a;
+     gl_FragColor = vec4(spread * uGain, coverage);
+   }
+ `;
+@@ -175,6 +188,7 @@ export class DreamGlowRenderer {
+   private readonly sourceSize = new THREE.Vector2(1, 1);
+   private readonly nearFar = new THREE.Vector2();
+   private readonly captureRect = new THREE.Vector4();
++  private readonly sourceBounds = new THREE.Vector4();
+   private readonly point = new THREE.Vector3();
+   private readonly center = new THREE.Vector3();
+   private readonly worldScale = new THREE.Vector3();
+@@ -204,6 +218,7 @@ export class DreamGlowRenderer {
+         uEmission: { value: this.emission.texture }, uSourceDepth: { value: this.emission.depthTexture },
+         uSceneDepth: { value: this.base.depthTexture }, uFullSize: { value: this.fullSize },
+         uSourceSize: { value: this.sourceSize }, uNearFar: { value: this.nearFar },
++        uSourceBounds: { value: this.sourceBounds },
+         uCaptureRect: { value: this.captureRect }, uReference: { value: 0 }, uGain: { value: 0 },
+         uSigmaRatios: { value: new THREE.Vector3().fromArray(DREAM_GLOW_MODEL.sigmaRatios) },
+         uWeights: { value: new THREE.Vector3().fromArray(DREAM_GLOW_MODEL.weights) },
+@@ -227,6 +242,15 @@ export class DreamGlowRenderer {
+     this.screenMesh.frustumCulled = false;
+     this.screenScene.add(this.screenMesh);
+     this.subjects = [];
++    this.setSubjects(roots);
++  }
++
++  /** Keep framebuffer allocations and the compiled full-screen programs while
++   * the current view changes. Only the scene-owned source registrations change.
++   */
++  setSubjects(roots: readonly THREE.Group[]): void {
++    if (this.disposed) throw new Error("DreamGlowRenderer has been disposed");
++    this.clearSubjects();
+     for (const root of new Set(roots)) {
+       const runtime = root.userData.dreamEmission as DreamEmissionRuntime | undefined;
+       if (!runtime?.profile.enabled) continue;
+@@ -334,6 +358,7 @@ export class DreamGlowRenderer {
+       left = Math.min(left, x); right = Math.max(right, x);
+       bottom = Math.min(bottom, y); top = Math.max(top, y);
+     }
++    this.sourceBounds.set(left - 2, bottom - 2, right + 2, top + 2);
+     const padding = DREAM_GLOW_MODEL.supportSigmas * DREAM_GLOW_MODEL.sigmaRatios[2] * reference + 2;
+     left = Math.floor(left - padding); bottom = Math.floor(bottom - padding);
+     right = Math.ceil(right + padding); top = Math.ceil(top + padding);
+@@ -457,15 +482,24 @@ export class DreamGlowRenderer {
+     }
+   }
+ 
++  /** Release old scene references without dropping renderer-owned programs. */
++  clearSubjects(): void {
++    for (const subject of this.subjects) {
++      for (const part of subject.parts) part.material.dispose();
++      subject.scene.clear();
++    }
++    this.subjects.length = 0;
++    this.renderedSubjects = 0;
++    this.skippedForBudget = 0;
++    this.status = "off";
++  }
++
+   dispose(): void {
+     if (this.disposed) return;
+     this.disposed = true;
+     this.base.dispose(); this.emission.dispose(); this.accumulation.dispose(); this.displayBase.dispose();
+     this.glowMaterial.dispose(); this.compositeMaterial.dispose(); this.triangle.dispose();
+-    for (const subject of this.subjects) {
+-      for (const part of subject.parts) part.material.dispose();
+-      subject.scene.clear();
+-    }
++    this.clearSubjects();
+     this.screenScene.clear();
+     // Original scene geometry/material ownership remains with Battlefield.
+   }

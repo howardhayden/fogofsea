@@ -1,4 +1,4 @@
-name: Restored glow performance profile
+name: Restored glow performance verification
 on:
   push:
     branches: [codex/restored-glow-performance-2026-09-13]
@@ -7,7 +7,7 @@ permissions:
 jobs:
   profile:
     runs-on: macos-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -16,19 +16,44 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - name: Restore approved application state
-        run: git apply tests/fixtures/glow-scene-repair.patch
+      - name: Preserve approved baseline then apply bounded candidate
+        run: |
+          git apply tests/fixtures/glow-scene-repair.patch
+          cp app/dreamGlowRenderer.ts app/dreamGlowBaseline.ts
+          git apply --check tests/fixtures/glow-performance.patch
+          git apply tests/fixtures/glow-performance.patch
       - run: npm ci
+      - name: Check source, lifetime, timing, materials, and original glow mathematics
+        run: |
+          npm run typecheck
+          node --import tsx --test tests/dream-glow-math.test.ts tests/dream-emission.test.ts tests/dream-reflectivity.test.ts tests/dream-glow-performance.test.ts
+          npm run build
       - run: npx playwright install --with-deps webkit
-      - name: Measure restored actual scenes
+      - name: Compare identical actual scenes against the approved renderer
         run: |
           npm run dev -- --port 4174 > /tmp/glow-vite.log 2>&1 &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:4174/ >/dev/null && break; sleep 1; done
+          node scripts/compare-restored-glow.mjs
           node scripts/profile-restored-glow.mjs
+      - name: Preserve exact tested application source
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          records={}
+          with zipfile.ZipFile('tested-performance-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(pathlib.Path('app').rglob('*')):
+                  if not p.is_file() or p.name=='dreamGlowBaseline.ts':continue
+                  raw=p.read_bytes();records[str(p)]=hashlib.sha256(raw).hexdigest();z.writestr(str(p),raw)
+          pathlib.Path('test-results').mkdir(exist_ok=True)
+          pathlib.Path('test-results/tested-source-sha256.json').write_text(json.dumps(records,indent=2))
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: restored-glow-profile-${{ github.sha }}
-          path: test-results/
+          name: restored-glow-performance-${{ github.sha }}
+          path: |
+            test-results/
+            tested-performance-source.zip
           retention-days: 14
           if-no-files-found: warn
