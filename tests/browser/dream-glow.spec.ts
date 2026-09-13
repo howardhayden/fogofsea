@@ -1,3 +1,4 @@
+import { writeFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 
 test("all entity glow profiles produce exterior light without core washout or hidden-source leakage", async ({ page }, testInfo) => {
@@ -15,8 +16,17 @@ test("all entity glow profiles produce exterior light without core washout or hi
     }
     return results;
   });
+  const metrics = results.map(({ capture: _capture, ...result }) => result);
+  const metricPath = testInfo.outputPath("dream-glow-gpu-metrics.json");
+  await writeFile(metricPath, JSON.stringify(metrics, null, 2));
+  await testInfo.attach("dream-glow-gpu-metrics", { path: metricPath, contentType: "application/json" });
+  console.log("dream-glow-gpu-metrics", JSON.stringify(metrics));
   for (const result of results) {
-    await testInfo.attach(`${result.kind}-dpr-${result.pixelRatio}`, { body: Buffer.from(result.capture.split(",")[1], "base64"), contentType: "image/png" });
+    const imagePath = testInfo.outputPath(`${result.kind}-dpr-${result.pixelRatio}.png`);
+    await writeFile(imagePath, Buffer.from(result.capture.split(",")[1], "base64"));
+    await testInfo.attach(`${result.kind}-dpr-${result.pixelRatio}`, { path: imagePath, contentType: "image/png" });
+  }
+  for (const result of results) {
     expect(result.status).toBe("sampled-radial-native-color");
     expect(result.renderedSubjects).toBe(1);
     expect(result.near).toBeGreaterThanOrEqual(0.05);
@@ -29,8 +39,5 @@ test("all entity glow profiles produce exterior light without core washout or hi
     expect(result.occludedMaximum).toBe(0);
     expect(result.framebufferError).toBe(0);
   }
-  const metrics = results.map(({ capture: _capture, ...result }) => result);
-  await testInfo.attach("dream-glow-gpu-metrics", { body: JSON.stringify(metrics, null, 2), contentType: "application/json" });
-  console.log("dream-glow-gpu-metrics", JSON.stringify(metrics));
   expect(errors).toEqual([]);
 });

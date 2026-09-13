@@ -87,6 +87,7 @@ const GLOW_FRAGMENT = `
 const COMPOSITE_FRAGMENT = `
   uniform sampler2D uBase;
   uniform sampler2D uGlow;
+  uniform vec2 uFullSize;
   uniform float uKnee;
   uniform float uCeiling;
   varying vec2 vUv;
@@ -101,8 +102,11 @@ const COMPOSITE_FRAGMENT = `
     // This is the actual original display framebuffer, including custom scene
     // shaders. Treat it as encoded data rather than encoding the whole scene
     // again merely because an unrelated animal has registered emission.
-    vec4 base = texture2D(uBase, vUv);
-    vec4 glow = texture2D(uGlow, vUv);
+    // A fractional DPR can round the viewport one pixel larger than the
+    // floored drawing buffer. Address the copy in physical pixels, not vUv.
+    vec2 pixelUv = gl_FragCoord.xy / uFullSize;
+    vec4 base = texture2D(uBase, pixelUv);
+    vec4 glow = texture2D(uGlow, pixelUv);
     float luminance = dot(glow.rgb, vec3(0.2126, 0.7152, 0.0722));
     if (luminance > uKnee) {
       float limited = uKnee + (uCeiling - uKnee) * (1.0 - exp(-(luminance - uKnee) / (uCeiling - uKnee)));
@@ -200,6 +204,7 @@ export class DreamGlowRenderer {
       vertexShader: FULLSCREEN_VERTEX, fragmentShader: COMPOSITE_FRAGMENT,
       uniforms: {
         uBase: { value: this.displayBase }, uGlow: { value: this.accumulation.texture },
+        uFullSize: { value: this.fullSize },
         uKnee: { value: DREAM_GLOW_MODEL.luminanceKnee }, uCeiling: { value: DREAM_GLOW_MODEL.luminanceCeiling },
       },
       depthTest: false, depthWrite: false, blending: THREE.NoBlending, toneMapped: false,
