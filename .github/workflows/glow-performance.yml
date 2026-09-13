@@ -16,25 +16,33 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - name: Preserve approved baseline then apply bounded candidate
+      - name: Preserve approved baseline then apply bounded candidates
         run: |
           git apply tests/fixtures/glow-scene-repair.patch
           cp app/dreamGlowRenderer.ts app/dreamGlowBaseline.ts
           git apply --check tests/fixtures/glow-performance.patch
           git apply tests/fixtures/glow-performance.patch
+          python3 - <<'PY'
+          import base64,gzip,hashlib,pathlib
+          raw=gzip.decompress(base64.b64decode(pathlib.Path('tests/fixtures/glow-performance-batch.patch.gz.b64').read_text(),validate=True))
+          assert hashlib.sha256(raw).hexdigest()=='6cfc1b2bba3a6b1500deb9eb63bbc7a7582fe4e227920a5cb1523c57c1ed5cac'
+          pathlib.Path('tests/fixtures/glow-performance-batch.patch').write_bytes(raw)
+          PY
+          git apply --check tests/fixtures/glow-performance-batch.patch
+          git apply tests/fixtures/glow-performance-batch.patch
       - run: npm ci
-      - name: Check source, lifetime, timing, materials, and original glow mathematics
+      - name: Check source, lifetime, source pool, timing, materials, and original glow mathematics
         run: |
           npm run typecheck
-          node --import tsx --test tests/dream-glow-math.test.ts tests/dream-emission.test.ts tests/dream-reflectivity.test.ts tests/dream-glow-performance.test.ts
+          node --import tsx --test tests/dream-glow-math.test.ts tests/dream-emission.test.ts tests/dream-reflectivity.test.ts tests/dream-glow-performance.test.ts tests/dream-glow-pool.test.ts
           npm run build
       - run: npx playwright install --with-deps webkit
-      - name: Compare identical actual scenes against the approved renderer
+      - name: Compare identical actual scenes and real animation against approved renderer
         run: |
           npm run dev -- --port 4174 > /tmp/glow-vite.log 2>&1 &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:4174/ >/dev/null && break; sleep 1; done
           node scripts/compare-restored-glow.mjs
-          node scripts/profile-restored-glow.mjs
+          node scripts/profile-motion-comparison.mjs
       - name: Preserve exact tested application source
         if: always()
         run: |
