@@ -64,7 +64,7 @@ export function listedUnits(values: Record<string, number>, eachLimit: number, t
     .slice(0, totalLimit);
 }
 
-function createShip(type: string, color: number) {
+export function createShip(type: string, color: number) {
   const group = new THREE.Group();
   const submarine = SUBMARINE_TYPES.includes(type);
   const scale = AVIATION_SHIPS.includes(type) ? 1.6 : submarine ? 0.75 : 1;
@@ -130,7 +130,7 @@ function createShip(type: string, color: number) {
   return group;
 }
 
-function createAircraft(type: string, color: number) {
+export function createAircraft(type: string, color: number) {
   const group = new THREE.Group();
   const rotorcraft = ROTORCRAFT.includes(type);
   const uncrewed = type.includes("uncrewed");
@@ -168,7 +168,7 @@ function createAircraft(type: string, color: number) {
   return group;
 }
 
-function createSeaCreature(scale: number, color: number, variant: number) {
+export function createSeaCreature(scale: number, color: number, variant: number) {
   const group = new THREE.Group();
   const material = new THREE.MeshStandardMaterial({ color, roughness: 0.92, flatShading: true, transparent: true, opacity: 0.58 });
   const bodyGeometry = variant % 3 === 0
@@ -1284,6 +1284,14 @@ export function buildSceneContents(input: SceneContentsInput): SceneContents {
     craft.userData.baseX = craft.position.x;
     scene.add(craft);
     aircraft.push(craft);
+  });
+
+  // Both environmental creature families use the same authorized geometry path.
+  [...seaCreatures, ...wildlife].forEach((creature, index) => {
+    attachDreamEmission(creature, createDreamEmissionProfile(
+      stableSeed(exerciseId, region, String(creature.userData.memberId ?? index), "creature-glow"),
+      time, "creature", dreamVisibilityLift,
+    ));
   });
 
   contactsForView(contactPlan, viewLayer).forEach((contact) => scene.add(createUnknownContact(contact, theme)));

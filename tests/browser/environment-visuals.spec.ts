@@ -454,7 +454,7 @@ test("selected operational subjects breathe faintly while stars remain a separat
   await page.locator(".time-control").getByRole("button", { name: "night", exact: true }).click();
   let plot = page.locator(".battlefield-canvas.layer-surface");
   await expect(plot).toHaveAttribute("data-dream-emission", "still");
-  await expect(plot).toHaveAttribute("data-dream-emission-halo", "dual-native-color-shell");
+  await expect(plot).toHaveAttribute("data-dream-emission-halo", "native-shape-field");
   await expect(plot).toHaveAttribute("data-dream-emission-occlusion", "scene-depth-fog-waves");
   await expect(page.locator("#weather-visual-note")).toContainText("thin, soft native-color halos");
   await expect(page.locator("#weather-visual-note")).toContainText("scene depth, fog, and waves continue to soften or cover them");
@@ -514,8 +514,8 @@ test("night dream emission produces a real, bounded, native-color WebGL aura", a
 
   await page.getByRole("button", { name: "Add one Fleet aviation ship" }).click();
   await expect.poll(async () => plot.locator(".fallback-ship").count()).toBeGreaterThan(0);
-  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-max-halo-meshes"))).toBe(126);
-  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-halo-meshes"))).toBe(3);
+  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-max-halo-meshes"))).toBe(0);
+  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-halo-meshes"))).toBe(0);
   const emittedNight = await cleanCanvasCapture(canvas);
   const metrics = await canvasDifferenceMetrics(page, emptyNight, emittedNight);
 
@@ -524,7 +524,7 @@ test("night dream emission produces a real, bounded, native-color WebGL aura", a
   expect(metrics.softEdge).toBeGreaterThan(120);
   expect(metrics.nativeCool).toBeGreaterThan(60);
   expect(metrics.changed).toBeGreaterThan(320);
-  // One unit must remain a local outline—not become a screen-sized light orb.
+  // One unit must remain a local shape-derived field, not a screen-sized light orb.
   expect(metrics.footprintWidth).toBeLessThan(metrics.width * 0.32);
   expect(metrics.footprintHeight).toBeLessThan(metrics.height * 0.32);
 });

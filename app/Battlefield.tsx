@@ -29,7 +29,8 @@ import {
 } from "./environmentVisuals";
 import { cloudCoverPhrase } from "./weatherPresentation";
 import { createWildlifePlan, describeWildlifeForView, wildlifeForView, wildlifeReactionMessage, type VisibleWildlife } from "./wildlife";
-import { DREAM_EMISSION_LIMITS, updateDreamEmission } from "./dreamEmission";
+import { DREAM_EMISSION_LIMITS, detachDreamEmission, updateDreamEmission } from "./dreamEmission";
+import { DreamGlowRenderer } from "./dreamGlowRenderer";
 import {
   createStarfieldPlan,
   describeStarfield,
@@ -524,6 +525,8 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       displayedAirWing: visualAirWing,
       result,
     });
+    const dreamSubjects = [...ships, ...aircraft, ...seaCreatures, ...wildlife];
+    const dreamGlow = new DreamGlowRenderer(renderer, camera, dreamSubjects);
     const clock3d = new THREE.Clock();
     const wildlifeRaycaster = new THREE.Raycaster();
     const wildlifePointer = new THREE.Vector2();
@@ -628,7 +631,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       });
       updateWildlifeAvatars(wildlife, wavePlan, elapsed, reducedMotion);
       updateAtmosphere(atmosphere, atmospherePlan, elapsed, reducedMotion);
-      updateDreamEmission([...ships, ...aircraft], elapsed, reducedMotion);
+      updateDreamEmission(dreamSubjects, elapsed, reducedMotion);
       if (skyCanopy) skyCanopy.position.copy(camera.position);
       if (scene.fog instanceof THREE.FogExp2 && viewLayer !== "subsurface") {
         camera.getWorldDirection(fogViewDirection);
@@ -684,7 +687,10 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       if (sunDisk) sunDisk.position.copy(camera.position).addScaledVector(sunDirection, celestialProminence.distance);
       if (moonDisk) moonDisk.position.copy(camera.position).addScaledVector(moonDirection, celestialProminence.distance);
       if (!reducedMotion) controls.update();
-      renderer.render(scene, camera);
+      dreamGlow.render(scene, camera);
+      container.dataset.dreamEmissionRenderer = dreamGlow.mode;
+      container.dataset.dreamEmissionSubjects = String(dreamGlow.subjects.length);
+      container.dataset.dreamEmissionRenderedSubjects = String(dreamGlow.renderedSubjects);
       container.dataset.renderedLayer = viewLayer;
       container.dataset.renderedTheme = theme;
     };
@@ -728,6 +734,8 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         delete container.dataset.renderedLayer;
         delete container.dataset.renderedTheme;
       }
+      dreamGlow.dispose();
+      dreamSubjects.forEach(detachDreamEmission);
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh || object instanceof THREE.Points || object instanceof THREE.Line || object instanceof THREE.LineSegments) {
           object.geometry?.dispose();
@@ -819,13 +827,12 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       data-sky-canopy={viewLayer === "subsurface" ? "subsurface" : "faceted-pastel-gradient"}
       data-time={time}
       data-dream-emission={time === "day" ? "off" : reducedMotion ? "still" : "breathing"}
-      data-dream-emission-halo={time === "day" ? "none" : "dual-native-color-shell"}
+      data-dream-emission-halo={time === "day" ? "none" : "native-shape-field"}
+      data-dream-emission-capture="48-reference-pixels"
+      data-dream-emission-fallback="reduced-css-profile"
       data-dream-emission-occlusion="scene-depth-fog-waves"
       data-dream-emission-max-halo-meshes={DREAM_EMISSION_LIMITS.maxHaloMeshes}
-      data-dream-emission-halo-meshes={time === "day" ? 0 : (
-        listedUnits(visualFleet, 8, 22).filter((type) => viewLayer !== "stars" && (viewLayer !== "subsurface" || type.includes("submarine"))).length
-        + (viewLayer === "subsurface" || viewLayer === "stars" ? 0 : listedUnits(visualAirWing, 5, 20).length)
-      ) * DREAM_EMISSION_LIMITS.haloMeshesPerSubject}
+      data-dream-emission-halo-meshes={0}
       data-weather-tier={atmospherePlan.precipitation.tier}
       data-fog-class={atmospherePlan.fog.classification}
       data-fog-banks={atmospherePlan.fog.banks.length}
@@ -1066,10 +1073,10 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         </details>
       )}
       <span id="battlefield-state-note" className="visually-hidden">
-        {`Viewing ${viewLayer}. Heading ${viewTelemetry.heading} degrees ${viewTelemetry.direction}; elevation ${viewTelemetry.elevation} degrees. ${region}, ${climate}, ${season}, ${time}. Weather: ${storming ? "storming with " : ""}${precipitation === "none" ? cloudCoverPhrase(clouds) : `${atmospherePlan.precipitation.presentation} ${precipitation}`}. Wind travels toward ${windHeading} degrees at ${windSpeed} knots; current travels toward ${currentHeading} degrees at ${currentSpeed} knots; resulting waves travel toward ${wavePlan.travelHeading} degrees.${atmospherePlan.stormLight.visible ? " Static low-poly lightning geometry remains visible with localized, eased, non-flashing cloud-interior light." : ""}${time === "day" ? "" : " Visible selected vessels, submarines, and aircraft retain crisp silhouettes with faint native-color halos that breathe slowly and asynchronously."}${auroraVisibleInLayer ? " Aurora is visible and described separately." : ""}${viewLayer === "stars" ? ` Visibility: ${skyVisibility.clarity}.` : ""}${viewLayer === "subsurface" ? ` ${lifeProfile.solitaryCount} vague solitary environmental forms and ${lifeProfile.schoolCount} small schooling forms appear at ${lifeProfile.depthLabel}.` : ""}`}
+        {`Viewing ${viewLayer}. Heading ${viewTelemetry.heading} degrees ${viewTelemetry.direction}; elevation ${viewTelemetry.elevation} degrees. ${region}, ${climate}, ${season}, ${time}. Weather: ${storming ? "storming with " : ""}${precipitation === "none" ? cloudCoverPhrase(clouds) : `${atmospherePlan.precipitation.presentation} ${precipitation}`}. Wind travels toward ${windHeading} degrees at ${windSpeed} knots; current travels toward ${currentHeading} degrees at ${currentSpeed} knots; resulting waves travel toward ${wavePlan.travelHeading} degrees.${atmospherePlan.stormLight.visible ? " Static low-poly lightning geometry remains visible with localized, eased, non-flashing cloud-interior light." : ""}${time === "day" ? "" : " Visible selected vessels, submarines, aircraft, and environmental creatures retain crisp silhouettes with native-color shape-derived light that varies slowly and asynchronously when motion is allowed."}${auroraVisibleInLayer ? " Aurora is visible and described separately." : ""}${viewLayer === "stars" ? ` Visibility: ${skyVisibility.clarity}.` : ""}${viewLayer === "subsurface" ? ` ${lifeProfile.solitaryCount} vague solitary environmental forms and ${lifeProfile.schoolCount} small schooling forms appear at ${lifeProfile.depthLabel}.` : ""}`}
       </span>
       <span id="environment-visual-note" className="visually-hidden">View layers change only through the labelled buttons or Page Up and Page Down keys. Dragging and arrow keys rotate the current view without changing layers.</span>
-      <span id="weather-visual-note" className="visually-hidden">{atmospherePlan.description} {time === "day" ? "Dream emission is inactive in daylight." : "Selected visible vessels, submarines, and aircraft keep hard, clean low-poly cores with thin, soft native-color halos that breathe much more slowly than stars twinkle; scene depth, fog, and waves continue to soften or cover them, and reduced motion freezes the halos."}</span>
+      <span id="weather-visual-note" className="visually-hidden">{atmospherePlan.description} {time === "day" ? "Dream emission is inactive in daylight." : "Visible vessels, submarines, aircraft, and environmental creatures keep hard, clean low-poly cores with thin, soft native-color halos derived from their actual geometry; scene depth, fog, and waves continue to soften or cover them. Only halo intensity varies, and reduced motion makes it static. The non-WebGL view uses a reduced CSS profile, not the full mathematical renderer."}</span>
       <span id="contact-visual-note" className="visually-hidden">{contactDescription}</span>
       <span id="wave-visual-note" className="visually-hidden">{wavePlan.description}</span>
       {visibleWildlife.length > 0 && <>
