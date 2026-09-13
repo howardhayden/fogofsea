@@ -1,0 +1,670 @@
+{
+  "results": [
+    {
+      "options": {
+        "kind": "edge"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 1,
+      "changed": 5230,
+      "leftChanged": 2576,
+      "maximumDifference": 117,
+      "radialProfile": [
+        {
+          "normalizedDistance": 0.01171875,
+          "relativeLight": 0.06374528367131205
+        },
+        {
+          "normalizedDistance": 0.01953125,
+          "relativeLight": 0.04509639316097408
+        },
+        {
+          "normalizedDistance": 0.05078125,
+          "relativeLight": 0.008778659364070147
+        },
+        {
+          "normalizedDistance": 0.09765625,
+          "relativeLight": 0.001374876268543201
+        }
+      ],
+      "renderMs": 1.400000000023283,
+      "render": {
+        "frame": 13,
+        "calls": 6,
+        "triangles": 12,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 2,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "ship"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 3,
+      "changed": 9258,
+      "leftChanged": 4893,
+      "maximumDifference": 176,
+      "radialProfile": null,
+      "renderMs": 1.400000000023283,
+      "render": {
+        "frame": 13,
+        "calls": 16,
+        "triangles": 706,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 6,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "submarine"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 2,
+      "changed": 7904,
+      "leftChanged": 4038,
+      "maximumDifference": 130,
+      "radialProfile": null,
+      "renderMs": 0.8000000000465661,
+      "render": {
+        "frame": 13,
+        "calls": 11,
+        "triangles": 666,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 4,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "aircraft"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 3,
+      "changed": 7466,
+      "leftChanged": 3856,
+      "maximumDifference": 157,
+      "radialProfile": null,
+      "renderMs": 0.6999999999534339,
+      "render": {
+        "frame": 13,
+        "calls": 14,
+        "triangles": 584,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 5,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "rotorcraft"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 3,
+      "changed": 8149,
+      "leftChanged": 4407,
+      "maximumDifference": 141,
+      "radialProfile": null,
+      "renderMs": 0.9000000000232831,
+      "render": {
+        "frame": 13,
+        "calls": 14,
+        "triangles": 584,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 5,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "sea-creature"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 3,
+      "changed": 13805,
+      "leftChanged": 7624,
+      "maximumDifference": 116,
+      "radialProfile": null,
+      "renderMs": 0.6999999999534339,
+      "render": {
+        "frame": 13,
+        "calls": 12,
+        "triangles": 147,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 4,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "penguin"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 8,
+      "changed": 7324,
+      "leftChanged": 2526,
+      "maximumDifference": 115,
+      "radialProfile": null,
+      "renderMs": 1.7000000000698492,
+      "render": {
+        "frame": 13,
+        "calls": 28,
+        "triangles": 336,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 10,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "seal"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 6,
+      "changed": 13855,
+      "leftChanged": 5685,
+      "maximumDifference": 134,
+      "radialProfile": null,
+      "renderMs": 0.7000000000698492,
+      "render": {
+        "frame": 13,
+        "calls": 22,
+        "triangles": 306,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 8,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "whale"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 8,
+      "changed": 8650,
+      "leftChanged": 3998,
+      "maximumDifference": 86,
+      "radialProfile": null,
+      "renderMs": 0.7000000000698492,
+      "render": {
+        "frame": 13,
+        "calls": 28,
+        "triangles": 276,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 10,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "dolphin"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 8,
+      "changed": 10439,
+      "leftChanged": 4845,
+      "maximumDifference": 112,
+      "radialProfile": null,
+      "renderMs": 1,
+      "render": {
+        "frame": 13,
+        "calls": 28,
+        "triangles": 276,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 10,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "shark"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 8,
+      "changed": 11658,
+      "leftChanged": 6130,
+      "maximumDifference": 91,
+      "radialProfile": null,
+      "renderMs": 1,
+      "render": {
+        "frame": 13,
+        "calls": 28,
+        "triangles": 270,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 10,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "seabird"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 6,
+      "changed": 6350,
+      "leftChanged": 3196,
+      "maximumDifference": 185,
+      "radialProfile": null,
+      "renderMs": 1.1000000000931323,
+      "render": {
+        "frame": 13,
+        "calls": 22,
+        "triangles": 126,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 8,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "shorebird"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 6,
+      "changed": 6350,
+      "leftChanged": 3196,
+      "maximumDifference": 185,
+      "radialProfile": null,
+      "renderMs": 0.5,
+      "render": {
+        "frame": 13,
+        "calls": 22,
+        "triangles": 126,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 8,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "edge",
+        "dpr": 2
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 1,
+      "changed": 20914,
+      "leftChanged": 10376,
+      "maximumDifference": 125,
+      "radialProfile": [
+        {
+          "normalizedDistance": 0.009765625,
+          "relativeLight": 0.07180477991932561
+        },
+        {
+          "normalizedDistance": 0.021484375,
+          "relativeLight": 0.04095149360092656
+        },
+        {
+          "normalizedDistance": 0.048828125,
+          "relativeLight": 0.009751733914394276
+        },
+        {
+          "normalizedDistance": 0.099609375,
+          "relativeLight": 0.001374876268543201
+        }
+      ],
+      "renderMs": 0.40000000002328306,
+      "render": {
+        "frame": 13,
+        "calls": 6,
+        "triangles": 12,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 2,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "edge",
+        "width": 320,
+        "height": 240
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 1,
+      "changed": 1980,
+      "leftChanged": 966,
+      "maximumDifference": 106,
+      "radialProfile": [
+        {
+          "normalizedDistance": 0.00625,
+          "relativeLight": 0.09826353048360846
+        },
+        {
+          "normalizedDistance": 0.01875,
+          "relativeLight": 0.04719646739947611
+        },
+        {
+          "normalizedDistance": 0.05625,
+          "relativeLight": 0.007563837116138691
+        },
+        {
+          "normalizedDistance": 0.10625,
+          "relativeLight": 0.0007200232436573435
+        }
+      ],
+      "renderMs": 0.40000000002328306,
+      "render": {
+        "frame": 13,
+        "calls": 6,
+        "triangles": 12,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 2,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "ship",
+        "occluder": "full"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 3,
+      "changed": 0,
+      "leftChanged": 0,
+      "maximumDifference": 0,
+      "radialProfile": null,
+      "renderMs": 0.8000000000465661,
+      "render": {
+        "frame": 13,
+        "calls": 17,
+        "triangles": 708,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 7,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "penguin",
+        "occluder": "full"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 8,
+      "changed": 0,
+      "leftChanged": 0,
+      "maximumDifference": 0,
+      "radialProfile": null,
+      "renderMs": 0.8000000000465661,
+      "render": {
+        "frame": 13,
+        "calls": 29,
+        "triangles": 338,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 11,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "aircraft",
+        "occluder": "half"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 3,
+      "changed": 3481,
+      "leftChanged": 0,
+      "maximumDifference": 152,
+      "radialProfile": null,
+      "renderMs": 0.7000000000698492,
+      "render": {
+        "frame": 13,
+        "calls": 15,
+        "triangles": 586,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 6,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "ship",
+        "hidden": true
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 0,
+      "sourceParts": 3,
+      "changed": 0,
+      "leftChanged": 0,
+      "maximumDifference": 0,
+      "radialProfile": null,
+      "renderMs": 0.2000000000698492,
+      "render": {
+        "frame": 7,
+        "calls": 1,
+        "triangles": 2,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 1,
+        "textures": 5
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "aircraft",
+        "occluder": "half",
+        "dpr": 2
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 3,
+      "changed": 13671,
+      "leftChanged": 0,
+      "maximumDifference": 164,
+      "radialProfile": null,
+      "renderMs": 0.5,
+      "render": {
+        "frame": 13,
+        "calls": 15,
+        "triangles": 586,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 6,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "aircraft",
+        "occluder": "half",
+        "width": 320,
+        "height": 240
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 3,
+      "changed": 1483,
+      "leftChanged": 0,
+      "maximumDifference": 144,
+      "radialProfile": null,
+      "renderMs": 0.5,
+      "render": {
+        "frame": 13,
+        "calls": 15,
+        "triangles": 586,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 6,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "penguin",
+        "occluder": "half"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 8,
+      "changed": 4538,
+      "leftChanged": 0,
+      "maximumDifference": 115,
+      "radialProfile": null,
+      "renderMs": 0.8000000000465661,
+      "render": {
+        "frame": 13,
+        "calls": 29,
+        "triangles": 338,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 11,
+        "textures": 9
+      },
+      "glError": 0
+    },
+    {
+      "options": {
+        "kind": "submarine",
+        "occluder": "half"
+      },
+      "mode": "native-shape-field",
+      "registered": 1,
+      "rendered": 1,
+      "sourceParts": 2,
+      "changed": 3784,
+      "leftChanged": 0,
+      "maximumDifference": 130,
+      "radialProfile": null,
+      "renderMs": 0.8000000000465661,
+      "render": {
+        "frame": 13,
+        "calls": 12,
+        "triangles": 668,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 5,
+        "textures": 9
+      },
+      "glError": 0
+    }
+  ],
+  "failures": [],
+  "errors": [],
+  "note": "SwiftShader correctness evidence, not a representative-device performance qualification or perceptual reference approval."
+}

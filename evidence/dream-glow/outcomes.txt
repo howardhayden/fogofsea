@@ -1,0 +1,3 @@
+pixels=success
+release=success
+browser=success
