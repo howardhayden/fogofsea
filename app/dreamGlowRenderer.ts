@@ -296,8 +296,8 @@ export class DreamGlowRenderer {
   }
 
   private prepareSubject(subject: Subject, camera: THREE.PerspectiveCamera): number {
-    if (!dreamSourceVisible(subject.root)) return 0;
     const root = subject.root;
+    if (!dreamSourceVisible(root)) return 0;
     this.worldBox.makeEmpty();
     let count = 0;
     for (const part of subject.parts) {
