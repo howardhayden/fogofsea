@@ -1,4 +1,4 @@
-name: NDCG pinned test workbench
+name: NDCG source checkpoint (not validation)
 on:
   push:
     branches: [codex/ndcg-entity-glow-2026-09-13]
@@ -6,30 +6,23 @@ on:
 permissions:
   contents: read
 jobs:
-  workbench:
+  checkpoint:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 78fd15225a763f6d535a96da2501b97e685ad6c9
           persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22.16.0'
-      - name: Install pinned test dependencies
-        run: npm ci --ignore-scripts
-      - name: Package exact source and offline workbench
+      - name: Package prepared source for continued local qualification
         shell: bash
         run: |
-          mkdir -p "$RUNNER_TEMP/ndcg-workbench"
-          git archive --format=tar HEAD | gzip > "$RUNNER_TEMP/ndcg-workbench/source.tar.gz"
-          tar -czf "$RUNNER_TEMP/ndcg-workbench/dependencies.tar.gz" node_modules
-          git rev-parse HEAD > "$RUNNER_TEMP/ndcg-workbench/BASE_COMMIT"
-          sha256sum "$RUNNER_TEMP/ndcg-workbench/"*.tar.gz > "$RUNNER_TEMP/ndcg-workbench/SHA256SUMS"
+          mkdir -p "$RUNNER_TEMP/ndcg-source"
+          git archive --format=tar HEAD | gzip > "$RUNNER_TEMP/ndcg-source/source.tar.gz"
+          git rev-parse HEAD > "$RUNNER_TEMP/ndcg-source/COMMIT"
+          sha256sum "$RUNNER_TEMP/ndcg-source/source.tar.gz" > "$RUNNER_TEMP/ndcg-source/SHA256SUMS"
       - uses: actions/upload-artifact@v4
         with:
-          name: ndcg-pinned-workbench
-          path: ${{ runner.temp }}/ndcg-workbench/
+          name: ndcg-source-checkpoint
+          path: ${{ runner.temp }}/ndcg-source/
           retention-days: 2
           if-no-files-found: error

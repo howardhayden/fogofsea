@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import {
@@ -29,7 +29,8 @@ import {
 } from "./environmentVisuals";
 import { cloudCoverPhrase } from "./weatherPresentation";
 import { createWildlifePlan, describeWildlifeForView, wildlifeForView, wildlifeReactionMessage, type VisibleWildlife } from "./wildlife";
-import { DREAM_EMISSION_LIMITS, updateDreamEmission } from "./dreamEmission";
+import { attachDreamEmission, createDreamEmissionProfile, detachDreamEmission, DREAM_EMISSION_LIMITS, updateDreamEmission } from "./dreamEmission";
+import { DreamGlowRenderer } from "./dreamGlowRenderer";
 import {
   createStarfieldPlan,
   describeStarfield,
@@ -524,6 +525,15 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       displayedAirWing: visualAirWing,
       result,
     });
+    // These arrays contain only entities already authorized for this view.
+    // Include both articulated wildlife and vague/schooling underwater forms.
+    [...seaCreatures, ...wildlife].forEach((creature, index) => {
+      attachDreamEmission(creature, createDreamEmissionProfile(
+        stableSeed(exerciseId, regionId, String(creature.userData.memberId ?? index), "creature-glow"), time, "creature",
+      ));
+    });
+    const dreamSubjects = [...ships, ...aircraft, ...seaCreatures, ...wildlife];
+    const dreamGlow = new DreamGlowRenderer(renderer, dreamSubjects);
     const clock3d = new THREE.Clock();
     const wildlifeRaycaster = new THREE.Raycaster();
     const wildlifePointer = new THREE.Vector2();
@@ -628,7 +638,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       });
       updateWildlifeAvatars(wildlife, wavePlan, elapsed, reducedMotion);
       updateAtmosphere(atmosphere, atmospherePlan, elapsed, reducedMotion);
-      updateDreamEmission([...ships, ...aircraft], elapsed, reducedMotion);
+      updateDreamEmission(dreamSubjects, elapsed, reducedMotion);
       if (skyCanopy) skyCanopy.position.copy(camera.position);
       if (scene.fog instanceof THREE.FogExp2 && viewLayer !== "subsurface") {
         camera.getWorldDirection(fogViewDirection);
@@ -684,7 +694,9 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       if (sunDisk) sunDisk.position.copy(camera.position).addScaledVector(sunDirection, celestialProminence.distance);
       if (moonDisk) moonDisk.position.copy(camera.position).addScaledVector(moonDirection, celestialProminence.distance);
       if (!reducedMotion) controls.update();
-      renderer.render(scene, camera);
+      dreamGlow.render(scene, camera);
+      container.dataset.dreamGlowProfile = dreamGlow.status;
+      container.dataset.dreamGlowSources = String(dreamGlow.renderedSubjects);
       container.dataset.renderedLayer = viewLayer;
       container.dataset.renderedTheme = theme;
     };
@@ -728,6 +740,10 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         delete container.dataset.renderedLayer;
         delete container.dataset.renderedTheme;
       }
+      dreamGlow.dispose();
+      dreamSubjects.forEach(detachDreamEmission);
+      delete container.dataset.dreamGlowProfile;
+      delete container.dataset.dreamGlowSources;
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh || object instanceof THREE.Points || object instanceof THREE.Line || object instanceof THREE.LineSegments) {
           object.geometry?.dispose();
@@ -738,7 +754,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       });
       renderer.renderLists.dispose();
     };
-  }, [climate, time, region, visualFleet, visualAirWing, exerciseId, result, theme, viewLayer, celestial, activeBody, activeBodyKind, activeBodyBrightness, celestialProminence, celestialReflectionVisible, reducedMotion, starfieldPlan, contactPlan, lifeProfile, wildlifePlan, wavePlan, auroraPlan, atmospherePlan, visualActive]);
+  }, [climate, time, region, regionId, visualFleet, visualAirWing, exerciseId, result, theme, viewLayer, celestial, activeBody, activeBodyKind, activeBodyBrightness, celestialProminence, celestialReflectionVisible, reducedMotion, starfieldPlan, contactPlan, lifeProfile, wildlifePlan, wavePlan, auroraPlan, atmospherePlan, visualActive]);
 
   useEffect(() => () => {
     const renderer = rendererRef.current;
@@ -819,13 +835,11 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       data-sky-canopy={viewLayer === "subsurface" ? "subsurface" : "faceted-pastel-gradient"}
       data-time={time}
       data-dream-emission={time === "day" ? "off" : reducedMotion ? "still" : "breathing"}
-      data-dream-emission-halo={time === "day" ? "none" : "dual-native-color-shell"}
+      data-dream-emission-halo={time === "day" ? "none" : "shape-derived-radial-convolution"}
+      data-dream-emission-fallback="core-only-reduced-profile"
       data-dream-emission-occlusion="scene-depth-fog-waves"
       data-dream-emission-max-halo-meshes={DREAM_EMISSION_LIMITS.maxHaloMeshes}
-      data-dream-emission-halo-meshes={time === "day" ? 0 : (
-        listedUnits(visualFleet, 8, 22).filter((type) => viewLayer !== "stars" && (viewLayer !== "subsurface" || type.includes("submarine"))).length
-        + (viewLayer === "subsurface" || viewLayer === "stars" ? 0 : listedUnits(visualAirWing, 5, 20).length)
-      ) * DREAM_EMISSION_LIMITS.haloMeshesPerSubject}
+      data-dream-emission-halo-meshes={0}
       data-weather-tier={atmospherePlan.precipitation.tier}
       data-fog-class={atmospherePlan.fog.classification}
       data-fog-banks={atmospherePlan.fog.banks.length}
@@ -930,22 +944,12 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         {storming && lightningCapable && <i className="fallback-lightning" />}
         <div className="fallback-grid" style={{ transform: `rotateX(64deg) rotateZ(${-viewTelemetry.heading}deg)` }} />
         {climate !== "ocean" && Array.from({ length: 9 }, (_, index) => <i className={`ice-floe ice-${index + 1}`} key={index} />)}
-        {fallbackFleet.map((type, index) => {
-          const style = { left: `${30 + ((index * 19) % 47)}%`, top: `${39 + ((index * 23) % 42)}%` };
-          const kind = type.includes("submarine") ? "submarine" : type.includes("aviation") || type.includes("expeditionary") ? "aviation" : "ship";
-          return <Fragment key={`${type}-${index}`}>
-            <b className={`fallback-dream-halo ship ${kind}`} style={{ ...style, "--dream-duration": `${24 + unitIntervalFromIndex(index + 211) * 14}s`, "--dream-delay": `${-unitIntervalFromIndex(index + 307) * 31}s` } as React.CSSProperties} />
-            <i className={`fallback-ship fallback-${type}`} style={style}><span /></i>
-          </Fragment>;
-        })}
-        {fallbackAircraft.map((type, index) => {
-          const style = { left: `${19 + ((index * 17) % 66)}%`, top: `${14 + ((index * 11) % 17)}%` };
-          const shape = ROTORCRAFT.includes(type) ? "rotor" : "wing";
-          return <Fragment key={`${type}-${index}`}>
-            <b className={`fallback-dream-halo aircraft ${shape}`} style={{ ...style, "--dream-duration": `${24 + unitIntervalFromIndex(index + 401) * 14}s`, "--dream-delay": `${-unitIntervalFromIndex(index + 503) * 31}s` } as React.CSSProperties} />
-            <i className={`fallback-aircraft ${shape}`} style={style} />
-          </Fragment>;
-        })}
+        {fallbackFleet.map((type, index) => (
+          <i key={`${type}-${index}`} className={`fallback-ship fallback-${type}`} style={{ left: `${30 + ((index * 19) % 47)}%`, top: `${39 + ((index * 23) % 42)}%` }}><span /></i>
+        ))}
+        {fallbackAircraft.map((type, index) => (
+          <i key={`${type}-${index}`} className={`fallback-aircraft ${ROTORCRAFT.includes(type) ? "rotor" : "wing"}`} style={{ left: `${19 + ((index * 17) % 66)}%`, top: `${14 + ((index * 11) % 17)}%` }} />
+        ))}
         <div className="fallback-sea-life">
           {Array.from({ length: lifeProfile.solitaryCount + lifeProfile.schoolCount }, (_, index) => <i className={index < lifeProfile.solitaryCount ? "solitary" : "schooling"} key={index} style={{ left: `${12 + ((index * 23) % 76)}%`, top: `${24 + ((index * 17) % 57)}%`, animationDelay: `${-(index % 9) * 0.7}s` }} />)}
         </div>
@@ -1066,10 +1070,10 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         </details>
       )}
       <span id="battlefield-state-note" className="visually-hidden">
-        {`Viewing ${viewLayer}. Heading ${viewTelemetry.heading} degrees ${viewTelemetry.direction}; elevation ${viewTelemetry.elevation} degrees. ${region}, ${climate}, ${season}, ${time}. Weather: ${storming ? "storming with " : ""}${precipitation === "none" ? cloudCoverPhrase(clouds) : `${atmospherePlan.precipitation.presentation} ${precipitation}`}. Wind travels toward ${windHeading} degrees at ${windSpeed} knots; current travels toward ${currentHeading} degrees at ${currentSpeed} knots; resulting waves travel toward ${wavePlan.travelHeading} degrees.${atmospherePlan.stormLight.visible ? " Static low-poly lightning geometry remains visible with localized, eased, non-flashing cloud-interior light." : ""}${time === "day" ? "" : " Visible selected vessels, submarines, and aircraft retain crisp silhouettes with faint native-color halos that breathe slowly and asynchronously."}${auroraVisibleInLayer ? " Aurora is visible and described separately." : ""}${viewLayer === "stars" ? ` Visibility: ${skyVisibility.clarity}.` : ""}${viewLayer === "subsurface" ? ` ${lifeProfile.solitaryCount} vague solitary environmental forms and ${lifeProfile.schoolCount} small schooling forms appear at ${lifeProfile.depthLabel}.` : ""}`}
+        {`Viewing ${viewLayer}. Heading ${viewTelemetry.heading} degrees ${viewTelemetry.direction}; elevation ${viewTelemetry.elevation} degrees. ${region}, ${climate}, ${season}, ${time}. Weather: ${storming ? "storming with " : ""}${precipitation === "none" ? cloudCoverPhrase(clouds) : `${atmospherePlan.precipitation.presentation} ${precipitation}`}. Wind travels toward ${windHeading} degrees at ${windSpeed} knots; current travels toward ${currentHeading} degrees at ${currentSpeed} knots; resulting waves travel toward ${wavePlan.travelHeading} degrees.${atmospherePlan.stormLight.visible ? " Static low-poly lightning geometry remains visible with localized, eased, non-flashing cloud-interior light." : ""}${time === "day" ? "" : " Visible selected vessels, submarines, aircraft, and creatures retain crisp native-color silhouettes; supported WebGL rendering spreads their own colors softly into nearby darkness. Decorative modulation is disabled with reduced motion."}${auroraVisibleInLayer ? " Aurora is visible and described separately." : ""}${viewLayer === "stars" ? ` Visibility: ${skyVisibility.clarity}.` : ""}${viewLayer === "subsurface" ? ` ${lifeProfile.solitaryCount} vague solitary environmental forms and ${lifeProfile.schoolCount} small schooling forms appear at ${lifeProfile.depthLabel}.` : ""}`}
       </span>
       <span id="environment-visual-note" className="visually-hidden">View layers change only through the labelled buttons or Page Up and Page Down keys. Dragging and arrow keys rotate the current view without changing layers.</span>
-      <span id="weather-visual-note" className="visually-hidden">{atmospherePlan.description} {time === "day" ? "Dream emission is inactive in daylight." : "Selected visible vessels, submarines, and aircraft keep hard, clean low-poly cores with thin, soft native-color halos that breathe much more slowly than stars twinkle; scene depth, fog, and waves continue to soften or cover them, and reduced motion freezes the halos."}</span>
+      <span id="weather-visual-note" className="visually-hidden">{atmospherePlan.description} {time === "day" ? "Dream emission is inactive in daylight." : "Visible vessels, submarines, aircraft, and creatures keep their native faceted cores. Supported WebGL rendering adds shape-derived, short-range colored light with depth and fog attenuation; reduced motion holds the light steady. The non-WebGL fallback preserves readable cores without decorative halos."}</span>
       <span id="contact-visual-note" className="visually-hidden">{contactDescription}</span>
       <span id="wave-visual-note" className="visually-hidden">{wavePlan.description}</span>
       {visibleWildlife.length > 0 && <>
