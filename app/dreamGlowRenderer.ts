@@ -1,5 +1,12 @@
 import * as THREE from "three";
-import { DREAM_GLOW_MODEL, DREAM_GLOW_TAPS, projectedGlowReference } from "./dreamGlowMath";
+import {
+  DREAM_GLOW_MODEL,
+  DREAM_GLOW_TAPS,
+  projectedConvexHullArea,
+  projectedGlowReference,
+  viewConditionedGlowReference,
+  type GlowPoint2,
+} from "./dreamGlowMath";
 import {
   DREAM_EMISSION_LIMITS, dreamSourceVisible,
   type DreamEmissionRuntime, type DreamSourcePart,
@@ -171,8 +178,10 @@ export class DreamGlowRenderer {
   private readonly point = new THREE.Vector3();
   private readonly center = new THREE.Vector3();
   private readonly worldScale = new THREE.Vector3();
+  private readonly referenceSize = new THREE.Vector3();
   private readonly worldBox = new THREE.Box3();
   private readonly scratchBox = new THREE.Box3();
+  private readonly referencePoints: THREE.Vector2[] = Array.from({ length: 8 }, () => new THREE.Vector2());
   private disposed = false;
 
   constructor(private readonly renderer: THREE.WebGLRenderer, roots: readonly THREE.Group[]) {
@@ -247,6 +256,45 @@ export class DreamGlowRenderer {
     }
   }
 
+  private projectedReference(subject: Subject, camera: THREE.PerspectiveCamera): number {
+    const { root, runtime } = subject;
+    this.center.copy(runtime.referenceSphere.center).applyMatrix4(root.matrixWorld).applyMatrix4(camera.matrixWorldInverse);
+    root.getWorldScale(this.worldScale);
+    const maximumScale = Math.max(Math.abs(this.worldScale.x), Math.abs(this.worldScale.y), Math.abs(this.worldScale.z));
+    const sphereDiameterWorld = runtime.referenceSphere.radius * 2 * maximumScale;
+    const sphereReference = projectedGlowReference(sphereDiameterWorld, -this.center.z, camera.projectionMatrix.elements[5], this.fullSize.y);
+    if (!sphereReference) return 0;
+
+    runtime.referenceBox.getSize(this.referenceSize);
+    const worldSizeX = Math.abs(this.referenceSize.x * this.worldScale.x);
+    const worldSizeY = Math.abs(this.referenceSize.y * this.worldScale.y);
+    const worldSizeZ = Math.abs(this.referenceSize.z * this.worldScale.z);
+    for (let corner = 0; corner < 8; corner++) {
+      this.point.set(
+        corner & 1 ? runtime.referenceBox.max.x : runtime.referenceBox.min.x,
+        corner & 2 ? runtime.referenceBox.max.y : runtime.referenceBox.min.y,
+        corner & 4 ? runtime.referenceBox.max.z : runtime.referenceBox.min.z,
+      ).applyMatrix4(root.matrixWorld).applyMatrix4(camera.matrixWorldInverse);
+      // Do not invent a projected footprint for a source crossing the near
+      // plane. Degrade this subject instead of clipping its reference scale.
+      if (-this.point.z <= camera.near) return 0;
+      this.point.applyMatrix4(camera.projectionMatrix);
+      this.referencePoints[corner].set(
+        (this.point.x * 0.5 + 0.5) * this.fullSize.x,
+        (this.point.y * 0.5 + 0.5) * this.fullSize.y,
+      );
+    }
+    const projectedArea = projectedConvexHullArea(this.referencePoints as readonly GlowPoint2[]);
+    return viewConditionedGlowReference(
+      sphereReference,
+      projectedArea,
+      worldSizeX,
+      worldSizeY,
+      worldSizeZ,
+      sphereDiameterWorld,
+    );
+  }
+
   private prepareSubject(subject: Subject, camera: THREE.PerspectiveCamera): number {
     if (!dreamSourceVisible(subject.root)) return 0;
     const root = subject.root;
@@ -266,10 +314,7 @@ export class DreamGlowRenderer {
       }
     }
     if (!count || this.worldBox.isEmpty()) return 0;
-    this.center.copy(subject.runtime.referenceSphere.center).applyMatrix4(root.matrixWorld).applyMatrix4(camera.matrixWorldInverse);
-    root.getWorldScale(this.worldScale);
-    const diameter = subject.runtime.referenceSphere.radius * 2 * Math.max(Math.abs(this.worldScale.x), Math.abs(this.worldScale.y), Math.abs(this.worldScale.z));
-    const reference = projectedGlowReference(diameter, -this.center.z, camera.projectionMatrix.elements[5], this.fullSize.y);
+    const reference = this.projectedReference(subject, camera);
     if (!Number.isFinite(reference) || reference <= 0) return 0;
     let left = Infinity; let right = -Infinity; let bottom = Infinity; let top = -Infinity;
     for (let corner = 0; corner < 8; corner++) {
