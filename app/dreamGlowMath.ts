@@ -121,8 +121,8 @@ export function viewConditionedGlowReference(
   worldSizeZ: number,
   sphereDiameterWorld: number,
 ): number {
-  const values = [sphereReference, projectedArea, worldSizeX, worldSizeY, worldSizeZ, sphereDiameterWorld];
-  if (!values.every((value) => Number.isFinite(value) && value > 0)) return 0;
+  if (![sphereReference, projectedArea, sphereDiameterWorld].every((value) => Number.isFinite(value) && value > 0)) return 0;
+  if (![worldSizeX, worldSizeY, worldSizeZ].every((value) => Number.isFinite(value) && value >= 0)) return 0;
   const maximumFaceArea = Math.max(worldSizeX * worldSizeY, worldSizeX * worldSizeZ, worldSizeY * worldSizeZ);
   if (!Number.isFinite(maximumFaceArea) || maximumFaceArea <= 0) return 0;
   const areaReference = sphereDiameterWorld * Math.sqrt(projectedArea / maximumFaceArea);
