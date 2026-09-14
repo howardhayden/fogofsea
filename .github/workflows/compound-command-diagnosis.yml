@@ -1,0 +1,41 @@
+name: Diagnose compound command timeout without changing test assertions
+on:
+  push:
+    branches: [codex/compound-command-gate-diagnosis]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Run the unchanged command test twice in isolation
+        id: isolated
+        continue-on-error: true
+        run: |
+          mkdir -p diagnosis
+          set -o pipefail
+          npx playwright test tests/browser/compound-command.spec.ts --project=desktop-chromium --workers=1 --repeat-each=2 --trace=on --output=test-results/compound-isolated 2>&1 | tee diagnosis/isolated.log
+      - name: Record actual test outcome separately from diagnostic completion
+        if: always()
+        run: |
+          mkdir -p diagnosis
+          echo '{"isolated":"${{ steps.isolated.outcome }}","application_changed":false,"assertions_changed":false,"timeout_changed":false}' > diagnosis/outcome.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compound-command-timeout-diagnosis
+          path: |
+            diagnosis/
+            test-results/
+          retention-days: 14
+          if-no-files-found: error
