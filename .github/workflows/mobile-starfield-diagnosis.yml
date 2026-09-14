@@ -1,0 +1,68 @@
+name: Diagnose mobile starfield release failure
+on:
+  push:
+    branches: [codex/mobile-starfield-release-diagnosis]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Reproduce unchanged required test
+        id: baseline
+        continue-on-error: true
+        run: |
+          mkdir -p diagnosis
+          set -o pipefail
+          npx playwright test tests/browser/starfield.spec.ts --project=mobile-chromium --grep 'actual Stars and Sky pixels' --workers=1 --output=test-results/mobile-baseline 2>&1 | tee diagnosis/baseline.log
+      - name: Add diagnostic observation only (never a release gate)
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/browser/starfield.spec.ts');s=p.read_text()
+          old='  // Thousands of distant instances intentionally resolve into hundreds of'
+          assert s.count(old)==1
+          s=s.replace(old,'  console.log("OBSERVED_COMPOSITION", JSON.stringify({metrics,compact,checkLargestField,requireColorEvidence,atmosphericComposite}));\n  return;\n'+old)
+          p.write_text(s)
+          p=Path('tests/browser/starfieldPixels.ts');s=p.read_text()
+          s='import { writeFile } from "node:fs/promises";\nimport { test } from "@playwright/test";\n'+s
+          old='    capture = await canvas.screenshot();'
+          assert s.count(old)==1
+          s=s.replace(old,old+'''
+              const state = await canvas.evaluate((node) => {
+                const c=node as HTMLCanvasElement; const box=c.getBoundingClientRect();
+                const plot=c.parentElement!;
+                return {width:c.width,height:c.height,clientWidth:c.clientWidth,clientHeight:c.clientHeight,
+                  rect:{x:box.x,y:box.y,width:box.width,height:box.height},dpr:devicePixelRatio,
+                  dataset:{...plot.dataset},viewport:[innerWidth,innerHeight],
+                  cameraOccluders:[document.elementsFromPoint(box.left+5,box.top+5).map(e=>e.className),document.elementsFromPoint(box.left+box.width/2,box.top+box.height/2).map(e=>e.className)]};
+              });
+              const label=state.dataset.renderedLayer+'-'+state.dataset.renderedTheme;
+              await writeFile(test.info().outputPath(label+'.png'),capture);
+              await writeFile(test.info().outputPath(label+'-state.json'),JSON.stringify(state,null,2));
+          ''')
+          p.write_text(s)
+          PY
+      - name: Observe all composition stages at both release viewports
+        run: |
+          set -o pipefail
+          npx playwright test tests/browser/starfield.spec.ts --grep 'actual Stars and Sky pixels' --workers=1 --output=test-results/mobile-observation 2>&1 | tee diagnosis/observed.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-starfield-diagnosis
+          path: |
+            diagnosis/
+            test-results/
+          retention-days: 14
+          if-no-files-found: error
