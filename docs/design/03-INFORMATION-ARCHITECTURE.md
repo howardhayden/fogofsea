@@ -201,7 +201,7 @@ Portable format/version/time, canonical game state, preferences, Academy complet
 | Required warfare areas | Visible | Actionable | Preserved |
 | Force compatibility | On item inspection | Actionable validation | Preserved in roster |
 | Opposing identity/composition | Not exposed | Remains abstract | Only rule-permitted effects reported |
-| Unknown contacts | None without credited sensing | Count/domain only | Turn record retains disclosed state |
+| Unknown contacts | None without both an upstream-authorized shape-valid estimate and credited sensing | Current model supplies no coordinate estimate, so zero markers | No marker state is written to the turn record |
 | Working adversary judgment | Not requested before Turn 2 | Bounded intent/pattern/next-action hypotheses plus insufficient evidence | Recorded as unscored staff judgment, never promoted to fact |
 | Absolute turn fact | Absent until its confirmation basis exists | Immediate when newly discovered | Filed under occurrence turn with “Discovered during Turn N” |
 | Probability range | Not needed during strategy | Previewed during command | Committed chance/draw/result disclosed |

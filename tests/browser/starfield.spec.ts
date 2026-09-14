@@ -1,8 +1,10 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { createStarfieldPlan, STARFIELD_LIMITS } from "../../app/starfield";
 import { createStarPlacements } from "../../app/viewModel";
-import { measureStarfieldPixels, type StarfieldPixelMetrics } from "./starfieldPixels";
-import { referenceFieldPinpoints, STARFIELD_DENSITY_REFERENCE } from "../helpers/starfield-density";
+import { captureStarfieldPixels, measureStarfieldPixels, type StarfieldPixelMetrics } from "./starfieldPixels";
+import {
+  referenceFieldCount, referenceFieldPinpoints, referenceProjectedArea, STARFIELD_DENSITY_REFERENCE,
+} from "../helpers/starfield-density";
 
 async function openSession(page: Page) {
   await page.goto("/");
@@ -44,46 +46,40 @@ async function installDeterministicVisualEntropy(page: Page, seed = 0x00c0ffee) 
   }, seed);
 }
 
-async function measureGoldAccentPixels(page: Page, canvas: Locator) {
-  const overlapping = page.locator(".battlefield-canvas > :not(canvas), .mission-panel, .force-panel, .plot-topline");
-  const previousVisibility = await overlapping.evaluateAll((elements) => elements.map((element) => {
-    const htmlElement = element as HTMLElement;
-    const value = htmlElement.style.getPropertyValue("visibility");
-    const priority = htmlElement.style.getPropertyPriority("visibility");
-    htmlElement.style.setProperty("visibility", "hidden", "important");
-    return { value, priority };
+async function waitForStablePaint(page: Page) {
+  await page.evaluate(() => new Promise<void>((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
   }));
-  let capture: Buffer;
-  try {
-    capture = await canvas.screenshot();
-  } finally {
-    await overlapping.evaluateAll((elements, states) => elements.forEach((element, index) => {
-      const htmlElement = element as HTMLElement;
-      const state = states[index];
-      if (!state?.value) htmlElement.style.removeProperty("visibility");
-      else htmlElement.style.setProperty("visibility", state.value, state.priority);
-    }), previousVisibility);
-  }
-  return page.evaluate(async (base64Capture) => {
-    const image = new Image();
-    image.src = `data:image/png;base64,${base64Capture}`;
-    await image.decode();
-    const decoded = document.createElement("canvas");
-    decoded.width = image.naturalWidth;
-    decoded.height = image.naturalHeight;
-    const context = decoded.getContext("2d", { willReadFrequently: true });
-    if (!context) throw new Error("Two-dimensional gold-accent analysis unavailable");
-    context.drawImage(image, 0, 0);
-    const data = context.getImageData(0, 0, decoded.width, decoded.height).data;
-    let gold = 0;
-    for (let index = 0; index < data.length; index += 4) {
-      const red = data[index];
-      const green = data[index + 1];
-      const blue = data[index + 2];
-      if (red >= 115 && green >= 85 && red >= green + 12 && green >= blue + 18) gold += 1;
-    }
-    return gold;
-  }, capture.toString("base64"));
+}
+
+async function readStarfieldCaptureEnvironment(canvas: Locator) {
+  return canvas.evaluate((node) => {
+    const element = node as HTMLCanvasElement;
+    const context = element.getContext("webgl2");
+    const debug = context?.getExtension("WEBGL_debug_renderer_info") as {
+      UNMASKED_VENDOR_WEBGL: number;
+      UNMASKED_RENDERER_WEBGL: number;
+    } | null;
+    const plot = element.parentElement;
+    const bounds = element.getBoundingClientRect();
+    return {
+      seed: plot?.dataset.starfieldSeed ?? null,
+      animation: plot?.dataset.starfieldAnimation ?? null,
+      cssWidth: bounds.width,
+      cssHeight: bounds.height,
+      backingWidth: element.width,
+      backingHeight: element.height,
+      devicePixelRatio: window.devicePixelRatio,
+      browser: navigator.userAgent,
+      webglVersion: context ? String(context.getParameter(context.VERSION)) : null,
+      webglVendor: context
+        ? String(context.getParameter(debug?.UNMASKED_VENDOR_WEBGL ?? context.VENDOR))
+        : null,
+      webglRenderer: context
+        ? String(context.getParameter(debug?.UNMASKED_RENDERER_WEBGL ?? context.RENDERER))
+        : null,
+    };
+  });
 }
 
 async function cleanStarCanvasCapture(canvas: Locator) {
@@ -155,13 +151,14 @@ function expectRenderedComposition(
     ? compact ? 200 : 450
     : compact ? 350 : 1_200));
   if (checkLargestField) {
-    expect(metrics.components).toBeGreaterThan(atmosphericComposite
-      ? compact ? 200 : 450
-      // 15,360 distant instances deliberately converge into hundreds of
-      // resolved screen-space facets; bright-pixel and coverage floors above
-      // prove abundance without pretending every subpixel light is a separate
-      // connected component after antialiasing.
-      : compact ? 200 : 650);
+    // Retain the merged release's >200 portrait count as a second independent
+    // sparse-frame guard, then compare equal angular fields. The reference
+    // check preserves the original desktop >650 Stars and >450 Sky floors.
+    expect(metrics.components).toBeGreaterThan(compact
+      ? 200
+      : atmosphericComposite ? 450 : 650);
+    expect(referenceFieldCount(metrics.components, metrics.width, metrics.height))
+      .toBeGreaterThan(atmosphericComposite ? 450 : 650);
     // Compare equal angular coverage. A 320 x 681 portrait frame sees only
     // 29.17% of the reference desktop frustum; its 99 actual pinpoints are
     // denser than the desktop's 305. Do not alter the renderer to inflate a
@@ -189,15 +186,15 @@ function expectRenderedComposition(
       ? compact ? 4 : 12
       : compact ? 2 : 8);
     expect(metrics.largest).toBeGreaterThan(20);
-    // The visual system permits an occasional touching jewel cluster, while
-    // this ceiling still occupies far below one percent
-    // of the canvas and cannot become a painted panel.
-    expect(metrics.largest).toBeLessThanOrEqual(compact ? 260 : 520);
+    // Compare a local feature at the original 648-pixel reference focal length.
+    // A taller raster resolves the same projected facet into more pixels;
+    // horizontal extent changes field coverage rather than local feature size.
+    expect(referenceProjectedArea(metrics.largest, metrics.height))
+      .toBeLessThanOrEqual(compact ? 260 : 520);
   }
 }
 
-function exactWhiteDominantModelComposition() {
-  const seed = 0x00c0ffee;
+function exactWhiteDominantModelComposition(seed: number) {
   const plan = createStarfieldPlan({
     seed,
     theme: "dark",
@@ -244,12 +241,19 @@ test("actual Stars and Sky pixels form a white-dominant crystalline canopy with 
   await expect(plot).toHaveAttribute("data-rendered-layer", "stars");
   const canvas = plot.locator(":scope > canvas");
   const compact = (page.viewportSize()?.width ?? 1_000) <= 760;
-  const modelComposition = exactWhiteDominantModelComposition();
+  // 0x00c0ffee seeds the deterministic crypto stream; the application then
+  // derives its actual model seed from the scenario identity and first word.
+  // Prove and use the seed rendered by this exact canvas so model evidence
+  // cannot silently describe a different starfield.
+  const renderedSeed = Number(await plot.getAttribute("data-starfield-seed"));
+  expect(renderedSeed).toBe(255_880_124);
+  await expect(plot).toHaveAttribute("data-starfield-animation", "still");
+  const modelComposition = exactWhiteDominantModelComposition(renderedSeed);
   expect(modelComposition).toEqual({
     total: 15_360,
-    whiteOrNearWhite: 12_177,
-    pureWhite: 5_427,
-    colorAccents: 3_183,
+    whiteOrNearWhite: 12_187,
+    pureWhite: 5_389,
+    colorAccents: 3_173,
     paleGoldLights: 423,
     jewelFacets: 1_424,
     movingLights: 14_880,
@@ -257,30 +261,69 @@ test("actual Stars and Sky pixels form a white-dominant crystalline canopy with 
     shiftHzRange: [0.18, 0.48],
     shiftDistanceRange: [2.8, 9.6],
     halo: { radius: 1.5, alphaFactor: 0.26, maximumAlpha: 0.23 },
-    radialRange: 315.919,
-    radialQuantiles: [126.597, 155.473, 205.749, 265.299, 326.21, 366.736, 384.839],
+    radialRange: 315.935,
+    radialQuantiles: [124.884, 154.66, 204.076, 263.857, 325.834, 367.492, 385.847],
   });
   await testInfo.attach("starfield-model-composition.json", {
     body: JSON.stringify(modelComposition, null, 2),
     contentType: "application/json",
   });
 
-  const darkMetrics = await measureStarfieldPixels(page, canvas);
+  await waitForStablePaint(page);
+  const environmentBefore = await readStarfieldCaptureEnvironment(canvas);
+  await waitForStablePaint(page);
+  const environmentAfter = await readStarfieldCaptureEnvironment(canvas);
+  await testInfo.attach("starfield-dark-render-environment.json", {
+    body: JSON.stringify({ before: environmentBefore, after: environmentAfter }, null, 2),
+    contentType: "application/json",
+  });
+  expect(environmentAfter).toEqual(environmentBefore);
+  expect(environmentAfter.seed).toBe(String(renderedSeed));
+  expect(environmentAfter.animation).toBe("still");
+  expect(Math.abs(environmentAfter.backingWidth
+    - environmentAfter.cssWidth * environmentAfter.devicePixelRatio)).toBeLessThanOrEqual(1);
+  expect(Math.abs(environmentAfter.backingHeight
+    - environmentAfter.cssHeight * environmentAfter.devicePixelRatio)).toBeLessThanOrEqual(1);
+
+  const darkCapture = await captureStarfieldPixels(page, canvas);
+  await waitForStablePaint(page);
+  const repeatedDarkCapture = await captureStarfieldPixels(page, canvas);
+  const darkMetrics = darkCapture.metrics;
+  await testInfo.attach("starfield-dark-canvas.png", {
+    body: Buffer.from(darkCapture.base64, "base64"),
+    contentType: "image/png",
+  });
+  await testInfo.attach("starfield-dark-canvas-repeat.png", {
+    body: Buffer.from(repeatedDarkCapture.base64, "base64"),
+    contentType: "image/png",
+  });
   await testInfo.attach("starfield-dark-pixel-metrics.json", {
     body: JSON.stringify(darkMetrics, null, 2),
     contentType: "application/json",
   });
+  await testInfo.attach("starfield-dark-capture-stability.json", {
+    body: JSON.stringify({
+      identicalPng: repeatedDarkCapture.base64 === darkCapture.base64,
+      identicalMetrics: JSON.stringify(repeatedDarkCapture.metrics) === JSON.stringify(darkCapture.metrics),
+      first: darkCapture.metrics,
+      second: repeatedDarkCapture.metrics,
+    }, null, 2),
+    contentType: "application/json",
+  });
+  expect(repeatedDarkCapture.metrics).toEqual(darkCapture.metrics);
+  expect(repeatedDarkCapture.base64).toBe(darkCapture.base64);
   expectRenderedComposition(darkMetrics, compact);
-  // Gold is deliberately occasional within the white-dominant canopy.
-  // Headless-GPU color conversion and additive blending can remove this rare
-  // exact hue at either viewport while broad chroma and the exact deterministic
-  // model above continue to prove the restrained accent population.
-  const goldPixels = await measureGoldAccentPixels(page, canvas);
+  // The exact model above owns compact source presence, where subpixel
+  // projection can erase the narrow probe. Preserve the original positive
+  // rendered floor at the regular viewport and independently prevent gold
+  // from becoming a dominant visible accent field.
+  const goldPixels = darkMetrics.gold;
   await testInfo.attach("starfield-gold-accent-pixels.json", {
     body: JSON.stringify({ compact, goldPixels }, null, 2),
     contentType: "application/json",
   });
-  expect(goldPixels).toBeGreaterThanOrEqual(0);
+  if (!compact) expect(goldPixels).toBeGreaterThan(15);
+  expect(goldPixels / darkMetrics.colorful).toBeLessThanOrEqual(0.25);
 
   await page.getByRole("button", { name: "Switch to light interface" }).click();
   await expect(page.locator(".app")).toHaveClass(/theme-light/);
@@ -390,7 +433,7 @@ test("the star layer exposes a bounded deterministic model and an equivalent scr
   await expect(starData).toHaveAttribute("open", "");
   await expect(starData).toContainText("VISIBLE LIGHTS");
   await expect(starData).toContainText("Crystalline canopy");
-  await expect(starData).toContainText("foreground weather and contacts stay clear");
+  await expect(starData).toContainText("tactical contacts are omitted");
   await expect(starData).not.toContainText("OVERLAPPING IRREGULAR HARMONIC DENSITY FIELDS");
 
   const skyToggle = page.locator(".sky-readout-toggle");

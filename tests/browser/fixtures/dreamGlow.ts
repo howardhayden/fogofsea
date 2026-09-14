@@ -25,10 +25,16 @@ export function runDreamGlowFixture(kind: DreamEmissionKind, pixelRatio: number)
   const group = new THREE.Group();
   const colors = { ship: [0.3, 0.6, 0.4], submarine: [0.2, 0.35, 0.5], aircraft: [0.4, 0.15, 0.25], creature: [0.6, 0.5, 0.15] } as const;
   const sourceColor = colors[kind];
-  const native = new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(sourceColor[0], sourceColor[1], sourceColor[2]), side: THREE.DoubleSide });
+  const native = new THREE.MeshStandardMaterial({
+    color: new THREE.Color().setRGB(sourceColor[0], sourceColor[1], sourceColor[2]),
+    roughness: 0.62,
+    metalness: 0.18,
+    side: THREE.DoubleSide,
+  });
   const geometry = new THREE.PlaneGeometry(2, 3);
   const core = new THREE.Mesh(geometry, native);
   group.add(core); scene.add(group);
+  scene.add(new THREE.AmbientLight(0xffffff, 1));
   // A legacy custom shader with display-authored output must remain bit-identical
   // outside the glow support. It deliberately has no colorspace shader chunk.
   const sentinelGeometry = new THREE.PlaneGeometry(0.5, 1);
@@ -40,6 +46,8 @@ export function runDreamGlowFixture(kind: DreamEmissionKind, pixelRatio: number)
   const sentinel = new THREE.Mesh(sentinelGeometry, sentinelMaterial);
   sentinel.position.set(-3, 0, -1); scene.add(sentinel);
   attachDreamEmission(group, createDreamEmissionProfile(41, "night", kind));
+  const productionMaterialPreserved = core.material === native;
+  const productionEmissive = (core.material as THREE.MeshStandardMaterial).emissive.getHex();
   updateDreamEmission([group], 0, true);
   const pipeline = new DreamGlowRenderer(renderer, [group]);
   const size = renderer.getDrawingBufferSize(new THREE.Vector2());
@@ -99,5 +107,6 @@ export function runDreamGlowFixture(kind: DreamEmissionKind, pixelRatio: number)
   sentinelGeometry.dispose(); sentinelMaterial.dispose();
   renderer.dispose(); renderer.forceContextLoss(); canvas.remove();
   return { kind, pixelRatio, status, renderedSubjects, reference, near, far, hueSpread, centerDifference, outsideDifference,
+    productionMaterialPreserved, productionEmissive,
     unauthorizedExteriorMaximum: Math.max(...forbiddenPixel), occludedMaximum, framebufferError, capture };
 }

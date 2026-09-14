@@ -168,7 +168,9 @@ function snapshotEstimate(value: unknown): DisclosedContactEstimate | null {
   return Object.freeze({ id: read("id"), domain, x: read("x"), y: read("y"), z: read("z"), scale: read("scale"), heading: read("heading") }) as DisclosedContactEstimate;
 }
 
-/** Projects canonical disclosed estimates; sensing capability is only a filter. */
+/** Shape-checks and projects caller-supplied disclosed-estimate records.
+ * Upstream code owns their authority; sensing capability is only a filter.
+ */
 export function createContactVisualizationPlan(seed: number, visibility: ContactVisibility, estimates: readonly DisclosedContactEstimate[]): ContactVisualizationPlan {
   const safeEstimates = Array.isArray(estimates) ? estimates.map(snapshotEstimate).filter((item): item is DisclosedContactEstimate => item !== null) : [];
   const counts = { air: 0, surface: 0, subsurface: 0 };

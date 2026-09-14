@@ -25,8 +25,9 @@ for (const kind of kinds) {
     assert.equal(mesh.geometry, geometry);
     assert.ok(mesh.scale.equals(beforeScale));
     assert.ok(runtime.parts[0].material.color.equals(beforeColor));
-    assert.equal(material.emissive.getHex(), 0, "shared original material was mutated");
-    assert.ok((mesh.material as THREE.MeshStandardMaterial).emissive.r > 0);
+    assert.equal(runtime.parts[0].material, material);
+    assert.equal(mesh.material, material, "registration replaced the production material");
+    assert.equal(material.emissive.getHex(), 0, "production hard surfaces became emissive");
     assert.equal(group.children.length, 1);
     assert.equal(group.userData.dreamEmissionHaloMeshes, 0);
     assert.equal(group.getObjectsByProperty("isLight", true).length, 0);
@@ -37,6 +38,7 @@ for (const kind of kinds) {
     assert.ok(mesh.scale.equals(beforeScale));
     detachDreamEmission(group);
     assert.equal(mesh.material, material);
+    assert.equal(material.emissive.getHex(), 0);
     assert.equal(group.userData.dreamEmission, undefined);
   });
 }
@@ -84,7 +86,7 @@ test("NDCG/T01-T04: reproducible phase, gain-only breathing, and daylight bypass
   assert.deepEqual(a, createDreamEmissionProfile(19, "night", "ship"));
   assert.notEqual(a.primaryPhase, createDreamEmissionProfile(20, "night", "ship").primaryPhase);
   assert.equal(a.primaryPeriod, 31); assert.equal(a.secondaryPeriod, 47);
-  assert.deepEqual(sampleDreamEmission(a, 900, true), { coreFactor: 1, haloFactor: 1 });
+  assert.deepEqual(sampleDreamEmission(a, 900, true), { haloFactor: 1 });
   assert.equal(createDreamEmissionProfile(19, "day", "ship").enabled, false);
   const day = new THREE.Group();
   day.add(new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial()));

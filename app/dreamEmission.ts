@@ -7,16 +7,15 @@ export type DreamEmissionKind = "ship" | "aircraft" | "submarine" | "creature";
 export type DreamEmissionProfile = Readonly<{
   kind: DreamEmissionKind;
   enabled: boolean;
-  coreStrength: number;
   haloStrength: number;
   primaryPeriod: number;
   secondaryPeriod: number;
   primaryPhase: number;
   secondaryPhase: number;
 }>;
-export type DreamEmissionSample = Readonly<{ coreFactor: number; haloFactor: number }>;
+export type DreamEmissionSample = Readonly<{ haloFactor: number }>;
 export type DreamSourceMaterial = THREE.MeshStandardMaterial | THREE.MeshBasicMaterial;
-export type DreamSourcePart = { mesh: THREE.Mesh; material: DreamSourceMaterial; original: DreamSourceMaterial };
+export type DreamSourcePart = { mesh: THREE.Mesh; material: DreamSourceMaterial };
 export type DreamEmissionRuntime = {
   profile: DreamEmissionProfile;
   parts: DreamSourcePart[];
@@ -53,9 +52,7 @@ export function createDreamEmissionProfile(
   if (!Number.isFinite(seed)) throw new RangeError("Invalid dream-emission seed");
   const random = seededRandom(stableSeed(seed, kind, "dream-emission"));
   const enabled = time !== "day";
-  // Native faceted shading remains; this static component is not a point light.
-  const coreStrength = time === "night" ? 0.22 : time === "dusk" ? 0.18 : time === "dawn" ? 0.14 : 0;
-  return Object.freeze({ kind, enabled, coreStrength,
+  return Object.freeze({ kind, enabled,
     haloStrength: enabled ? DREAM_GLOW_MODEL.gain : 0,
     primaryPeriod: DREAM_GLOW_MODEL.primaryPeriod,
     secondaryPeriod: DREAM_GLOW_MODEL.secondaryPeriod,
@@ -65,7 +62,7 @@ export function createDreamEmissionProfile(
 }
 
 export function sampleDreamEmission(profile: DreamEmissionProfile, elapsed: number, reducedMotion: boolean): DreamEmissionSample {
-  return { coreFactor: 1, haloFactor: dreamGlowBreathing(elapsed, profile.primaryPhase, profile.secondaryPhase, reducedMotion) };
+  return { haloFactor: dreamGlowBreathing(elapsed, profile.primaryPhase, profile.secondaryPhase, reducedMotion) };
 }
 
 export function dreamSourceVisible(object: THREE.Object3D): boolean {
@@ -93,14 +90,13 @@ function excludedPart(mesh: THREE.Mesh, root: THREE.Group): boolean {
 export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionProfile): void {
   detachDreamEmission(group);
   if (!profile.enabled || group.userData.dreamEmissionAuthorized === false) return;
-  if (![profile.coreStrength, profile.haloStrength, profile.primaryPhase, profile.secondaryPhase].every(Number.isFinite)
-    || profile.coreStrength < 0 || profile.coreStrength > 1 || profile.haloStrength < 0 || profile.haloStrength > 1) return;
+  if (![profile.haloStrength, profile.primaryPhase, profile.secondaryPhase].every(Number.isFinite)
+    || profile.haloStrength < 0 || profile.haloStrength > 1) return;
   group.updateWorldMatrix(true, true);
   const inverseRoot = group.matrixWorld.clone().invert();
   const localBounds = new THREE.Box3();
   const relative = new THREE.Matrix4();
   const parts: DreamSourcePart[] = [];
-  const materialCopies = new Map<DreamSourceMaterial, DreamSourceMaterial>();
   group.traverse((object) => {
     if (!(object instanceof THREE.Mesh) || object instanceof THREE.InstancedMesh || object instanceof THREE.SkinnedMesh || excludedPart(object, group)) return;
     const original = object.material;
@@ -108,27 +104,17 @@ export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionPr
     // Deformed/multi-material renderers need their own explicitly qualified
     // extraction path; the current generated entity families use this path.
     if (object.morphTargetInfluences?.length) return;
-    let material = materialCopies.get(original);
-    if (!material) {
-      material = original.clone();
-      if (material instanceof THREE.MeshStandardMaterial) {
-        material.emissive.add(material.color.clone().multiplyScalar(profile.coreStrength / Math.max(1, material.emissiveIntensity)));
-      }
-      materialCopies.set(original, material);
-    }
-    object.material = material;
-    parts.push({ mesh: object, material, original });
+    // The real model remains the crisp, lit scene source. DreamGlowRenderer
+    // owns separate emission-only proxies and samples this native material;
+    // registration must never make hull or airframe surfaces emissive.
+    parts.push({ mesh: object, material: original });
     object.geometry.computeBoundingBox();
     if (object.geometry.boundingBox) {
       relative.multiplyMatrices(inverseRoot, object.matrixWorld);
       localBounds.union(object.geometry.boundingBox.clone().applyMatrix4(relative));
     }
   });
-  if (!parts.length || localBounds.isEmpty()) {
-    for (const part of parts) part.mesh.material = part.original;
-    for (const material of materialCopies.values()) material.dispose();
-    return;
-  }
+  if (!parts.length || localBounds.isEmpty()) return;
   const referenceBox = localBounds.clone();
   group.userData.dreamEmission = {
     profile,
@@ -145,11 +131,6 @@ export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionPr
 export function detachDreamEmission(group: THREE.Group): void {
   const runtime = group.userData.dreamEmission as DreamEmissionRuntime | undefined;
   if (!runtime) return;
-  const disposed = new Set<THREE.Material>();
-  for (const { mesh, original, material } of runtime.parts) {
-    if (mesh.material === material) mesh.material = original;
-    if (!disposed.has(material)) { material.dispose(); disposed.add(material); }
-  }
   delete group.userData.dreamEmission;
   delete group.userData.dreamEmissionHaloMeshes;
 }

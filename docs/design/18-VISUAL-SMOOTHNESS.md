@@ -10,8 +10,8 @@ The authoritative state is the product. Visuals are bounded projections of that 
 
 | Layer | May know | May produce | Must not do |
 | --- | --- | --- | --- |
-| Canonical model | committed scenario, difficulty, turn, adjudication | hazard timeline and mechanics | depend on frames, camera, GPU, or animation |
-| Disclosure | facts knowable now | canonical estimates and textual status | promote concealed truth |
+| Canonical model | committed scenario, difficulty, turn, adjudication | versioned turn mechanics | depend on frames, camera, GPU, or animation |
+| Disclosure | facts knowable now | upstream-authorized estimates and textual status | promote concealed truth or call shape validation authority |
 | Authorized visual adapter | explicitly granted partitions | immutable compact render facts | inspect denied partitions or raw game objects |
 | Renderer | render facts and presentation settings | pixels, camera telemetry, readiness markers | mutate rules, state, time, or disclosure |
 | Instrumentation | local timing and resource samples | evidence records | become adjudication input or telemetry |
@@ -37,12 +37,12 @@ Average FPS alone is not acceptance evidence. Capture interval distributions, p5
 | Moon | astronomical phase/position | phase and horizon semantics survive fallback | dark theme + overcast + subsurface |
 | Aurora | climate/latitude/time gated | complementary noncolor description | day, storm, reduced motion |
 | Wakes | vessel-centric geometry | medium-specific vessel/exhaust/rotor/submarine/creature disturbances | rough seas, loss of authorization |
-| Severe weather | matrix disruption plus canonical hazard | model-owned active window and mechanics | visuals disagree with state |
-| TSUNAMI | absent in baseline | explicit committed hazard and signed N-wave; never inferred | sea state looks extreme without event |
+| Severe weather | canonical matrix disruption | model-owned active window and mechanics | visuals disagree with state |
+| TSUNAMI | absent | blocked pending a versioned matrix/save migration; never inferred from waves | unversioned fields reject or rewrite existing played histories |
 | Camera | orbit, keyboard, five views | stable saved pose and truthful telemetry | rapid rotate/zoom/resize/context loss |
 | Overlays | glass panels and modals | renderer pauses behind occlusion | compositor load, privacy gate |
-| Dream light | whole-structure emission baseline | visible tight/broad/atmospheric aura around authorized subjects, with hard non-emissive structure | accessors, geometry bombs, revoke/regrant |
-| Contacts | capability-seeded population baseline | canonical disclosed estimates filtered by capability | perfect sensing with no observations |
+| Dream light | unchanged directly lit model plus authorized native-color sources | bounded, view-conditioned tight/broad/atmospheric compositor fed by emission-only proxies; zero halo geometry or lights; production materials and opaque direct core pixels preserved | hidden or accessor-backed sources, copy failure, geometry/resource exhaustion, side/overhead projection, revoke/regrant |
+| Contacts | former capability-seeded population rejected | shape-valid caller-supplied estimates filtered by capability; upstream authority required and none currently supplied | perfect sensing with no observations |
 
 ## Slice and evidence rules
 

@@ -69,3 +69,12 @@ jobs:
 
       - name: Execute browser release gate
         run: npm run test:browser
+
+      - name: Preserve browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-gate-failure-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          path: ./test-results
+          if-no-files-found: warn
+          retention-days: 14

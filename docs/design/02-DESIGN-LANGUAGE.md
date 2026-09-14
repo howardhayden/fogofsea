@@ -110,15 +110,17 @@ Sea geometry communicates sea state, wind, and current through facet shape, cres
 
 ### 5.5 Subject emission
 
-At Dawn, Dusk, and Night, selected visible vessels, aircraft, and submarines may use subtle dream-emission:
+At Dawn, Dusk, and Night, authorized visible vessels, aircraft, submarines, and creatures may contribute subtle dream glow:
 
-- crisp native-color core;
-- two thin silhouette-following shells;
-- low-radius, low-opacity aura;
-- 24–83 second asynchronous shallow breath;
-- bounded poor-weather lift for legibility;
-- no point light, white wash, or large orb;
-- full fog, wave, and depth occlusion.
+- unchanged production geometry and directly lit materials, with no added emissive term;
+- renderer-owned emission-only proxies sampling each filled native-color source;
+- a bounded, view-conditioned three-scale exterior field with sigma ratios `[0.012, 0.035, 0.075]` and weights `[0.65, 0.30, 0.05]`;
+- 31- and 47-second subject-specific phases that modulate gain only;
+- scene-depth and fog attenuation, never a poor-weather visibility boost;
+- a fixed reduced-motion gain and a direct core-only Day, capability, or budget fallback;
+- no halo mesh, point light, white wash, global bloom, or hidden-source admission.
+
+Creature glow remains decoration of already visible geometry and grants no contact identity, sensing meaning, scoring effect, or other tactical authority.
 
 ## 6. Motion language
 
