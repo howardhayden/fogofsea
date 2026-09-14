@@ -1,4 +1,4 @@
-name: Record approved release blocked before deployment
+name: Verify approved rendering on the public site
 on:
   push:
     branches: [codex/approved-rendering-live-check]
@@ -7,36 +7,80 @@ concurrency:
   cancel-in-progress: true
 permissions:
   contents: read
+  actions: read
 jobs:
-  record-blocker:
+  verify-live:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 20
     steps:
-      - name: Record the actual merge result; do not poll for an unperformed deployment
-        run: |
-          mkdir -p test-results
-          cat > test-results/blocked-release.json <<'EOF'
-          {
-            "approved_commit": "0c7fea10dfdf39e0d14410ce84e1baebf6eaa9bc",
-            "pull_request": 7,
-            "merge_attempt": "rejected with HTTP 405",
-            "reason": "Required status check browser-gate is failing",
-            "browser_run": 34797938234,
-            "browser_job": 103834577926,
-            "browser_tests_passed": 105,
-            "browser_tests_failed": 1,
-            "browser_tests_skipped": 60,
-            "failed_case": "mobile-chromium: actual Stars and Sky pixels form a white-dominant crystalline canopy with restrained color accents",
-            "observed_pinpoints": 99,
-            "required_pinpoints": "> 120",
-            "main_changed_by_release": false,
-            "deployment_performed": false,
-            "verification_recipe_preserved_at": "826ecdf6180d08bb4739e467ff363792c10024b1"
-          }
-          EOF
-          cat test-results/blocked-release.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v4
         with:
-          name: approved-rendering-release-blocker
-          path: test-results/blocked-release.json
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: fog-of-sea-dist-8ded40424649ff3e19bed72c718d722a72fdb94f
+          run-id: 34801652624
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/approved-dist
+      - name: Wait for the protected merge without modifying any branch
+        run: |
+          found=0
+          for i in $(seq 1 60); do
+            git fetch --quiet origin main
+            if git merge-base --is-ancestor 39896f673d2697e6adffd5d6629e0c22adac777b FETCH_HEAD; then found=1; break; fi
+            sleep 10
+          done
+          test "$found" = 1
+          mkdir -p test-results
+          git rev-parse FETCH_HEAD > test-results/main-commit.txt
+      - name: Verify publicly served JavaScript and CSS bytes
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,re,time,urllib.request,urllib.parse
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'approved-dist'
+          indexes=list(root.rglob('index.html'))
+          assert len(indexes)==1
+          dist=indexes[0].parent
+          expected={p.relative_to(dist).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((dist/'assets').rglob('*')) if p.is_file() and p.suffix in ('.js','.css')}
+          assert expected and any(p.endswith('.css') for p in expected)
+          entries=re.findall(r'(?:src|href)="((?:\./|/)assets/[^"?]+\.(?:js|css))"',indexes[0].read_text())
+          assert entries
+          attempts=[]; verified=False
+          def fetch(url):
+              request=urllib.request.Request(url,headers={'Cache-Control':'no-cache','Accept-Encoding':'identity','User-Agent':'FOG-OF-SEA-release-verification'})
+              with urllib.request.urlopen(request,timeout=25) as response:
+                  assert urllib.parse.urlparse(response.url).hostname in ('fogofsea.app','www.fogofsea.app')
+                  return response.read(),response.headers.get('Content-Type',''),response.headers.get('CF-Ray')
+          for attempt in range(48):
+              record={'attempt':attempt+1,'utc':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
+              try:
+                  html,content_type,ray=fetch('https://fogofsea.app/?approved-release=39896f6&probe='+str(int(time.time())))
+                  text=html.decode();record['cf_ray']=ray
+                  record['entry_points_match']=all(entry.lstrip('./') in text for entry in entries)
+                  assert record['entry_points_match'], 'Public HTML still references a different release'
+                  assets={}
+                  for name,digest in expected.items():
+                      raw,mime,_=fetch('https://fogofsea.app/'+name)
+                      actual=hashlib.sha256(raw).hexdigest()
+                      assets[name]={'expected':digest,'actual':actual,'match':actual==digest,'content_type':mime}
+                  record['assets']=assets
+                  verified=all(row['match'] for row in assets.values())
+                  record['verified']=verified
+              except Exception as error:
+                  record['error']=str(error)
+              attempts.append(record)
+              if verified:break
+              time.sleep(10)
+          result={'approved_application_commit':'0c7fea10dfdf39e0d14410ce84e1baebf6eaa9bc','gate_correction_commit':'39896f673d2697e6adffd5d6629e0c22adac777b','main_commit':pathlib.Path('test-results/main-commit.txt').read_text().strip(),'release_run':34801652624,'release_artifact':10331712872,'public_origin':'https://fogofsea.app','asset_count':len(expected),'verified':verified,'attempts':attempts}
+          pathlib.Path('test-results/live-deployment.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps({'verified':verified,'asset_count':len(expected),'last_attempt':attempts[-1]},indent=2))
+          assert verified, 'Public deployment did not match the approved release during this verification window'
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: approved-rendering-public-deployment
+          path: test-results/
+          if-no-files-found: warn
           retention-days: 14
