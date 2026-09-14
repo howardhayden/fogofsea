@@ -1,0 +1,79 @@
+name: Dense starfield preservation and performance
+on:
+  push:
+    branches: [codex/dense-starfield-performance]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Establish exact user-approved smoother baseline
+        run: |
+          git apply tests/fixtures/glow-scene-repair.patch
+          git apply tests/fixtures/glow-performance.patch
+          python3 - <<'PY'
+          import base64,gzip,hashlib,pathlib,subprocess
+          raw=gzip.decompress(base64.b64decode(pathlib.Path('tests/fixtures/glow-performance-batch.patch.gz.b64').read_text(),validate=True))
+          assert hashlib.sha256(raw).hexdigest()=='6cfc1b2bba3a6b1500deb9eb63bbc7a7582fe4e227920a5cb1523c57c1ed5cac'
+          pathlib.Path('/tmp/adopted-batch.patch').write_bytes(raw)
+          subprocess.run(['git','apply','/tmp/adopted-batch.patch'],check=True)
+          files=sorted(p for p in pathlib.Path('app').rglob('*') if p.is_file() and p.name!='starfieldCulling.ts')
+          manifest=''.join(str(p)+'\0'+hashlib.sha256(p.read_bytes()).hexdigest()+'\n' for p in files)
+          assert hashlib.sha256(manifest.encode()).hexdigest()=='51497a958fd0cb3b39bd70532da715fd3323ea57cc74f7e213a275688cb05004','Baseline is not the approved archive'
+          PY
+          mkdir -p /tmp/fog-stars-baseline
+          cp -R app public scripts index.html package.json package-lock.json vite.config.ts tsconfig.json /tmp/fog-stars-baseline/
+          cp app/starfield.ts app/starfieldBaseline.ts
+          cp app/dreamGlowRenderer.ts app/dreamGlowBaseline.ts
+      - name: Apply scoped starfield changes
+        run: |
+          git apply --check tests/fixtures/dense-starfield.patch
+          git apply tests/fixtures/dense-starfield.patch
+      - run: npm ci
+      - name: Source and boundary verification
+        run: |
+          npm run typecheck
+          npm run lint
+          node --import tsx --test tests/starfield.test.ts tests/starfield-culling.test.ts tests/dream-glow-math.test.ts tests/dream-emission.test.ts tests/dream-reflectivity.test.ts tests/dream-glow-performance.test.ts tests/dream-glow-pool.test.ts
+          npm run build
+      - run: npx playwright install --with-deps webkit
+      - name: Compare dense fields and real application against approved source
+        run: |
+          ln -s "$PWD/node_modules" /tmp/fog-stars-baseline/node_modules
+          (cd /tmp/fog-stars-baseline && npm run dev -- --port 4174 > /tmp/baseline-vite.log 2>&1) &
+          npm run dev -- --port 4176 > /tmp/candidate-vite.log 2>&1 &
+          for port in 4174 4176; do for i in $(seq 1 30); do curl -sf http://127.0.0.1:$port/ >/dev/null && break; sleep 1; done; done
+          node scripts/verify-dense-starfield.mjs
+          node scripts/profile-actual-dense-stars.mjs
+      - name: Preserve actual tested source
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import pathlib,zipfile,hashlib,json
+          records={}
+          with zipfile.ZipFile('tested-dense-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for root in ['app','scripts','tests']:
+                  for p in sorted(pathlib.Path(root).rglob('*')):
+                      if not p.is_file() or p.name in ['starfieldBaseline.ts','dreamGlowBaseline.ts']:continue
+                      raw=p.read_bytes();records[str(p)]=hashlib.sha256(raw).hexdigest();z.writestr(str(p),raw)
+          pathlib.Path('test-results').mkdir(exist_ok=True)
+          pathlib.Path('test-results/tested-source-sha256.json').write_text(json.dumps(records,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dense-starfield-evidence-${{ github.sha }}
+          path: |
+            test-results/
+            tested-dense-source.zip
+          retention-days: 14
+          if-no-files-found: error

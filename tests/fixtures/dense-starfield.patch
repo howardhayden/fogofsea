@@ -1,0 +1,102 @@
+diff --git a/app/starfield.ts b/app/starfield.ts
+--- a/app/starfield.ts
++++ b/app/starfield.ts
+@@ -1,4 +1,5 @@
+ import * as THREE from "three";
++import { StarfieldCulling } from "./starfieldCulling";
+ import { refractSkyDirection, type SubsurfaceOpticsPlan } from "./environmentVisuals";
+ import { seededRandom, type StarPlacement, type ViewLayer } from "./viewModel";
+ 
+@@ -619,6 +620,7 @@ export function visibleStarfieldPlan(plan: StarfieldPlan, input: StarfieldVisibi
+ type StarBatchRuntime = {
+   mesh: THREE.InstancedMesh;
+   material: THREE.ShaderMaterial;
++  culling: StarfieldCulling;
+ };
+ 
+ export type StarfieldRuntime = {
+@@ -864,7 +866,7 @@ function createStarBatches(plan: StarfieldPlan, root: THREE.Group) {
+   // over the canopy. Opaque vessels and aircraft also occlude it via depth.
+   mesh.renderOrder = -20;
+   root.add(mesh);
+-  return [{ mesh, material }];
++  return [{ mesh, material, culling: new StarfieldCulling(mesh) }];
+ }
+ 
+ export function createStarfield(scene: THREE.Scene, plan: StarfieldPlan): StarfieldRuntime {
+@@ -896,6 +898,14 @@ export function updateStarfield(
+   });
+ }
+ 
++/** Run after camera controls settle and before Three uploads instance buffers.
++ * Culling uses the full animated envelope, never the instantaneous time sample.
++ */
++export function prepareStarfieldForCamera(runtime: StarfieldRuntime | null, camera: THREE.Camera): void {
++  if (!runtime) return;
++  for (const batch of runtime.starBatches) batch.culling.prepare(camera);
++}
++
+ export function describeStarfield(plan: StarfieldPlan) {
+   const opticalLabel = plan.appearance === "direct through the water surface"
+     ? " These are direct refracted sightlines through the water surface, not reflections."
+diff --git a/app/Battlefield.tsx b/app/Battlefield.tsx
+--- a/app/Battlefield.tsx
++++ b/app/Battlefield.tsx
+@@ -34,6 +34,7 @@ import { DreamGlowRenderer } from "./dreamGlowRenderer";
+ import { advanceRenderDeadline } from "./visualPerformance";
+ import {
+   createStarfieldPlan,
++  prepareStarfieldForCamera,
+   describeStarfield,
+   STARFIELD_LIMITS,
+   updateStarfield,
+@@ -705,7 +706,8 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
+       if (sunDisk) sunDisk.position.copy(camera.position).addScaledVector(sunDirection, celestialProminence.distance);
+       if (moonDisk) moonDisk.position.copy(camera.position).addScaledVector(moonDirection, celestialProminence.distance);
+       if (!reducedMotion) controls.update();
+-      dreamGlow.render(scene, camera);
++      prepareStarfieldForCamera(starfield, camera);
++      dreamGlow.render(scene, camera, starfield?.root);
+       container.dataset.dreamGlowProfile = dreamGlow.status;
+       container.dataset.dreamGlowSources = String(dreamGlow.renderedSubjects);
+       container.dataset.renderedLayer = viewLayer;
+@@ -755,6 +757,8 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
+       dreamSubjects.forEach(detachDreamEmission);
+       delete container.dataset.dreamGlowProfile;
+       delete container.dataset.dreamGlowSources;
++      // Instanced buffers have separate ownership from geometry/materials.
++      starfield?.starBatches.forEach(({ mesh }) => mesh.dispose());
+       scene.traverse((object) => {
+         if (object instanceof THREE.Mesh || object instanceof THREE.Points || object instanceof THREE.Line || object instanceof THREE.LineSegments) {
+           object.geometry?.dispose();
+diff --git a/app/dreamGlowRenderer.ts b/app/dreamGlowRenderer.ts
+--- a/app/dreamGlowRenderer.ts
++++ b/app/dreamGlowRenderer.ts
+@@ -455,7 +455,7 @@ export class DreamGlowRenderer {
+     renderer.setScissorTest(false);
+   }
+ 
+-  render(scene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
++  render(scene: THREE.Scene, camera: THREE.PerspectiveCamera, nonDepthWritingStars?: THREE.Group): void {
+     if (this.disposed) throw new Error("DreamGlowRenderer has been disposed");
+     const renderer = this.renderer;
+     this.renderedSubjects = 0;
+@@ -490,7 +490,17 @@ export class DreamGlowRenderer {
+       renderer.toneMapping = THREE.NoToneMapping;
+       renderer.setScissorTest(false);
+       renderer.setRenderTarget(this.base);
+-      renderer.render(scene, camera);
++      // This pass supplies depth only. Stars explicitly use depthWrite=false;
++      // drawing their dense translucent canopy here cannot affect that depth.
++      // Restore visibility even on failure; the authoritative color pass still
++      // draws every potentially visible star with its original shader.
++      const starsVisible = nonDepthWritingStars?.visible;
++      try {
++        if (nonDepthWritingStars) nonDepthWritingStars.visible = false;
++        renderer.render(scene, camera);
++      } finally {
++        if (nonDepthWritingStars && starsVisible !== undefined) nonDepthWritingStars.visible = starsVisible;
++      }
+       // render(scene) has updated original mesh world matrices, including rigs.
+       this.accumulation.scissorTest = false;
+       renderer.setRenderTarget(this.accumulation);
