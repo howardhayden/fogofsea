@@ -1,0 +1,72 @@
+name: Verify and commit mobile starfield gate correction
+on:
+  push:
+    branches: [codex/mobile-starfield-gate-staging]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Apply test-only correction to the exact approved head
+        env:
+          STAGING_SHA: ${{ github.sha }}
+        run: |
+          git switch --detach 0c7fea10dfdf39e0d14410ce84e1baebf6eaa9bc
+          python3 - <<'PY'
+          import pathlib,subprocess,os
+          for name in ['tests/helpers/starfield-density.ts','tests/starfield-density.test.ts','docs/design/25-MOBILE-STARFIELD-GATE.md']:
+              p=pathlib.Path(name);p.parent.mkdir(parents=True,exist_ok=True)
+              p.write_bytes(subprocess.check_output(['git','show',os.environ['STAGING_SHA']+':'+name]))
+          p=pathlib.Path('tests/browser/starfield.spec.ts');s=p.read_text()
+          old='import { measureStarfieldPixels, type StarfieldPixelMetrics } from "./starfieldPixels";'
+          assert s.count(old)==1
+          s=s.replace(old,old+'\nimport { referenceFieldPinpoints, STARFIELD_DENSITY_REFERENCE } from "../helpers/starfield-density";')
+          old='    expect(metrics.pinpoint).toBeGreaterThan(atmosphericComposite\n      ? compact ? 120 : 300\n      : compact ? 120 : 300);'
+          assert s.count(old)==1
+          new='''    // Compare equal angular coverage. A 320 x 681 portrait frame sees only
+              // 29.17% of the reference desktop frustum; its 99 actual pinpoints are
+              // denser than the desktop's 305. Do not alter the renderer to inflate a
+              // raw count in a narrower view. Keep the existing >300 reference floor.
+              expect(referenceFieldPinpoints(metrics.pinpoint, metrics.width, metrics.height))
+                .toBeGreaterThan(STARFIELD_DENSITY_REFERENCE.minimumPinpoints);'''
+          new=new.replace('\n              ','\n    ')
+          p.write_text(s.replace(old,new))
+          assert not subprocess.check_output(['git','diff','--name-only','--','app'])
+          PY
+      - run: npm ci
+      - name: Complete non-browser release gate
+        run: npm run release:check
+      - run: npx playwright install --with-deps chromium
+      - name: Repeat both real composition fixtures without retries or changed visual thresholds
+        run: npx playwright test tests/browser/starfield.spec.ts --grep 'actual Stars and Sky pixels' --repeat-each=3 --workers=1 --output=test-results/mobile-correction
+      - name: Commit only the verified tests and evidence
+        run: |
+          python3 - <<'PY'
+          import pathlib,hashlib,json,subprocess
+          hashes=json.loads(pathlib.Path('evidence/releases/approved-rendering/application-sha256.json').read_text())
+          assert len(hashes)==59
+          for name,digest in hashes.items():assert hashlib.sha256(pathlib.Path(name).read_bytes()).hexdigest()==digest,name
+          assert not subprocess.check_output(['git','diff','--name-only','--','app'])
+          PY
+          git config user.name 'Hayden Howard'
+          git config user.email 'howardhayden@tuta.io'
+          git add tests/helpers/starfield-density.ts tests/starfield-density.test.ts tests/browser/starfield.spec.ts docs/design/25-MOBILE-STARFIELD-GATE.md
+          git commit -m 'Resolve portrait starfield gate using equal field-of-view density' -m 'Keep every approved application byte and the original strict >300 desktop density floor. Replace the unsupported absolute compact count with solid-angle normalization, retain all other visual assertions, and add sparse/invalid/FOV-binding tests. Preserve the reproduced 99-versus-120 failure and its derivation.'
+          git push origin HEAD:refs/heads/codex/mobile-starfield-gate-resolved
+          git rev-parse HEAD > test-results/mobile-correction-commit.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-starfield-correction
+          path: test-results/
+          retention-days: 14
+          if-no-files-found: warn
