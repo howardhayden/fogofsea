@@ -1,0 +1,14 @@
+diff --git a/app/globals.css b/app/globals.css
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -368,6 +368,10 @@
+ .fallback-stars i.still { --star-waypoint-1-x: 32%; --star-waypoint-1-y: -20%; --star-waypoint-2-x: -46%; --star-waypoint-2-y: 29%; --star-waypoint-3-x: 21%; --star-waypoint-3-y: 43%; --star-waypoint-4-x: -27%; --star-waypoint-4-y: -31%; animation: fallback-star-twinkle ease-in-out infinite alternate-reverse; }
+ .fallback-stars i.still:nth-of-type(3n + 1) { --star-waypoint-1-x: -38%; --star-waypoint-1-y: 16%; --star-waypoint-2-x: 24%; --star-waypoint-2-y: -41%; --star-waypoint-3-x: 47%; --star-waypoint-3-y: 25%; --star-waypoint-4-x: -19%; --star-waypoint-4-y: 34%; }
+ .fallback-stars i.still:nth-of-type(3n + 2) { --star-waypoint-1-x: 18%; --star-waypoint-1-y: 44%; --star-waypoint-2-x: -42%; --star-waypoint-2-y: -18%; --star-waypoint-3-x: 34%; --star-waypoint-3-y: -32%; --star-waypoint-4-x: 9%; --star-waypoint-4-y: 39%; }
++/* Once an opaque WebGL frame is present, the fallback canopy is covered.
++   Retain its DOM and appearance for fallback use, but do not animate hundreds
++   of hidden filtered layers behind the authoritative canvas. */
++.battlefield-canvas[data-webgl="ready"][data-rendered-layer] .fallback-stars i { animation-play-state: paused; }
+ @keyframes fallback-star-twinkle {
+   0% { opacity: var(--star-alpha-dim); translate: 0 0; scale: var(--star-scale-dim); }
+   23% { opacity: var(--star-alpha-mid); translate: var(--star-waypoint-1-x) var(--star-waypoint-1-y); scale: var(--star-scale-mid); }

@@ -6,12 +6,12 @@ const out='test-results/dense-starfield';await mkdir(out,{recursive:true});
 const browser=await webkit.launch({headless:true});
 const beforeImages=new Map(); const comparisons=[]; const motion=[]; const errors=[];
 try {
- for(const [round,variant] of ['baseline','candidate','candidate','baseline'].entries()) {
+ for(const [round,variant] of ['baseline','candidate','css-only','css-only','candidate','baseline'].entries()) {
   const page=await browser.newPage({viewport:{width:1280,height:800},deviceScaleFactor:1.8,reducedMotion:'reduce'});
   page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error' && /WebGL|shader|GL_INVALID/i.test(m.text()))errors.push(m.text());});
   await page.addInitScript(()=>{let state=0xc0ffee;Object.defineProperty(globalThis.crypto,'getRandomValues',{configurable:true,value:(view)=>{const bytes=new Uint8Array(view.buffer,view.byteOffset,view.byteLength);for(let i=0;i<bytes.length;i++){state^=state<<13;state^=state>>>17;state^=state<<5;bytes[i]=state&255;}return view;}});});
-  await page.goto(`http://127.0.0.1:${variant==='baseline'?4174:4176}/`);
+  await page.goto(`http://127.0.0.1:${variant==='baseline'?4174:variant==='css-only'?4178:4176}/`);
   await page.evaluate(async()=>{const {DreamGlowRenderer}=await import('/app/dreamGlowRenderer.ts');const render=DreamGlowRenderer.prototype.render;
    DreamGlowRenderer.prototype.render=function(scene,camera,...rest){window.__app={pipeline:this,scene,camera};const at=performance.now();const result=render.call(this,scene,camera,...rest);if(window.__frames)window.__frames.push({at,cpu:performance.now()-at});return result;};
   });
@@ -23,7 +23,7 @@ try {
   await page.getByRole('button',{name:'EMBARKED AVIATION',exact:true}).click();
   for(const label of ['Deck-launched multirole aircraft','Maritime mission helicopter'])await page.getByRole('button',{name:'Add one '+label,exact:true}).click();
   await page.waitForTimeout(700);
-  if(round<2) for(const time of ['dawn','day','dusk','night']) {
+  if(round<3) for(const time of ['dawn','day','dusk','night']) {
    await page.locator('.time-control').getByRole('button',{name:time,exact:true}).click();
    for(const view of ['stars','sky','air-side','air-overhead','surface','subsurface']) {
     await page.locator('.depth-control').getByRole('button',{name:view.startsWith('air')?'air':view,exact:true}).click();
@@ -36,7 +36,7 @@ try {
     else {
      const b=beforeImages.get(label);assert.ok(b);assert.equal(r.total,b.total,'canonical density changed');assert.equal(r.sources,b.sources,'glow source lost');assert.equal(r.status,b.status,'glow disabled');
      const diff=await page.evaluate(async({b,a})=>{const decode=async(raw)=>{const i=new Image();i.src=raw;await i.decode();const c=document.createElement('canvas');c.width=i.width;c.height=i.height;const ctx=c.getContext('2d');ctx.drawImage(i,0,0);return ctx.getImageData(0,0,c.width,c.height).data;};const [left,right]=await Promise.all([decode(b),decode(a)]);let changed=0,bad=0,max=0;for(let i=0;i<left.length;i+=4){let d=0;for(let c=0;c<4;c++)d=Math.max(d,Math.abs(left[i+c]-right[i+c]));if(d)changed++;if(d>1)bad++;max=Math.max(max,d);}return {changed,bad,max};},{b:b.capture,a:r.capture});
-     comparisons.push({label,total:r.total,baselineSubmitted:b.submitted,candidateSubmitted:r.submitted,sources:r.sources,status:r.status,...diff});console.log('app-compare',JSON.stringify(comparisons.at(-1)));
+     comparisons.push({variant,label,total:r.total,baselineSubmitted:b.submitted,candidateSubmitted:r.submitted,sources:r.sources,status:r.status,...diff});console.log('app-compare',JSON.stringify(comparisons.at(-1)));
      assert.equal(diff.bad,0,'complete application pixels changed');
     }
    }
