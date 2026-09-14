@@ -66,6 +66,20 @@ jobs:
           for name in extras:
               raw=subprocess.check_output(['git','show',os.environ['STAGING_SHA']+':'+name])
               path=pathlib.Path(name);path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
+          # The source binding still expected the discarded timestamp-subtraction
+          # expression. Keep the 30 Hz obligation and bind it to the approved API;
+          # executable cadence tests cover quantized 60/90/120 Hz and stalls.
+          test=pathlib.Path('tests/rendered-html.test.mjs')
+          before=test.read_text()
+          old=r'  assert.match(battlefield, /1000 \/ 30/);'
+          new='\n'.join([
+              '  // Preserve the 30 Hz contract through the phase-preserving scheduler.',
+              r'  assert.match(battlefield, /import \{ advanceRenderDeadline \} from "\.\/visualPerformance"/);',
+              r'  assert.match(battlefield, /nextFrameAt = advanceRenderDeadline\(nextFrameAt, Math\.max\(frameAt, nextFrameAt\), 30\)/);',
+              r'  assert.match(battlefield, /if \(frameAt \+ 1 < nextFrameAt\) return/);',
+          ])
+          assert before.count(old)==1, 'Unexpected test binding requires reconciliation'
+          test.write_text(before.replace(old,new))
           evidence=pathlib.Path('evidence/releases/approved-rendering');evidence.mkdir(parents=True,exist_ok=True)
           (evidence/'application-sha256.json').write_text(json.dumps(hashes,indent=2)+'\n')
           (evidence/'source-identity.json').write_text(json.dumps({
@@ -77,6 +91,12 @@ jobs:
               'original_glow_parent':'bd84e20cffd37ae5435bee50caab6319f50d2a7f',
               'all_59_application_files_match':True,
               'rejected_culling_and_sampling_experiments_included':False,
+          },indent=2)+'\n')
+          (evidence/'release-test-binding-correction.json').write_text(json.dumps({
+              'failed_run':34797575735,'failed_job':103833549639,
+              'failure':'tests/rendered-html.test.mjs required the old literal 1000 / 30 expression',
+              'correction':'Bind the unchanged 30 Hz requirement to advanceRenderDeadline and retain cadence/skip-boundary execution tests',
+              'application_changed_by_correction':False,'original_js_tests_passed':29,'original_js_tests_failed':1,
           },indent=2)+'\n')
           for path in (root/'test-results').rglob('*.json'):
               if path.name.startswith('tested-'):continue
@@ -95,8 +115,8 @@ jobs:
           PY
           git config user.name 'Hayden Howard'
           git config user.email 'howardhayden@tuta.io'
-          git add -- app/Battlefield.tsx app/dreamGlowRenderer.ts app/globals.css tests/dream-glow-performance.test.ts tests/dream-glow-pool.test.ts tests/dream-reflectivity.test.ts docs/design/24-APPROVED-RENDERING-RELEASE.md evidence/releases/approved-rendering
-          git commit -m 'Ship approved dream glow, scene preservation, and dense-starfield smoothness' -m 'The new glow effect was indirectly recommended by ENS Mayukh Banik, who could not discern a glow effect, which told me all I needed to know.' -m 'Integrate all 59 application files byte-for-byte from the user-approved dense-starfield download: native-color shape-derived glow, side-view scaling, reflective scene preservation, reusable batched rendering, and the covered CSS fallback-star pause. Exclude the rejected star-culling and per-sample experiments. Preserve validation evidence and original release gates.'
+          git add -- app/Battlefield.tsx app/dreamGlowRenderer.ts app/globals.css tests/rendered-html.test.mjs tests/dream-glow-performance.test.ts tests/dream-glow-pool.test.ts tests/dream-reflectivity.test.ts docs/design/24-APPROVED-RENDERING-RELEASE.md evidence/releases/approved-rendering
+          git commit -m 'Ship approved dream glow, scene preservation, and dense-starfield smoothness' -m 'The new glow effect was indirectly recommended by ENS Mayukh Banik, who could not discern a glow effect, which told me all I needed to know.' -m 'Integrate all 59 application files byte-for-byte from the user-approved dense-starfield download: native-color shape-derived glow, side-view scaling, reflective scene preservation, reusable batched rendering, and the covered CSS fallback-star pause. Exclude the rejected star-culling and per-sample experiments. Preserve validation evidence and original release gates; bind the 30 Hz source assertion to its approved scheduler API.'
           git push origin HEAD:refs/heads/codex/approved-rendering-release
           git rev-parse HEAD > "$RUNNER_TEMP/approved-release-commit.txt"
       - uses: actions/upload-artifact@v4
