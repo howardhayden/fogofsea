@@ -451,7 +451,9 @@ test("academy uses keyboard-operated tabs, named panels, quiz groups, and modal 
   await openSession(page);
   const opener = await openAcademyResponsively(page);
   const academy = page.getByRole("dialog", { name: "THE ACADEMY" });
-  await expect(academy).toHaveAttribute("aria-describedby", "academy-independence");
+  await expect(academy).toHaveAttribute("aria-describedby", "academy-independence academy-guidance-copy");
+  await expect(academy.locator("#academy-independence")).toHaveCount(1);
+  await expect(academy.locator("#academy-guidance-copy")).toHaveCount(1);
   const academyScrollSurface = academy.locator(".academy-scroll-surface");
   const visiblePanels = () => academy.locator("[role='tabpanel']").evaluateAll((panels) => panels.filter((panel) => panel.getClientRects().length > 0).map((panel) => panel.id));
   await expect.poll(visiblePanels).toEqual(["academy-panel-course"]);

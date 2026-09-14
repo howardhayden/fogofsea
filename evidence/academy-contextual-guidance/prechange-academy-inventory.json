@@ -1,0 +1,38 @@
+{
+  "format": "fog-of-sea-academy-prechange-inventory-v1",
+  "payloadSha256": "ba9e6d5e0781abcef1adfe792ac283d1ddf0feca4b4ecab627c6edb95b9c07ca",
+  "payload": {
+    "capturedOn": "2026-09-14",
+    "baselineRevision": "795ea751b2615f26bd2d3eff2a826fbe079a062a",
+    "captureMethod": "git show from the current authoritative main revision before Academy integration",
+    "sources": [
+      {"path": "app/Academy.tsx", "sha256": "3776333eb62daf2a3910c81abad19f6f3b0e09b99d1c0ece4ac4557046865635"},
+      {"path": "app/page.tsx", "sha256": "5dbfd3aa81f645046636caa656e782a3fc8d86d08f4eca2b0b4178370038ee91"},
+      {"path": "app/academyData.ts", "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"},
+      {"path": "app/globals.css", "sha256": "914637b0609e3d2c730f4ab14c566b65f3921f973e6a7d8f246c487fd7a828cc"},
+      {"path": "docs/design/04-INTERACTION-DESIGN.md", "sha256": "82854b1b4de03ff8d7c6a29e9fc59b0b89c8de523d073a6c39f7d94a4f58feec"},
+      {"path": "tests/rendered-html.test.mjs", "sha256": "f20ccbea9ff85f7c6ef9269d2d56726b2cab14845e6e5dc7f2c0d114bf041cac"}
+    ],
+    "academy": {
+      "moduleCount": 25,
+      "theoryLensCount": 13,
+      "initialPath": "grand",
+      "initialActiveModule": "strategy-grammar",
+      "receivedScenarioContext": false,
+      "receivedGameplayPhase": false,
+      "receivedWorkspaceView": false,
+      "receivedPlayerTheorySelections": false,
+      "lessonBodyControlled": false,
+      "lessonBodyDefaultOpen": false,
+      "contextualSuggestionLabel": false,
+      "contextualHelpExplanation": false
+    },
+    "caller": {
+      "academyProps": ["initialModuleId", "onClose", "completed", "onCompletedChange", "savingEnabled"],
+      "scenarioBound": false,
+      "phaseBound": false,
+      "workspaceBound": false
+    },
+    "claimBoundary": "This inventory records source state and deterministic counts only. It does not claim historical browser rendering or learner comprehension."
+  }
+}

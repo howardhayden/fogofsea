@@ -46,6 +46,7 @@ import { latticeCopy } from "./latticeCopy";
 import { FLEET_METHOD_LABELS, POSTURE_LABELS, deriveOperationalStrategy } from "./operationalStrategy";
 import { deriveForceReadiness } from "./forceReadiness";
 import { cloudCoverLabel, cloudCoverPhrase } from "./weatherPresentation";
+import { selectAcademyScenarioContext } from "./academyGuidance";
 
 const Battlefield = lazy(() => import("./Battlefield"));
 
@@ -244,6 +245,9 @@ export default function Home() {
   const [catalogQuery, setCatalogQuery] = useState("");
   const [catalogFilter, setCatalogFilter] = useState<"all" | "available" | "selected">("all");
   const [mobileView, setMobileView] = useState<"mission" | "decisions" | "force" | "command" | "visualization">("mission");
+  const [compactViewport, setCompactViewport] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches,
+  );
   const [planningStage, setPlanningStage] = useState<"strategy" | "force">("strategy");
   const [theme, setTheme] = useState<"light" | "dark">(() => typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
   const [briefOpen, setBriefOpen] = useState(false);
@@ -336,6 +340,14 @@ export default function Home() {
     return () => window.clearTimeout(timer);
   }, [hydrated, storageMode]);
 
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 760px)");
+    const update = () => setCompactViewport(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
   const {
     metrics,
     forceAdaptation,
@@ -385,6 +397,7 @@ export default function Home() {
   }), [selectedWarfare, selectedEndState, selectedLens, selectedPartnerLens, selectedGuardrail]);
 
   const operationalStrategy = useMemo(() => deriveOperationalStrategy(scenario), [scenario]);
+  const academyScenario = useMemo(() => selectAcademyScenarioContext(scenario), [scenario]);
   const resetGameState = (next: Scenario) => {
     sessionActions.resetSession(createEmptySession(next, difficulty, academyProgress));
     setActiveRoster("fleet");
@@ -844,6 +857,13 @@ export default function Home() {
   const skipTarget = result ? "#result-heading" : rigidState ? rigidState.turn >= 1 ? "#command-intelligence-heading" : "#rigid-turn-heading" : planningStage === "force" ? "#force-heading-title" : "#mission-workflow";
   const skipLabel = result ? "Skip to final debrief" : rigidState ? rigidState.turn >= 1 ? "Skip to intelligence review" : "Skip to command turn" : planningStage === "force" ? "Skip to force design" : "Skip to mission workflow";
   const phaseKey = result ? "debrief" : rigidState ? "command" : planningStage;
+  const academyWorkspaceView = compactViewport
+    ? mobileView
+    : phaseKey === "strategy"
+      ? "decisions"
+      : phaseKey === "force"
+        ? "force"
+        : "command";
   const phaseAnnouncement = result
     ? "Final debrief is now active. Planning and command controls are unavailable until you choose a debrief action."
     : rigidState
@@ -1361,7 +1381,20 @@ export default function Home() {
           onResetAll={requestResetAll}
         />
       )}
-      {academyOpen && <Academy initialModuleId={academyTarget} onClose={closeAcademy} completed={academyProgress} onCompletedChange={sessionActions.setAcademyProgress} savingEnabled={storageMode === "enabled"} />}
+      {academyOpen && (
+        <Academy
+          initialModuleId={academyTarget}
+          onClose={closeAcademy}
+          completed={academyProgress}
+          onCompletedChange={sessionActions.setAcademyProgress}
+          savingEnabled={storageMode === "enabled"}
+          scenario={academyScenario}
+          gameplayPhase={phaseKey}
+          workspaceView={academyWorkspaceView}
+          selectedLens={selectedLens}
+          selectedPartnerLens={selectedPartnerLens}
+        />
+      )}
       {creditsOpen && <div className="modal-backdrop" role="presentation" onMouseDown={closeCredits}><section className="credits-dialog" role="dialog" aria-modal="true" aria-labelledby="credits-title" aria-describedby="credits-summary" tabIndex={-1} onKeyDown={event => handleDialogKeyDown(event, closeCredits)} onMouseDown={event => event.stopPropagation()}><div className="guide-header"><div><span>OPEN-SOURCE CREDITS</span><h2 id="credits-title">CREDITS &amp; LICENSES</h2></div><button type="button" autoFocus onClick={closeCredits} aria-label="Close credits">×</button></div><div className="credits-grid"><article><strong>TYPOGRAPHY</strong><p>Jost variable font by the Jost Project Authors, distributed through Fontsource under the SIL Open Font License 1.1.</p></article><article><strong>CORE SOFTWARE</strong><p>React, React DOM, Three.js, Astronomy Engine, and the static build tooling are distributed under reviewed open-source licenses.</p></article><article><strong>SOUND</strong><p>Original browser-synthesized ambiance and effects. No recordings, samples, vocals, streams, or external audio requests.</p></article><article><strong>VISUALS</strong><p>Original low-poly geometry and interface artwork. The aurora engine adapts the MIT-licensed progressive domain-warp technique from FastNoise Lite by Jordan Peck and contributors; full attribution and license text are included below.</p></article></div><p id="credits-summary">The download includes exact package versions, license identifiers, source locations, notices, and full license texts in the generated third-party inventory.</p><nav className="credit-links" aria-label="License documents"><a href="./third-party-notices.txt" target="_blank" rel="noreferrer" aria-label="Review third-party notices (opens in a new tab)">REVIEW THIRD-PARTY NOTICES</a><a href="./third-party-licenses.txt" target="_blank" rel="noreferrer" aria-label="Review runtime license texts (opens in a new tab)">REVIEW RUNTIME LICENSE TEXTS</a></nav></section></div>}
       {pendingConfirmation && (
         <ConfirmDialog

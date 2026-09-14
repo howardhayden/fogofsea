@@ -79,7 +79,7 @@ test("first-play gate exposes privacy, saved games, and three distinct play mode
   assert.match(page, /readinessGaps/);
 });
 
-test("dense instructional copy begins behind native progressive disclosures", async () => {
+test("dense instructional copy stays disclosed with bounded contextual Academy defaults", async () => {
   const [page, academy, command, debrief] = await Promise.all([
     read("../app/page.tsx"),
     read("../app/Academy.tsx"),
@@ -90,7 +90,9 @@ test("dense instructional copy begins behind native progressive disclosures", as
   assert.match(page, /id="mission-brief-details"[^>]*hidden=\{!briefOpen\}/);
   assert.match(page, /<details className="guide-armaments">/);
   assert.match(page, /<details id="field-guide-scenario-acceptance" className="guide-rule"><summary>HOW A SCENARIO IS ACCEPTED/);
-  assert.match(academy, /<details className="lesson-body">/);
+  assert.match(academy, /className="lesson-body"/);
+  assert.match(academy, /open=\{expandedLessonIds\.has\(active\.id\)\}/);
+  assert.match(academy, /guidance\.defaultExpandedModuleIds/);
   assert.match(academy, /<details className="academy-disclosure">/);
   assert.match(academy, /<details className="reading-list">/);
   assert.match(command, /<details id="last-turn-learning" className="kriegsspiel-report">\s*<summary>LAST TURN/);

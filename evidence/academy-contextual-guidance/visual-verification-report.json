@@ -1,0 +1,44 @@
+{
+  "format": "fog-of-sea-academy-visual-verification-v1",
+  "payloadSha256": "416020dd8648feab3410021a374165c6bd1980acbdab2234f936891af784ce90",
+  "payload": {
+    "capturedOn": "2026-09-14",
+    "overallStatus": "implemented-pending-browser-verification",
+    "structuralRendering": {
+      "command": "node --import tsx --test tests/academy-guidance.test.ts",
+      "result": "pass",
+      "cases": 4,
+      "verified": [
+        "Scenario-derived active lesson renders open with visible suggestion labels.",
+        "One provisional selection retains scenario defaults; two distinct selections render player-selection defaults.",
+        "Compact Visualization context renders Jomini open while retaining scenario theory suggestions.",
+        "An explicit help target stays active and open on a path that retains every derived suggestion without broadening suggestion membership."
+      ]
+    },
+    "sourceAndReleaseChecks": {
+      "result": "pass",
+      "checks": ["lint", "typecheck", "Lattice schemas", "Lattice copy", "licenses", "notices", "SBOM", "content", "hosting", "browser-suite discovery", "complete non-browser tests", "production build", "artifact validation"]
+    },
+    "browserSpecification": {
+      "path": "tests/browser/academy-guidance.spec.ts",
+      "discoveredCases": 6,
+      "intendedExecutedCases": 3,
+      "projectSkips": 3,
+      "result": "discovered-not-executed"
+    },
+    "browserExecution": {
+      "command": "npx playwright test tests/browser/academy-guidance.spec.ts",
+      "result": "environment-blocked-before-product-assertion",
+      "launched": false,
+      "assertionsExecuted": 0,
+      "failure": "Pinned Chromium headless-shell executable was absent. One bounded npx playwright install chromium attempt timed out against cdn.playwright.dev and was stopped rather than retried in a loop.",
+      "classification": "verification-environment blocker, not a product assertion failure and not a pass"
+    },
+    "unverified": [
+      "Live disclosure toggling and persistence within one mounted Academy session.",
+      "Live focus, screen-reader, forced-colors, and pointer behavior after contextual defaults.",
+      "Rendered containment at desktop and compact breakpoints."
+    ],
+    "claimRule": "No browser, device, or human-comprehension claim may be promoted from structural rendering or browser-test discovery."
+  }
+}

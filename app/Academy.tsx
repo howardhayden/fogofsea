@@ -12,6 +12,13 @@ import {
 } from "./academyData";
 import { INPUT_LIMITS, sanitizeAcademyNote } from "./inputSecurity";
 import { latticeCopy } from "./latticeCopy";
+import {
+  deriveAcademyGuidance,
+  type AcademyGameplayPhase,
+  type AcademyScenarioContext,
+  type AcademyWorkspaceView,
+} from "./academyGuidance";
+import type { TheoryLens } from "./gameModel";
 
 type AcademyView = "course" | "compare" | "sources";
 
@@ -21,18 +28,60 @@ type AcademyProps = {
   completed: string[];
   onCompletedChange: (completed: string[]) => void;
   savingEnabled: boolean;
+  scenario: AcademyScenarioContext;
+  gameplayPhase: AcademyGameplayPhase;
+  workspaceView: AcademyWorkspaceView;
+  selectedLens: TheoryLens | "";
+  selectedPartnerLens: TheoryLens | "";
 };
 
-export default function Academy({ initialModuleId, onClose, completed, onCompletedChange, savingEnabled }: AcademyProps) {
+function pathCoveringGuidance(moduleIds: readonly string[]): AcademyPath {
+  const guidedModules = ACADEMY_MODULES.filter((module) => moduleIds.includes(module.id));
+  return PATHS.find((candidate) => guidedModules.every((module) => module.paths.includes(candidate.id)))?.id
+    || guidedModules[0]?.paths[0]
+    || "grand";
+}
+
+export default function Academy({
+  initialModuleId,
+  onClose,
+  completed,
+  onCompletedChange,
+  savingEnabled,
+  scenario,
+  gameplayPhase,
+  workspaceView,
+  selectedLens,
+  selectedPartnerLens,
+}: AcademyProps) {
   const dialogRef = useRef<HTMLElement>(null);
   const scrollSurfaceRef = useRef<HTMLDivElement>(null);
   const lessonHeadingRef = useRef<HTMLHeadingElement>(null);
   const viewTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const onCloseRef = useRef(onClose);
-  const initialModule = ACADEMY_MODULES.find((module) => module.id === initialModuleId);
-  const [path, setPath] = useState<AcademyPath>(initialModule?.paths[0] || "grand");
+  const [guidanceContext] = useState(() => ({
+    scenario,
+    gameplayPhase,
+    workspaceView,
+    selectedLens,
+    selectedPartnerLens,
+  }));
+  const guidance = useMemo(() => deriveAcademyGuidance(guidanceContext), [guidanceContext]);
+  const explicitInitialModule = ACADEMY_MODULES.find((module) => module.id === initialModuleId);
+  const guidedInitialModule = ACADEMY_MODULES.find((module) => module.id === guidance.primaryModuleId);
+  const initialModule = explicitInitialModule || guidedInitialModule;
+  const [path, setPath] = useState<AcademyPath>(
+    pathCoveringGuidance([
+      ...guidance.defaultExpandedModuleIds,
+      ...(explicitInitialModule ? [explicitInitialModule.id] : []),
+    ]),
+  );
   const [view, setView] = useState<AcademyView>("course");
   const [activeId, setActiveId] = useState(initialModule?.id || "strategy-grammar");
+  const [expandedLessonIds, setExpandedLessonIds] = useState<Set<string>>(() => new Set([
+    ...guidance.defaultExpandedModuleIds,
+    ...(explicitInitialModule ? [explicitInitialModule.id] : []),
+  ]));
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [comparePrimary, setComparePrimary] = useState("Mahan");
@@ -52,7 +101,7 @@ export default function Academy({ initialModuleId, onClose, completed, onComplet
       }
       if (dialogRef.current) containDialogTab(event, dialogRef.current);
     };
-    const focusTimer = window.setTimeout(() => initialModuleId ? lessonHeadingRef.current?.focus() : dialogRef.current?.querySelector<HTMLElement>("button")?.focus(), 0);
+    const focusTimer = window.setTimeout(() => lessonHeadingRef.current?.focus(), 0);
     window.addEventListener("keydown", onKeyDown);
     return () => {
       window.clearTimeout(focusTimer);
@@ -66,6 +115,10 @@ export default function Academy({ initialModuleId, onClose, completed, onComplet
   const completedInPath = modules.filter((module) => completed.includes(module.id)).length;
   const progress = Math.round((completedInPath / modules.length) * 100);
   const views: AcademyView[] = ["course", "compare", "sources"];
+  const suggestedModuleIds = useMemo(
+    () => new Set(guidance.defaultExpandedModuleIds),
+    [guidance.defaultExpandedModuleIds],
+  );
 
   const selectView = (next: AcademyView) => {
     setView(next);
@@ -99,7 +152,7 @@ export default function Academy({ initialModuleId, onClose, completed, onComplet
     setSelectedAnswer(null);
     setSubmitted(false);
     scrollSurfaceRef.current?.scrollTo({ top: 0 });
-    window.setTimeout(() => lessonHeadingRef.current?.focus({ preventScroll: true }), 0);
+    window.setTimeout(() => lessonHeadingRef.current?.focus(), 0);
   };
 
   const recordCompletion = () => {
@@ -119,9 +172,32 @@ export default function Academy({ initialModuleId, onClose, completed, onComplet
     selectModule(modules[nextIndex].id);
   };
 
+  const setLessonExpanded = (moduleId: string, open: boolean) => {
+    setExpandedLessonIds((current) => {
+      const next = new Set(current);
+      if (open) next.add(moduleId);
+      else next.delete(moduleId);
+      return next;
+    });
+  };
+
+  const activeSuggested = suggestedModuleIds.has(active.id);
+
   return (
     <div className="academy-backdrop" role="presentation" onMouseDown={onClose}>
-      <section ref={dialogRef} className="academy" role="dialog" aria-modal="true" aria-labelledby="academy-title" aria-describedby="academy-independence" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()}>
+      <section
+        ref={dialogRef}
+        className="academy"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="academy-title"
+        aria-describedby="academy-independence academy-guidance-copy"
+        data-guidance-source={guidance.source}
+        data-gameplay-phase={guidanceContext.gameplayPhase}
+        data-workspace-view={guidanceContext.workspaceView}
+        tabIndex={-1}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
         <header className="academy-header">
           <div className="academy-brand">
             <span>INDEPENDENT STRATEGY LAB</span>
@@ -157,15 +233,32 @@ export default function Academy({ initialModuleId, onClose, completed, onComplet
               </div>
               <nav className="module-list" aria-label="Lessons in this learning path">
                 {modules.map((module) => (
-                  <button type="button" key={module.id} aria-current={active.id === module.id ? "page" : undefined} className={active.id === module.id ? "active" : ""} onClick={() => selectModule(module.id)}>
+                  <button
+                    type="button"
+                    key={module.id}
+                    aria-current={active.id === module.id ? "page" : undefined}
+                    className={`${active.id === module.id ? "active" : ""} ${suggestedModuleIds.has(module.id) ? "suggested" : ""}`.trim()}
+                    data-academy-suggested={suggestedModuleIds.has(module.id) ? "true" : undefined}
+                    data-academy-module-id={module.id}
+                    onClick={() => selectModule(module.id)}
+                  >
                     <i className={completed.includes(module.id) ? "complete" : ""}>{completed.includes(module.id) ? "✓" : module.number}</i>
-                    <span><strong>{module.title}</strong><small>{module.era} · {module.level}</small></span>
+                    <span>
+                      <strong>{module.title}</strong>
+                      <small>{module.era} · {module.level}</small>
+                      {suggestedModuleIds.has(module.id) && <b className="module-suggestion">SUGGESTED NOW</b>}
+                    </span>
                   </button>
                 ))}
               </nav>
             </aside>
 
             <article className="lesson">
+              <section className="academy-guidance" role="note" aria-labelledby="academy-guidance-heading">
+                <span id="academy-guidance-heading">{guidance.heading.toUpperCase()}</span>
+                <p id="academy-guidance-copy">{guidance.explanation}</p>
+              </section>
+
               <div className="lesson-heading">
                 <div><span>MODULE {active.number} · {active.level.toUpperCase()}</span><h3 ref={lessonHeadingRef} tabIndex={-1}>{active.title}</h3><p>{active.subtitle}</p></div>
                 <div className="lesson-position">{activeIndex + 1}<small>/ {modules.length}</small></div>
@@ -180,8 +273,17 @@ export default function Academy({ initialModuleId, onClose, completed, onComplet
                 <ol>{active.objectives.map((objective) => <li key={objective}>{objective}</li>)}</ol>
               </details>
 
-              <details className="lesson-body">
-                <summary>LESSON · READ WHEN READY</summary>
+              <details
+                className="lesson-body"
+                data-module-id={active.id}
+                open={expandedLessonIds.has(active.id)}
+                onToggle={(event) => setLessonExpanded(active.id, event.currentTarget.open)}
+              >
+                <summary>{explicitInitialModule?.id === active.id
+                  ? "LESSON · REQUESTED HELP"
+                  : activeSuggested
+                    ? "LESSON · SUGGESTED FOR THIS CONTEXT"
+                    : "LESSON · READ WHEN READY"}</summary>
                 {active.lesson.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </details>
 
