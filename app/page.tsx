@@ -1062,7 +1062,7 @@ export default function Home() {
 
         <section ref={visualizationViewRef} className="tactical-panel" aria-label={result ? "Final review" : undefined} aria-labelledby={result ? undefined : "tactical-panel-title"} tabIndex={-1}>
           {!result && <h2 id="tactical-panel-title" className="visually-hidden">TACTICAL VISUALIZATION</h2>}
-          {!result && <>
+          {!result && storageMode !== "undecided" && <>
           <Suspense fallback={<div className="battlefield-loading" role="status"><span>PREPARING LOCAL THREE-DIMENSIONAL PLOT…</span></div>}>
             <Battlefield
               key={scenario.id}
@@ -1093,6 +1093,8 @@ export default function Home() {
               result={null}
               theme={theme}
               contactVisibility={contactVisibility}
+              disclosedContacts={[]}
+              visualActive={!overlayOpen}
               currentPhaseContentActive={Boolean(rigidState)}
             />
           </Suspense>

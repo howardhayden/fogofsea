@@ -1,0 +1,63 @@
+{
+  "format": "fog-of-sea-visual-performance-baseline-v1",
+  "baselineId": "FOS-VS-BL-0f0565b-2026-09-12",
+  "capturedOn": "2026-09-12",
+  "status": "partial-environment-baseline",
+  "claimBoundary": "This record contains repository, release-check, artifact-size, and browser-launch observations only. It contains no presented-frame pacing, browser startup or scenario-ready duration, CPU or GPU pressure, retained-memory growth, physical-device thermal behavior, reduced-motion runtime result, or human accessibility result.",
+  "repository": {
+    "branchAtBaseline": "main",
+    "commit": "0f0565b8dd0ed97fcacf5160402f49b9da79cb6d",
+    "worktreeAtBaseline": "clean"
+  },
+  "dependencyFailureAndCorrection": {
+    "firstRun": {
+      "result": "blocked",
+      "passedBeforeBlock": ["lint", "typecheck"],
+      "failure": "AJV dist/2020.js was absent from the checked-in installed dependency tree; verify:lattice-schemas could not start."
+    },
+    "correction": "Reconciled the local installed tree from package-lock.json with npm install --ignore-scripts; no application source was changed.",
+    "rerun": "npm run check passed completely."
+  },
+  "releaseCheck": {
+    "result": "pass-after-local-dependency-repair",
+    "browserInventory": "164 tests in 16 files listed; listing is not execution",
+    "javascriptTests": "30/30",
+    "typescriptTests": "203/203",
+    "redTeamTests": "66/66",
+    "buildDurationSeconds": 4.98,
+    "artifactValidation": "18 raw-byte-scanned files; 15 decoded textual assets; no remote HTML assets or source maps"
+  },
+  "browserExecution": {
+    "command": "npx playwright test tests/browser/environment-visuals.spec.ts --project=desktop-chromium --grep surface-waves",
+    "result": "environment-blocked-before-product-assertion",
+    "launched": false,
+    "assertionsExecuted": 0,
+    "failure": "Pinned Chromium headless-shell executable was unavailable at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell."
+  },
+  "artifact": {
+    "totalRawBytes": 1707415,
+    "aggregateSha256": "07ed7595cdd6801609010b68cee13ac39677c8cdd08a94237f7e7286b9a533e4",
+    "initialPath": {
+      "rawBytes": 891462,
+      "gzipBytes": 252456,
+      "files": ["assets/index-B3N0I5db.js", "assets/interface-runtime-6RWF-rzJ.js", "assets/index-Xn8preIv.css"]
+    },
+    "lazyTacticalPath": {
+      "rawBytes": 722406,
+      "gzipBytes": 203285,
+      "files": ["assets/Battlefield-DBqyjBT4.js", "assets/three-renderer-BwaYNRhg.js", "assets/sky-model-DePhbSum.js"]
+    }
+  },
+  "unmeasured": [
+    "presented-frame interval distribution and hitch clusters",
+    "camera input-to-present latency",
+    "browser cold startup and scenario-ready time",
+    "main-thread, worker, and GPU pressure",
+    "heap, DOM, GPU allocation, and retained growth",
+    "physical Android and iOS thermal, power, and battery behavior",
+    "live reduced-motion, forced-colors, screen-reader, keyboard, touch, and no-WebGL behavior",
+    "temporal luminance and prohibited-flash behavior",
+    "visual-reference and human comprehension review"
+  ],
+  "claimRule": "No unmeasured item may be promoted on the strength of this baseline."
+}

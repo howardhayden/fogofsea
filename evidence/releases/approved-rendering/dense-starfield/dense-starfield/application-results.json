@@ -1,0 +1,9864 @@
+{
+  "comparisons": [
+    {
+      "variant": "candidate",
+      "label": "dawn-stars",
+      "total": 3981,
+      "baselineSubmitted": 3981,
+      "candidateSubmitted": 248,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dawn-sky",
+      "total": 1914,
+      "baselineSubmitted": 1914,
+      "candidateSubmitted": 229,
+      "sources": 8,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dawn-air-side",
+      "total": 1742,
+      "baselineSubmitted": 1742,
+      "candidateSubmitted": 81,
+      "sources": 17,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dawn-air-overhead",
+      "total": 1742,
+      "baselineSubmitted": 1742,
+      "candidateSubmitted": 0,
+      "sources": 15,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dawn-surface",
+      "total": 1822,
+      "baselineSubmitted": 1822,
+      "candidateSubmitted": 0,
+      "sources": 17,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dawn-subsurface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 22,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "day-stars",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "day-sky",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "day-air-side",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "day-air-overhead",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "day-surface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "day-subsurface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dusk-stars",
+      "total": 5125,
+      "baselineSubmitted": 5125,
+      "candidateSubmitted": 343,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dusk-sky",
+      "total": 2487,
+      "baselineSubmitted": 2487,
+      "candidateSubmitted": 331,
+      "sources": 7,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dusk-air-side",
+      "total": 2294,
+      "baselineSubmitted": 2294,
+      "candidateSubmitted": 110,
+      "sources": 16,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dusk-air-overhead",
+      "total": 2294,
+      "baselineSubmitted": 2294,
+      "candidateSubmitted": 0,
+      "sources": 14,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dusk-surface",
+      "total": 2410,
+      "baselineSubmitted": 2410,
+      "candidateSubmitted": 0,
+      "sources": 16,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "dusk-subsurface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 22,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "night-stars",
+      "total": 12503,
+      "baselineSubmitted": 12503,
+      "candidateSubmitted": 825,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "night-sky",
+      "total": 7110,
+      "baselineSubmitted": 7110,
+      "candidateSubmitted": 931,
+      "sources": 4,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "night-air-side",
+      "total": 6928,
+      "baselineSubmitted": 6928,
+      "candidateSubmitted": 357,
+      "sources": 7,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "night-air-overhead",
+      "total": 6928,
+      "baselineSubmitted": 6928,
+      "candidateSubmitted": 0,
+      "sources": 8,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "night-surface",
+      "total": 7024,
+      "baselineSubmitted": 7024,
+      "candidateSubmitted": 0,
+      "sources": 8,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "candidate",
+      "label": "night-subsurface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 19,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dawn-stars",
+      "total": 3981,
+      "baselineSubmitted": 3981,
+      "candidateSubmitted": 3981,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dawn-sky",
+      "total": 1914,
+      "baselineSubmitted": 1914,
+      "candidateSubmitted": 1914,
+      "sources": 8,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dawn-air-side",
+      "total": 1742,
+      "baselineSubmitted": 1742,
+      "candidateSubmitted": 1742,
+      "sources": 17,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dawn-air-overhead",
+      "total": 1742,
+      "baselineSubmitted": 1742,
+      "candidateSubmitted": 1742,
+      "sources": 15,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dawn-surface",
+      "total": 1822,
+      "baselineSubmitted": 1822,
+      "candidateSubmitted": 1822,
+      "sources": 17,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dawn-subsurface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 22,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "day-stars",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "day-sky",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "day-air-side",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "day-air-overhead",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "day-surface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "day-subsurface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dusk-stars",
+      "total": 5125,
+      "baselineSubmitted": 5125,
+      "candidateSubmitted": 5125,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dusk-sky",
+      "total": 2487,
+      "baselineSubmitted": 2487,
+      "candidateSubmitted": 2487,
+      "sources": 7,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dusk-air-side",
+      "total": 2294,
+      "baselineSubmitted": 2294,
+      "candidateSubmitted": 2294,
+      "sources": 16,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dusk-air-overhead",
+      "total": 2294,
+      "baselineSubmitted": 2294,
+      "candidateSubmitted": 2294,
+      "sources": 14,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dusk-surface",
+      "total": 2410,
+      "baselineSubmitted": 2410,
+      "candidateSubmitted": 2410,
+      "sources": 16,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "dusk-subsurface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 22,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "night-stars",
+      "total": 12503,
+      "baselineSubmitted": 12503,
+      "candidateSubmitted": 12503,
+      "sources": 0,
+      "status": "off",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "night-sky",
+      "total": 7110,
+      "baselineSubmitted": 7110,
+      "candidateSubmitted": 7110,
+      "sources": 4,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "night-air-side",
+      "total": 6928,
+      "baselineSubmitted": 6928,
+      "candidateSubmitted": 6928,
+      "sources": 7,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "night-air-overhead",
+      "total": 6928,
+      "baselineSubmitted": 6928,
+      "candidateSubmitted": 6928,
+      "sources": 8,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "night-surface",
+      "total": 7024,
+      "baselineSubmitted": 7024,
+      "candidateSubmitted": 7024,
+      "sources": 8,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    },
+    {
+      "variant": "css-only",
+      "label": "night-subsurface",
+      "total": 0,
+      "baselineSubmitted": 0,
+      "candidateSubmitted": 0,
+      "sources": 19,
+      "status": "sampled-radial-native-color",
+      "changed": 0,
+      "bad": 0,
+      "max": 0
+    }
+  ],
+  "motion": [
+    {
+      "round": 0,
+      "variant": "baseline",
+      "view": "stars",
+      "duration": 6069,
+      "frames": [
+        {
+          "at": 100047,
+          "cpu": 1
+        },
+        {
+          "at": 100100,
+          "cpu": 1
+        },
+        {
+          "at": 100153,
+          "cpu": 0
+        },
+        {
+          "at": 100201,
+          "cpu": 0
+        },
+        {
+          "at": 100248,
+          "cpu": 1
+        },
+        {
+          "at": 100301,
+          "cpu": 1
+        },
+        {
+          "at": 100357,
+          "cpu": 0
+        },
+        {
+          "at": 100409,
+          "cpu": 0
+        },
+        {
+          "at": 100460,
+          "cpu": 0
+        },
+        {
+          "at": 100508,
+          "cpu": 0
+        },
+        {
+          "at": 100559,
+          "cpu": 0
+        },
+        {
+          "at": 100617,
+          "cpu": 0
+        },
+        {
+          "at": 100686,
+          "cpu": 1
+        },
+        {
+          "at": 100747,
+          "cpu": 1
+        },
+        {
+          "at": 100802,
+          "cpu": 0
+        },
+        {
+          "at": 100861,
+          "cpu": 0
+        },
+        {
+          "at": 100911,
+          "cpu": 0
+        },
+        {
+          "at": 100963,
+          "cpu": 0
+        },
+        {
+          "at": 101014,
+          "cpu": 1
+        },
+        {
+          "at": 101065,
+          "cpu": 0
+        },
+        {
+          "at": 101117,
+          "cpu": 1
+        },
+        {
+          "at": 101169,
+          "cpu": 0
+        },
+        {
+          "at": 101218,
+          "cpu": 0
+        },
+        {
+          "at": 101272,
+          "cpu": 1
+        },
+        {
+          "at": 101323,
+          "cpu": 0
+        },
+        {
+          "at": 101378,
+          "cpu": 0
+        },
+        {
+          "at": 101431,
+          "cpu": 1
+        },
+        {
+          "at": 101483,
+          "cpu": 0
+        },
+        {
+          "at": 101531,
+          "cpu": 0
+        },
+        {
+          "at": 101582,
+          "cpu": 0
+        },
+        {
+          "at": 101642,
+          "cpu": 0
+        },
+        {
+          "at": 101694,
+          "cpu": 0
+        },
+        {
+          "at": 101753,
+          "cpu": 1
+        },
+        {
+          "at": 101811,
+          "cpu": 1
+        },
+        {
+          "at": 101873,
+          "cpu": 0
+        },
+        {
+          "at": 101941,
+          "cpu": 0
+        },
+        {
+          "at": 101999,
+          "cpu": 0
+        },
+        {
+          "at": 102054,
+          "cpu": 0
+        },
+        {
+          "at": 102110,
+          "cpu": 0
+        },
+        {
+          "at": 102157,
+          "cpu": 0
+        },
+        {
+          "at": 102208,
+          "cpu": 0
+        },
+        {
+          "at": 102262,
+          "cpu": 1
+        },
+        {
+          "at": 102317,
+          "cpu": 0
+        },
+        {
+          "at": 102366,
+          "cpu": 1
+        },
+        {
+          "at": 102420,
+          "cpu": 0
+        },
+        {
+          "at": 102473,
+          "cpu": 1
+        },
+        {
+          "at": 102525,
+          "cpu": 1
+        },
+        {
+          "at": 102579,
+          "cpu": 1
+        },
+        {
+          "at": 102629,
+          "cpu": 0
+        },
+        {
+          "at": 102689,
+          "cpu": 0
+        },
+        {
+          "at": 102743,
+          "cpu": 0
+        },
+        {
+          "at": 102806,
+          "cpu": 0
+        },
+        {
+          "at": 102860,
+          "cpu": 0
+        },
+        {
+          "at": 102920,
+          "cpu": 1
+        },
+        {
+          "at": 102971,
+          "cpu": 0
+        },
+        {
+          "at": 103020,
+          "cpu": 0
+        },
+        {
+          "at": 103074,
+          "cpu": 1
+        },
+        {
+          "at": 103123,
+          "cpu": 0
+        },
+        {
+          "at": 103183,
+          "cpu": 0
+        },
+        {
+          "at": 103271,
+          "cpu": 0
+        },
+        {
+          "at": 103325,
+          "cpu": 0
+        },
+        {
+          "at": 103375,
+          "cpu": 1
+        },
+        {
+          "at": 103430,
+          "cpu": 0
+        },
+        {
+          "at": 103478,
+          "cpu": 0
+        },
+        {
+          "at": 103526,
+          "cpu": 0
+        },
+        {
+          "at": 103576,
+          "cpu": 0
+        },
+        {
+          "at": 103623,
+          "cpu": 0
+        },
+        {
+          "at": 103670,
+          "cpu": 1
+        },
+        {
+          "at": 103722,
+          "cpu": 0
+        },
+        {
+          "at": 103771,
+          "cpu": 0
+        },
+        {
+          "at": 103820,
+          "cpu": 1
+        },
+        {
+          "at": 103872,
+          "cpu": 0
+        },
+        {
+          "at": 103919,
+          "cpu": 1
+        },
+        {
+          "at": 103968,
+          "cpu": 1
+        },
+        {
+          "at": 104018,
+          "cpu": 1
+        },
+        {
+          "at": 104066,
+          "cpu": 0
+        },
+        {
+          "at": 104114,
+          "cpu": 0
+        },
+        {
+          "at": 104167,
+          "cpu": 0
+        },
+        {
+          "at": 104215,
+          "cpu": 0
+        },
+        {
+          "at": 104262,
+          "cpu": 0
+        },
+        {
+          "at": 104311,
+          "cpu": 1
+        },
+        {
+          "at": 104360,
+          "cpu": 0
+        },
+        {
+          "at": 104408,
+          "cpu": 1
+        },
+        {
+          "at": 104458,
+          "cpu": 1
+        },
+        {
+          "at": 104508,
+          "cpu": 0
+        },
+        {
+          "at": 104554,
+          "cpu": 0
+        },
+        {
+          "at": 104619,
+          "cpu": 0
+        },
+        {
+          "at": 104665,
+          "cpu": 1
+        },
+        {
+          "at": 104717,
+          "cpu": 0
+        },
+        {
+          "at": 104766,
+          "cpu": 1
+        },
+        {
+          "at": 104813,
+          "cpu": 1
+        },
+        {
+          "at": 104860,
+          "cpu": 0
+        },
+        {
+          "at": 104910,
+          "cpu": 0
+        },
+        {
+          "at": 104957,
+          "cpu": 0
+        },
+        {
+          "at": 105006,
+          "cpu": 0
+        },
+        {
+          "at": 105059,
+          "cpu": 0
+        },
+        {
+          "at": 105108,
+          "cpu": 0
+        },
+        {
+          "at": 105155,
+          "cpu": 0
+        },
+        {
+          "at": 105209,
+          "cpu": 0
+        },
+        {
+          "at": 105258,
+          "cpu": 1
+        },
+        {
+          "at": 105309,
+          "cpu": 0
+        },
+        {
+          "at": 105366,
+          "cpu": 1
+        },
+        {
+          "at": 105413,
+          "cpu": 1
+        },
+        {
+          "at": 105462,
+          "cpu": 0
+        },
+        {
+          "at": 105530,
+          "cpu": 1
+        },
+        {
+          "at": 105606,
+          "cpu": 0
+        },
+        {
+          "at": 105667,
+          "cpu": 1
+        },
+        {
+          "at": 105718,
+          "cpu": 1
+        },
+        {
+          "at": 105769,
+          "cpu": 1
+        },
+        {
+          "at": 105819,
+          "cpu": 0
+        },
+        {
+          "at": 105866,
+          "cpu": 1
+        },
+        {
+          "at": 105911,
+          "cpu": 0
+        },
+        {
+          "at": 105958,
+          "cpu": 0
+        },
+        {
+          "at": 106012,
+          "cpu": 1
+        },
+        {
+          "at": 106063,
+          "cpu": 0
+        }
+      ],
+      "intervals": [
+        53,
+        53,
+        48,
+        47,
+        53,
+        56,
+        52,
+        51,
+        48,
+        51,
+        58,
+        69,
+        61,
+        55,
+        59,
+        50,
+        52,
+        51,
+        51,
+        52,
+        52,
+        49,
+        54,
+        51,
+        55,
+        53,
+        52,
+        48,
+        51,
+        60,
+        52,
+        59,
+        58,
+        62,
+        68,
+        58,
+        55,
+        56,
+        47,
+        51,
+        54,
+        55,
+        49,
+        54,
+        53,
+        52,
+        54,
+        50,
+        60,
+        54,
+        63,
+        54,
+        60,
+        51,
+        49,
+        54,
+        49,
+        60,
+        88,
+        54,
+        50,
+        55,
+        48,
+        48,
+        50,
+        47,
+        47,
+        52,
+        49,
+        49,
+        52,
+        47,
+        49,
+        50,
+        48,
+        48,
+        53,
+        48,
+        47,
+        49,
+        49,
+        48,
+        50,
+        50,
+        46,
+        65,
+        46,
+        52,
+        49,
+        47,
+        47,
+        50,
+        47,
+        49,
+        53,
+        49,
+        47,
+        54,
+        49,
+        51,
+        57,
+        47,
+        49,
+        68,
+        76,
+        61,
+        51,
+        51,
+        50,
+        47,
+        45,
+        47,
+        54,
+        51
+      ],
+      "total": 12503,
+      "submitted": 12503,
+      "sources": 0,
+      "status": "off"
+    },
+    {
+      "round": 0,
+      "variant": "baseline",
+      "view": "air",
+      "duration": 6075,
+      "frames": [
+        {
+          "at": 112627,
+          "cpu": 4
+        },
+        {
+          "at": 112696,
+          "cpu": 3
+        },
+        {
+          "at": 112765,
+          "cpu": 1
+        },
+        {
+          "at": 112835,
+          "cpu": 6
+        },
+        {
+          "at": 112911,
+          "cpu": 3
+        },
+        {
+          "at": 112972,
+          "cpu": 2
+        },
+        {
+          "at": 113033,
+          "cpu": 5
+        },
+        {
+          "at": 113112,
+          "cpu": 3
+        },
+        {
+          "at": 113171,
+          "cpu": 2
+        },
+        {
+          "at": 113233,
+          "cpu": 2
+        },
+        {
+          "at": 113301,
+          "cpu": 2
+        },
+        {
+          "at": 113363,
+          "cpu": 3
+        },
+        {
+          "at": 113423,
+          "cpu": 2
+        },
+        {
+          "at": 113490,
+          "cpu": 2
+        },
+        {
+          "at": 113555,
+          "cpu": 2
+        },
+        {
+          "at": 113619,
+          "cpu": 2
+        },
+        {
+          "at": 113687,
+          "cpu": 3
+        },
+        {
+          "at": 113799,
+          "cpu": 8
+        },
+        {
+          "at": 113889,
+          "cpu": 7
+        },
+        {
+          "at": 113984,
+          "cpu": 3
+        },
+        {
+          "at": 114055,
+          "cpu": 5
+        },
+        {
+          "at": 114127,
+          "cpu": 3
+        },
+        {
+          "at": 114202,
+          "cpu": 2
+        },
+        {
+          "at": 114282,
+          "cpu": 2
+        },
+        {
+          "at": 114363,
+          "cpu": 3
+        },
+        {
+          "at": 114432,
+          "cpu": 2
+        },
+        {
+          "at": 114494,
+          "cpu": 2
+        },
+        {
+          "at": 114562,
+          "cpu": 4
+        },
+        {
+          "at": 114633,
+          "cpu": 1
+        },
+        {
+          "at": 114695,
+          "cpu": 2
+        },
+        {
+          "at": 114758,
+          "cpu": 6
+        },
+        {
+          "at": 114829,
+          "cpu": 4
+        },
+        {
+          "at": 114893,
+          "cpu": 3
+        },
+        {
+          "at": 114955,
+          "cpu": 2
+        },
+        {
+          "at": 115020,
+          "cpu": 2
+        },
+        {
+          "at": 115077,
+          "cpu": 2
+        },
+        {
+          "at": 115136,
+          "cpu": 2
+        },
+        {
+          "at": 115205,
+          "cpu": 8
+        },
+        {
+          "at": 115291,
+          "cpu": 5
+        },
+        {
+          "at": 115365,
+          "cpu": 5
+        },
+        {
+          "at": 115446,
+          "cpu": 4
+        },
+        {
+          "at": 115524,
+          "cpu": 3
+        },
+        {
+          "at": 115602,
+          "cpu": 3
+        },
+        {
+          "at": 115665,
+          "cpu": 2
+        },
+        {
+          "at": 115730,
+          "cpu": 2
+        },
+        {
+          "at": 115796,
+          "cpu": 2
+        },
+        {
+          "at": 115858,
+          "cpu": 2
+        },
+        {
+          "at": 115914,
+          "cpu": 2
+        },
+        {
+          "at": 115976,
+          "cpu": 5
+        },
+        {
+          "at": 116051,
+          "cpu": 3
+        },
+        {
+          "at": 116110,
+          "cpu": 2
+        },
+        {
+          "at": 116174,
+          "cpu": 2
+        },
+        {
+          "at": 116236,
+          "cpu": 2
+        },
+        {
+          "at": 116295,
+          "cpu": 1
+        },
+        {
+          "at": 116359,
+          "cpu": 3
+        },
+        {
+          "at": 116427,
+          "cpu": 2
+        },
+        {
+          "at": 116483,
+          "cpu": 1
+        },
+        {
+          "at": 116542,
+          "cpu": 3
+        },
+        {
+          "at": 116601,
+          "cpu": 1
+        },
+        {
+          "at": 116664,
+          "cpu": 2
+        },
+        {
+          "at": 116724,
+          "cpu": 4
+        },
+        {
+          "at": 116789,
+          "cpu": 2
+        },
+        {
+          "at": 116848,
+          "cpu": 2
+        },
+        {
+          "at": 116910,
+          "cpu": 2
+        },
+        {
+          "at": 116975,
+          "cpu": 2
+        },
+        {
+          "at": 117032,
+          "cpu": 2
+        },
+        {
+          "at": 117091,
+          "cpu": 2
+        },
+        {
+          "at": 117149,
+          "cpu": 2
+        },
+        {
+          "at": 117204,
+          "cpu": 2
+        },
+        {
+          "at": 117268,
+          "cpu": 2
+        },
+        {
+          "at": 117345,
+          "cpu": 6
+        },
+        {
+          "at": 117404,
+          "cpu": 2
+        },
+        {
+          "at": 117493,
+          "cpu": 2
+        },
+        {
+          "at": 117558,
+          "cpu": 2
+        },
+        {
+          "at": 117620,
+          "cpu": 6
+        },
+        {
+          "at": 117686,
+          "cpu": 2
+        },
+        {
+          "at": 117772,
+          "cpu": 3
+        },
+        {
+          "at": 117878,
+          "cpu": 4
+        },
+        {
+          "at": 117951,
+          "cpu": 3
+        },
+        {
+          "at": 118014,
+          "cpu": 2
+        },
+        {
+          "at": 118075,
+          "cpu": 2
+        },
+        {
+          "at": 118136,
+          "cpu": 1
+        },
+        {
+          "at": 118208,
+          "cpu": 2
+        },
+        {
+          "at": 118279,
+          "cpu": 2
+        },
+        {
+          "at": 118341,
+          "cpu": 2
+        },
+        {
+          "at": 118408,
+          "cpu": 3
+        },
+        {
+          "at": 118471,
+          "cpu": 4
+        },
+        {
+          "at": 118535,
+          "cpu": 7
+        },
+        {
+          "at": 118605,
+          "cpu": 3
+        }
+      ],
+      "intervals": [
+        69,
+        69,
+        70,
+        76,
+        61,
+        61,
+        79,
+        59,
+        62,
+        68,
+        62,
+        60,
+        67,
+        65,
+        64,
+        68,
+        112,
+        90,
+        95,
+        71,
+        72,
+        75,
+        80,
+        81,
+        69,
+        62,
+        68,
+        71,
+        62,
+        63,
+        71,
+        64,
+        62,
+        65,
+        57,
+        59,
+        69,
+        86,
+        74,
+        81,
+        78,
+        78,
+        63,
+        65,
+        66,
+        62,
+        56,
+        62,
+        75,
+        59,
+        64,
+        62,
+        59,
+        64,
+        68,
+        56,
+        59,
+        59,
+        63,
+        60,
+        65,
+        59,
+        62,
+        65,
+        57,
+        59,
+        58,
+        55,
+        64,
+        77,
+        59,
+        89,
+        65,
+        62,
+        66,
+        86,
+        106,
+        73,
+        63,
+        61,
+        61,
+        72,
+        71,
+        62,
+        67,
+        63,
+        64,
+        70
+      ],
+      "total": 6928,
+      "submitted": 6928,
+      "sources": 8,
+      "status": "sampled-radial-native-color"
+    },
+    {
+      "round": 1,
+      "variant": "candidate",
+      "view": "stars",
+      "duration": 6034,
+      "frames": [
+        {
+          "at": 48136,
+          "cpu": 0
+        },
+        {
+          "at": 48201,
+          "cpu": 0
+        },
+        {
+          "at": 48258,
+          "cpu": 1
+        },
+        {
+          "at": 48295,
+          "cpu": 0
+        },
+        {
+          "at": 48345,
+          "cpu": 0
+        },
+        {
+          "at": 48370,
+          "cpu": 0
+        },
+        {
+          "at": 48394,
+          "cpu": 1
+        },
+        {
+          "at": 48442,
+          "cpu": 0
+        },
+        {
+          "at": 48475,
+          "cpu": 0
+        },
+        {
+          "at": 48509,
+          "cpu": 0
+        },
+        {
+          "at": 48542,
+          "cpu": 0
+        },
+        {
+          "at": 48570,
+          "cpu": 1
+        },
+        {
+          "at": 48607,
+          "cpu": 0
+        },
+        {
+          "at": 48640,
+          "cpu": 0
+        },
+        {
+          "at": 48671,
+          "cpu": 0
+        },
+        {
+          "at": 48702,
+          "cpu": 1
+        },
+        {
+          "at": 48745,
+          "cpu": 0
+        },
+        {
+          "at": 48776,
+          "cpu": 0
+        },
+        {
+          "at": 48804,
+          "cpu": 0
+        },
+        {
+          "at": 48830,
+          "cpu": 0
+        },
+        {
+          "at": 48858,
+          "cpu": 0
+        },
+        {
+          "at": 48906,
+          "cpu": 1
+        },
+        {
+          "at": 48931,
+          "cpu": 0
+        },
+        {
+          "at": 48975,
+          "cpu": 0
+        },
+        {
+          "at": 49001,
+          "cpu": 0
+        },
+        {
+          "at": 49025,
+          "cpu": 0
+        },
+        {
+          "at": 49082,
+          "cpu": 0
+        },
+        {
+          "at": 49108,
+          "cpu": 0
+        },
+        {
+          "at": 49133,
+          "cpu": 0
+        },
+        {
+          "at": 49159,
+          "cpu": 0
+        },
+        {
+          "at": 49211,
+          "cpu": 0
+        },
+        {
+          "at": 49235,
+          "cpu": 1
+        },
+        {
+          "at": 49257,
+          "cpu": 0
+        },
+        {
+          "at": 49305,
+          "cpu": 0
+        },
+        {
+          "at": 49329,
+          "cpu": 0
+        },
+        {
+          "at": 49358,
+          "cpu": 0
+        },
+        {
+          "at": 49405,
+          "cpu": 0
+        },
+        {
+          "at": 49425,
+          "cpu": 0
+        },
+        {
+          "at": 49475,
+          "cpu": 0
+        },
+        {
+          "at": 49513,
+          "cpu": 1
+        },
+        {
+          "at": 49547,
+          "cpu": 0
+        },
+        {
+          "at": 49576,
+          "cpu": 0
+        },
+        {
+          "at": 49606,
+          "cpu": 1
+        },
+        {
+          "at": 49640,
+          "cpu": 0
+        },
+        {
+          "at": 49668,
+          "cpu": 1
+        },
+        {
+          "at": 49698,
+          "cpu": 0
+        },
+        {
+          "at": 49725,
+          "cpu": 0
+        },
+        {
+          "at": 49784,
+          "cpu": 1
+        },
+        {
+          "at": 49817,
+          "cpu": 1
+        },
+        {
+          "at": 49844,
+          "cpu": 1
+        },
+        {
+          "at": 49874,
+          "cpu": 0
+        },
+        {
+          "at": 49904,
+          "cpu": 0
+        },
+        {
+          "at": 49938,
+          "cpu": 1
+        },
+        {
+          "at": 49976,
+          "cpu": 0
+        },
+        {
+          "at": 50013,
+          "cpu": 0
+        },
+        {
+          "at": 50042,
+          "cpu": 0
+        },
+        {
+          "at": 50072,
+          "cpu": 1
+        },
+        {
+          "at": 50104,
+          "cpu": 0
+        },
+        {
+          "at": 50131,
+          "cpu": 0
+        },
+        {
+          "at": 50160,
+          "cpu": 0
+        },
+        {
+          "at": 50197,
+          "cpu": 0
+        },
+        {
+          "at": 50228,
+          "cpu": 1
+        },
+        {
+          "at": 50257,
+          "cpu": 0
+        },
+        {
+          "at": 50312,
+          "cpu": 1
+        },
+        {
+          "at": 50340,
+          "cpu": 1
+        },
+        {
+          "at": 50369,
+          "cpu": 0
+        },
+        {
+          "at": 50398,
+          "cpu": 0
+        },
+        {
+          "at": 50427,
+          "cpu": 0
+        },
+        {
+          "at": 50457,
+          "cpu": 0
+        },
+        {
+          "at": 50489,
+          "cpu": 1
+        },
+        {
+          "at": 50543,
+          "cpu": 1
+        },
+        {
+          "at": 50570,
+          "cpu": 0
+        },
+        {
+          "at": 50600,
+          "cpu": 1
+        },
+        {
+          "at": 50632,
+          "cpu": 0
+        },
+        {
+          "at": 50662,
+          "cpu": 0
+        },
+        {
+          "at": 50694,
+          "cpu": 0
+        },
+        {
+          "at": 50750,
+          "cpu": 0
+        },
+        {
+          "at": 50779,
+          "cpu": 0
+        },
+        {
+          "at": 50808,
+          "cpu": 1
+        },
+        {
+          "at": 50837,
+          "cpu": 0
+        },
+        {
+          "at": 50864,
+          "cpu": 0
+        },
+        {
+          "at": 50894,
+          "cpu": 1
+        },
+        {
+          "at": 50923,
+          "cpu": 0
+        },
+        {
+          "at": 50979,
+          "cpu": 1
+        },
+        {
+          "at": 51015,
+          "cpu": 1
+        },
+        {
+          "at": 51044,
+          "cpu": 0
+        },
+        {
+          "at": 51076,
+          "cpu": 0
+        },
+        {
+          "at": 51106,
+          "cpu": 0
+        },
+        {
+          "at": 51129,
+          "cpu": 0
+        },
+        {
+          "at": 51191,
+          "cpu": 1
+        },
+        {
+          "at": 51247,
+          "cpu": 0
+        },
+        {
+          "at": 51283,
+          "cpu": 1
+        },
+        {
+          "at": 51312,
+          "cpu": 1
+        },
+        {
+          "at": 51342,
+          "cpu": 0
+        },
+        {
+          "at": 51372,
+          "cpu": 0
+        },
+        {
+          "at": 51406,
+          "cpu": 1
+        },
+        {
+          "at": 51449,
+          "cpu": 1
+        },
+        {
+          "at": 51482,
+          "cpu": 0
+        },
+        {
+          "at": 51511,
+          "cpu": 0
+        },
+        {
+          "at": 51544,
+          "cpu": 1
+        },
+        {
+          "at": 51572,
+          "cpu": 1
+        },
+        {
+          "at": 51600,
+          "cpu": 0
+        },
+        {
+          "at": 51649,
+          "cpu": 0
+        },
+        {
+          "at": 51676,
+          "cpu": 0
+        },
+        {
+          "at": 51705,
+          "cpu": 0
+        },
+        {
+          "at": 51741,
+          "cpu": 0
+        },
+        {
+          "at": 51770,
+          "cpu": 1
+        },
+        {
+          "at": 51799,
+          "cpu": 0
+        },
+        {
+          "at": 51827,
+          "cpu": 1
+        },
+        {
+          "at": 51858,
+          "cpu": 1
+        },
+        {
+          "at": 51896,
+          "cpu": 0
+        },
+        {
+          "at": 51928,
+          "cpu": 1
+        },
+        {
+          "at": 51958,
+          "cpu": 0
+        },
+        {
+          "at": 51990,
+          "cpu": 0
+        },
+        {
+          "at": 52046,
+          "cpu": 0
+        },
+        {
+          "at": 52073,
+          "cpu": 0
+        },
+        {
+          "at": 52103,
+          "cpu": 0
+        },
+        {
+          "at": 52131,
+          "cpu": 0
+        },
+        {
+          "at": 52160,
+          "cpu": 0
+        },
+        {
+          "at": 52190,
+          "cpu": 0
+        },
+        {
+          "at": 52252,
+          "cpu": 1
+        },
+        {
+          "at": 52278,
+          "cpu": 0
+        },
+        {
+          "at": 52304,
+          "cpu": 0
+        },
+        {
+          "at": 52341,
+          "cpu": 0
+        },
+        {
+          "at": 52372,
+          "cpu": 1
+        },
+        {
+          "at": 52401,
+          "cpu": 0
+        },
+        {
+          "at": 52432,
+          "cpu": 0
+        },
+        {
+          "at": 52458,
+          "cpu": 0
+        },
+        {
+          "at": 52511,
+          "cpu": 0
+        },
+        {
+          "at": 52547,
+          "cpu": 0
+        },
+        {
+          "at": 52587,
+          "cpu": 0
+        },
+        {
+          "at": 52615,
+          "cpu": 0
+        },
+        {
+          "at": 52647,
+          "cpu": 1
+        },
+        {
+          "at": 52679,
+          "cpu": 0
+        },
+        {
+          "at": 52707,
+          "cpu": 1
+        },
+        {
+          "at": 52743,
+          "cpu": 0
+        },
+        {
+          "at": 52770,
+          "cpu": 0
+        },
+        {
+          "at": 52807,
+          "cpu": 0
+        },
+        {
+          "at": 52842,
+          "cpu": 1
+        },
+        {
+          "at": 52874,
+          "cpu": 0
+        },
+        {
+          "at": 52910,
+          "cpu": 0
+        },
+        {
+          "at": 52944,
+          "cpu": 0
+        },
+        {
+          "at": 52981,
+          "cpu": 1
+        },
+        {
+          "at": 53013,
+          "cpu": 1
+        },
+        {
+          "at": 53050,
+          "cpu": 1
+        },
+        {
+          "at": 53080,
+          "cpu": 1
+        },
+        {
+          "at": 53114,
+          "cpu": 1
+        },
+        {
+          "at": 53156,
+          "cpu": 0
+        },
+        {
+          "at": 53185,
+          "cpu": 0
+        },
+        {
+          "at": 53227,
+          "cpu": 0
+        },
+        {
+          "at": 53260,
+          "cpu": 1
+        },
+        {
+          "at": 53295,
+          "cpu": 2
+        },
+        {
+          "at": 53331,
+          "cpu": 0
+        },
+        {
+          "at": 53364,
+          "cpu": 0
+        },
+        {
+          "at": 53390,
+          "cpu": 0
+        },
+        {
+          "at": 53427,
+          "cpu": 0
+        },
+        {
+          "at": 53471,
+          "cpu": 0
+        },
+        {
+          "at": 53513,
+          "cpu": 0
+        },
+        {
+          "at": 53556,
+          "cpu": 1
+        },
+        {
+          "at": 53592,
+          "cpu": 1
+        },
+        {
+          "at": 53626,
+          "cpu": 0
+        },
+        {
+          "at": 53656,
+          "cpu": 0
+        },
+        {
+          "at": 53691,
+          "cpu": 0
+        },
+        {
+          "at": 53748,
+          "cpu": 0
+        },
+        {
+          "at": 53775,
+          "cpu": 0
+        },
+        {
+          "at": 53801,
+          "cpu": 0
+        },
+        {
+          "at": 53824,
+          "cpu": 1
+        },
+        {
+          "at": 53873,
+          "cpu": 0
+        },
+        {
+          "at": 53899,
+          "cpu": 0
+        },
+        {
+          "at": 53926,
+          "cpu": 0
+        },
+        {
+          "at": 53957,
+          "cpu": 0
+        },
+        {
+          "at": 54008,
+          "cpu": 0
+        },
+        {
+          "at": 54033,
+          "cpu": 0
+        }
+      ],
+      "intervals": [
+        65,
+        57,
+        37,
+        50,
+        25,
+        24,
+        48,
+        33,
+        34,
+        33,
+        28,
+        37,
+        33,
+        31,
+        31,
+        43,
+        31,
+        28,
+        26,
+        28,
+        48,
+        25,
+        44,
+        26,
+        24,
+        57,
+        26,
+        25,
+        26,
+        52,
+        24,
+        22,
+        48,
+        24,
+        29,
+        47,
+        20,
+        50,
+        38,
+        34,
+        29,
+        30,
+        34,
+        28,
+        30,
+        27,
+        59,
+        33,
+        27,
+        30,
+        30,
+        34,
+        38,
+        37,
+        29,
+        30,
+        32,
+        27,
+        29,
+        37,
+        31,
+        29,
+        55,
+        28,
+        29,
+        29,
+        29,
+        30,
+        32,
+        54,
+        27,
+        30,
+        32,
+        30,
+        32,
+        56,
+        29,
+        29,
+        29,
+        27,
+        30,
+        29,
+        56,
+        36,
+        29,
+        32,
+        30,
+        23,
+        62,
+        56,
+        36,
+        29,
+        30,
+        30,
+        34,
+        43,
+        33,
+        29,
+        33,
+        28,
+        28,
+        49,
+        27,
+        29,
+        36,
+        29,
+        29,
+        28,
+        31,
+        38,
+        32,
+        30,
+        32,
+        56,
+        27,
+        30,
+        28,
+        29,
+        30,
+        62,
+        26,
+        26,
+        37,
+        31,
+        29,
+        31,
+        26,
+        53,
+        36,
+        40,
+        28,
+        32,
+        32,
+        28,
+        36,
+        27,
+        37,
+        35,
+        32,
+        36,
+        34,
+        37,
+        32,
+        37,
+        30,
+        34,
+        42,
+        29,
+        42,
+        33,
+        35,
+        36,
+        33,
+        26,
+        37,
+        44,
+        42,
+        43,
+        36,
+        34,
+        30,
+        35,
+        57,
+        27,
+        26,
+        23,
+        49,
+        26,
+        27,
+        31,
+        51,
+        25
+      ],
+      "total": 12503,
+      "submitted": 825,
+      "sources": 0,
+      "status": "off"
+    },
+    {
+      "round": 1,
+      "variant": "candidate",
+      "view": "air",
+      "duration": 6032,
+      "frames": [
+        {
+          "at": 59203,
+          "cpu": 3
+        },
+        {
+          "at": 59243,
+          "cpu": 3
+        },
+        {
+          "at": 59284,
+          "cpu": 4
+        },
+        {
+          "at": 59321,
+          "cpu": 5
+        },
+        {
+          "at": 59361,
+          "cpu": 3
+        },
+        {
+          "at": 59401,
+          "cpu": 8
+        },
+        {
+          "at": 59438,
+          "cpu": 4
+        },
+        {
+          "at": 59478,
+          "cpu": 1
+        },
+        {
+          "at": 59514,
+          "cpu": 5
+        },
+        {
+          "at": 59550,
+          "cpu": 5
+        },
+        {
+          "at": 59586,
+          "cpu": 4
+        },
+        {
+          "at": 59617,
+          "cpu": 3
+        },
+        {
+          "at": 59650,
+          "cpu": 3
+        },
+        {
+          "at": 59684,
+          "cpu": 4
+        },
+        {
+          "at": 59718,
+          "cpu": 3
+        },
+        {
+          "at": 59758,
+          "cpu": 4
+        },
+        {
+          "at": 59797,
+          "cpu": 3
+        },
+        {
+          "at": 59847,
+          "cpu": 3
+        },
+        {
+          "at": 59892,
+          "cpu": 2
+        },
+        {
+          "at": 59949,
+          "cpu": 4
+        },
+        {
+          "at": 59988,
+          "cpu": 6
+        },
+        {
+          "at": 60029,
+          "cpu": 6
+        },
+        {
+          "at": 60071,
+          "cpu": 2
+        },
+        {
+          "at": 60108,
+          "cpu": 4
+        },
+        {
+          "at": 60149,
+          "cpu": 4
+        },
+        {
+          "at": 60191,
+          "cpu": 4
+        },
+        {
+          "at": 60231,
+          "cpu": 3
+        },
+        {
+          "at": 60270,
+          "cpu": 3
+        },
+        {
+          "at": 60308,
+          "cpu": 4
+        },
+        {
+          "at": 60348,
+          "cpu": 5
+        },
+        {
+          "at": 60389,
+          "cpu": 2
+        },
+        {
+          "at": 60428,
+          "cpu": 5
+        },
+        {
+          "at": 60476,
+          "cpu": 2
+        },
+        {
+          "at": 60515,
+          "cpu": 7
+        },
+        {
+          "at": 60551,
+          "cpu": 3
+        },
+        {
+          "at": 60586,
+          "cpu": 4
+        },
+        {
+          "at": 60622,
+          "cpu": 3
+        },
+        {
+          "at": 60657,
+          "cpu": 3
+        },
+        {
+          "at": 60695,
+          "cpu": 7
+        },
+        {
+          "at": 60739,
+          "cpu": 3
+        },
+        {
+          "at": 60777,
+          "cpu": 6
+        },
+        {
+          "at": 60824,
+          "cpu": 2
+        },
+        {
+          "at": 60864,
+          "cpu": 5
+        },
+        {
+          "at": 60901,
+          "cpu": 6
+        },
+        {
+          "at": 60939,
+          "cpu": 3
+        },
+        {
+          "at": 60977,
+          "cpu": 3
+        },
+        {
+          "at": 61014,
+          "cpu": 5
+        },
+        {
+          "at": 61051,
+          "cpu": 4
+        },
+        {
+          "at": 61089,
+          "cpu": 5
+        },
+        {
+          "at": 61124,
+          "cpu": 3
+        },
+        {
+          "at": 61156,
+          "cpu": 3
+        },
+        {
+          "at": 61191,
+          "cpu": 2
+        },
+        {
+          "at": 61223,
+          "cpu": 3
+        },
+        {
+          "at": 61257,
+          "cpu": 3
+        },
+        {
+          "at": 61292,
+          "cpu": 3
+        },
+        {
+          "at": 61326,
+          "cpu": 3
+        },
+        {
+          "at": 61360,
+          "cpu": 4
+        },
+        {
+          "at": 61395,
+          "cpu": 3
+        },
+        {
+          "at": 61428,
+          "cpu": 3
+        },
+        {
+          "at": 61461,
+          "cpu": 3
+        },
+        {
+          "at": 61499,
+          "cpu": 3
+        },
+        {
+          "at": 61534,
+          "cpu": 3
+        },
+        {
+          "at": 61569,
+          "cpu": 2
+        },
+        {
+          "at": 61605,
+          "cpu": 4
+        },
+        {
+          "at": 61638,
+          "cpu": 3
+        },
+        {
+          "at": 61671,
+          "cpu": 3
+        },
+        {
+          "at": 61710,
+          "cpu": 2
+        },
+        {
+          "at": 61742,
+          "cpu": 3
+        },
+        {
+          "at": 61775,
+          "cpu": 4
+        },
+        {
+          "at": 61811,
+          "cpu": 2
+        },
+        {
+          "at": 61844,
+          "cpu": 3
+        },
+        {
+          "at": 61886,
+          "cpu": 2
+        },
+        {
+          "at": 61933,
+          "cpu": 6
+        },
+        {
+          "at": 61973,
+          "cpu": 3
+        },
+        {
+          "at": 62004,
+          "cpu": 3
+        },
+        {
+          "at": 62036,
+          "cpu": 3
+        },
+        {
+          "at": 62066,
+          "cpu": 2
+        },
+        {
+          "at": 62095,
+          "cpu": 3
+        },
+        {
+          "at": 62127,
+          "cpu": 3
+        },
+        {
+          "at": 62161,
+          "cpu": 4
+        },
+        {
+          "at": 62194,
+          "cpu": 3
+        },
+        {
+          "at": 62225,
+          "cpu": 3
+        },
+        {
+          "at": 62275,
+          "cpu": 2
+        },
+        {
+          "at": 62303,
+          "cpu": 3
+        },
+        {
+          "at": 62334,
+          "cpu": 2
+        },
+        {
+          "at": 62363,
+          "cpu": 5
+        },
+        {
+          "at": 62395,
+          "cpu": 4
+        },
+        {
+          "at": 62428,
+          "cpu": 3
+        },
+        {
+          "at": 62459,
+          "cpu": 3
+        },
+        {
+          "at": 62490,
+          "cpu": 3
+        },
+        {
+          "at": 62542,
+          "cpu": 1
+        },
+        {
+          "at": 62570,
+          "cpu": 2
+        },
+        {
+          "at": 62599,
+          "cpu": 3
+        },
+        {
+          "at": 62629,
+          "cpu": 3
+        },
+        {
+          "at": 62659,
+          "cpu": 3
+        },
+        {
+          "at": 62712,
+          "cpu": 1
+        },
+        {
+          "at": 62742,
+          "cpu": 3
+        },
+        {
+          "at": 62776,
+          "cpu": 4
+        },
+        {
+          "at": 62815,
+          "cpu": 3
+        },
+        {
+          "at": 62856,
+          "cpu": 5
+        },
+        {
+          "at": 62895,
+          "cpu": 5
+        },
+        {
+          "at": 62933,
+          "cpu": 3
+        },
+        {
+          "at": 62972,
+          "cpu": 2
+        },
+        {
+          "at": 63001,
+          "cpu": 3
+        },
+        {
+          "at": 63032,
+          "cpu": 3
+        },
+        {
+          "at": 63063,
+          "cpu": 3
+        },
+        {
+          "at": 63092,
+          "cpu": 3
+        },
+        {
+          "at": 63144,
+          "cpu": 1
+        },
+        {
+          "at": 63175,
+          "cpu": 3
+        },
+        {
+          "at": 63205,
+          "cpu": 3
+        },
+        {
+          "at": 63234,
+          "cpu": 3
+        },
+        {
+          "at": 63265,
+          "cpu": 3
+        },
+        {
+          "at": 63294,
+          "cpu": 2
+        },
+        {
+          "at": 63324,
+          "cpu": 3
+        },
+        {
+          "at": 63358,
+          "cpu": 3
+        },
+        {
+          "at": 63390,
+          "cpu": 3
+        },
+        {
+          "at": 63424,
+          "cpu": 3
+        },
+        {
+          "at": 63479,
+          "cpu": 2
+        },
+        {
+          "at": 63512,
+          "cpu": 2
+        },
+        {
+          "at": 63542,
+          "cpu": 3
+        },
+        {
+          "at": 63573,
+          "cpu": 3
+        },
+        {
+          "at": 63603,
+          "cpu": 3
+        },
+        {
+          "at": 63633,
+          "cpu": 3
+        },
+        {
+          "at": 63664,
+          "cpu": 3
+        },
+        {
+          "at": 63693,
+          "cpu": 2
+        },
+        {
+          "at": 63724,
+          "cpu": 3
+        },
+        {
+          "at": 63756,
+          "cpu": 3
+        },
+        {
+          "at": 63798,
+          "cpu": 2
+        },
+        {
+          "at": 63840,
+          "cpu": 4
+        },
+        {
+          "at": 63888,
+          "cpu": 4
+        },
+        {
+          "at": 63929,
+          "cpu": 3
+        },
+        {
+          "at": 63968,
+          "cpu": 4
+        },
+        {
+          "at": 64003,
+          "cpu": 3
+        },
+        {
+          "at": 64037,
+          "cpu": 4
+        },
+        {
+          "at": 64071,
+          "cpu": 4
+        },
+        {
+          "at": 64106,
+          "cpu": 4
+        },
+        {
+          "at": 64140,
+          "cpu": 3
+        },
+        {
+          "at": 64174,
+          "cpu": 4
+        },
+        {
+          "at": 64210,
+          "cpu": 4
+        },
+        {
+          "at": 64244,
+          "cpu": 3
+        },
+        {
+          "at": 64278,
+          "cpu": 3
+        },
+        {
+          "at": 64313,
+          "cpu": 4
+        },
+        {
+          "at": 64346,
+          "cpu": 5
+        },
+        {
+          "at": 64390,
+          "cpu": 4
+        },
+        {
+          "at": 64428,
+          "cpu": 5
+        },
+        {
+          "at": 64464,
+          "cpu": 4
+        },
+        {
+          "at": 64502,
+          "cpu": 4
+        },
+        {
+          "at": 64553,
+          "cpu": 3
+        },
+        {
+          "at": 64591,
+          "cpu": 4
+        },
+        {
+          "at": 64637,
+          "cpu": 7
+        },
+        {
+          "at": 64690,
+          "cpu": 3
+        },
+        {
+          "at": 64730,
+          "cpu": 4
+        },
+        {
+          "at": 64775,
+          "cpu": 3
+        },
+        {
+          "at": 64825,
+          "cpu": 3
+        },
+        {
+          "at": 64866,
+          "cpu": 5
+        },
+        {
+          "at": 64906,
+          "cpu": 3
+        },
+        {
+          "at": 64951,
+          "cpu": 4
+        },
+        {
+          "at": 64996,
+          "cpu": 2
+        },
+        {
+          "at": 65047,
+          "cpu": 5
+        },
+        {
+          "at": 65095,
+          "cpu": 4
+        },
+        {
+          "at": 65139,
+          "cpu": 5
+        },
+        {
+          "at": 65181,
+          "cpu": 5
+        }
+      ],
+      "intervals": [
+        40,
+        41,
+        37,
+        40,
+        40,
+        37,
+        40,
+        36,
+        36,
+        36,
+        31,
+        33,
+        34,
+        34,
+        40,
+        39,
+        50,
+        45,
+        57,
+        39,
+        41,
+        42,
+        37,
+        41,
+        42,
+        40,
+        39,
+        38,
+        40,
+        41,
+        39,
+        48,
+        39,
+        36,
+        35,
+        36,
+        35,
+        38,
+        44,
+        38,
+        47,
+        40,
+        37,
+        38,
+        38,
+        37,
+        37,
+        38,
+        35,
+        32,
+        35,
+        32,
+        34,
+        35,
+        34,
+        34,
+        35,
+        33,
+        33,
+        38,
+        35,
+        35,
+        36,
+        33,
+        33,
+        39,
+        32,
+        33,
+        36,
+        33,
+        42,
+        47,
+        40,
+        31,
+        32,
+        30,
+        29,
+        32,
+        34,
+        33,
+        31,
+        50,
+        28,
+        31,
+        29,
+        32,
+        33,
+        31,
+        31,
+        52,
+        28,
+        29,
+        30,
+        30,
+        53,
+        30,
+        34,
+        39,
+        41,
+        39,
+        38,
+        39,
+        29,
+        31,
+        31,
+        29,
+        52,
+        31,
+        30,
+        29,
+        31,
+        29,
+        30,
+        34,
+        32,
+        34,
+        55,
+        33,
+        30,
+        31,
+        30,
+        30,
+        31,
+        29,
+        31,
+        32,
+        42,
+        42,
+        48,
+        41,
+        39,
+        35,
+        34,
+        34,
+        35,
+        34,
+        34,
+        36,
+        34,
+        34,
+        35,
+        33,
+        44,
+        38,
+        36,
+        38,
+        51,
+        38,
+        46,
+        53,
+        40,
+        45,
+        50,
+        41,
+        40,
+        45,
+        45,
+        51,
+        48,
+        44,
+        42
+      ],
+      "total": 6928,
+      "submitted": 0,
+      "sources": 8,
+      "status": "sampled-radial-native-color"
+    },
+    {
+      "round": 2,
+      "variant": "css-only",
+      "view": "stars",
+      "duration": 6033,
+      "frames": [
+        {
+          "at": 35337,
+          "cpu": 0
+        },
+        {
+          "at": 35383,
+          "cpu": 0
+        },
+        {
+          "at": 35413,
+          "cpu": 1
+        },
+        {
+          "at": 35440,
+          "cpu": 0
+        },
+        {
+          "at": 35469,
+          "cpu": 0
+        },
+        {
+          "at": 35496,
+          "cpu": 1
+        },
+        {
+          "at": 35518,
+          "cpu": 0
+        },
+        {
+          "at": 35564,
+          "cpu": 0
+        },
+        {
+          "at": 35590,
+          "cpu": 0
+        },
+        {
+          "at": 35632,
+          "cpu": 0
+        },
+        {
+          "at": 35652,
+          "cpu": 0
+        },
+        {
+          "at": 35692,
+          "cpu": 1
+        },
+        {
+          "at": 35733,
+          "cpu": 0
+        },
+        {
+          "at": 35753,
+          "cpu": 0
+        },
+        {
+          "at": 35798,
+          "cpu": 0
+        },
+        {
+          "at": 35819,
+          "cpu": 0
+        },
+        {
+          "at": 35861,
+          "cpu": 0
+        },
+        {
+          "at": 35887,
+          "cpu": 0
+        },
+        {
+          "at": 35933,
+          "cpu": 0
+        },
+        {
+          "at": 35958,
+          "cpu": 0
+        },
+        {
+          "at": 36003,
+          "cpu": 1
+        },
+        {
+          "at": 36026,
+          "cpu": 0
+        },
+        {
+          "at": 36069,
+          "cpu": 1
+        },
+        {
+          "at": 36093,
+          "cpu": 1
+        },
+        {
+          "at": 36137,
+          "cpu": 0
+        },
+        {
+          "at": 36160,
+          "cpu": 0
+        },
+        {
+          "at": 36184,
+          "cpu": 1
+        },
+        {
+          "at": 36228,
+          "cpu": 0
+        },
+        {
+          "at": 36251,
+          "cpu": 0
+        },
+        {
+          "at": 36302,
+          "cpu": 0
+        },
+        {
+          "at": 36323,
+          "cpu": 0
+        },
+        {
+          "at": 36365,
+          "cpu": 0
+        },
+        {
+          "at": 36388,
+          "cpu": 1
+        },
+        {
+          "at": 36428,
+          "cpu": 0
+        },
+        {
+          "at": 36468,
+          "cpu": 1
+        },
+        {
+          "at": 36491,
+          "cpu": 0
+        },
+        {
+          "at": 36531,
+          "cpu": 0
+        },
+        {
+          "at": 36552,
+          "cpu": 0
+        },
+        {
+          "at": 36594,
+          "cpu": 0
+        },
+        {
+          "at": 36639,
+          "cpu": 1
+        },
+        {
+          "at": 36660,
+          "cpu": 0
+        },
+        {
+          "at": 36702,
+          "cpu": 1
+        },
+        {
+          "at": 36724,
+          "cpu": 0
+        },
+        {
+          "at": 36769,
+          "cpu": 1
+        },
+        {
+          "at": 36797,
+          "cpu": 0
+        },
+        {
+          "at": 36825,
+          "cpu": 0
+        },
+        {
+          "at": 36853,
+          "cpu": 0
+        },
+        {
+          "at": 36902,
+          "cpu": 1
+        },
+        {
+          "at": 36930,
+          "cpu": 0
+        },
+        {
+          "at": 36954,
+          "cpu": 1
+        },
+        {
+          "at": 37003,
+          "cpu": 1
+        },
+        {
+          "at": 37029,
+          "cpu": 0
+        },
+        {
+          "at": 37058,
+          "cpu": 1
+        },
+        {
+          "at": 37088,
+          "cpu": 0
+        },
+        {
+          "at": 37120,
+          "cpu": 0
+        },
+        {
+          "at": 37174,
+          "cpu": 0
+        },
+        {
+          "at": 37203,
+          "cpu": 0
+        },
+        {
+          "at": 37228,
+          "cpu": 0
+        },
+        {
+          "at": 37256,
+          "cpu": 0
+        },
+        {
+          "at": 37304,
+          "cpu": 0
+        },
+        {
+          "at": 37326,
+          "cpu": 0
+        },
+        {
+          "at": 37369,
+          "cpu": 0
+        },
+        {
+          "at": 37392,
+          "cpu": 0
+        },
+        {
+          "at": 37432,
+          "cpu": 1
+        },
+        {
+          "at": 37454,
+          "cpu": 0
+        },
+        {
+          "at": 37499,
+          "cpu": 0
+        },
+        {
+          "at": 37521,
+          "cpu": 0
+        },
+        {
+          "at": 37562,
+          "cpu": 0
+        },
+        {
+          "at": 37584,
+          "cpu": 1
+        },
+        {
+          "at": 37625,
+          "cpu": 0
+        },
+        {
+          "at": 37667,
+          "cpu": 0
+        },
+        {
+          "at": 37689,
+          "cpu": 0
+        },
+        {
+          "at": 37730,
+          "cpu": 0
+        },
+        {
+          "at": 37752,
+          "cpu": 0
+        },
+        {
+          "at": 37794,
+          "cpu": 1
+        },
+        {
+          "at": 37835,
+          "cpu": 0
+        },
+        {
+          "at": 37856,
+          "cpu": 0
+        },
+        {
+          "at": 37898,
+          "cpu": 0
+        },
+        {
+          "at": 37919,
+          "cpu": 0
+        },
+        {
+          "at": 37960,
+          "cpu": 0
+        },
+        {
+          "at": 38002,
+          "cpu": 1
+        },
+        {
+          "at": 38026,
+          "cpu": 0
+        },
+        {
+          "at": 38071,
+          "cpu": 0
+        },
+        {
+          "at": 38094,
+          "cpu": 0
+        },
+        {
+          "at": 38134,
+          "cpu": 0
+        },
+        {
+          "at": 38155,
+          "cpu": 0
+        },
+        {
+          "at": 38197,
+          "cpu": 1
+        },
+        {
+          "at": 38218,
+          "cpu": 1
+        },
+        {
+          "at": 38259,
+          "cpu": 0
+        },
+        {
+          "at": 38302,
+          "cpu": 0
+        },
+        {
+          "at": 38323,
+          "cpu": 0
+        },
+        {
+          "at": 38364,
+          "cpu": 0
+        },
+        {
+          "at": 38388,
+          "cpu": 0
+        },
+        {
+          "at": 38430,
+          "cpu": 0
+        },
+        {
+          "at": 38451,
+          "cpu": 0
+        },
+        {
+          "at": 38493,
+          "cpu": 0
+        },
+        {
+          "at": 38534,
+          "cpu": 0
+        },
+        {
+          "at": 38555,
+          "cpu": 0
+        },
+        {
+          "at": 38598,
+          "cpu": 0
+        },
+        {
+          "at": 38618,
+          "cpu": 0
+        },
+        {
+          "at": 38659,
+          "cpu": 0
+        },
+        {
+          "at": 38701,
+          "cpu": 0
+        },
+        {
+          "at": 38722,
+          "cpu": 0
+        },
+        {
+          "at": 38767,
+          "cpu": 0
+        },
+        {
+          "at": 38794,
+          "cpu": 1
+        },
+        {
+          "at": 38821,
+          "cpu": 0
+        },
+        {
+          "at": 38866,
+          "cpu": 0
+        },
+        {
+          "at": 38894,
+          "cpu": 0
+        },
+        {
+          "at": 38919,
+          "cpu": 0
+        },
+        {
+          "at": 38963,
+          "cpu": 0
+        },
+        {
+          "at": 38992,
+          "cpu": 1
+        },
+        {
+          "at": 39022,
+          "cpu": 0
+        },
+        {
+          "at": 39068,
+          "cpu": 0
+        },
+        {
+          "at": 39093,
+          "cpu": 1
+        },
+        {
+          "at": 39120,
+          "cpu": 1
+        },
+        {
+          "at": 39165,
+          "cpu": 0
+        },
+        {
+          "at": 39190,
+          "cpu": 0
+        },
+        {
+          "at": 39233,
+          "cpu": 0
+        },
+        {
+          "at": 39256,
+          "cpu": 0
+        },
+        {
+          "at": 39305,
+          "cpu": 0
+        },
+        {
+          "at": 39333,
+          "cpu": 1
+        },
+        {
+          "at": 39358,
+          "cpu": 0
+        },
+        {
+          "at": 39387,
+          "cpu": 1
+        },
+        {
+          "at": 39433,
+          "cpu": 0
+        },
+        {
+          "at": 39456,
+          "cpu": 0
+        },
+        {
+          "at": 39501,
+          "cpu": 0
+        },
+        {
+          "at": 39524,
+          "cpu": 0
+        },
+        {
+          "at": 39572,
+          "cpu": 0
+        },
+        {
+          "at": 39597,
+          "cpu": 0
+        },
+        {
+          "at": 39618,
+          "cpu": 0
+        },
+        {
+          "at": 39660,
+          "cpu": 0
+        },
+        {
+          "at": 39703,
+          "cpu": 0
+        },
+        {
+          "at": 39724,
+          "cpu": 0
+        },
+        {
+          "at": 39766,
+          "cpu": 0
+        },
+        {
+          "at": 39788,
+          "cpu": 0
+        },
+        {
+          "at": 39829,
+          "cpu": 0
+        },
+        {
+          "at": 39869,
+          "cpu": 1
+        },
+        {
+          "at": 39892,
+          "cpu": 0
+        },
+        {
+          "at": 39933,
+          "cpu": 0
+        },
+        {
+          "at": 39954,
+          "cpu": 0
+        },
+        {
+          "at": 39996,
+          "cpu": 0
+        },
+        {
+          "at": 40036,
+          "cpu": 1
+        },
+        {
+          "at": 40057,
+          "cpu": 0
+        },
+        {
+          "at": 40100,
+          "cpu": 0
+        },
+        {
+          "at": 40120,
+          "cpu": 1
+        },
+        {
+          "at": 40164,
+          "cpu": 0
+        },
+        {
+          "at": 40188,
+          "cpu": 0
+        },
+        {
+          "at": 40234,
+          "cpu": 0
+        },
+        {
+          "at": 40261,
+          "cpu": 0
+        },
+        {
+          "at": 40285,
+          "cpu": 1
+        },
+        {
+          "at": 40329,
+          "cpu": 0
+        },
+        {
+          "at": 40351,
+          "cpu": 0
+        },
+        {
+          "at": 40403,
+          "cpu": 1
+        },
+        {
+          "at": 40428,
+          "cpu": 0
+        },
+        {
+          "at": 40455,
+          "cpu": 0
+        },
+        {
+          "at": 40505,
+          "cpu": 0
+        },
+        {
+          "at": 40531,
+          "cpu": 0
+        },
+        {
+          "at": 40557,
+          "cpu": 1
+        },
+        {
+          "at": 40604,
+          "cpu": 1
+        },
+        {
+          "at": 40627,
+          "cpu": 0
+        },
+        {
+          "at": 40675,
+          "cpu": 0
+        },
+        {
+          "at": 40705,
+          "cpu": 0
+        },
+        {
+          "at": 40730,
+          "cpu": 0
+        },
+        {
+          "at": 40753,
+          "cpu": 0
+        },
+        {
+          "at": 40802,
+          "cpu": 0
+        },
+        {
+          "at": 40827,
+          "cpu": 1
+        },
+        {
+          "at": 40851,
+          "cpu": 0
+        },
+        {
+          "at": 40899,
+          "cpu": 1
+        },
+        {
+          "at": 40929,
+          "cpu": 1
+        },
+        {
+          "at": 40955,
+          "cpu": 0
+        },
+        {
+          "at": 40984,
+          "cpu": 0
+        },
+        {
+          "at": 41034,
+          "cpu": 0
+        },
+        {
+          "at": 41062,
+          "cpu": 0
+        },
+        {
+          "at": 41090,
+          "cpu": 1
+        },
+        {
+          "at": 41139,
+          "cpu": 1
+        },
+        {
+          "at": 41166,
+          "cpu": 0
+        },
+        {
+          "at": 41197,
+          "cpu": 0
+        },
+        {
+          "at": 41221,
+          "cpu": 0
+        },
+        {
+          "at": 41272,
+          "cpu": 0
+        },
+        {
+          "at": 41296,
+          "cpu": 1
+        },
+        {
+          "at": 41319,
+          "cpu": 0
+        }
+      ],
+      "intervals": [
+        46,
+        30,
+        27,
+        29,
+        27,
+        22,
+        46,
+        26,
+        42,
+        20,
+        40,
+        41,
+        20,
+        45,
+        21,
+        42,
+        26,
+        46,
+        25,
+        45,
+        23,
+        43,
+        24,
+        44,
+        23,
+        24,
+        44,
+        23,
+        51,
+        21,
+        42,
+        23,
+        40,
+        40,
+        23,
+        40,
+        21,
+        42,
+        45,
+        21,
+        42,
+        22,
+        45,
+        28,
+        28,
+        28,
+        49,
+        28,
+        24,
+        49,
+        26,
+        29,
+        30,
+        32,
+        54,
+        29,
+        25,
+        28,
+        48,
+        22,
+        43,
+        23,
+        40,
+        22,
+        45,
+        22,
+        41,
+        22,
+        41,
+        42,
+        22,
+        41,
+        22,
+        42,
+        41,
+        21,
+        42,
+        21,
+        41,
+        42,
+        24,
+        45,
+        23,
+        40,
+        21,
+        42,
+        21,
+        41,
+        43,
+        21,
+        41,
+        24,
+        42,
+        21,
+        42,
+        41,
+        21,
+        43,
+        20,
+        41,
+        42,
+        21,
+        45,
+        27,
+        27,
+        45,
+        28,
+        25,
+        44,
+        29,
+        30,
+        46,
+        25,
+        27,
+        45,
+        25,
+        43,
+        23,
+        49,
+        28,
+        25,
+        29,
+        46,
+        23,
+        45,
+        23,
+        48,
+        25,
+        21,
+        42,
+        43,
+        21,
+        42,
+        22,
+        41,
+        40,
+        23,
+        41,
+        21,
+        42,
+        40,
+        21,
+        43,
+        20,
+        44,
+        24,
+        46,
+        27,
+        24,
+        44,
+        22,
+        52,
+        25,
+        27,
+        50,
+        26,
+        26,
+        47,
+        23,
+        48,
+        30,
+        25,
+        23,
+        49,
+        25,
+        24,
+        48,
+        30,
+        26,
+        29,
+        50,
+        28,
+        28,
+        49,
+        27,
+        31,
+        24,
+        51,
+        24,
+        23
+      ],
+      "total": 12503,
+      "submitted": 12503,
+      "sources": 0,
+      "status": "off"
+    },
+    {
+      "round": 2,
+      "variant": "css-only",
+      "view": "air",
+      "duration": 6010,
+      "frames": [
+        {
+          "at": 46370,
+          "cpu": 3
+        },
+        {
+          "at": 46400,
+          "cpu": 4
+        },
+        {
+          "at": 46432,
+          "cpu": 3
+        },
+        {
+          "at": 46461,
+          "cpu": 3
+        },
+        {
+          "at": 46495,
+          "cpu": 3
+        },
+        {
+          "at": 46527,
+          "cpu": 3
+        },
+        {
+          "at": 46557,
+          "cpu": 4
+        },
+        {
+          "at": 46597,
+          "cpu": 2
+        },
+        {
+          "at": 46630,
+          "cpu": 3
+        },
+        {
+          "at": 46661,
+          "cpu": 4
+        },
+        {
+          "at": 46692,
+          "cpu": 3
+        },
+        {
+          "at": 46730,
+          "cpu": 3
+        },
+        {
+          "at": 46765,
+          "cpu": 3
+        },
+        {
+          "at": 46795,
+          "cpu": 3
+        },
+        {
+          "at": 46834,
+          "cpu": 2
+        },
+        {
+          "at": 46869,
+          "cpu": 3
+        },
+        {
+          "at": 46910,
+          "cpu": 2
+        },
+        {
+          "at": 46946,
+          "cpu": 2
+        },
+        {
+          "at": 46982,
+          "cpu": 4
+        },
+        {
+          "at": 47013,
+          "cpu": 3
+        },
+        {
+          "at": 47046,
+          "cpu": 3
+        },
+        {
+          "at": 47080,
+          "cpu": 2
+        },
+        {
+          "at": 47109,
+          "cpu": 3
+        },
+        {
+          "at": 47141,
+          "cpu": 4
+        },
+        {
+          "at": 47177,
+          "cpu": 3
+        },
+        {
+          "at": 47225,
+          "cpu": 2
+        },
+        {
+          "at": 47256,
+          "cpu": 3
+        },
+        {
+          "at": 47296,
+          "cpu": 3
+        },
+        {
+          "at": 47346,
+          "cpu": 6
+        },
+        {
+          "at": 47401,
+          "cpu": 5
+        },
+        {
+          "at": 47440,
+          "cpu": 3
+        },
+        {
+          "at": 47478,
+          "cpu": 4
+        },
+        {
+          "at": 47528,
+          "cpu": 5
+        },
+        {
+          "at": 47572,
+          "cpu": 3
+        },
+        {
+          "at": 47611,
+          "cpu": 2
+        },
+        {
+          "at": 47656,
+          "cpu": 2
+        },
+        {
+          "at": 47690,
+          "cpu": 3
+        },
+        {
+          "at": 47722,
+          "cpu": 4
+        },
+        {
+          "at": 47767,
+          "cpu": 6
+        },
+        {
+          "at": 47814,
+          "cpu": 3
+        },
+        {
+          "at": 47855,
+          "cpu": 5
+        },
+        {
+          "at": 47897,
+          "cpu": 3
+        },
+        {
+          "at": 47931,
+          "cpu": 4
+        },
+        {
+          "at": 47968,
+          "cpu": 3
+        },
+        {
+          "at": 48001,
+          "cpu": 3
+        },
+        {
+          "at": 48032,
+          "cpu": 3
+        },
+        {
+          "at": 48064,
+          "cpu": 3
+        },
+        {
+          "at": 48096,
+          "cpu": 3
+        },
+        {
+          "at": 48122,
+          "cpu": 1
+        },
+        {
+          "at": 48173,
+          "cpu": 2
+        },
+        {
+          "at": 48215,
+          "cpu": 7
+        },
+        {
+          "at": 48269,
+          "cpu": 4
+        },
+        {
+          "at": 48325,
+          "cpu": 2
+        },
+        {
+          "at": 48374,
+          "cpu": 4
+        },
+        {
+          "at": 48418,
+          "cpu": 3
+        },
+        {
+          "at": 48457,
+          "cpu": 5
+        },
+        {
+          "at": 48500,
+          "cpu": 6
+        },
+        {
+          "at": 48548,
+          "cpu": 3
+        },
+        {
+          "at": 48589,
+          "cpu": 4
+        },
+        {
+          "at": 48631,
+          "cpu": 4
+        },
+        {
+          "at": 48665,
+          "cpu": 3
+        },
+        {
+          "at": 48699,
+          "cpu": 4
+        },
+        {
+          "at": 48734,
+          "cpu": 4
+        },
+        {
+          "at": 48768,
+          "cpu": 3
+        },
+        {
+          "at": 48799,
+          "cpu": 3
+        },
+        {
+          "at": 48834,
+          "cpu": 3
+        },
+        {
+          "at": 48864,
+          "cpu": 4
+        },
+        {
+          "at": 48899,
+          "cpu": 3
+        },
+        {
+          "at": 48932,
+          "cpu": 3
+        },
+        {
+          "at": 48968,
+          "cpu": 4
+        },
+        {
+          "at": 49006,
+          "cpu": 3
+        },
+        {
+          "at": 49051,
+          "cpu": 3
+        },
+        {
+          "at": 49089,
+          "cpu": 3
+        },
+        {
+          "at": 49126,
+          "cpu": 3
+        },
+        {
+          "at": 49165,
+          "cpu": 2
+        },
+        {
+          "at": 49208,
+          "cpu": 3
+        },
+        {
+          "at": 49247,
+          "cpu": 4
+        },
+        {
+          "at": 49285,
+          "cpu": 3
+        },
+        {
+          "at": 49319,
+          "cpu": 4
+        },
+        {
+          "at": 49354,
+          "cpu": 3
+        },
+        {
+          "at": 49389,
+          "cpu": 3
+        },
+        {
+          "at": 49418,
+          "cpu": 3
+        },
+        {
+          "at": 49471,
+          "cpu": 2
+        },
+        {
+          "at": 49509,
+          "cpu": 3
+        },
+        {
+          "at": 49546,
+          "cpu": 4
+        },
+        {
+          "at": 49581,
+          "cpu": 3
+        },
+        {
+          "at": 49616,
+          "cpu": 4
+        },
+        {
+          "at": 49646,
+          "cpu": 3
+        },
+        {
+          "at": 49676,
+          "cpu": 3
+        },
+        {
+          "at": 49711,
+          "cpu": 4
+        },
+        {
+          "at": 49743,
+          "cpu": 3
+        },
+        {
+          "at": 49775,
+          "cpu": 4
+        },
+        {
+          "at": 49815,
+          "cpu": 2
+        },
+        {
+          "at": 49848,
+          "cpu": 5
+        },
+        {
+          "at": 49887,
+          "cpu": 3
+        },
+        {
+          "at": 49927,
+          "cpu": 3
+        },
+        {
+          "at": 49958,
+          "cpu": 3
+        },
+        {
+          "at": 49989,
+          "cpu": 3
+        },
+        {
+          "at": 50020,
+          "cpu": 3
+        },
+        {
+          "at": 50055,
+          "cpu": 3
+        },
+        {
+          "at": 50092,
+          "cpu": 3
+        },
+        {
+          "at": 50131,
+          "cpu": 2
+        },
+        {
+          "at": 50165,
+          "cpu": 2
+        },
+        {
+          "at": 50199,
+          "cpu": 4
+        },
+        {
+          "at": 50235,
+          "cpu": 4
+        },
+        {
+          "at": 50270,
+          "cpu": 3
+        },
+        {
+          "at": 50299,
+          "cpu": 3
+        },
+        {
+          "at": 50333,
+          "cpu": 3
+        },
+        {
+          "at": 50363,
+          "cpu": 5
+        },
+        {
+          "at": 50399,
+          "cpu": 4
+        },
+        {
+          "at": 50436,
+          "cpu": 2
+        },
+        {
+          "at": 50472,
+          "cpu": 5
+        },
+        {
+          "at": 50514,
+          "cpu": 5
+        },
+        {
+          "at": 50555,
+          "cpu": 5
+        },
+        {
+          "at": 50588,
+          "cpu": 3
+        },
+        {
+          "at": 50640,
+          "cpu": 2
+        },
+        {
+          "at": 50673,
+          "cpu": 3
+        },
+        {
+          "at": 50703,
+          "cpu": 4
+        },
+        {
+          "at": 50736,
+          "cpu": 4
+        },
+        {
+          "at": 50772,
+          "cpu": 3
+        },
+        {
+          "at": 50803,
+          "cpu": 3
+        },
+        {
+          "at": 50834,
+          "cpu": 3
+        },
+        {
+          "at": 50869,
+          "cpu": 4
+        },
+        {
+          "at": 50907,
+          "cpu": 2
+        },
+        {
+          "at": 50941,
+          "cpu": 2
+        },
+        {
+          "at": 50973,
+          "cpu": 3
+        },
+        {
+          "at": 51002,
+          "cpu": 3
+        },
+        {
+          "at": 51033,
+          "cpu": 3
+        },
+        {
+          "at": 51073,
+          "cpu": 2
+        },
+        {
+          "at": 51110,
+          "cpu": 2
+        },
+        {
+          "at": 51143,
+          "cpu": 3
+        },
+        {
+          "at": 51179,
+          "cpu": 2
+        },
+        {
+          "at": 51208,
+          "cpu": 4
+        },
+        {
+          "at": 51239,
+          "cpu": 3
+        },
+        {
+          "at": 51274,
+          "cpu": 1
+        },
+        {
+          "at": 51306,
+          "cpu": 4
+        },
+        {
+          "at": 51340,
+          "cpu": 3
+        },
+        {
+          "at": 51373,
+          "cpu": 3
+        },
+        {
+          "at": 51402,
+          "cpu": 3
+        },
+        {
+          "at": 51433,
+          "cpu": 3
+        },
+        {
+          "at": 51466,
+          "cpu": 3
+        },
+        {
+          "at": 51495,
+          "cpu": 3
+        },
+        {
+          "at": 51525,
+          "cpu": 2
+        },
+        {
+          "at": 51555,
+          "cpu": 3
+        },
+        {
+          "at": 51586,
+          "cpu": 3
+        },
+        {
+          "at": 51640,
+          "cpu": 2
+        },
+        {
+          "at": 51670,
+          "cpu": 3
+        },
+        {
+          "at": 51701,
+          "cpu": 3
+        },
+        {
+          "at": 51731,
+          "cpu": 3
+        },
+        {
+          "at": 51763,
+          "cpu": 4
+        },
+        {
+          "at": 51793,
+          "cpu": 2
+        },
+        {
+          "at": 51821,
+          "cpu": 3
+        },
+        {
+          "at": 51852,
+          "cpu": 3
+        },
+        {
+          "at": 51904,
+          "cpu": 2
+        },
+        {
+          "at": 51932,
+          "cpu": 2
+        },
+        {
+          "at": 51962,
+          "cpu": 3
+        },
+        {
+          "at": 51992,
+          "cpu": 3
+        },
+        {
+          "at": 52021,
+          "cpu": 3
+        },
+        {
+          "at": 52052,
+          "cpu": 3
+        },
+        {
+          "at": 52102,
+          "cpu": 2
+        },
+        {
+          "at": 52128,
+          "cpu": 2
+        },
+        {
+          "at": 52160,
+          "cpu": 3
+        },
+        {
+          "at": 52187,
+          "cpu": 3
+        },
+        {
+          "at": 52237,
+          "cpu": 2
+        },
+        {
+          "at": 52265,
+          "cpu": 4
+        },
+        {
+          "at": 52293,
+          "cpu": 3
+        },
+        {
+          "at": 52322,
+          "cpu": 2
+        },
+        {
+          "at": 52352,
+          "cpu": 3
+        }
+      ],
+      "intervals": [
+        30,
+        32,
+        29,
+        34,
+        32,
+        30,
+        40,
+        33,
+        31,
+        31,
+        38,
+        35,
+        30,
+        39,
+        35,
+        41,
+        36,
+        36,
+        31,
+        33,
+        34,
+        29,
+        32,
+        36,
+        48,
+        31,
+        40,
+        50,
+        55,
+        39,
+        38,
+        50,
+        44,
+        39,
+        45,
+        34,
+        32,
+        45,
+        47,
+        41,
+        42,
+        34,
+        37,
+        33,
+        31,
+        32,
+        32,
+        26,
+        51,
+        42,
+        54,
+        56,
+        49,
+        44,
+        39,
+        43,
+        48,
+        41,
+        42,
+        34,
+        34,
+        35,
+        34,
+        31,
+        35,
+        30,
+        35,
+        33,
+        36,
+        38,
+        45,
+        38,
+        37,
+        39,
+        43,
+        39,
+        38,
+        34,
+        35,
+        35,
+        29,
+        53,
+        38,
+        37,
+        35,
+        35,
+        30,
+        30,
+        35,
+        32,
+        32,
+        40,
+        33,
+        39,
+        40,
+        31,
+        31,
+        31,
+        35,
+        37,
+        39,
+        34,
+        34,
+        36,
+        35,
+        29,
+        34,
+        30,
+        36,
+        37,
+        36,
+        42,
+        41,
+        33,
+        52,
+        33,
+        30,
+        33,
+        36,
+        31,
+        31,
+        35,
+        38,
+        34,
+        32,
+        29,
+        31,
+        40,
+        37,
+        33,
+        36,
+        29,
+        31,
+        35,
+        32,
+        34,
+        33,
+        29,
+        31,
+        33,
+        29,
+        30,
+        30,
+        31,
+        54,
+        30,
+        31,
+        30,
+        32,
+        30,
+        28,
+        31,
+        52,
+        28,
+        30,
+        30,
+        29,
+        31,
+        50,
+        26,
+        32,
+        27,
+        50,
+        28,
+        28,
+        29,
+        30
+      ],
+      "total": 6928,
+      "submitted": 6928,
+      "sources": 8,
+      "status": "sampled-radial-native-color"
+    },
+    {
+      "round": 3,
+      "variant": "css-only",
+      "view": "stars",
+      "duration": 6007,
+      "frames": [
+        {
+          "at": 12612,
+          "cpu": 1
+        },
+        {
+          "at": 12660,
+          "cpu": 0
+        },
+        {
+          "at": 12685,
+          "cpu": 0
+        },
+        {
+          "at": 12712,
+          "cpu": 0
+        },
+        {
+          "at": 12754,
+          "cpu": 0
+        },
+        {
+          "at": 12795,
+          "cpu": 1
+        },
+        {
+          "at": 12818,
+          "cpu": 1
+        },
+        {
+          "at": 12860,
+          "cpu": 0
+        },
+        {
+          "at": 12882,
+          "cpu": 0
+        },
+        {
+          "at": 12926,
+          "cpu": 1
+        },
+        {
+          "at": 12949,
+          "cpu": 0
+        },
+        {
+          "at": 12993,
+          "cpu": 0
+        },
+        {
+          "at": 13016,
+          "cpu": 0
+        },
+        {
+          "at": 13058,
+          "cpu": 0
+        },
+        {
+          "at": 13079,
+          "cpu": 1
+        },
+        {
+          "at": 13130,
+          "cpu": 0
+        },
+        {
+          "at": 13159,
+          "cpu": 0
+        },
+        {
+          "at": 13184,
+          "cpu": 0
+        },
+        {
+          "at": 13211,
+          "cpu": 0
+        },
+        {
+          "at": 13260,
+          "cpu": 1
+        },
+        {
+          "at": 13284,
+          "cpu": 0
+        },
+        {
+          "at": 13333,
+          "cpu": 1
+        },
+        {
+          "at": 13358,
+          "cpu": 0
+        },
+        {
+          "at": 13382,
+          "cpu": 1
+        },
+        {
+          "at": 13439,
+          "cpu": 0
+        },
+        {
+          "at": 13468,
+          "cpu": 1
+        },
+        {
+          "at": 13498,
+          "cpu": 0
+        },
+        {
+          "at": 13531,
+          "cpu": 1
+        },
+        {
+          "at": 13561,
+          "cpu": 0
+        },
+        {
+          "at": 13593,
+          "cpu": 0
+        },
+        {
+          "at": 13624,
+          "cpu": 1
+        },
+        {
+          "at": 13655,
+          "cpu": 0
+        },
+        {
+          "at": 13686,
+          "cpu": 0
+        },
+        {
+          "at": 13718,
+          "cpu": 1
+        },
+        {
+          "at": 13749,
+          "cpu": 0
+        },
+        {
+          "at": 13778,
+          "cpu": 0
+        },
+        {
+          "at": 13834,
+          "cpu": 0
+        },
+        {
+          "at": 13861,
+          "cpu": 0
+        },
+        {
+          "at": 13891,
+          "cpu": 1
+        },
+        {
+          "at": 13920,
+          "cpu": 0
+        },
+        {
+          "at": 13948,
+          "cpu": 1
+        },
+        {
+          "at": 14003,
+          "cpu": 0
+        },
+        {
+          "at": 14033,
+          "cpu": 0
+        },
+        {
+          "at": 14060,
+          "cpu": 0
+        },
+        {
+          "at": 14087,
+          "cpu": 0
+        },
+        {
+          "at": 14115,
+          "cpu": 0
+        },
+        {
+          "at": 14167,
+          "cpu": 0
+        },
+        {
+          "at": 14193,
+          "cpu": 1
+        },
+        {
+          "at": 14222,
+          "cpu": 0
+        },
+        {
+          "at": 14245,
+          "cpu": 0
+        },
+        {
+          "at": 14292,
+          "cpu": 1
+        },
+        {
+          "at": 14320,
+          "cpu": 0
+        },
+        {
+          "at": 14344,
+          "cpu": 0
+        },
+        {
+          "at": 14392,
+          "cpu": 0
+        },
+        {
+          "at": 14419,
+          "cpu": 0
+        },
+        {
+          "at": 14466,
+          "cpu": 0
+        },
+        {
+          "at": 14490,
+          "cpu": 1
+        },
+        {
+          "at": 14517,
+          "cpu": 0
+        },
+        {
+          "at": 14561,
+          "cpu": 1
+        },
+        {
+          "at": 14582,
+          "cpu": 0
+        },
+        {
+          "at": 14623,
+          "cpu": 1
+        },
+        {
+          "at": 14644,
+          "cpu": 0
+        },
+        {
+          "at": 14684,
+          "cpu": 0
+        },
+        {
+          "at": 14725,
+          "cpu": 1
+        },
+        {
+          "at": 14746,
+          "cpu": 0
+        },
+        {
+          "at": 14786,
+          "cpu": 0
+        },
+        {
+          "at": 14827,
+          "cpu": 0
+        },
+        {
+          "at": 14847,
+          "cpu": 0
+        },
+        {
+          "at": 14887,
+          "cpu": 0
+        },
+        {
+          "at": 14928,
+          "cpu": 1
+        },
+        {
+          "at": 14949,
+          "cpu": 1
+        },
+        {
+          "at": 14989,
+          "cpu": 0
+        },
+        {
+          "at": 15012,
+          "cpu": 0
+        },
+        {
+          "at": 15052,
+          "cpu": 0
+        },
+        {
+          "at": 15092,
+          "cpu": 0
+        },
+        {
+          "at": 15114,
+          "cpu": 0
+        },
+        {
+          "at": 15156,
+          "cpu": 0
+        },
+        {
+          "at": 15177,
+          "cpu": 0
+        },
+        {
+          "at": 15220,
+          "cpu": 0
+        },
+        {
+          "at": 15262,
+          "cpu": 0
+        },
+        {
+          "at": 15283,
+          "cpu": 0
+        },
+        {
+          "at": 15327,
+          "cpu": 0
+        },
+        {
+          "at": 15348,
+          "cpu": 1
+        },
+        {
+          "at": 15389,
+          "cpu": 1
+        },
+        {
+          "at": 15412,
+          "cpu": 0
+        },
+        {
+          "at": 15453,
+          "cpu": 0
+        },
+        {
+          "at": 15495,
+          "cpu": 0
+        },
+        {
+          "at": 15518,
+          "cpu": 0
+        },
+        {
+          "at": 15560,
+          "cpu": 0
+        },
+        {
+          "at": 15581,
+          "cpu": 0
+        },
+        {
+          "at": 15624,
+          "cpu": 0
+        },
+        {
+          "at": 15645,
+          "cpu": 0
+        },
+        {
+          "at": 15688,
+          "cpu": 0
+        },
+        {
+          "at": 15710,
+          "cpu": 1
+        },
+        {
+          "at": 15752,
+          "cpu": 0
+        },
+        {
+          "at": 15793,
+          "cpu": 0
+        },
+        {
+          "at": 15816,
+          "cpu": 0
+        },
+        {
+          "at": 15858,
+          "cpu": 0
+        },
+        {
+          "at": 15879,
+          "cpu": 1
+        },
+        {
+          "at": 15922,
+          "cpu": 1
+        },
+        {
+          "at": 15944,
+          "cpu": 0
+        },
+        {
+          "at": 15986,
+          "cpu": 0
+        },
+        {
+          "at": 16030,
+          "cpu": 1
+        },
+        {
+          "at": 16053,
+          "cpu": 0
+        },
+        {
+          "at": 16095,
+          "cpu": 1
+        },
+        {
+          "at": 16119,
+          "cpu": 0
+        },
+        {
+          "at": 16162,
+          "cpu": 1
+        },
+        {
+          "at": 16185,
+          "cpu": 0
+        },
+        {
+          "at": 16230,
+          "cpu": 0
+        },
+        {
+          "at": 16251,
+          "cpu": 0
+        },
+        {
+          "at": 16293,
+          "cpu": 1
+        },
+        {
+          "at": 16316,
+          "cpu": 1
+        },
+        {
+          "at": 16358,
+          "cpu": 0
+        },
+        {
+          "at": 16380,
+          "cpu": 0
+        },
+        {
+          "at": 16423,
+          "cpu": 0
+        },
+        {
+          "at": 16444,
+          "cpu": 0
+        },
+        {
+          "at": 16485,
+          "cpu": 1
+        },
+        {
+          "at": 16529,
+          "cpu": 0
+        },
+        {
+          "at": 16550,
+          "cpu": 0
+        },
+        {
+          "at": 16592,
+          "cpu": 0
+        },
+        {
+          "at": 16614,
+          "cpu": 1
+        },
+        {
+          "at": 16656,
+          "cpu": 0
+        },
+        {
+          "at": 16697,
+          "cpu": 0
+        },
+        {
+          "at": 16720,
+          "cpu": 0
+        },
+        {
+          "at": 16761,
+          "cpu": 0
+        },
+        {
+          "at": 16783,
+          "cpu": 0
+        },
+        {
+          "at": 16826,
+          "cpu": 0
+        },
+        {
+          "at": 16847,
+          "cpu": 0
+        },
+        {
+          "at": 16889,
+          "cpu": 0
+        },
+        {
+          "at": 16912,
+          "cpu": 1
+        },
+        {
+          "at": 16954,
+          "cpu": 1
+        },
+        {
+          "at": 16996,
+          "cpu": 0
+        },
+        {
+          "at": 17020,
+          "cpu": 0
+        },
+        {
+          "at": 17062,
+          "cpu": 1
+        },
+        {
+          "at": 17084,
+          "cpu": 0
+        },
+        {
+          "at": 17127,
+          "cpu": 0
+        },
+        {
+          "at": 17148,
+          "cpu": 0
+        },
+        {
+          "at": 17190,
+          "cpu": 0
+        },
+        {
+          "at": 17213,
+          "cpu": 0
+        },
+        {
+          "at": 17254,
+          "cpu": 0
+        },
+        {
+          "at": 17296,
+          "cpu": 0
+        },
+        {
+          "at": 17318,
+          "cpu": 1
+        },
+        {
+          "at": 17360,
+          "cpu": 0
+        },
+        {
+          "at": 17382,
+          "cpu": 0
+        },
+        {
+          "at": 17425,
+          "cpu": 0
+        },
+        {
+          "at": 17446,
+          "cpu": 1
+        },
+        {
+          "at": 17489,
+          "cpu": 0
+        },
+        {
+          "at": 17511,
+          "cpu": 0
+        },
+        {
+          "at": 17552,
+          "cpu": 0
+        },
+        {
+          "at": 17593,
+          "cpu": 0
+        },
+        {
+          "at": 17616,
+          "cpu": 0
+        },
+        {
+          "at": 17657,
+          "cpu": 0
+        },
+        {
+          "at": 17678,
+          "cpu": 0
+        },
+        {
+          "at": 17721,
+          "cpu": 1
+        },
+        {
+          "at": 17763,
+          "cpu": 0
+        },
+        {
+          "at": 17785,
+          "cpu": 0
+        },
+        {
+          "at": 17828,
+          "cpu": 0
+        },
+        {
+          "at": 17849,
+          "cpu": 0
+        },
+        {
+          "at": 17892,
+          "cpu": 0
+        },
+        {
+          "at": 17914,
+          "cpu": 0
+        },
+        {
+          "at": 17956,
+          "cpu": 0
+        },
+        {
+          "at": 17978,
+          "cpu": 0
+        },
+        {
+          "at": 18021,
+          "cpu": 0
+        },
+        {
+          "at": 18045,
+          "cpu": 0
+        },
+        {
+          "at": 18086,
+          "cpu": 0
+        },
+        {
+          "at": 18129,
+          "cpu": 0
+        },
+        {
+          "at": 18150,
+          "cpu": 1
+        },
+        {
+          "at": 18192,
+          "cpu": 0
+        },
+        {
+          "at": 18214,
+          "cpu": 1
+        },
+        {
+          "at": 18256,
+          "cpu": 0
+        },
+        {
+          "at": 18277,
+          "cpu": 1
+        },
+        {
+          "at": 18320,
+          "cpu": 1
+        },
+        {
+          "at": 18362,
+          "cpu": 0
+        },
+        {
+          "at": 18384,
+          "cpu": 0
+        },
+        {
+          "at": 18426,
+          "cpu": 1
+        },
+        {
+          "at": 18448,
+          "cpu": 0
+        },
+        {
+          "at": 18489,
+          "cpu": 0
+        },
+        {
+          "at": 18512,
+          "cpu": 0
+        },
+        {
+          "at": 18554,
+          "cpu": 0
+        },
+        {
+          "at": 18595,
+          "cpu": 0
+        }
+      ],
+      "intervals": [
+        48,
+        25,
+        27,
+        42,
+        41,
+        23,
+        42,
+        22,
+        44,
+        23,
+        44,
+        23,
+        42,
+        21,
+        51,
+        29,
+        25,
+        27,
+        49,
+        24,
+        49,
+        25,
+        24,
+        57,
+        29,
+        30,
+        33,
+        30,
+        32,
+        31,
+        31,
+        31,
+        32,
+        31,
+        29,
+        56,
+        27,
+        30,
+        29,
+        28,
+        55,
+        30,
+        27,
+        27,
+        28,
+        52,
+        26,
+        29,
+        23,
+        47,
+        28,
+        24,
+        48,
+        27,
+        47,
+        24,
+        27,
+        44,
+        21,
+        41,
+        21,
+        40,
+        41,
+        21,
+        40,
+        41,
+        20,
+        40,
+        41,
+        21,
+        40,
+        23,
+        40,
+        40,
+        22,
+        42,
+        21,
+        43,
+        42,
+        21,
+        44,
+        21,
+        41,
+        23,
+        41,
+        42,
+        23,
+        42,
+        21,
+        43,
+        21,
+        43,
+        22,
+        42,
+        41,
+        23,
+        42,
+        21,
+        43,
+        22,
+        42,
+        44,
+        23,
+        42,
+        24,
+        43,
+        23,
+        45,
+        21,
+        42,
+        23,
+        42,
+        22,
+        43,
+        21,
+        41,
+        44,
+        21,
+        42,
+        22,
+        42,
+        41,
+        23,
+        41,
+        22,
+        43,
+        21,
+        42,
+        23,
+        42,
+        42,
+        24,
+        42,
+        22,
+        43,
+        21,
+        42,
+        23,
+        41,
+        42,
+        22,
+        42,
+        22,
+        43,
+        21,
+        43,
+        22,
+        41,
+        41,
+        23,
+        41,
+        21,
+        43,
+        42,
+        22,
+        43,
+        21,
+        43,
+        22,
+        42,
+        22,
+        43,
+        24,
+        41,
+        43,
+        21,
+        42,
+        22,
+        42,
+        21,
+        43,
+        42,
+        22,
+        42,
+        22,
+        41,
+        23,
+        42,
+        41
+      ],
+      "total": 12503,
+      "submitted": 12503,
+      "sources": 0,
+      "status": "off"
+    },
+    {
+      "round": 3,
+      "variant": "css-only",
+      "view": "air",
+      "duration": 6007,
+      "frames": [
+        {
+          "at": 23127,
+          "cpu": 3
+        },
+        {
+          "at": 23156,
+          "cpu": 3
+        },
+        {
+          "at": 23186,
+          "cpu": 3
+        },
+        {
+          "at": 23217,
+          "cpu": 3
+        },
+        {
+          "at": 23268,
+          "cpu": 2
+        },
+        {
+          "at": 23297,
+          "cpu": 4
+        },
+        {
+          "at": 23329,
+          "cpu": 3
+        },
+        {
+          "at": 23358,
+          "cpu": 3
+        },
+        {
+          "at": 23388,
+          "cpu": 3
+        },
+        {
+          "at": 23419,
+          "cpu": 3
+        },
+        {
+          "at": 23448,
+          "cpu": 2
+        },
+        {
+          "at": 23500,
+          "cpu": 1
+        },
+        {
+          "at": 23529,
+          "cpu": 3
+        },
+        {
+          "at": 23558,
+          "cpu": 3
+        },
+        {
+          "at": 23588,
+          "cpu": 3
+        },
+        {
+          "at": 23624,
+          "cpu": 4
+        },
+        {
+          "at": 23658,
+          "cpu": 4
+        },
+        {
+          "at": 23689,
+          "cpu": 3
+        },
+        {
+          "at": 23731,
+          "cpu": 2
+        },
+        {
+          "at": 23760,
+          "cpu": 3
+        },
+        {
+          "at": 23789,
+          "cpu": 3
+        },
+        {
+          "at": 23823,
+          "cpu": 4
+        },
+        {
+          "at": 23854,
+          "cpu": 3
+        },
+        {
+          "at": 23884,
+          "cpu": 5
+        },
+        {
+          "at": 23922,
+          "cpu": 3
+        },
+        {
+          "at": 23956,
+          "cpu": 4
+        },
+        {
+          "at": 23988,
+          "cpu": 4
+        },
+        {
+          "at": 24020,
+          "cpu": 4
+        },
+        {
+          "at": 24051,
+          "cpu": 3
+        },
+        {
+          "at": 24090,
+          "cpu": 3
+        },
+        {
+          "at": 24124,
+          "cpu": 2
+        },
+        {
+          "at": 24153,
+          "cpu": 3
+        },
+        {
+          "at": 24183,
+          "cpu": 3
+        },
+        {
+          "at": 24215,
+          "cpu": 4
+        },
+        {
+          "at": 24267,
+          "cpu": 2
+        },
+        {
+          "at": 24296,
+          "cpu": 3
+        },
+        {
+          "at": 24328,
+          "cpu": 3
+        },
+        {
+          "at": 24358,
+          "cpu": 3
+        },
+        {
+          "at": 24387,
+          "cpu": 3
+        },
+        {
+          "at": 24419,
+          "cpu": 3
+        },
+        {
+          "at": 24448,
+          "cpu": 4
+        },
+        {
+          "at": 24502,
+          "cpu": 2
+        },
+        {
+          "at": 24533,
+          "cpu": 2
+        },
+        {
+          "at": 24564,
+          "cpu": 4
+        },
+        {
+          "at": 24601,
+          "cpu": 3
+        },
+        {
+          "at": 24639,
+          "cpu": 3
+        },
+        {
+          "at": 24674,
+          "cpu": 3
+        },
+        {
+          "at": 24711,
+          "cpu": 3
+        },
+        {
+          "at": 24749,
+          "cpu": 3
+        },
+        {
+          "at": 24783,
+          "cpu": 3
+        },
+        {
+          "at": 24819,
+          "cpu": 4
+        },
+        {
+          "at": 24857,
+          "cpu": 3
+        },
+        {
+          "at": 24893,
+          "cpu": 3
+        },
+        {
+          "at": 24929,
+          "cpu": 4
+        },
+        {
+          "at": 24967,
+          "cpu": 3
+        },
+        {
+          "at": 25006,
+          "cpu": 3
+        },
+        {
+          "at": 25041,
+          "cpu": 3
+        },
+        {
+          "at": 25077,
+          "cpu": 3
+        },
+        {
+          "at": 25111,
+          "cpu": 3
+        },
+        {
+          "at": 25146,
+          "cpu": 2
+        },
+        {
+          "at": 25180,
+          "cpu": 3
+        },
+        {
+          "at": 25214,
+          "cpu": 3
+        },
+        {
+          "at": 25250,
+          "cpu": 3
+        },
+        {
+          "at": 25285,
+          "cpu": 4
+        },
+        {
+          "at": 25319,
+          "cpu": 4
+        },
+        {
+          "at": 25353,
+          "cpu": 4
+        },
+        {
+          "at": 25389,
+          "cpu": 3
+        },
+        {
+          "at": 25422,
+          "cpu": 4
+        },
+        {
+          "at": 25456,
+          "cpu": 3
+        },
+        {
+          "at": 25491,
+          "cpu": 3
+        },
+        {
+          "at": 25525,
+          "cpu": 2
+        },
+        {
+          "at": 25558,
+          "cpu": 4
+        },
+        {
+          "at": 25594,
+          "cpu": 3
+        },
+        {
+          "at": 25627,
+          "cpu": 3
+        },
+        {
+          "at": 25660,
+          "cpu": 3
+        },
+        {
+          "at": 25695,
+          "cpu": 3
+        },
+        {
+          "at": 25730,
+          "cpu": 2
+        },
+        {
+          "at": 25763,
+          "cpu": 3
+        },
+        {
+          "at": 25798,
+          "cpu": 3
+        },
+        {
+          "at": 25831,
+          "cpu": 3
+        },
+        {
+          "at": 25863,
+          "cpu": 3
+        },
+        {
+          "at": 25896,
+          "cpu": 3
+        },
+        {
+          "at": 25925,
+          "cpu": 3
+        },
+        {
+          "at": 25954,
+          "cpu": 3
+        },
+        {
+          "at": 25984,
+          "cpu": 4
+        },
+        {
+          "at": 26014,
+          "cpu": 2
+        },
+        {
+          "at": 26065,
+          "cpu": 1
+        },
+        {
+          "at": 26093,
+          "cpu": 4
+        },
+        {
+          "at": 26123,
+          "cpu": 3
+        },
+        {
+          "at": 26154,
+          "cpu": 3
+        },
+        {
+          "at": 26186,
+          "cpu": 3
+        },
+        {
+          "at": 26215,
+          "cpu": 2
+        },
+        {
+          "at": 26265,
+          "cpu": 1
+        },
+        {
+          "at": 26293,
+          "cpu": 3
+        },
+        {
+          "at": 26322,
+          "cpu": 3
+        },
+        {
+          "at": 26354,
+          "cpu": 3
+        },
+        {
+          "at": 26384,
+          "cpu": 3
+        },
+        {
+          "at": 26435,
+          "cpu": 1
+        },
+        {
+          "at": 26464,
+          "cpu": 2
+        },
+        {
+          "at": 26494,
+          "cpu": 3
+        },
+        {
+          "at": 26525,
+          "cpu": 3
+        },
+        {
+          "at": 26555,
+          "cpu": 4
+        },
+        {
+          "at": 26588,
+          "cpu": 4
+        },
+        {
+          "at": 26617,
+          "cpu": 3
+        },
+        {
+          "at": 26668,
+          "cpu": 1
+        },
+        {
+          "at": 26696,
+          "cpu": 3
+        },
+        {
+          "at": 26725,
+          "cpu": 3
+        },
+        {
+          "at": 26754,
+          "cpu": 4
+        },
+        {
+          "at": 26786,
+          "cpu": 3
+        },
+        {
+          "at": 26815,
+          "cpu": 3
+        },
+        {
+          "at": 26867,
+          "cpu": 2
+        },
+        {
+          "at": 26897,
+          "cpu": 2
+        },
+        {
+          "at": 26926,
+          "cpu": 3
+        },
+        {
+          "at": 26955,
+          "cpu": 3
+        },
+        {
+          "at": 26987,
+          "cpu": 2
+        },
+        {
+          "at": 27016,
+          "cpu": 4
+        },
+        {
+          "at": 27069,
+          "cpu": 1
+        },
+        {
+          "at": 27098,
+          "cpu": 3
+        },
+        {
+          "at": 27127,
+          "cpu": 3
+        },
+        {
+          "at": 27159,
+          "cpu": 2
+        },
+        {
+          "at": 27190,
+          "cpu": 3
+        },
+        {
+          "at": 27221,
+          "cpu": 3
+        },
+        {
+          "at": 27251,
+          "cpu": 3
+        },
+        {
+          "at": 27282,
+          "cpu": 3
+        },
+        {
+          "at": 27334,
+          "cpu": 1
+        },
+        {
+          "at": 27362,
+          "cpu": 3
+        },
+        {
+          "at": 27393,
+          "cpu": 3
+        },
+        {
+          "at": 27422,
+          "cpu": 4
+        },
+        {
+          "at": 27454,
+          "cpu": 3
+        },
+        {
+          "at": 27488,
+          "cpu": 3
+        },
+        {
+          "at": 27518,
+          "cpu": 3
+        },
+        {
+          "at": 27548,
+          "cpu": 3
+        },
+        {
+          "at": 27602,
+          "cpu": 2
+        },
+        {
+          "at": 27630,
+          "cpu": 3
+        },
+        {
+          "at": 27661,
+          "cpu": 3
+        },
+        {
+          "at": 27695,
+          "cpu": 3
+        },
+        {
+          "at": 27729,
+          "cpu": 3
+        },
+        {
+          "at": 27761,
+          "cpu": 3
+        },
+        {
+          "at": 27796,
+          "cpu": 3
+        },
+        {
+          "at": 27827,
+          "cpu": 4
+        },
+        {
+          "at": 27858,
+          "cpu": 3
+        },
+        {
+          "at": 27902,
+          "cpu": 2
+        },
+        {
+          "at": 27932,
+          "cpu": 3
+        },
+        {
+          "at": 27963,
+          "cpu": 3
+        },
+        {
+          "at": 27998,
+          "cpu": 2
+        },
+        {
+          "at": 28030,
+          "cpu": 3
+        },
+        {
+          "at": 28062,
+          "cpu": 4
+        },
+        {
+          "at": 28096,
+          "cpu": 3
+        },
+        {
+          "at": 28127,
+          "cpu": 4
+        },
+        {
+          "at": 28166,
+          "cpu": 2
+        },
+        {
+          "at": 28199,
+          "cpu": 3
+        },
+        {
+          "at": 28229,
+          "cpu": 3
+        },
+        {
+          "at": 28259,
+          "cpu": 2
+        },
+        {
+          "at": 28292,
+          "cpu": 3
+        },
+        {
+          "at": 28327,
+          "cpu": 3
+        },
+        {
+          "at": 28361,
+          "cpu": 4
+        },
+        {
+          "at": 28398,
+          "cpu": 2
+        },
+        {
+          "at": 28433,
+          "cpu": 3
+        },
+        {
+          "at": 28466,
+          "cpu": 3
+        },
+        {
+          "at": 28501,
+          "cpu": 3
+        },
+        {
+          "at": 28535,
+          "cpu": 3
+        },
+        {
+          "at": 28569,
+          "cpu": 3
+        },
+        {
+          "at": 28606,
+          "cpu": 3
+        },
+        {
+          "at": 28639,
+          "cpu": 3
+        },
+        {
+          "at": 28672,
+          "cpu": 3
+        },
+        {
+          "at": 28704,
+          "cpu": 3
+        },
+        {
+          "at": 28734,
+          "cpu": 2
+        },
+        {
+          "at": 28763,
+          "cpu": 3
+        },
+        {
+          "at": 28796,
+          "cpu": 2
+        },
+        {
+          "at": 28829,
+          "cpu": 2
+        },
+        {
+          "at": 28862,
+          "cpu": 3
+        },
+        {
+          "at": 28898,
+          "cpu": 2
+        },
+        {
+          "at": 28929,
+          "cpu": 4
+        },
+        {
+          "at": 28963,
+          "cpu": 3
+        },
+        {
+          "at": 29001,
+          "cpu": 2
+        },
+        {
+          "at": 29034,
+          "cpu": 2
+        },
+        {
+          "at": 29066,
+          "cpu": 3
+        },
+        {
+          "at": 29101,
+          "cpu": 2
+        }
+      ],
+      "intervals": [
+        29,
+        30,
+        31,
+        51,
+        29,
+        32,
+        29,
+        30,
+        31,
+        29,
+        52,
+        29,
+        29,
+        30,
+        36,
+        34,
+        31,
+        42,
+        29,
+        29,
+        34,
+        31,
+        30,
+        38,
+        34,
+        32,
+        32,
+        31,
+        39,
+        34,
+        29,
+        30,
+        32,
+        52,
+        29,
+        32,
+        30,
+        29,
+        32,
+        29,
+        54,
+        31,
+        31,
+        37,
+        38,
+        35,
+        37,
+        38,
+        34,
+        36,
+        38,
+        36,
+        36,
+        38,
+        39,
+        35,
+        36,
+        34,
+        35,
+        34,
+        34,
+        36,
+        35,
+        34,
+        34,
+        36,
+        33,
+        34,
+        35,
+        34,
+        33,
+        36,
+        33,
+        33,
+        35,
+        35,
+        33,
+        35,
+        33,
+        32,
+        33,
+        29,
+        29,
+        30,
+        30,
+        51,
+        28,
+        30,
+        31,
+        32,
+        29,
+        50,
+        28,
+        29,
+        32,
+        30,
+        51,
+        29,
+        30,
+        31,
+        30,
+        33,
+        29,
+        51,
+        28,
+        29,
+        29,
+        32,
+        29,
+        52,
+        30,
+        29,
+        29,
+        32,
+        29,
+        53,
+        29,
+        29,
+        32,
+        31,
+        31,
+        30,
+        31,
+        52,
+        28,
+        31,
+        29,
+        32,
+        34,
+        30,
+        30,
+        54,
+        28,
+        31,
+        34,
+        34,
+        32,
+        35,
+        31,
+        31,
+        44,
+        30,
+        31,
+        35,
+        32,
+        32,
+        34,
+        31,
+        39,
+        33,
+        30,
+        30,
+        33,
+        35,
+        34,
+        37,
+        35,
+        33,
+        35,
+        34,
+        34,
+        37,
+        33,
+        33,
+        32,
+        30,
+        29,
+        33,
+        33,
+        33,
+        36,
+        31,
+        34,
+        38,
+        33,
+        32,
+        35
+      ],
+      "total": 6927,
+      "submitted": 6927,
+      "sources": 7,
+      "status": "sampled-radial-native-color"
+    },
+    {
+      "round": 4,
+      "variant": "candidate",
+      "view": "stars",
+      "duration": 6022,
+      "frames": [
+        {
+          "at": 11583,
+          "cpu": 0
+        },
+        {
+          "at": 11607,
+          "cpu": 0
+        },
+        {
+          "at": 11650,
+          "cpu": 0
+        },
+        {
+          "at": 11671,
+          "cpu": 1
+        },
+        {
+          "at": 11715,
+          "cpu": 0
+        },
+        {
+          "at": 11738,
+          "cpu": 0
+        },
+        {
+          "at": 11780,
+          "cpu": 0
+        },
+        {
+          "at": 11806,
+          "cpu": 0
+        },
+        {
+          "at": 11850,
+          "cpu": 0
+        },
+        {
+          "at": 11872,
+          "cpu": 0
+        },
+        {
+          "at": 11917,
+          "cpu": 0
+        },
+        {
+          "at": 11940,
+          "cpu": 0
+        },
+        {
+          "at": 11984,
+          "cpu": 0
+        },
+        {
+          "at": 12009,
+          "cpu": 1
+        },
+        {
+          "at": 12053,
+          "cpu": 0
+        },
+        {
+          "at": 12076,
+          "cpu": 0
+        },
+        {
+          "at": 12121,
+          "cpu": 0
+        },
+        {
+          "at": 12144,
+          "cpu": 0
+        },
+        {
+          "at": 12188,
+          "cpu": 0
+        },
+        {
+          "at": 12213,
+          "cpu": 0
+        },
+        {
+          "at": 12236,
+          "cpu": 0
+        },
+        {
+          "at": 12279,
+          "cpu": 0
+        },
+        {
+          "at": 12304,
+          "cpu": 0
+        },
+        {
+          "at": 12353,
+          "cpu": 0
+        },
+        {
+          "at": 12379,
+          "cpu": 0
+        },
+        {
+          "at": 12405,
+          "cpu": 0
+        },
+        {
+          "at": 12455,
+          "cpu": 0
+        },
+        {
+          "at": 12480,
+          "cpu": 0
+        },
+        {
+          "at": 12504,
+          "cpu": 0
+        },
+        {
+          "at": 12547,
+          "cpu": 0
+        },
+        {
+          "at": 12569,
+          "cpu": 1
+        },
+        {
+          "at": 12618,
+          "cpu": 1
+        },
+        {
+          "at": 12644,
+          "cpu": 0
+        },
+        {
+          "at": 12669,
+          "cpu": 0
+        },
+        {
+          "at": 12720,
+          "cpu": 1
+        },
+        {
+          "at": 12742,
+          "cpu": 0
+        },
+        {
+          "at": 12784,
+          "cpu": 0
+        },
+        {
+          "at": 12808,
+          "cpu": 0
+        },
+        {
+          "at": 12856,
+          "cpu": 0
+        },
+        {
+          "at": 12878,
+          "cpu": 1
+        },
+        {
+          "at": 12903,
+          "cpu": 0
+        },
+        {
+          "at": 12945,
+          "cpu": 0
+        },
+        {
+          "at": 12987,
+          "cpu": 0
+        },
+        {
+          "at": 13010,
+          "cpu": 0
+        },
+        {
+          "at": 13052,
+          "cpu": 0
+        },
+        {
+          "at": 13074,
+          "cpu": 0
+        },
+        {
+          "at": 13117,
+          "cpu": 0
+        },
+        {
+          "at": 13138,
+          "cpu": 0
+        },
+        {
+          "at": 13180,
+          "cpu": 0
+        },
+        {
+          "at": 13203,
+          "cpu": 1
+        },
+        {
+          "at": 13245,
+          "cpu": 0
+        },
+        {
+          "at": 13286,
+          "cpu": 0
+        },
+        {
+          "at": 13309,
+          "cpu": 0
+        },
+        {
+          "at": 13350,
+          "cpu": 0
+        },
+        {
+          "at": 13371,
+          "cpu": 0
+        },
+        {
+          "at": 13414,
+          "cpu": 0
+        },
+        {
+          "at": 13435,
+          "cpu": 0
+        },
+        {
+          "at": 13477,
+          "cpu": 0
+        },
+        {
+          "at": 13519,
+          "cpu": 1
+        },
+        {
+          "at": 13541,
+          "cpu": 1
+        },
+        {
+          "at": 13583,
+          "cpu": 1
+        },
+        {
+          "at": 13606,
+          "cpu": 0
+        },
+        {
+          "at": 13648,
+          "cpu": 0
+        },
+        {
+          "at": 13669,
+          "cpu": 0
+        },
+        {
+          "at": 13713,
+          "cpu": 0
+        },
+        {
+          "at": 13735,
+          "cpu": 0
+        },
+        {
+          "at": 13775,
+          "cpu": 1
+        },
+        {
+          "at": 13818,
+          "cpu": 0
+        },
+        {
+          "at": 13840,
+          "cpu": 0
+        },
+        {
+          "at": 13890,
+          "cpu": 0
+        },
+        {
+          "at": 13917,
+          "cpu": 0
+        },
+        {
+          "at": 13943,
+          "cpu": 0
+        },
+        {
+          "at": 13992,
+          "cpu": 0
+        },
+        {
+          "at": 14022,
+          "cpu": 0
+        },
+        {
+          "at": 14050,
+          "cpu": 0
+        },
+        {
+          "at": 14075,
+          "cpu": 0
+        },
+        {
+          "at": 14104,
+          "cpu": 0
+        },
+        {
+          "at": 14155,
+          "cpu": 0
+        },
+        {
+          "at": 14184,
+          "cpu": 0
+        },
+        {
+          "at": 14210,
+          "cpu": 1
+        },
+        {
+          "at": 14236,
+          "cpu": 0
+        },
+        {
+          "at": 14288,
+          "cpu": 0
+        },
+        {
+          "at": 14315,
+          "cpu": 0
+        },
+        {
+          "at": 14344,
+          "cpu": 0
+        },
+        {
+          "at": 14369,
+          "cpu": 0
+        },
+        {
+          "at": 14417,
+          "cpu": 0
+        },
+        {
+          "at": 14445,
+          "cpu": 1
+        },
+        {
+          "at": 14474,
+          "cpu": 0
+        },
+        {
+          "at": 14507,
+          "cpu": 1
+        },
+        {
+          "at": 14540,
+          "cpu": 1
+        },
+        {
+          "at": 14574,
+          "cpu": 1
+        },
+        {
+          "at": 14605,
+          "cpu": 0
+        },
+        {
+          "at": 14656,
+          "cpu": 1
+        },
+        {
+          "at": 14684,
+          "cpu": 0
+        },
+        {
+          "at": 14713,
+          "cpu": 0
+        },
+        {
+          "at": 14735,
+          "cpu": 0
+        },
+        {
+          "at": 14778,
+          "cpu": 1
+        },
+        {
+          "at": 14802,
+          "cpu": 0
+        },
+        {
+          "at": 14854,
+          "cpu": 0
+        },
+        {
+          "at": 14881,
+          "cpu": 0
+        },
+        {
+          "at": 14905,
+          "cpu": 0
+        },
+        {
+          "at": 14959,
+          "cpu": 0
+        },
+        {
+          "at": 14983,
+          "cpu": 0
+        },
+        {
+          "at": 15006,
+          "cpu": 0
+        },
+        {
+          "at": 15048,
+          "cpu": 0
+        },
+        {
+          "at": 15072,
+          "cpu": 0
+        },
+        {
+          "at": 15116,
+          "cpu": 0
+        },
+        {
+          "at": 15137,
+          "cpu": 0
+        },
+        {
+          "at": 15179,
+          "cpu": 0
+        },
+        {
+          "at": 15206,
+          "cpu": 0
+        },
+        {
+          "at": 15237,
+          "cpu": 0
+        },
+        {
+          "at": 15282,
+          "cpu": 0
+        },
+        {
+          "at": 15307,
+          "cpu": 0
+        },
+        {
+          "at": 15356,
+          "cpu": 0
+        },
+        {
+          "at": 15379,
+          "cpu": 0
+        },
+        {
+          "at": 15402,
+          "cpu": 1
+        },
+        {
+          "at": 15445,
+          "cpu": 0
+        },
+        {
+          "at": 15491,
+          "cpu": 0
+        },
+        {
+          "at": 15515,
+          "cpu": 1
+        },
+        {
+          "at": 15539,
+          "cpu": 0
+        },
+        {
+          "at": 15581,
+          "cpu": 1
+        },
+        {
+          "at": 15604,
+          "cpu": 0
+        },
+        {
+          "at": 15646,
+          "cpu": 0
+        },
+        {
+          "at": 15687,
+          "cpu": 0
+        },
+        {
+          "at": 15710,
+          "cpu": 1
+        },
+        {
+          "at": 15752,
+          "cpu": 1
+        },
+        {
+          "at": 15774,
+          "cpu": 0
+        },
+        {
+          "at": 15817,
+          "cpu": 0
+        },
+        {
+          "at": 15839,
+          "cpu": 0
+        },
+        {
+          "at": 15882,
+          "cpu": 1
+        },
+        {
+          "at": 15905,
+          "cpu": 0
+        },
+        {
+          "at": 15946,
+          "cpu": 0
+        },
+        {
+          "at": 15988,
+          "cpu": 0
+        },
+        {
+          "at": 16012,
+          "cpu": 1
+        },
+        {
+          "at": 16035,
+          "cpu": 0
+        },
+        {
+          "at": 16076,
+          "cpu": 1
+        },
+        {
+          "at": 16122,
+          "cpu": 0
+        },
+        {
+          "at": 16143,
+          "cpu": 1
+        },
+        {
+          "at": 16185,
+          "cpu": 0
+        },
+        {
+          "at": 16209,
+          "cpu": 0
+        },
+        {
+          "at": 16254,
+          "cpu": 0
+        },
+        {
+          "at": 16275,
+          "cpu": 1
+        },
+        {
+          "at": 16318,
+          "cpu": 1
+        },
+        {
+          "at": 16340,
+          "cpu": 0
+        },
+        {
+          "at": 16382,
+          "cpu": 0
+        },
+        {
+          "at": 16404,
+          "cpu": 1
+        },
+        {
+          "at": 16446,
+          "cpu": 0
+        },
+        {
+          "at": 16488,
+          "cpu": 0
+        },
+        {
+          "at": 16513,
+          "cpu": 0
+        },
+        {
+          "at": 16536,
+          "cpu": 0
+        },
+        {
+          "at": 16578,
+          "cpu": 0
+        },
+        {
+          "at": 16602,
+          "cpu": 0
+        },
+        {
+          "at": 16655,
+          "cpu": 1
+        },
+        {
+          "at": 16685,
+          "cpu": 0
+        },
+        {
+          "at": 16713,
+          "cpu": 0
+        },
+        {
+          "at": 16738,
+          "cpu": 0
+        },
+        {
+          "at": 16786,
+          "cpu": 0
+        },
+        {
+          "at": 16811,
+          "cpu": 1
+        },
+        {
+          "at": 16838,
+          "cpu": 0
+        },
+        {
+          "at": 16886,
+          "cpu": 0
+        },
+        {
+          "at": 16910,
+          "cpu": 1
+        },
+        {
+          "at": 16952,
+          "cpu": 1
+        },
+        {
+          "at": 16974,
+          "cpu": 0
+        },
+        {
+          "at": 17018,
+          "cpu": 0
+        },
+        {
+          "at": 17039,
+          "cpu": 0
+        },
+        {
+          "at": 17081,
+          "cpu": 0
+        },
+        {
+          "at": 17103,
+          "cpu": 1
+        },
+        {
+          "at": 17145,
+          "cpu": 0
+        },
+        {
+          "at": 17187,
+          "cpu": 0
+        },
+        {
+          "at": 17210,
+          "cpu": 0
+        },
+        {
+          "at": 17253,
+          "cpu": 0
+        },
+        {
+          "at": 17281,
+          "cpu": 0
+        },
+        {
+          "at": 17310,
+          "cpu": 0
+        },
+        {
+          "at": 17337,
+          "cpu": 0
+        },
+        {
+          "at": 17389,
+          "cpu": 1
+        },
+        {
+          "at": 17418,
+          "cpu": 1
+        },
+        {
+          "at": 17446,
+          "cpu": 0
+        },
+        {
+          "at": 17473,
+          "cpu": 1
+        },
+        {
+          "at": 17501,
+          "cpu": 1
+        },
+        {
+          "at": 17551,
+          "cpu": 0
+        },
+        {
+          "at": 17576,
+          "cpu": 0
+        }
+      ],
+      "intervals": [
+        24,
+        43,
+        21,
+        44,
+        23,
+        42,
+        26,
+        44,
+        22,
+        45,
+        23,
+        44,
+        25,
+        44,
+        23,
+        45,
+        23,
+        44,
+        25,
+        23,
+        43,
+        25,
+        49,
+        26,
+        26,
+        50,
+        25,
+        24,
+        43,
+        22,
+        49,
+        26,
+        25,
+        51,
+        22,
+        42,
+        24,
+        48,
+        22,
+        25,
+        42,
+        42,
+        23,
+        42,
+        22,
+        43,
+        21,
+        42,
+        23,
+        42,
+        41,
+        23,
+        41,
+        21,
+        43,
+        21,
+        42,
+        42,
+        22,
+        42,
+        23,
+        42,
+        21,
+        44,
+        22,
+        40,
+        43,
+        22,
+        50,
+        27,
+        26,
+        49,
+        30,
+        28,
+        25,
+        29,
+        51,
+        29,
+        26,
+        26,
+        52,
+        27,
+        29,
+        25,
+        48,
+        28,
+        29,
+        33,
+        33,
+        34,
+        31,
+        51,
+        28,
+        29,
+        22,
+        43,
+        24,
+        52,
+        27,
+        24,
+        54,
+        24,
+        23,
+        42,
+        24,
+        44,
+        21,
+        42,
+        27,
+        31,
+        45,
+        25,
+        49,
+        23,
+        23,
+        43,
+        46,
+        24,
+        24,
+        42,
+        23,
+        42,
+        41,
+        23,
+        42,
+        22,
+        43,
+        22,
+        43,
+        23,
+        41,
+        42,
+        24,
+        23,
+        41,
+        46,
+        21,
+        42,
+        24,
+        45,
+        21,
+        43,
+        22,
+        42,
+        22,
+        42,
+        42,
+        25,
+        23,
+        42,
+        24,
+        53,
+        30,
+        28,
+        25,
+        48,
+        25,
+        27,
+        48,
+        24,
+        42,
+        22,
+        44,
+        21,
+        42,
+        22,
+        42,
+        42,
+        23,
+        43,
+        28,
+        29,
+        27,
+        52,
+        29,
+        28,
+        27,
+        28,
+        50,
+        25
+      ],
+      "total": 12503,
+      "submitted": 949,
+      "sources": 0,
+      "status": "off"
+    },
+    {
+      "round": 4,
+      "variant": "candidate",
+      "view": "air",
+      "duration": 6033,
+      "frames": [
+        {
+          "at": 22027,
+          "cpu": 5
+        },
+        {
+          "at": 22067,
+          "cpu": 5
+        },
+        {
+          "at": 22105,
+          "cpu": 6
+        },
+        {
+          "at": 22143,
+          "cpu": 4
+        },
+        {
+          "at": 22177,
+          "cpu": 3
+        },
+        {
+          "at": 22209,
+          "cpu": 4
+        },
+        {
+          "at": 22241,
+          "cpu": 4
+        },
+        {
+          "at": 22274,
+          "cpu": 5
+        },
+        {
+          "at": 22311,
+          "cpu": 4
+        },
+        {
+          "at": 22347,
+          "cpu": 4
+        },
+        {
+          "at": 22382,
+          "cpu": 5
+        },
+        {
+          "at": 22417,
+          "cpu": 5
+        },
+        {
+          "at": 22453,
+          "cpu": 4
+        },
+        {
+          "at": 22486,
+          "cpu": 4
+        },
+        {
+          "at": 22522,
+          "cpu": 4
+        },
+        {
+          "at": 22556,
+          "cpu": 3
+        },
+        {
+          "at": 22590,
+          "cpu": 6
+        },
+        {
+          "at": 22623,
+          "cpu": 4
+        },
+        {
+          "at": 22659,
+          "cpu": 3
+        },
+        {
+          "at": 22690,
+          "cpu": 3
+        },
+        {
+          "at": 22722,
+          "cpu": 4
+        },
+        {
+          "at": 22762,
+          "cpu": 4
+        },
+        {
+          "at": 22802,
+          "cpu": 3
+        },
+        {
+          "at": 22835,
+          "cpu": 5
+        },
+        {
+          "at": 22870,
+          "cpu": 4
+        },
+        {
+          "at": 22903,
+          "cpu": 2
+        },
+        {
+          "at": 22935,
+          "cpu": 5
+        },
+        {
+          "at": 22975,
+          "cpu": 4
+        },
+        {
+          "at": 23009,
+          "cpu": 4
+        },
+        {
+          "at": 23042,
+          "cpu": 3
+        },
+        {
+          "at": 23077,
+          "cpu": 3
+        },
+        {
+          "at": 23109,
+          "cpu": 5
+        },
+        {
+          "at": 23141,
+          "cpu": 4
+        },
+        {
+          "at": 23176,
+          "cpu": 4
+        },
+        {
+          "at": 23208,
+          "cpu": 4
+        },
+        {
+          "at": 23241,
+          "cpu": 6
+        },
+        {
+          "at": 23278,
+          "cpu": 6
+        },
+        {
+          "at": 23314,
+          "cpu": 3
+        },
+        {
+          "at": 23346,
+          "cpu": 3
+        },
+        {
+          "at": 23380,
+          "cpu": 4
+        },
+        {
+          "at": 23412,
+          "cpu": 3
+        },
+        {
+          "at": 23445,
+          "cpu": 3
+        },
+        {
+          "at": 23478,
+          "cpu": 3
+        },
+        {
+          "at": 23509,
+          "cpu": 4
+        },
+        {
+          "at": 23544,
+          "cpu": 4
+        },
+        {
+          "at": 23579,
+          "cpu": 2
+        },
+        {
+          "at": 23611,
+          "cpu": 3
+        },
+        {
+          "at": 23643,
+          "cpu": 3
+        },
+        {
+          "at": 23677,
+          "cpu": 4
+        },
+        {
+          "at": 23710,
+          "cpu": 3
+        },
+        {
+          "at": 23743,
+          "cpu": 2
+        },
+        {
+          "at": 23777,
+          "cpu": 3
+        },
+        {
+          "at": 23808,
+          "cpu": 3
+        },
+        {
+          "at": 23839,
+          "cpu": 4
+        },
+        {
+          "at": 23872,
+          "cpu": 2
+        },
+        {
+          "at": 23924,
+          "cpu": 2
+        },
+        {
+          "at": 23954,
+          "cpu": 3
+        },
+        {
+          "at": 23986,
+          "cpu": 3
+        },
+        {
+          "at": 24019,
+          "cpu": 3
+        },
+        {
+          "at": 24049,
+          "cpu": 2
+        },
+        {
+          "at": 24080,
+          "cpu": 3
+        },
+        {
+          "at": 24109,
+          "cpu": 3
+        },
+        {
+          "at": 24139,
+          "cpu": 3
+        },
+        {
+          "at": 24171,
+          "cpu": 3
+        },
+        {
+          "at": 24203,
+          "cpu": 3
+        },
+        {
+          "at": 24256,
+          "cpu": 2
+        },
+        {
+          "at": 24289,
+          "cpu": 3
+        },
+        {
+          "at": 24319,
+          "cpu": 3
+        },
+        {
+          "at": 24349,
+          "cpu": 4
+        },
+        {
+          "at": 24381,
+          "cpu": 2
+        },
+        {
+          "at": 24410,
+          "cpu": 3
+        },
+        {
+          "at": 24442,
+          "cpu": 3
+        },
+        {
+          "at": 24480,
+          "cpu": 1
+        },
+        {
+          "at": 24516,
+          "cpu": 4
+        },
+        {
+          "at": 24560,
+          "cpu": 3
+        },
+        {
+          "at": 24598,
+          "cpu": 8
+        },
+        {
+          "at": 24648,
+          "cpu": 3
+        },
+        {
+          "at": 24701,
+          "cpu": 3
+        },
+        {
+          "at": 24742,
+          "cpu": 2
+        },
+        {
+          "at": 24778,
+          "cpu": 2
+        },
+        {
+          "at": 24813,
+          "cpu": 2
+        },
+        {
+          "at": 24848,
+          "cpu": 3
+        },
+        {
+          "at": 24885,
+          "cpu": 3
+        },
+        {
+          "at": 24925,
+          "cpu": 7
+        },
+        {
+          "at": 24964,
+          "cpu": 3
+        },
+        {
+          "at": 24998,
+          "cpu": 6
+        },
+        {
+          "at": 25037,
+          "cpu": 3
+        },
+        {
+          "at": 25073,
+          "cpu": 2
+        },
+        {
+          "at": 25107,
+          "cpu": 4
+        },
+        {
+          "at": 25140,
+          "cpu": 3
+        },
+        {
+          "at": 25171,
+          "cpu": 3
+        },
+        {
+          "at": 25225,
+          "cpu": 2
+        },
+        {
+          "at": 25256,
+          "cpu": 3
+        },
+        {
+          "at": 25287,
+          "cpu": 4
+        },
+        {
+          "at": 25318,
+          "cpu": 3
+        },
+        {
+          "at": 25348,
+          "cpu": 4
+        },
+        {
+          "at": 25381,
+          "cpu": 2
+        },
+        {
+          "at": 25410,
+          "cpu": 3
+        },
+        {
+          "at": 25440,
+          "cpu": 3
+        },
+        {
+          "at": 25472,
+          "cpu": 3
+        },
+        {
+          "at": 25524,
+          "cpu": 1
+        },
+        {
+          "at": 25552,
+          "cpu": 3
+        },
+        {
+          "at": 25584,
+          "cpu": 2
+        },
+        {
+          "at": 25613,
+          "cpu": 2
+        },
+        {
+          "at": 25643,
+          "cpu": 2
+        },
+        {
+          "at": 25676,
+          "cpu": 2
+        },
+        {
+          "at": 25708,
+          "cpu": 2
+        },
+        {
+          "at": 25738,
+          "cpu": 3
+        },
+        {
+          "at": 25771,
+          "cpu": 3
+        },
+        {
+          "at": 25824,
+          "cpu": 1
+        },
+        {
+          "at": 25852,
+          "cpu": 3
+        },
+        {
+          "at": 25888,
+          "cpu": 3
+        },
+        {
+          "at": 25923,
+          "cpu": 3
+        },
+        {
+          "at": 25962,
+          "cpu": 4
+        },
+        {
+          "at": 26003,
+          "cpu": 4
+        },
+        {
+          "at": 26042,
+          "cpu": 3
+        },
+        {
+          "at": 26075,
+          "cpu": 5
+        },
+        {
+          "at": 26112,
+          "cpu": 2
+        },
+        {
+          "at": 26141,
+          "cpu": 3
+        },
+        {
+          "at": 26172,
+          "cpu": 3
+        },
+        {
+          "at": 26205,
+          "cpu": 2
+        },
+        {
+          "at": 26256,
+          "cpu": 2
+        },
+        {
+          "at": 26285,
+          "cpu": 2
+        },
+        {
+          "at": 26316,
+          "cpu": 2
+        },
+        {
+          "at": 26346,
+          "cpu": 2
+        },
+        {
+          "at": 26376,
+          "cpu": 3
+        },
+        {
+          "at": 26407,
+          "cpu": 3
+        },
+        {
+          "at": 26437,
+          "cpu": 3
+        },
+        {
+          "at": 26489,
+          "cpu": 2
+        },
+        {
+          "at": 26520,
+          "cpu": 2
+        },
+        {
+          "at": 26549,
+          "cpu": 3
+        },
+        {
+          "at": 26581,
+          "cpu": 3
+        },
+        {
+          "at": 26617,
+          "cpu": 2
+        },
+        {
+          "at": 26646,
+          "cpu": 3
+        },
+        {
+          "at": 26676,
+          "cpu": 3
+        },
+        {
+          "at": 26708,
+          "cpu": 2
+        },
+        {
+          "at": 26738,
+          "cpu": 2
+        },
+        {
+          "at": 26789,
+          "cpu": 2
+        },
+        {
+          "at": 26819,
+          "cpu": 2
+        },
+        {
+          "at": 26848,
+          "cpu": 3
+        },
+        {
+          "at": 26878,
+          "cpu": 3
+        },
+        {
+          "at": 26911,
+          "cpu": 2
+        },
+        {
+          "at": 26940,
+          "cpu": 3
+        },
+        {
+          "at": 26970,
+          "cpu": 3
+        },
+        {
+          "at": 27025,
+          "cpu": 2
+        },
+        {
+          "at": 27056,
+          "cpu": 3
+        },
+        {
+          "at": 27086,
+          "cpu": 3
+        },
+        {
+          "at": 27117,
+          "cpu": 3
+        },
+        {
+          "at": 27146,
+          "cpu": 3
+        },
+        {
+          "at": 27176,
+          "cpu": 3
+        },
+        {
+          "at": 27208,
+          "cpu": 2
+        },
+        {
+          "at": 27237,
+          "cpu": 3
+        },
+        {
+          "at": 27289,
+          "cpu": 1
+        },
+        {
+          "at": 27318,
+          "cpu": 3
+        },
+        {
+          "at": 27348,
+          "cpu": 3
+        },
+        {
+          "at": 27378,
+          "cpu": 3
+        },
+        {
+          "at": 27409,
+          "cpu": 3
+        },
+        {
+          "at": 27439,
+          "cpu": 3
+        },
+        {
+          "at": 27491,
+          "cpu": 2
+        },
+        {
+          "at": 27521,
+          "cpu": 3
+        },
+        {
+          "at": 27551,
+          "cpu": 3
+        },
+        {
+          "at": 27582,
+          "cpu": 3
+        },
+        {
+          "at": 27614,
+          "cpu": 3
+        },
+        {
+          "at": 27643,
+          "cpu": 3
+        },
+        {
+          "at": 27673,
+          "cpu": 2
+        },
+        {
+          "at": 27703,
+          "cpu": 3
+        },
+        {
+          "at": 27756,
+          "cpu": 2
+        },
+        {
+          "at": 27785,
+          "cpu": 3
+        },
+        {
+          "at": 27816,
+          "cpu": 2
+        },
+        {
+          "at": 27845,
+          "cpu": 3
+        },
+        {
+          "at": 27876,
+          "cpu": 2
+        },
+        {
+          "at": 27907,
+          "cpu": 3
+        },
+        {
+          "at": 27939,
+          "cpu": 3
+        },
+        {
+          "at": 27970,
+          "cpu": 2
+        },
+        {
+          "at": 28024,
+          "cpu": 3
+        }
+      ],
+      "intervals": [
+        40,
+        38,
+        38,
+        34,
+        32,
+        32,
+        33,
+        37,
+        36,
+        35,
+        35,
+        36,
+        33,
+        36,
+        34,
+        34,
+        33,
+        36,
+        31,
+        32,
+        40,
+        40,
+        33,
+        35,
+        33,
+        32,
+        40,
+        34,
+        33,
+        35,
+        32,
+        32,
+        35,
+        32,
+        33,
+        37,
+        36,
+        32,
+        34,
+        32,
+        33,
+        33,
+        31,
+        35,
+        35,
+        32,
+        32,
+        34,
+        33,
+        33,
+        34,
+        31,
+        31,
+        33,
+        52,
+        30,
+        32,
+        33,
+        30,
+        31,
+        29,
+        30,
+        32,
+        32,
+        53,
+        33,
+        30,
+        30,
+        32,
+        29,
+        32,
+        38,
+        36,
+        44,
+        38,
+        50,
+        53,
+        41,
+        36,
+        35,
+        35,
+        37,
+        40,
+        39,
+        34,
+        39,
+        36,
+        34,
+        33,
+        31,
+        54,
+        31,
+        31,
+        31,
+        30,
+        33,
+        29,
+        30,
+        32,
+        52,
+        28,
+        32,
+        29,
+        30,
+        33,
+        32,
+        30,
+        33,
+        53,
+        28,
+        36,
+        35,
+        39,
+        41,
+        39,
+        33,
+        37,
+        29,
+        31,
+        33,
+        51,
+        29,
+        31,
+        30,
+        30,
+        31,
+        30,
+        52,
+        31,
+        29,
+        32,
+        36,
+        29,
+        30,
+        32,
+        30,
+        51,
+        30,
+        29,
+        30,
+        33,
+        29,
+        30,
+        55,
+        31,
+        30,
+        31,
+        29,
+        30,
+        32,
+        29,
+        52,
+        29,
+        30,
+        30,
+        31,
+        30,
+        52,
+        30,
+        30,
+        31,
+        32,
+        29,
+        30,
+        30,
+        53,
+        29,
+        31,
+        29,
+        31,
+        31,
+        32,
+        31,
+        54
+      ],
+      "total": 6927,
+      "submitted": 0,
+      "sources": 7,
+      "status": "sampled-radial-native-color"
+    },
+    {
+      "round": 5,
+      "variant": "baseline",
+      "view": "stars",
+      "duration": 6053,
+      "frames": [
+        {
+          "at": 13733,
+          "cpu": 0
+        },
+        {
+          "at": 13780,
+          "cpu": 1
+        },
+        {
+          "at": 13822,
+          "cpu": 0
+        },
+        {
+          "at": 13863,
+          "cpu": 0
+        },
+        {
+          "at": 13904,
+          "cpu": 1
+        },
+        {
+          "at": 13945,
+          "cpu": 1
+        },
+        {
+          "at": 13986,
+          "cpu": 0
+        },
+        {
+          "at": 14031,
+          "cpu": 0
+        },
+        {
+          "at": 14071,
+          "cpu": 1
+        },
+        {
+          "at": 14112,
+          "cpu": 0
+        },
+        {
+          "at": 14154,
+          "cpu": 0
+        },
+        {
+          "at": 14199,
+          "cpu": 1
+        },
+        {
+          "at": 14242,
+          "cpu": 0
+        },
+        {
+          "at": 14285,
+          "cpu": 0
+        },
+        {
+          "at": 14326,
+          "cpu": 1
+        },
+        {
+          "at": 14367,
+          "cpu": 1
+        },
+        {
+          "at": 14409,
+          "cpu": 0
+        },
+        {
+          "at": 14450,
+          "cpu": 0
+        },
+        {
+          "at": 14491,
+          "cpu": 0
+        },
+        {
+          "at": 14530,
+          "cpu": 1
+        },
+        {
+          "at": 14570,
+          "cpu": 0
+        },
+        {
+          "at": 14611,
+          "cpu": 0
+        },
+        {
+          "at": 14653,
+          "cpu": 0
+        },
+        {
+          "at": 14695,
+          "cpu": 0
+        },
+        {
+          "at": 14737,
+          "cpu": 0
+        },
+        {
+          "at": 14789,
+          "cpu": 0
+        },
+        {
+          "at": 14835,
+          "cpu": 1
+        },
+        {
+          "at": 14878,
+          "cpu": 0
+        },
+        {
+          "at": 14920,
+          "cpu": 0
+        },
+        {
+          "at": 14963,
+          "cpu": 0
+        },
+        {
+          "at": 15003,
+          "cpu": 1
+        },
+        {
+          "at": 15046,
+          "cpu": 0
+        },
+        {
+          "at": 15088,
+          "cpu": 0
+        },
+        {
+          "at": 15129,
+          "cpu": 0
+        },
+        {
+          "at": 15171,
+          "cpu": 1
+        },
+        {
+          "at": 15212,
+          "cpu": 0
+        },
+        {
+          "at": 15253,
+          "cpu": 0
+        },
+        {
+          "at": 15295,
+          "cpu": 0
+        },
+        {
+          "at": 15337,
+          "cpu": 0
+        },
+        {
+          "at": 15377,
+          "cpu": 0
+        },
+        {
+          "at": 15419,
+          "cpu": 0
+        },
+        {
+          "at": 15460,
+          "cpu": 0
+        },
+        {
+          "at": 15501,
+          "cpu": 0
+        },
+        {
+          "at": 15542,
+          "cpu": 0
+        },
+        {
+          "at": 15583,
+          "cpu": 1
+        },
+        {
+          "at": 15624,
+          "cpu": 0
+        },
+        {
+          "at": 15667,
+          "cpu": 1
+        },
+        {
+          "at": 15708,
+          "cpu": 0
+        },
+        {
+          "at": 15749,
+          "cpu": 0
+        },
+        {
+          "at": 15797,
+          "cpu": 1
+        },
+        {
+          "at": 15857,
+          "cpu": 1
+        },
+        {
+          "at": 15916,
+          "cpu": 0
+        },
+        {
+          "at": 15962,
+          "cpu": 0
+        },
+        {
+          "at": 16010,
+          "cpu": 0
+        },
+        {
+          "at": 16064,
+          "cpu": 0
+        },
+        {
+          "at": 16109,
+          "cpu": 0
+        },
+        {
+          "at": 16153,
+          "cpu": 0
+        },
+        {
+          "at": 16202,
+          "cpu": 1
+        },
+        {
+          "at": 16246,
+          "cpu": 1
+        },
+        {
+          "at": 16288,
+          "cpu": 1
+        },
+        {
+          "at": 16340,
+          "cpu": 0
+        },
+        {
+          "at": 16389,
+          "cpu": 1
+        },
+        {
+          "at": 16435,
+          "cpu": 0
+        },
+        {
+          "at": 16487,
+          "cpu": 1
+        },
+        {
+          "at": 16548,
+          "cpu": 1
+        },
+        {
+          "at": 16600,
+          "cpu": 0
+        },
+        {
+          "at": 16642,
+          "cpu": 0
+        },
+        {
+          "at": 16693,
+          "cpu": 1
+        },
+        {
+          "at": 16748,
+          "cpu": 0
+        },
+        {
+          "at": 16791,
+          "cpu": 0
+        },
+        {
+          "at": 16849,
+          "cpu": 0
+        },
+        {
+          "at": 16909,
+          "cpu": 1
+        },
+        {
+          "at": 16975,
+          "cpu": 0
+        },
+        {
+          "at": 17037,
+          "cpu": 0
+        },
+        {
+          "at": 17092,
+          "cpu": 1
+        },
+        {
+          "at": 17150,
+          "cpu": 0
+        },
+        {
+          "at": 17203,
+          "cpu": 1
+        },
+        {
+          "at": 17252,
+          "cpu": 1
+        },
+        {
+          "at": 17305,
+          "cpu": 0
+        },
+        {
+          "at": 17355,
+          "cpu": 1
+        },
+        {
+          "at": 17416,
+          "cpu": 0
+        },
+        {
+          "at": 17482,
+          "cpu": 0
+        },
+        {
+          "at": 17539,
+          "cpu": 1
+        },
+        {
+          "at": 17592,
+          "cpu": 0
+        },
+        {
+          "at": 17645,
+          "cpu": 0
+        },
+        {
+          "at": 17702,
+          "cpu": 1
+        },
+        {
+          "at": 17751,
+          "cpu": 1
+        },
+        {
+          "at": 17799,
+          "cpu": 0
+        },
+        {
+          "at": 17850,
+          "cpu": 1
+        },
+        {
+          "at": 17904,
+          "cpu": 0
+        },
+        {
+          "at": 17968,
+          "cpu": 1
+        },
+        {
+          "at": 18027,
+          "cpu": 0
+        },
+        {
+          "at": 18089,
+          "cpu": 0
+        },
+        {
+          "at": 18144,
+          "cpu": 0
+        },
+        {
+          "at": 18193,
+          "cpu": 0
+        },
+        {
+          "at": 18237,
+          "cpu": 0
+        },
+        {
+          "at": 18284,
+          "cpu": 0
+        },
+        {
+          "at": 18338,
+          "cpu": 0
+        },
+        {
+          "at": 18392,
+          "cpu": 1
+        },
+        {
+          "at": 18443,
+          "cpu": 0
+        },
+        {
+          "at": 18493,
+          "cpu": 1
+        },
+        {
+          "at": 18553,
+          "cpu": 0
+        },
+        {
+          "at": 18611,
+          "cpu": 0
+        },
+        {
+          "at": 18665,
+          "cpu": 1
+        },
+        {
+          "at": 18714,
+          "cpu": 0
+        },
+        {
+          "at": 18768,
+          "cpu": 0
+        },
+        {
+          "at": 18815,
+          "cpu": 0
+        },
+        {
+          "at": 18861,
+          "cpu": 1
+        },
+        {
+          "at": 18916,
+          "cpu": 0
+        },
+        {
+          "at": 18978,
+          "cpu": 0
+        },
+        {
+          "at": 19034,
+          "cpu": 1
+        },
+        {
+          "at": 19098,
+          "cpu": 1
+        },
+        {
+          "at": 19153,
+          "cpu": 0
+        },
+        {
+          "at": 19207,
+          "cpu": 0
+        },
+        {
+          "at": 19263,
+          "cpu": 1
+        },
+        {
+          "at": 19314,
+          "cpu": 1
+        },
+        {
+          "at": 19368,
+          "cpu": 1
+        },
+        {
+          "at": 19424,
+          "cpu": 1
+        },
+        {
+          "at": 19475,
+          "cpu": 0
+        },
+        {
+          "at": 19522,
+          "cpu": 1
+        },
+        {
+          "at": 19568,
+          "cpu": 0
+        },
+        {
+          "at": 19630,
+          "cpu": 1
+        },
+        {
+          "at": 19680,
+          "cpu": 0
+        },
+        {
+          "at": 19732,
+          "cpu": 0
+        }
+      ],
+      "intervals": [
+        47,
+        42,
+        41,
+        41,
+        41,
+        41,
+        45,
+        40,
+        41,
+        42,
+        45,
+        43,
+        43,
+        41,
+        41,
+        42,
+        41,
+        41,
+        39,
+        40,
+        41,
+        42,
+        42,
+        42,
+        52,
+        46,
+        43,
+        42,
+        43,
+        40,
+        43,
+        42,
+        41,
+        42,
+        41,
+        41,
+        42,
+        42,
+        40,
+        42,
+        41,
+        41,
+        41,
+        41,
+        41,
+        43,
+        41,
+        41,
+        48,
+        60,
+        59,
+        46,
+        48,
+        54,
+        45,
+        44,
+        49,
+        44,
+        42,
+        52,
+        49,
+        46,
+        52,
+        61,
+        52,
+        42,
+        51,
+        55,
+        43,
+        58,
+        60,
+        66,
+        62,
+        55,
+        58,
+        53,
+        49,
+        53,
+        50,
+        61,
+        66,
+        57,
+        53,
+        53,
+        57,
+        49,
+        48,
+        51,
+        54,
+        64,
+        59,
+        62,
+        55,
+        49,
+        44,
+        47,
+        54,
+        54,
+        51,
+        50,
+        60,
+        58,
+        54,
+        49,
+        54,
+        47,
+        46,
+        55,
+        62,
+        56,
+        64,
+        55,
+        54,
+        56,
+        51,
+        54,
+        56,
+        51,
+        47,
+        46,
+        62,
+        50,
+        52
+      ],
+      "total": 12503,
+      "submitted": 12503,
+      "sources": 0,
+      "status": "off"
+    },
+    {
+      "round": 5,
+      "variant": "baseline",
+      "view": "air",
+      "duration": 6046,
+      "frames": [
+        {
+          "at": 26896,
+          "cpu": 2
+        },
+        {
+          "at": 26957,
+          "cpu": 3
+        },
+        {
+          "at": 27020,
+          "cpu": 2
+        },
+        {
+          "at": 27081,
+          "cpu": 3
+        },
+        {
+          "at": 27148,
+          "cpu": 6
+        },
+        {
+          "at": 27214,
+          "cpu": 2
+        },
+        {
+          "at": 27275,
+          "cpu": 4
+        },
+        {
+          "at": 27333,
+          "cpu": 4
+        },
+        {
+          "at": 27405,
+          "cpu": 2
+        },
+        {
+          "at": 27469,
+          "cpu": 1
+        },
+        {
+          "at": 27530,
+          "cpu": 2
+        },
+        {
+          "at": 27593,
+          "cpu": 3
+        },
+        {
+          "at": 27652,
+          "cpu": 2
+        },
+        {
+          "at": 27711,
+          "cpu": 2
+        },
+        {
+          "at": 27770,
+          "cpu": 2
+        },
+        {
+          "at": 27826,
+          "cpu": 5
+        },
+        {
+          "at": 27886,
+          "cpu": 1
+        },
+        {
+          "at": 27943,
+          "cpu": 2
+        },
+        {
+          "at": 28002,
+          "cpu": 5
+        },
+        {
+          "at": 28065,
+          "cpu": 3
+        },
+        {
+          "at": 28132,
+          "cpu": 4
+        },
+        {
+          "at": 28203,
+          "cpu": 2
+        },
+        {
+          "at": 28263,
+          "cpu": 2
+        },
+        {
+          "at": 28345,
+          "cpu": 3
+        },
+        {
+          "at": 28407,
+          "cpu": 3
+        },
+        {
+          "at": 28480,
+          "cpu": 5
+        },
+        {
+          "at": 28549,
+          "cpu": 3
+        },
+        {
+          "at": 28622,
+          "cpu": 2
+        },
+        {
+          "at": 28686,
+          "cpu": 5
+        },
+        {
+          "at": 28759,
+          "cpu": 4
+        },
+        {
+          "at": 28824,
+          "cpu": 7
+        },
+        {
+          "at": 28889,
+          "cpu": 7
+        },
+        {
+          "at": 28948,
+          "cpu": 2
+        },
+        {
+          "at": 29007,
+          "cpu": 1
+        },
+        {
+          "at": 29063,
+          "cpu": 6
+        },
+        {
+          "at": 29123,
+          "cpu": 2
+        },
+        {
+          "at": 29184,
+          "cpu": 2
+        },
+        {
+          "at": 29257,
+          "cpu": 2
+        },
+        {
+          "at": 29324,
+          "cpu": 4
+        },
+        {
+          "at": 29382,
+          "cpu": 1
+        },
+        {
+          "at": 29442,
+          "cpu": 1
+        },
+        {
+          "at": 29499,
+          "cpu": 2
+        },
+        {
+          "at": 29560,
+          "cpu": 4
+        },
+        {
+          "at": 29625,
+          "cpu": 4
+        },
+        {
+          "at": 29682,
+          "cpu": 2
+        },
+        {
+          "at": 29742,
+          "cpu": 2
+        },
+        {
+          "at": 29802,
+          "cpu": 2
+        },
+        {
+          "at": 29861,
+          "cpu": 3
+        },
+        {
+          "at": 29918,
+          "cpu": 2
+        },
+        {
+          "at": 29987,
+          "cpu": 2
+        },
+        {
+          "at": 30052,
+          "cpu": 4
+        },
+        {
+          "at": 30115,
+          "cpu": 2
+        },
+        {
+          "at": 30173,
+          "cpu": 2
+        },
+        {
+          "at": 30230,
+          "cpu": 2
+        },
+        {
+          "at": 30287,
+          "cpu": 2
+        },
+        {
+          "at": 30345,
+          "cpu": 3
+        },
+        {
+          "at": 30403,
+          "cpu": 1
+        },
+        {
+          "at": 30460,
+          "cpu": 2
+        },
+        {
+          "at": 30517,
+          "cpu": 3
+        },
+        {
+          "at": 30575,
+          "cpu": 2
+        },
+        {
+          "at": 30635,
+          "cpu": 3
+        },
+        {
+          "at": 30693,
+          "cpu": 3
+        },
+        {
+          "at": 30752,
+          "cpu": 2
+        },
+        {
+          "at": 30809,
+          "cpu": 2
+        },
+        {
+          "at": 30865,
+          "cpu": 1
+        },
+        {
+          "at": 30922,
+          "cpu": 2
+        },
+        {
+          "at": 30983,
+          "cpu": 3
+        },
+        {
+          "at": 31043,
+          "cpu": 2
+        },
+        {
+          "at": 31102,
+          "cpu": 4
+        },
+        {
+          "at": 31164,
+          "cpu": 4
+        },
+        {
+          "at": 31227,
+          "cpu": 3
+        },
+        {
+          "at": 31290,
+          "cpu": 2
+        },
+        {
+          "at": 31350,
+          "cpu": 1
+        },
+        {
+          "at": 31410,
+          "cpu": 2
+        },
+        {
+          "at": 31473,
+          "cpu": 3
+        },
+        {
+          "at": 31536,
+          "cpu": 2
+        },
+        {
+          "at": 31598,
+          "cpu": 2
+        },
+        {
+          "at": 31659,
+          "cpu": 2
+        },
+        {
+          "at": 31720,
+          "cpu": 2
+        },
+        {
+          "at": 31781,
+          "cpu": 2
+        },
+        {
+          "at": 31845,
+          "cpu": 3
+        },
+        {
+          "at": 31902,
+          "cpu": 2
+        },
+        {
+          "at": 31955,
+          "cpu": 2
+        },
+        {
+          "at": 32014,
+          "cpu": 4
+        },
+        {
+          "at": 32073,
+          "cpu": 3
+        },
+        {
+          "at": 32131,
+          "cpu": 1
+        },
+        {
+          "at": 32188,
+          "cpu": 2
+        },
+        {
+          "at": 32247,
+          "cpu": 2
+        },
+        {
+          "at": 32302,
+          "cpu": 1
+        },
+        {
+          "at": 32358,
+          "cpu": 2
+        },
+        {
+          "at": 32413,
+          "cpu": 1
+        },
+        {
+          "at": 32471,
+          "cpu": 1
+        },
+        {
+          "at": 32531,
+          "cpu": 3
+        },
+        {
+          "at": 32586,
+          "cpu": 1
+        },
+        {
+          "at": 32642,
+          "cpu": 2
+        },
+        {
+          "at": 32705,
+          "cpu": 3
+        },
+        {
+          "at": 32767,
+          "cpu": 2
+        },
+        {
+          "at": 32823,
+          "cpu": 2
+        },
+        {
+          "at": 32883,
+          "cpu": 4
+        }
+      ],
+      "intervals": [
+        61,
+        63,
+        61,
+        67,
+        66,
+        61,
+        58,
+        72,
+        64,
+        61,
+        63,
+        59,
+        59,
+        59,
+        56,
+        60,
+        57,
+        59,
+        63,
+        67,
+        71,
+        60,
+        82,
+        62,
+        73,
+        69,
+        73,
+        64,
+        73,
+        65,
+        65,
+        59,
+        59,
+        56,
+        60,
+        61,
+        73,
+        67,
+        58,
+        60,
+        57,
+        61,
+        65,
+        57,
+        60,
+        60,
+        59,
+        57,
+        69,
+        65,
+        63,
+        58,
+        57,
+        57,
+        58,
+        58,
+        57,
+        57,
+        58,
+        60,
+        58,
+        59,
+        57,
+        56,
+        57,
+        61,
+        60,
+        59,
+        62,
+        63,
+        63,
+        60,
+        60,
+        63,
+        63,
+        62,
+        61,
+        61,
+        61,
+        64,
+        57,
+        53,
+        59,
+        59,
+        58,
+        57,
+        59,
+        55,
+        56,
+        55,
+        58,
+        60,
+        55,
+        56,
+        63,
+        62,
+        56,
+        60
+      ],
+      "total": 6934,
+      "submitted": 6934,
+      "sources": 7,
+      "status": "sampled-radial-native-color"
+    }
+  ],
+  "errors": []
+}

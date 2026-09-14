@@ -1,0 +1,11 @@
+{
+  "approved_download": "FOG-OF-SEA-vscodium-dense-starfield.zip",
+  "approved_download_sha256": "7a4962084de14fc2bf2fc032c7168a6cf988efd1460356476112101c18dc4dd0",
+  "application_manifest_sha256": "e5a0ea1b216ab10ada3cb875e2cdd97eb73d88f1f06006edbee78e349c0a03a4",
+  "artifact_run": 34794716567,
+  "artifact_id": 10328799946,
+  "selected_source": "tested-css-only-source.zip",
+  "original_glow_parent": "bd84e20cffd37ae5435bee50caab6319f50d2a7f",
+  "all_59_application_files_match": true,
+  "rejected_culling_and_sampling_experiments_included": false
+}

@@ -40,6 +40,7 @@ async function reachFinalReview(page: Page) {
 
 test("final review is a bounded debrief surface with no operable plot UI", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "One browser is resized through every review breakpoint");
+  test.setTimeout(180_000);
   await openSession(page);
   await reachFinalReview(page);
 

@@ -2,109 +2,118 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import * as THREE from "three";
 import {
-  attachDreamEmission,
-  createDreamEmissionProfile,
-  DREAM_EMISSION_LIMITS,
-  dreamEmissionVisibilityLift,
-  sampleDreamEmission,
-  updateDreamEmission,
+  attachDreamEmission, createDreamEmissionProfile, detachDreamEmission,
+  DREAM_EMISSION_LIMITS, dreamEmissionVisibilityLift, dreamSourceVisible,
+  sampleDreamEmission, updateDreamEmission, type DreamEmissionKind, type DreamEmissionRuntime,
 } from "../app/dreamEmission";
 
-test("dream-emission profiles are deterministic, selective, slow, and asynchronous", () => {
-  const ship = createDreamEmissionProfile(19, "night", "ship");
-  const repeated = createDreamEmissionProfile(19, "night", "ship");
-  const aircraft = createDreamEmissionProfile(20, "night", "aircraft");
-  const day = createDreamEmissionProfile(19, "day", "ship");
-  assert.deepEqual(ship, repeated);
-  assert.equal(ship.enabled, true);
-  assert.equal(day.enabled, false);
-  assert.equal(day.coreStrength, 0);
-  assert.ok(ship.primaryPeriod >= 24 && ship.primaryPeriod <= 38);
-  assert.ok(ship.secondaryPeriod >= 57 && ship.secondaryPeriod <= 83);
-  assert.notEqual(ship.primaryPeriod, aircraft.primaryPeriod);
-  assert.equal(ship.haloScale, 1.09);
-  assert.equal(ship.outerHaloScale, 1.17);
-  assert.equal(aircraft.haloScale, 1.16);
-  assert.equal(aircraft.outerHaloScale, 1.26);
-  assert.ok(ship.coreStrength >= 0.14 && ship.coreStrength <= 0.22);
-  assert.ok(ship.haloStrength >= 0.32 && ship.haloStrength <= 0.44);
-  assert.ok(ship.outerHaloStrength > 0 && ship.outerHaloStrength < ship.haloStrength * 0.3);
-});
+const kinds: readonly DreamEmissionKind[] = ["ship", "submarine", "aircraft", "creature"];
 
-test("dream-emission breathing stays shallow and reduced motion freezes it", () => {
-  const profile = createDreamEmissionProfile(92, "dusk", "submarine");
-  const samples = Array.from({ length: 240 }, (_, index) => sampleDreamEmission(profile, index * 0.5, false));
-  assert.ok(samples.every((sample) => sample.coreFactor >= 0.94 && sample.coreFactor <= 1.06));
-  assert.ok(samples.every((sample) => sample.haloFactor >= 0.89 && sample.haloFactor <= 1.11));
-  assert.ok(samples.every((sample) => sample.haloScale >= 1.106 && sample.haloScale <= 1.114));
-  assert.notDeepEqual(samples[0], samples[100]);
-  assert.deepEqual(sampleDreamEmission(profile, 0, true), sampleDreamEmission(profile, 999, true));
-});
+for (const kind of kinds) {
+  test(`NDCG/S01-S06: ${kind} uses its native source meshes, not aura geometry`, () => {
+    const group = new THREE.Group();
+    const material = new THREE.MeshStandardMaterial({ color: 0x547f91, flatShading: true });
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 0.3, 0.4), material);
+    group.add(mesh);
+    const beforeScale = mesh.scale.clone();
+    const beforeColor = material.color.clone();
+    const geometry = mesh.geometry;
+    attachDreamEmission(group, createDreamEmissionProfile(7, "night", kind));
+    const runtime = group.userData.dreamEmission as DreamEmissionRuntime;
+    assert.equal(runtime.parts.length, 1);
+    assert.equal(runtime.parts[0].mesh, mesh);
+    assert.equal(mesh.geometry, geometry);
+    assert.ok(mesh.scale.equals(beforeScale));
+    assert.ok(runtime.parts[0].material.color.equals(beforeColor));
+    assert.equal(material.emissive.getHex(), 0, "shared original material was mutated");
+    assert.ok((mesh.material as THREE.MeshStandardMaterial).emissive.r > 0);
+    assert.equal(group.children.length, 1);
+    assert.equal(group.userData.dreamEmissionHaloMeshes, 0);
+    assert.equal(group.getObjectsByProperty("isLight", true).length, 0);
+    updateDreamEmission([group], 20, false);
+    assert.ok(runtime.haloFactor >= 0.97 && runtime.haloFactor <= 1.03);
+    updateDreamEmission([group], 999, true);
+    assert.equal(runtime.haloFactor, 1);
+    assert.ok(mesh.scale.equals(beforeScale));
+    detachDreamEmission(group);
+    assert.equal(mesh.material, material);
+    assert.equal(group.userData.dreamEmission, undefined);
+  });
+}
 
-test("adverse-weather visibility support is bounded and cannot defeat occlusion", () => {
-  assert.equal(dreamEmissionVisibilityLift(0, 0), 1);
-  const foggy = dreamEmissionVisibilityLift(0.052, 4);
-  assert.ok(foggy > 1);
-  assert.ok(foggy <= 1.22);
-  assert.equal(dreamEmissionVisibilityLift(Number.POSITIVE_INFINITY, 99), 1.22);
-  const normal = createDreamEmissionProfile(17, "night", "ship");
-  const supported = createDreamEmissionProfile(17, "night", "ship", foggy);
-  const capped = createDreamEmissionProfile(17, "night", "ship", 999);
-  assert.ok(supported.coreStrength > normal.coreStrength);
-  assert.ok(supported.haloStrength > normal.haloStrength);
-  assert.ok(capped.haloStrength <= normal.haloStrength * 1.22);
-  assert.equal(createDreamEmissionProfile(17, "day", "ship", 999).haloStrength, 0);
-});
-
-test("same-geometry halo keeps a crisp, fog-aware, native-color core without lights", () => {
+test("NDCG/S03: different source regions retain different native hues", () => {
   const group = new THREE.Group();
-  const material = new THREE.MeshStandardMaterial({ color: 0x74b9ad });
-  const core = new THREE.Mesh(new THREE.BoxGeometry(1, 0.3, 0.4), material);
-  const towerMaterial = new THREE.MeshStandardMaterial({ color: 0x547f91 });
-  const tower = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.4, 0.2), towerMaterial);
-  tower.position.y = 0.3;
-  const tacticalRing = new THREE.Mesh(new THREE.RingGeometry(1, 1.1), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-  group.add(core, tower, tacticalRing);
-  const profile = createDreamEmissionProfile(7, "dawn", "ship");
-  attachDreamEmission(group, profile);
+  group.add(new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial({ color: 0xff0066 })),
+    new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ color: 0x33bbff })));
+  attachDreamEmission(group, createDreamEmissionProfile(4, "night", "creature"));
+  const runtime = group.userData.dreamEmission as DreamEmissionRuntime;
+  assert.equal(runtime.parts[0].material.color.getHex(), 0xff0066);
+  assert.equal(runtime.parts[1].material.color.getHex(), 0x33bbff);
+  detachDreamEmission(group);
+});
 
-  const innerHalo = group.children.find((child) => child.name === "dream-emission-halo-inner");
-  const outerHalo = group.children.find((child) => child.name === "dream-emission-halo-outer");
-  assert.ok(innerHalo instanceof THREE.Mesh);
-  assert.ok(outerHalo instanceof THREE.Mesh);
-  for (const halo of [innerHalo, outerHalo]) {
-    assert.notEqual(halo.geometry, core.geometry);
-    assert.equal(halo.geometry, innerHalo.geometry);
-    assert.ok(halo.geometry.getAttribute("color") instanceof THREE.BufferAttribute);
-    assert.ok(halo.material instanceof THREE.ShaderMaterial);
-    assert.equal(halo.material.side, THREE.BackSide);
-    assert.equal(halo.material.depthTest, true);
-    assert.equal(halo.material.depthWrite, false);
-    assert.equal(halo.material.blending, THREE.NormalBlending);
-    assert.equal(halo.material.fog, true);
-    assert.equal(halo.material.toneMapped, false);
-  }
-  assert.equal(innerHalo.scale.x, profile.haloScale);
-  assert.equal(outerHalo.scale.x, profile.outerHaloScale);
-  assert.equal(group.userData.dreamEmissionHaloMeshes, DREAM_EMISSION_LIMITS.haloMeshesPerSubject);
-  assert.equal(DREAM_EMISSION_LIMITS.maxHaloMeshes, DREAM_EMISSION_LIMITS.maxSubjects * DREAM_EMISSION_LIMITS.haloMeshesPerSubject);
-  assert.ok((innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value > (outerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value);
-  assert.equal(material.emissive.getHex(), material.color.getHex());
-  assert.equal(towerMaterial.emissive.getHex(), towerMaterial.color.getHex());
-  assert.equal(tacticalRing.children.length, 0);
-  assert.equal(group.getObjectsByProperty("isLight", true).length, 0);
+test("NDCG/E03-C03: rings, wakes and reaction effects cannot contaminate the emitter", () => {
+  const group = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial({ color: 0x669988 }));
+  const ring = new THREE.Mesh(new THREE.RingGeometry(), new THREE.MeshBasicMaterial());
+  const wake = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial());
+  wake.name = "surface-vessel-wake";
+  const reaction = new THREE.Group(); reaction.name = "wildlife-happy-reaction";
+  reaction.add(new THREE.Mesh(new THREE.TetrahedronGeometry(), new THREE.MeshStandardMaterial()));
+  group.add(body, ring, wake, reaction);
+  group.userData.ring = ring; group.userData.wake = wake;
+  attachDreamEmission(group, createDreamEmissionProfile(3, "night", "ship"));
+  assert.equal((group.userData.dreamEmission as DreamEmissionRuntime).parts.length, 1);
+  detachDreamEmission(group);
+});
 
-  updateDreamEmission([group], 12, false);
-  assert.ok(material.emissiveIntensity > 0);
-  const frozenStrength = (innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value;
-  updateDreamEmission([group], 999, true);
-  const reducedStrength = (innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value;
-  updateDreamEmission([group], 0, true);
-  assert.equal((innerHalo.material as THREE.ShaderMaterial).uniforms.uStrength.value, reducedStrength);
-  assert.notEqual(frozenStrength, 0);
+test("NDCG/V01: explicit authorization and ancestor visibility fail closed", () => {
+  const ancestor = new THREE.Group(); const group = new THREE.Group();
+  group.add(new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial()));
+  ancestor.add(group); ancestor.visible = false;
+  assert.equal(dreamSourceVisible(group), false);
+  ancestor.visible = true; ancestor.userData.dreamEmissionAuthorized = false;
+  assert.equal(dreamSourceVisible(group), false);
+  group.userData.dreamEmissionAuthorized = false;
+  attachDreamEmission(group, createDreamEmissionProfile(3, "night", "submarine"));
+  assert.equal(group.userData.dreamEmission, undefined);
+});
 
-  const daylight = new THREE.Group();
-  daylight.add(new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial({ color: 0xff00aa })));
-  attachDreamEmission(daylight, createDreamEmissionProfile(7, "day", "ship"));
-  assert.equal(daylight.userData.dreamEmission, undefined);
+test("NDCG/T01-T04: reproducible phase, gain-only breathing, and daylight bypass", () => {
+  const a = createDreamEmissionProfile(19, "night", "ship");
+  assert.deepEqual(a, createDreamEmissionProfile(19, "night", "ship"));
+  assert.notEqual(a.primaryPhase, createDreamEmissionProfile(20, "night", "ship").primaryPhase);
+  assert.equal(a.primaryPeriod, 31); assert.equal(a.secondaryPeriod, 47);
+  assert.deepEqual(sampleDreamEmission(a, 900, true), { coreFactor: 1, haloFactor: 1 });
+  assert.equal(createDreamEmissionProfile(19, "day", "ship").enabled, false);
+  const day = new THREE.Group();
+  day.add(new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial()));
+  attachDreamEmission(day, createDreamEmissionProfile(1, "day", "creature"));
+  assert.equal(day.userData.dreamEmission, undefined);
+  assert.equal(DREAM_EMISSION_LIMITS.maxHaloMeshes, 0);
+});
+
+test("NDCG/V02-Q08: weather cannot amplify emission or propagate nonfinite values", () => {
+  for (const density of [0, 0.05, Infinity, NaN]) assert.equal(dreamEmissionVisibilityLift(density, 99), 1);
+  assert.deepEqual(createDreamEmissionProfile(1, "night", "ship", 999), createDreamEmissionProfile(1, "night", "ship", 1));
+  assert.throws(() => createDreamEmissionProfile(NaN, "night", "ship"), RangeError);
+  const group = new THREE.Group();
+  const profile = createDreamEmissionProfile(1, "night", "ship");
+  attachDreamEmission(group, { ...profile, haloStrength: Infinity });
+  assert.equal(group.userData.dreamEmission, undefined);
+});
+
+test("NDCG/R01: viewport/pose changes do not rewrite the authored reference size", () => {
+  const group = new THREE.Group();
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 1), new THREE.MeshStandardMaterial());
+  group.add(mesh);
+  attachDreamEmission(group, createDreamEmissionProfile(3, "night", "creature"));
+  const runtime = group.userData.dreamEmission as DreamEmissionRuntime;
+  const radius = runtime.referenceSphere.radius;
+  mesh.rotation.z = 1.2; group.position.x = 30;
+  updateDreamEmission([group], 50, false);
+  assert.equal(runtime.referenceSphere.radius, radius);
+  attachDreamEmission(group, createDreamEmissionProfile(3, "night", "creature"));
+  assert.equal(group.children.length, 1, "re-registration leaked geometry");
+  detachDreamEmission(group);
 });

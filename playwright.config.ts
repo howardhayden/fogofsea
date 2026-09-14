@@ -5,6 +5,9 @@ const browserExecutable = process.env.FOG_TEST_BROWSER_PATH;
 export default defineConfig({
   testDir: "./tests/browser",
   fullyParallel: false,
+  // Shared CI browser-rendering resources must not make unrelated scenarios
+  // compete for one test's 90-second action budget. Keep local defaults.
+  workers: process.env.CI ? 1 : undefined,
   forbidOnly: true,
   retries: 0,
   reporter: "line",

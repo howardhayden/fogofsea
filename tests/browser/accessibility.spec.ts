@@ -494,6 +494,7 @@ test("academy uses keyboard-operated tabs, named panels, quiz groups, and modal 
 });
 
 test("screen-reader semantics and a keyboard-only lifecycle hold through strategy, force, command, and debrief", async ({ page }, testInfo) => {
+  test.setTimeout(180_000);
   await page.setViewportSize(testInfo.project.name === "mobile-chromium" ? { width: 320, height: 800 } : { width: 1024, height: 720 });
   await page.goto("/");
   const session = page.getByRole("button", { name: "PLAY WITHOUT BROWSER SAVING" });

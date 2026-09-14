@@ -240,7 +240,10 @@ test("visualization uses five rotatable views and fixed fictional environment da
   assert.match(viewModel, /minAzimuthAngle|VIEW_CONFIG|subsurface/s);
   assert.match(battlefield, /getCelestialState\(scenarioDate, time, observerLatitude, observerLongitude\)/);
   assert.match(battlefield, /document\.hidden/);
-  assert.match(battlefield, /1000 \/ 30/);
+  // Preserve the 30 Hz contract through the phase-preserving scheduler.
+  assert.match(battlefield, /import \{ advanceRenderDeadline \} from "\.\/visualPerformance"/);
+  assert.match(battlefield, /nextFrameAt = advanceRenderDeadline\(nextFrameAt, Math\.max\(frameAt, nextFrameAt\), 30\)/);
+  assert.match(battlefield, /if \(frameAt \+ 1 < nextFrameAt\) return/);
   assert.match(battlefield, /baseX/);
   assert.match(page, /windHeading=\{scenario\.windHeading\}/);
   assert.match(page, /currentHeading=\{scenario\.currentHeading\}/);

@@ -1,0 +1,35 @@
+name: Focused dream-glow verification
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  glow-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npx tsx --test tests/dream-glow-math.test.ts tests/dream-emission.test.ts
+      - run: npx playwright install --with-deps chromium
+      - name: Four-family glow and outside-support identity
+        run: npx playwright test tests/browser/dream-glow.spec.ts --output=test-results/glow
+      - name: Existing desktop sky composition
+        run: npx playwright test tests/browser/starfield.spec.ts --project=desktop-chromium --grep 'actual Stars and Sky pixels' --output=test-results/sky
+      - name: Native scene glow integration
+        run: npx playwright test tests/browser/environment-visuals.spec.ts --project=desktop-chromium --grep 'night dream emission|selected operational subjects' --output=test-results/scene
+      - name: Preserve positive and negative browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dream-glow-evidence-${{ github.event.pull_request.head.sha || github.sha }}
+          path: test-results/
+          if-no-files-found: warn
+          retention-days: 14

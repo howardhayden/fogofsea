@@ -28,11 +28,11 @@ async function expectNoContacts(page: Page, layer: "sky" | "air" | "surface" | "
   await expect(plot).toHaveAttribute("data-visible-unknown-contacts", "0");
   await expect(plot.locator(".fallback-contact")).toHaveCount(0);
   await expect(page.locator("#contact-visual-note")).toHaveText(
-    `Selected force has no credited ${domain}-detection capability; no unknown markers are shown.`,
+    `No canonical disclosed ${domain} estimate is available to render; sensing capability alone never creates a contact marker.`,
   );
 }
 
-test("unknown contacts require compatible mission credit and stay within the sensed domain", async ({ page }, testInfo) => {
+test("sensing filters canonical disclosed contacts but never manufactures them", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "Desktop force-to-plot integration contract");
   test.setTimeout(180_000);
 
@@ -68,7 +68,8 @@ test("unknown contacts require compatible mission credit and stay within the sen
   await expectNoContacts(page, "subsurface", "subsurface");
 
   // A second compatible deck legally hosts the relevant aircraft. Mission
-  // credit now unlocks only the surface picture its sensors can establish.
+  // credit establishes sensing capacity, but cannot manufacture a contact
+  // when authoritative scenario state discloses no estimate.
   await page.getByRole("button", { name: "FLEET", exact: true }).click();
   await page.getByRole("button", { name: "Add one Short-deck aviation ship" }).click();
   await expect(aviationShip).toContainText("MISSION CREDIT · 1/2");
@@ -79,12 +80,11 @@ test("unknown contacts require compatible mission credit and stay within the sen
 
   const surfacePlot = await selectPlotLayer(page, "surface");
   const surfaceCount = Number(await surfacePlot.getAttribute("data-visible-unknown-contacts"));
-  expect(surfaceCount).toBeGreaterThanOrEqual(1);
-  expect(surfaceCount).toBeLessThanOrEqual(3);
-  await expect(surfacePlot.locator(".fallback-contact.contact-surface")).toHaveCount(surfaceCount);
+  expect(surfaceCount).toBe(0);
+  await expect(surfacePlot.locator(".fallback-contact.contact-surface")).toHaveCount(0);
   await expect(surfacePlot.locator(".fallback-contact:not(.contact-surface)")).toHaveCount(0);
   await expect(page.locator("#contact-visual-note")).toHaveText(
-    new RegExp(`^${surfaceCount} unidentified surface contact marker(?: is|s are) shown because the selected force has credited surface-detection capability\\. Markers communicate uncertainty, not exact identity or opposing composition\\.$`),
+    "No canonical disclosed surface estimate is available to render; sensing capability alone never creates a contact marker.",
   );
 
   const markerContracts = await surfacePlot.locator(".fallback-contact").evaluateAll((markers) => markers.map((marker) => ({
@@ -93,12 +93,7 @@ test("unknown contacts require compatible mission credit and stay within the sen
     ariaLabel: marker.getAttribute("aria-label"),
     dataKeys: Object.keys((marker as HTMLElement).dataset),
   })));
-  expect(markerContracts).toEqual(Array.from({ length: surfaceCount }, () => ({
-    text: "",
-    title: null,
-    ariaLabel: null,
-    dataKeys: [],
-  })));
+  expect(markerContracts).toEqual([]);
 
   await expectNoContacts(page, "sky", "air");
   await expectNoContacts(page, "air", "air");

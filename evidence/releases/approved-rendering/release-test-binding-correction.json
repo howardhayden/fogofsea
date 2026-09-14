@@ -1,0 +1,9 @@
+{
+  "failed_run": 34797575735,
+  "failed_job": 103833549639,
+  "failure": "tests/rendered-html.test.mjs required the old literal 1000 / 30 expression",
+  "correction": "Bind the unchanged 30 Hz requirement to advanceRenderDeadline and retain cadence/skip-boundary execution tests",
+  "application_changed_by_correction": false,
+  "original_js_tests_passed": 29,
+  "original_js_tests_failed": 1
+}

@@ -291,7 +291,7 @@ test("reflection and aurora visual states have explicit nonvisual equivalents ac
     await expect(page.locator("#aurora-visual-note")).toContainText("zero by day, clearly visible at dawn, brighter at dusk, and brightest at night");
     await expect(page.locator(".fallback-aurora i")).toHaveCount(auroraBands);
     expect(await page.locator(".fallback-aurora").evaluate((node) => getComputedStyle(node).mixBlendMode)).toBe("normal");
-    const fallbackCurtains = await page.locator(".fallback-aurora i").evaluateAll((nodes) => nodes.map((node) => {
+    const fallbackCurtains = await plot.locator(".fallback-aurora i").evaluateAll((nodes) => nodes.map((node) => {
       const style = getComputedStyle(node);
       return {
         filter: style.filter,
@@ -454,32 +454,23 @@ test("selected operational subjects breathe faintly while stars remain a separat
   await page.locator(".time-control").getByRole("button", { name: "night", exact: true }).click();
   let plot = page.locator(".battlefield-canvas.layer-surface");
   await expect(plot).toHaveAttribute("data-dream-emission", "still");
-  await expect(plot).toHaveAttribute("data-dream-emission-halo", "dual-native-color-shell");
+  await expect(plot).toHaveAttribute("data-dream-emission-halo", "shape-derived-radial-convolution");
   await expect(plot).toHaveAttribute("data-dream-emission-occlusion", "scene-depth-fog-waves");
-  await expect(page.locator("#weather-visual-note")).toContainText("thin, soft native-color halos");
-  await expect(page.locator("#weather-visual-note")).toContainText("scene depth, fog, and waves continue to soften or cover them");
+  await expect(page.locator("#weather-visual-note")).toContainText("short-range colored light");
+  await expect(page.locator("#weather-visual-note")).toContainText("depth and fog attenuation");
   const unitCount = await plot.locator(".fallback-ship, .fallback-aircraft").count();
   if ((page.viewportSize()?.width ?? 1_000) > 760) expect(unitCount).toBeGreaterThan(0);
-  await expect(plot.locator(".fallback-dream-halo")).toHaveCount(unitCount);
+  await expect(plot.locator(".fallback-dream-halo")).toHaveCount(0);
+  await expect(plot).toHaveAttribute("data-dream-emission-fallback", "core-only-reduced-profile");
   if (unitCount > 0) {
-    const reduced = await plot.locator(".fallback-dream-halo").first().evaluate((halo) => ({
-      animation: getComputedStyle(halo).animationName,
-      opacity: Number.parseFloat(getComputedStyle(halo).opacity),
-      scale: getComputedStyle(halo).scale,
-      color: getComputedStyle(halo).color,
-      z: Number(getComputedStyle(halo).zIndex),
-    }));
-    expect(reduced.animation).toBe("none");
-    expect(reduced.opacity).toBeGreaterThanOrEqual(0.18);
-    expect(Number.parseFloat(reduced.scale)).toBeGreaterThanOrEqual(1.06);
-    expect(reduced.color).not.toBe("rgb(255, 255, 255)");
-    expect(reduced.z).toBeLessThan(Number(await plot.locator(".fallback-waves").evaluate((waves) => getComputedStyle(waves).zIndex)));
+    await expect(plot).toHaveAttribute("data-dream-glow-profile", "sampled-radial-native-color");
+    await expect.poll(async () => Number(await plot.getAttribute("data-dream-glow-sources"))).toBeGreaterThan(0);
   }
 
   await page.locator(".time-control").getByRole("button", { name: "day", exact: true }).click();
   await expect(plot).toHaveAttribute("data-dream-emission", "off");
   await expect(plot).toHaveAttribute("data-dream-emission-halo", "none");
-  if (unitCount > 0) await expect(plot.locator(".fallback-dream-halo").first()).toBeHidden();
+  await expect(plot.locator(".fallback-dream-halo")).toHaveCount(0);
 
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await openSession(page);
@@ -487,16 +478,8 @@ test("selected operational subjects breathe faintly while stars remain a separat
   await page.locator(".time-control").getByRole("button", { name: "night", exact: true }).click();
   plot = page.locator(".battlefield-canvas.layer-surface");
   await expect(plot).toHaveAttribute("data-dream-emission", "breathing");
-  const movingHalo = plot.locator(".fallback-dream-halo").first();
-  if (await movingHalo.count()) {
-    const motion = await movingHalo.evaluate((halo) => ({
-      animation: getComputedStyle(halo).animationName,
-      duration: Number.parseFloat(getComputedStyle(halo).animationDuration),
-    }));
-    expect(motion.animation).toBe("dream-emission-breathe");
-    expect(motion.duration).toBeGreaterThanOrEqual(24);
-    expect(motion.duration).toBeLessThanOrEqual(38);
-  }
+  await expect(plot.locator(".fallback-dream-halo")).toHaveCount(0);
+  await expect(plot).toHaveAttribute("data-dream-emission-halo", "shape-derived-radial-convolution");
   await expect(plot).toHaveAttribute("data-starfield-animation", "alive-bounded-wander");
   await expect(plot).toHaveAttribute("data-webgl", "ready");
   expect(shaderErrors).toEqual([]);
@@ -514,8 +497,9 @@ test("night dream emission produces a real, bounded, native-color WebGL aura", a
 
   await page.getByRole("button", { name: "Add one Fleet aviation ship" }).click();
   await expect.poll(async () => plot.locator(".fallback-ship").count()).toBeGreaterThan(0);
-  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-max-halo-meshes"))).toBe(84);
-  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-halo-meshes"))).toBe(2);
+  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-max-halo-meshes"))).toBe(0);
+  await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-halo-meshes"))).toBe(0);
+  await expect.poll(async () => Number(await plot.getAttribute("data-dream-glow-sources"))).toBeGreaterThan(0);
   const emittedNight = await cleanCanvasCapture(canvas);
   const metrics = await canvasDifferenceMetrics(page, emptyNight, emittedNight);
 
@@ -524,7 +508,7 @@ test("night dream emission produces a real, bounded, native-color WebGL aura", a
   expect(metrics.softEdge).toBeGreaterThan(120);
   expect(metrics.nativeCool).toBeGreaterThan(60);
   expect(metrics.changed).toBeGreaterThan(320);
-  // One unit must remain a local outline—not become a screen-sized light orb.
+  // One unit must remain a local glow—not become a screen-sized light orb.
   expect(metrics.footprintWidth).toBeLessThan(metrics.width * 0.32);
   expect(metrics.footprintHeight).toBeLessThan(metrics.height * 0.32);
 });

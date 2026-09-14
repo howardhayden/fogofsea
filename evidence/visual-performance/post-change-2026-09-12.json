@@ -1,0 +1,71 @@
+{
+  "format": "fog-of-sea-visual-performance-post-change-v1",
+  "baselineId": "FOS-VS-BL-0f0565b-2026-09-12",
+  "capturedOn": "2026-09-12",
+  "status": "source-verified-runtime-device-evidence-blocked",
+  "releaseCheck": {
+    "result": "pass",
+    "javascriptTests": "30/30",
+    "typescriptTests": "208/208",
+    "redTeamTests": "66/66",
+    "browserInventory": "164 tests in 16 files listed; listing is not execution",
+    "buildModules": 84,
+    "buildDurationSeconds": 2.83,
+    "artifactValidation": "20 raw scanned / 17 decoded before stale baseline chunks were removed; no remote HTML assets or source maps"
+  },
+  "focusedVerification": {
+    "visualRequirements": "14/14 structurally valid",
+    "hazardPersistenceAndAdjudication": "47/47 targeted tests",
+    "contactAuthority": "6/6 targeted tests",
+    "combinedNewModelAndPerformance": "20/20 targeted tests"
+  },
+  "browserExecution": {
+    "command": "npx playwright test tests/browser/environment-visuals.spec.ts --project=desktop-chromium --grep surface-waves",
+    "result": "environment-blocked-before-product-assertion",
+    "launched": false,
+    "assertionsExecuted": 0,
+    "failure": "Pinned Chromium headless-shell executable was unavailable at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell."
+  },
+  "artifact": {
+    "totalRawBytes": 1711236,
+    "aggregateSha256": "6c0435b90acfca26c14d45732b33ff3d5d10a26a140436b4b08e4022778c8445",
+    "initialPath": {
+      "rawBytes": 890834,
+      "gzipBytes": 251701,
+      "files": ["assets/index-PhHHaZuM.js", "assets/interface-runtime-6RWF-rzJ.js", "assets/index-Xn8preIv.css"]
+    },
+    "lazyTacticalPath": {
+      "rawBytes": 726855,
+      "gzipBytes": 204879,
+      "files": ["assets/Battlefield-154-R5ma.js", "assets/three-renderer-BwaYNRhg.js", "assets/sky-model-DePhbSum.js"]
+    },
+    "deltaFromBaseline": {
+      "totalRawBytes": 3821,
+      "initialRawBytes": -628,
+      "initialGzipBytes": -755,
+      "lazyTacticalRawBytes": 4449,
+      "lazyTacticalGzipBytes": 1594
+    }
+  },
+  "implementedBoundaries": [
+    "canonical deterministic environmental hazard timeline including explicit TSUNAMI state",
+    "hazard mechanics independent of renderer, camera, animation, and WebGL",
+    "canonical disclosed contact estimates with sensing used only as a filter",
+    "privacy-decision gate before tactical lazy-module mount",
+    "render effect teardown while overlays are open",
+    "frame-interval distribution, monotonic deadline, and hysteretic governor primitives",
+    "interactive Markdown concept map and CSD matrix"
+  ],
+  "unmeasured": [
+    "presented-frame interval distribution and hitch clusters",
+    "camera input-to-present latency",
+    "browser cold startup and scenario-ready time",
+    "main-thread, worker, and GPU pressure",
+    "heap, DOM, GPU allocation, and retained growth",
+    "physical Android and iOS thermal, power, and battery behavior",
+    "live reduced-motion, forced-colors, screen-reader, keyboard, touch, and no-WebGL behavior",
+    "temporal luminance and prohibited-flash behavior",
+    "visual-reference and human comprehension review"
+  ],
+  "claimRule": "Passing source and build checks does not promote blocked or unmeasured runtime/device claims."
+}

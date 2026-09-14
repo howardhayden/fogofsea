@@ -1,6 +1,6 @@
 import type { Aircraft, Armament, Platform, TrackingMethod } from "./gameModel";
 import type { ScenarioDisruption } from "./scenarioMatrix";
-import { seededRandom, type ViewLayer } from "./viewModel";
+import type { ViewLayer } from "./viewModel";
 
 export type ContactDomain = "air" | "surface" | "subsurface";
 export type ContactVisibility = Readonly<Record<ContactDomain, boolean>>;
@@ -20,6 +20,7 @@ export type ContactVisibilityInput = {
 };
 
 export type UnknownContact = {
+  id: string;
   domain: ContactDomain;
   x: number;
   y: number;
@@ -27,6 +28,8 @@ export type UnknownContact = {
   scale: number;
   heading: number;
 };
+
+export type DisclosedContactEstimate = Readonly<UnknownContact>;
 
 export type ContactVisualizationPlan = {
   seed: number;
@@ -149,36 +152,36 @@ export function publicKnowledgeForDisruption(
   return assessed ? "assessed" : "concealed";
 }
 
-function contactPosition(domain: ContactDomain, random: () => number): UnknownContact {
-  const x = -13 + random() * 26;
-  const z = -12 + random() * 24;
-  return {
-    domain,
-    x,
-    y: domain === "air" ? 5.8 + random() * 5.2 : domain === "surface" ? 0.58 : -3.8 - random() * 1.5,
-    z,
-    scale: 0.78 + random() * 0.54,
-    heading: random() * Math.PI * 2,
+function snapshotEstimate(value: unknown): DisclosedContactEstimate | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const read = (key: string) => {
+    const descriptor = Object.prototype.hasOwnProperty.call(value, key) ? Object.getOwnPropertyDescriptor(value, key) : undefined;
+    return descriptor && "value" in descriptor ? descriptor.value : undefined;
   };
+  const domain = read("domain");
+  const finite = (key: string) => typeof read(key) === "number" && Number.isFinite(read(key));
+  if (typeof read("id") !== "string" || !/^[a-z0-9][a-z0-9._-]{0,79}$/i.test(read("id"))
+    || !["air", "surface", "subsurface"].includes(String(domain))
+    || !["x", "y", "z", "scale", "heading"].every(finite)
+    || Math.abs(read("x")) > 50 || Math.abs(read("y")) > 20 || Math.abs(read("z")) > 50
+    || read("scale") <= 0 || read("scale") > 3 || Math.abs(read("heading")) > Math.PI * 2) return null;
+  return Object.freeze({ id: read("id"), domain, x: read("x"), y: read("y"), z: read("z"), scale: read("scale"), heading: read("heading") }) as DisclosedContactEstimate;
 }
 
-/** Makes bounded unknown-contact locations from capability flags and a seed. */
-export function createContactVisualizationPlan(seed: number, visibility: ContactVisibility): ContactVisualizationPlan {
-  const random = seededRandom(seed ^ 0xc07ac7);
-  const domains: ContactDomain[] = ["air", "surface", "subsurface"];
-  const contacts = domains.flatMap((domain) => {
-    if (!visibility[domain]) return [];
-    const count = 1 + Math.floor(random() * CONTACT_LIMITS[domain]);
-    return Array.from({ length: count }, () => contactPosition(domain, random));
+/** Projects canonical disclosed estimates; sensing capability is only a filter. */
+export function createContactVisualizationPlan(seed: number, visibility: ContactVisibility, estimates: readonly DisclosedContactEstimate[]): ContactVisualizationPlan {
+  const safeEstimates = Array.isArray(estimates) ? estimates.map(snapshotEstimate).filter((item): item is DisclosedContactEstimate => item !== null) : [];
+  const counts = { air: 0, surface: 0, subsurface: 0 };
+  const contacts = safeEstimates.filter((contact) => {
+    if (!visibility[contact.domain] || counts[contact.domain] >= CONTACT_LIMITS[contact.domain]) return false;
+    if (counts.air + counts.surface + counts.subsurface >= CONTACT_LIMITS.total) return false;
+    counts[contact.domain] += 1;
+    return true;
   });
   return {
     seed,
     contacts,
-    counts: {
-      air: contacts.filter((contact) => contact.domain === "air").length,
-      surface: contacts.filter((contact) => contact.domain === "surface").length,
-      subsurface: contacts.filter((contact) => contact.domain === "subsurface").length,
-    },
+    counts,
   };
 }
 
