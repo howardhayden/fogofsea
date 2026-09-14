@@ -61,6 +61,7 @@ const GLOW_FRAGMENT = `
   uniform vec4 uCaptureRect;
   uniform float uReference;
   uniform float uGain;
+  uniform vec4 uSourceBounds;
   uniform vec3 uSigmaRatios;
   uniform vec3 uWeights;
   uniform vec3 uTaps[${DREAM_GLOW_TAPS.length}];
@@ -74,9 +75,22 @@ const GLOW_FRAGMENT = `
     vec2 fullUv = gl_FragCoord.xy / uFullSize;
     vec2 centerUv = (gl_FragCoord.xy - uCaptureRect.xy) / uSourceSize;
     float destinationDepth = texture2D(uSceneDepth, fullUv).r;
+    float coverage = sourceAt(centerUv).a;
+    // The final composite discards every halo contribution at an opaque core.
+    // Preserve that mask but do not evaluate 327 samples that cannot be shown.
+    if (coverage >= 1.0) {
+      gl_FragColor = vec4(0.0, 0.0, 0.0, coverage);
+      return;
+    }
     vec3 spread = vec3(0.0);
     for (int scaleIndex = 0; scaleIndex < 3; scaleIndex++) {
-      vec2 sigma = uReference * uSigmaRatios[scaleIndex] / uSourceSize;
+      float radius = uReference * uSigmaRatios[scaleIndex];
+      // A conservative projected source rectangle plus the exact finite
+      // kernel support. The two-pixel source margin includes raster/filter edges.
+      float support = 3.0 * radius;
+      if (any(lessThan(gl_FragCoord.xy, uSourceBounds.xy - support)) ||
+          any(greaterThan(gl_FragCoord.xy, uSourceBounds.zw + support))) continue;
+      vec2 sigma = radius / uSourceSize;
       for (int tapIndex = 0; tapIndex < ${DREAM_GLOW_TAPS.length}; tapIndex++) {
         vec3 tap = uTaps[tapIndex];
         vec2 sampleUv = centerUv + tap.xy * sigma;
@@ -87,7 +101,6 @@ const GLOW_FRAGMENT = `
         spread += source.rgb * (tap.z * uWeights[scaleIndex]);
       }
     }
-    float coverage = sourceAt(centerUv).a;
     gl_FragColor = vec4(spread * uGain, coverage);
   }
 `;
@@ -131,7 +144,14 @@ const COMPOSITE_FRAGMENT = `
 `;
 
 type CapturedPart = { source: DreamSourcePart; proxy: THREE.Mesh; material: THREE.MeshBasicMaterial };
-type Subject = { root: THREE.Group; runtime: DreamEmissionRuntime; scene: THREE.Scene; parts: CapturedPart[] };
+type Subject = {
+  root: THREE.Group; runtime: DreamEmissionRuntime; scene: THREE.Scene; parts: CapturedPart[];
+  captureRect: THREE.Vector4; sourceBounds: THREE.Vector4;
+};
+type SourceTarget = {
+  target: THREE.WebGLRenderTarget; captureRect: THREE.Vector4; sourceBounds: THREE.Vector4;
+  reference: number; gain: number; used: boolean; lastUsed: number;
+};
 export type DreamGlowStatus = "off" | "sampled-radial-native-color" | "core-only-capability" | "core-only-budget" | "partial-core-only-budget";
 
 function renderTarget(depth: boolean, samples: number): THREE.WebGLRenderTarget {
@@ -152,7 +172,10 @@ function renderTarget(depth: boolean, samples: number): THREE.WebGLRenderTarget 
 
 /** Explicit scene postprocess. Every source is a registered, authorized group
  * returned by buildSceneContents; undisclosed simulation objects are not read.
- * One reusable source target is cropped/padded in unclipped screen coordinates.
+ * Bounded source targets are cropped/padded in unclipped screen coordinates.
+ * Captures are accumulated in batches, avoiding full-frame target switches for
+ * every small source. The source-pixel budget equals the former maximum single
+ * source allocation; larger workloads use multiple batches, not fewer entities.
  */
 export class DreamGlowRenderer {
   status: DreamGlowStatus = "off";
@@ -175,6 +198,7 @@ export class DreamGlowRenderer {
   private readonly sourceSize = new THREE.Vector2(1, 1);
   private readonly nearFar = new THREE.Vector2();
   private readonly captureRect = new THREE.Vector4();
+  private readonly sourceBounds = new THREE.Vector4();
   private readonly point = new THREE.Vector3();
   private readonly center = new THREE.Vector3();
   private readonly worldScale = new THREE.Vector3();
@@ -183,9 +207,18 @@ export class DreamGlowRenderer {
   private readonly scratchBox = new THREE.Box3();
   private readonly referencePoints: THREE.Vector2[] = Array.from({ length: 8 }, () => new THREE.Vector2());
   private disposed = false;
+  private displayCopyVerified = false;
+  private displayCopyFailed = false;
+  private readonly sourceTargets: SourceTarget[] = [];
+  private readonly pendingSources: SourceTarget[] = [];
+  private sourceTargetPixels = 0;
+  private sourceUseSerial = 0;
 
   constructor(private readonly renderer: THREE.WebGLRenderer, roots: readonly THREE.Group[]) {
-    this.supported = renderer.extensions.has("EXT_color_buffer_float");
+    // RGBA storage is required by the display-copy path on WebKit. An
+    // externally supplied opaque context must retain its native scene instead.
+    this.supported = renderer.extensions.has("EXT_color_buffer_float")
+      && renderer.getContext().getContextAttributes()?.alpha === true;
     const samples = Math.min(4, renderer.capabilities.maxSamples);
     this.base = renderTarget(true, samples);
     this.emission = renderTarget(true, samples);
@@ -199,6 +232,7 @@ export class DreamGlowRenderer {
         uEmission: { value: this.emission.texture }, uSourceDepth: { value: this.emission.depthTexture },
         uSceneDepth: { value: this.base.depthTexture }, uFullSize: { value: this.fullSize },
         uSourceSize: { value: this.sourceSize }, uNearFar: { value: this.nearFar },
+        uSourceBounds: { value: this.sourceBounds },
         uCaptureRect: { value: this.captureRect }, uReference: { value: 0 }, uGain: { value: 0 },
         uSigmaRatios: { value: new THREE.Vector3().fromArray(DREAM_GLOW_MODEL.sigmaRatios) },
         uWeights: { value: new THREE.Vector3().fromArray(DREAM_GLOW_MODEL.weights) },
@@ -222,6 +256,15 @@ export class DreamGlowRenderer {
     this.screenMesh.frustumCulled = false;
     this.screenScene.add(this.screenMesh);
     this.subjects = [];
+    this.setSubjects(roots);
+  }
+
+  /** Keep framebuffer allocations and the compiled full-screen programs while
+   * the current view changes. Only the scene-owned source registrations change.
+   */
+  setSubjects(roots: readonly THREE.Group[]): void {
+    if (this.disposed) throw new Error("DreamGlowRenderer has been disposed");
+    this.clearSubjects();
     for (const root of new Set(roots)) {
       const runtime = root.userData.dreamEmission as DreamEmissionRuntime | undefined;
       if (!runtime?.profile.enabled) continue;
@@ -252,7 +295,7 @@ export class DreamGlowRenderer {
         sourceScene.add(proxy);
         return { source, proxy, material };
       });
-      this.subjects.push({ root, runtime, scene: sourceScene, parts });
+      this.subjects.push({ root, runtime, scene: sourceScene, parts, captureRect: new THREE.Vector4(), sourceBounds: new THREE.Vector4() });
     }
   }
 
@@ -329,6 +372,7 @@ export class DreamGlowRenderer {
       left = Math.min(left, x); right = Math.max(right, x);
       bottom = Math.min(bottom, y); top = Math.max(top, y);
     }
+    this.sourceBounds.set(left - 2, bottom - 2, right + 2, top + 2);
     const padding = DREAM_GLOW_MODEL.supportSigmas * DREAM_GLOW_MODEL.sigmaRatios[2] * reference + 2;
     left = Math.floor(left - padding); bottom = Math.floor(bottom - padding);
     right = Math.ceil(right + padding); top = Math.ceil(top + padding);
@@ -337,13 +381,78 @@ export class DreamGlowRenderer {
     const maximum = Math.min(DREAM_EMISSION_LIMITS.maxSourceTextureSize, this.renderer.capabilities.maxTextureSize);
     if (width > maximum || height > maximum) { this.skippedForBudget++; return 0; }
     this.captureRect.set(left, bottom, width, height);
-    const targetWidth = Math.max(this.emission.width, THREE.MathUtils.ceilPowerOfTwo(width));
-    const targetHeight = Math.max(this.emission.height, THREE.MathUtils.ceilPowerOfTwo(height));
-    this.emission.setSize(targetWidth, targetHeight);
-    this.sourceSize.set(targetWidth, targetHeight);
-    this.cropCamera.copy(camera, false);
-    this.cropCamera.setViewOffset(this.fullSize.x, this.fullSize.y, left, this.fullSize.y - top, width, height);
+    subject.captureRect.copy(this.captureRect);
+    subject.sourceBounds.copy(this.sourceBounds);
     return reference;
+  }
+
+  /** Reuse exact-sized power-of-two targets, not the largest previous crop for
+   * every subsequent tiny emitter. Unused entries are evicted before exceeding
+   * the same pixel ceiling as the former single 2048-by-2048 source target.
+   * A full batch returns null: the caller flushes it and retries without dropping
+   * or weakening the incoming source.
+   */
+  private acquireSourceTarget(width: number, height: number): SourceTarget | null {
+    const pixels = width * height;
+    const maximum = DREAM_EMISSION_LIMITS.maxSourceTextureSize ** 2;
+    if (pixels > maximum) return null;
+    const reusable = this.sourceTargets.find((entry) => !entry.used && entry.target.width === width && entry.target.height === height);
+    if (reusable) {
+      reusable.used = true;
+      reusable.lastUsed = ++this.sourceUseSerial;
+      return reusable;
+    }
+    while (this.sourceTargetPixels + pixels > maximum) {
+      let oldest = -1;
+      for (let index = 0; index < this.sourceTargets.length; index++) {
+        const entry = this.sourceTargets[index];
+        if (!entry.used && (oldest < 0 || entry.lastUsed < this.sourceTargets[oldest].lastUsed)) oldest = index;
+      }
+      if (oldest < 0) return null;
+      const [removed] = this.sourceTargets.splice(oldest, 1);
+      this.sourceTargetPixels -= removed.target.width * removed.target.height;
+      removed.target.dispose();
+    }
+    const target = renderTarget(true, this.emission.samples);
+    target.setSize(width, height);
+    const entry: SourceTarget = {
+      target, captureRect: new THREE.Vector4(), sourceBounds: new THREE.Vector4(),
+      reference: 0, gain: 0, used: true, lastUsed: ++this.sourceUseSerial,
+    };
+    this.sourceTargets.push(entry);
+    this.sourceTargetPixels += pixels;
+    return entry;
+  }
+
+  private flushSources(): void {
+    if (!this.pendingSources.length) return;
+    const renderer = this.renderer;
+    const pixelRatio = renderer.getPixelRatio();
+    this.accumulation.scissorTest = false;
+    renderer.setRenderTarget(this.accumulation);
+    renderer.setScissorTest(true);
+    renderer.autoClear = false;
+    this.screenMesh.material = this.glowMaterial;
+    for (const entry of this.pendingSources) {
+      this.captureRect.copy(entry.captureRect);
+      this.sourceBounds.copy(entry.sourceBounds);
+      this.sourceSize.set(entry.target.width, entry.target.height);
+      this.glowMaterial.uniforms.uEmission.value = entry.target.texture;
+      this.glowMaterial.uniforms.uSourceDepth.value = entry.target.depthTexture;
+      this.glowMaterial.uniforms.uReference.value = entry.reference;
+      this.glowMaterial.uniforms.uGain.value = entry.gain;
+      const x = Math.max(0, this.captureRect.x); const y = Math.max(0, this.captureRect.y);
+      const width = Math.min(this.fullSize.x, this.captureRect.x + this.captureRect.z) - x;
+      const height = Math.min(this.fullSize.y, this.captureRect.y + this.captureRect.w) - y;
+      // Three accepts logical scissor units and applies DPR internally. Divide
+      // once so these exact physical-pixel rectangles retain fractional-DPR parity.
+      renderer.setScissor(x / pixelRatio, y / pixelRatio, width / pixelRatio, height / pixelRatio);
+      renderer.render(this.screenScene, this.screenCamera);
+      entry.used = false;
+      this.renderedSubjects++;
+    }
+    this.pendingSources.length = 0;
+    renderer.setScissorTest(false);
   }
 
   render(scene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
@@ -354,8 +463,8 @@ export class DreamGlowRenderer {
     renderer.getDrawingBufferSize(this.fullSize);
     if (this.fullSize.x < 1 || this.fullSize.y < 1) { this.status = "off"; return; }
     const supportedOutput = renderer.getRenderTarget() === null && renderer.outputColorSpace === THREE.SRGBColorSpace;
-    if (!this.subjects.length || !this.supported || !supportedOutput || this.fullSize.x * this.fullSize.y > DREAM_EMISSION_LIMITS.maxBufferPixels) {
-      this.status = !this.subjects.length ? "off" : !this.supported || !supportedOutput ? "core-only-capability" : "core-only-budget";
+    if (!this.subjects.length || !this.supported || this.displayCopyFailed || !supportedOutput || this.fullSize.x * this.fullSize.y > DREAM_EMISSION_LIMITS.maxBufferPixels) {
+      this.status = !this.subjects.length ? "off" : !this.supported || this.displayCopyFailed || !supportedOutput ? "core-only-capability" : "core-only-budget";
       renderer.render(scene, camera);
       return;
     }
@@ -373,6 +482,7 @@ export class DreamGlowRenderer {
       this.displayBase = new THREE.FramebufferTexture(this.fullSize.x, this.fullSize.y);
       this.displayBase.colorSpace = THREE.NoColorSpace;
       this.compositeMaterial.uniforms.uBase.value = this.displayBase;
+      this.displayCopyVerified = false;
     }
     this.nearFar.set(camera.near, camera.far);
     try {
@@ -390,28 +500,37 @@ export class DreamGlowRenderer {
       for (const subject of this.subjects) {
         const reference = this.prepareSubject(subject, camera);
         if (!reference) continue;
+        const width = THREE.MathUtils.ceilPowerOfTwo(subject.captureRect.z);
+        const height = THREE.MathUtils.ceilPowerOfTwo(subject.captureRect.w);
+        let entry = this.acquireSourceTarget(width, height);
+        if (!entry) {
+          this.flushSources();
+          entry = this.acquireSourceTarget(width, height);
+        }
+        // prepareSubject has already enforced these dimensions. No workload
+        // budget causes a hidden source cap or silent quality reduction.
+        if (!entry) throw new Error("Validated glow source exceeds allocation ceiling");
+        entry.captureRect.copy(subject.captureRect);
+        entry.sourceBounds.copy(subject.sourceBounds);
+        entry.reference = reference;
+        entry.gain = subject.runtime.profile.haloStrength * subject.runtime.haloFactor;
+        this.captureRect.copy(entry.captureRect);
+        this.sourceBounds.copy(entry.sourceBounds);
         subject.scene.fog = scene.fog;
+        this.cropCamera.copy(camera, false);
+        this.cropCamera.setViewOffset(this.fullSize.x, this.fullSize.y, this.captureRect.x,
+          this.fullSize.y - this.captureRect.y - this.captureRect.w, this.captureRect.z, this.captureRect.w);
+        entry.target.viewport.set(0, 0, this.captureRect.z, this.captureRect.w);
         renderer.setScissorTest(false);
-        // Render-target viewports are physical pixels. Renderer.setViewport
-        // would multiply these by devicePixelRatio a second time in Three r179.
-        this.emission.viewport.set(0, 0, this.captureRect.z, this.captureRect.w);
-        renderer.setRenderTarget(this.emission);
-        // Automatic clearing resets write masks; a bare depth clear after
-        // a depthWrite=false fullscreen pass can leave stale source depth.
+        renderer.setRenderTarget(entry.target);
+        // Automatic clear resets the depth write mask; only this small target
+        // is cleared/resolved, never a historical maximum crop for every bird.
         renderer.autoClear = true;
         renderer.render(subject.scene, this.cropCamera);
         renderer.autoClear = false;
-        this.glowMaterial.uniforms.uReference.value = reference;
-        this.glowMaterial.uniforms.uGain.value = subject.runtime.profile.haloStrength * subject.runtime.haloFactor;
-        this.screenMesh.material = this.glowMaterial;
-        const x = Math.max(0, this.captureRect.x); const y = Math.max(0, this.captureRect.y);
-        this.accumulation.scissor.set(x, y, Math.min(this.fullSize.x, this.captureRect.x + this.captureRect.z) - x,
-          Math.min(this.fullSize.y, this.captureRect.y + this.captureRect.w) - y);
-        this.accumulation.scissorTest = true;
-        renderer.setRenderTarget(this.accumulation);
-        renderer.render(this.screenScene, this.screenCamera);
-        this.renderedSubjects++;
+        this.pendingSources.push(entry);
       }
+      this.flushSources();
       if (this.skippedForBudget > 0) this.status = this.renderedSubjects > 0 ? "partial-core-only-budget" : "core-only-budget";
       renderer.setScissorTest(false);
       renderer.setRenderTarget(previous.target);
@@ -421,13 +540,28 @@ export class DreamGlowRenderer {
       // pass supplies depth only; legacy custom shaders are not assumed to
       // follow the same output-transfer convention as standard materials.
       renderer.autoClear = true;
+      renderer.setClearColor(previous.clearColor, previous.clearAlpha);
       renderer.render(scene, camera);
       if (this.renderedSubjects === 0) return;
       renderer.copyFramebufferToTexture(this.displayBase, new THREE.Vector2(0, 0));
+      // Validate each new snapshot allocation once, not on every frame. If
+      // capture fails, the just-rendered lit scene remains the output; never
+      // cover it with an empty texture. Retry only with a new renderer instance.
+      if (!this.displayCopyVerified) {
+        const context = renderer.getContext();
+        if (context.getError() !== context.NO_ERROR) {
+          this.displayCopyFailed = true;
+          this.status = "core-only-capability";
+          return;
+        }
+        this.displayCopyVerified = true;
+      }
       renderer.autoClear = false;
       this.screenMesh.material = this.compositeMaterial;
       renderer.render(this.screenScene, this.screenCamera);
     } finally {
+      for (const entry of this.sourceTargets) entry.used = false;
+      this.pendingSources.length = 0;
       renderer.setRenderTarget(previous.target);
       renderer.setViewport(previous.viewport);
       renderer.setScissor(previous.scissor);
@@ -438,15 +572,28 @@ export class DreamGlowRenderer {
     }
   }
 
+  /** Release old scene references without dropping renderer-owned programs. */
+  clearSubjects(): void {
+    for (const subject of this.subjects) {
+      for (const part of subject.parts) part.material.dispose();
+      subject.scene.clear();
+    }
+    this.subjects.length = 0;
+    this.renderedSubjects = 0;
+    this.skippedForBudget = 0;
+    this.status = "off";
+  }
+
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
     this.base.dispose(); this.emission.dispose(); this.accumulation.dispose(); this.displayBase.dispose();
     this.glowMaterial.dispose(); this.compositeMaterial.dispose(); this.triangle.dispose();
-    for (const subject of this.subjects) {
-      for (const part of subject.parts) part.material.dispose();
-      subject.scene.clear();
-    }
+    for (const entry of this.sourceTargets) entry.target.dispose();
+    this.sourceTargets.length = 0;
+    this.pendingSources.length = 0;
+    this.sourceTargetPixels = 0;
+    this.clearSubjects();
     this.screenScene.clear();
     // Original scene geometry/material ownership remains with Battlefield.
   }

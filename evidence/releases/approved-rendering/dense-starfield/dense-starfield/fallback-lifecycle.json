@@ -1,0 +1,62 @@
+[
+  {
+    "port": "4176",
+    "stars": 960,
+    "ready": [
+      "paused"
+    ],
+    "beforeFrame": [
+      "running"
+    ],
+    "unavailable": [
+      "running"
+    ],
+    "nonopaque": 0,
+    "glError": 0
+  },
+  {
+    "port": 4176,
+    "noGpu": {
+      "webgl": "unavailable",
+      "states": [
+        "running"
+      ]
+    }
+  },
+  {
+    "port": 4176,
+    "reduced": [
+      "none"
+    ]
+  },
+  {
+    "port": "4178",
+    "stars": 960,
+    "ready": [
+      "paused"
+    ],
+    "beforeFrame": [
+      "running"
+    ],
+    "unavailable": [
+      "running"
+    ],
+    "nonopaque": 0,
+    "glError": 0
+  },
+  {
+    "port": 4178,
+    "noGpu": {
+      "webgl": "unavailable",
+      "states": [
+        "running"
+      ]
+    }
+  },
+  {
+    "port": 4178,
+    "reduced": [
+      "none"
+    ]
+  }
+]

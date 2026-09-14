@@ -31,6 +31,7 @@ import { cloudCoverPhrase } from "./weatherPresentation";
 import { createWildlifePlan, describeWildlifeForView, wildlifeForView, wildlifeReactionMessage, type VisibleWildlife } from "./wildlife";
 import { attachDreamEmission, createDreamEmissionProfile, detachDreamEmission, DREAM_EMISSION_LIMITS, updateDreamEmission } from "./dreamEmission";
 import { DreamGlowRenderer } from "./dreamGlowRenderer";
+import { advanceRenderDeadline } from "./visualPerformance";
 import {
   createStarfieldPlan,
   describeStarfield,
@@ -165,6 +166,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
   const host = useRef<HTMLDivElement>(null);
   const wildlifeReactRef = useRef<(memberId: string) => void>(() => {});
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const dreamGlowRef = useRef<DreamGlowRenderer | null>(null);
   const rendererUnavailable = useRef(false);
   const viewPoses = useRef<Partial<Record<ViewLayer, ViewPose>>>({});
   const [viewLayer, setViewLayer] = useState<ViewLayer>("surface");
@@ -367,7 +369,9 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     let renderer = rendererRef.current;
     if (!renderer) {
       const renderCanvas = document.createElement("canvas");
-      const renderingContext = renderCanvas.getContext("webgl2", { antialias: true, alpha: false });
+      // WebKit cannot copy an opaque RGB drawing buffer into the RGBA glow
+      // snapshot. Keep RGBA storage; the scene background still paints alpha 1.
+      const renderingContext = renderCanvas.getContext("webgl2", { antialias: true, alpha: true });
       if (!renderingContext) {
         rendererUnavailable.current = true;
         container.dataset.webgl = "unavailable";
@@ -533,7 +537,11 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       ));
     });
     const dreamSubjects = [...ships, ...aircraft, ...seaCreatures, ...wildlife];
-    const dreamGlow = new DreamGlowRenderer(renderer, dreamSubjects);
+    // Scene changes must not repeatedly allocate the glow buffers or discard
+    // the expensive convolution programs. The renderer owns their lifetime.
+    const dreamGlow = dreamGlowRef.current ?? new DreamGlowRenderer(renderer, []);
+    dreamGlowRef.current = dreamGlow;
+    dreamGlow.setSubjects(dreamSubjects);
     const clock3d = new THREE.Clock();
     const wildlifeRaycaster = new THREE.Raycaster();
     const wildlifePointer = new THREE.Vector2();
@@ -586,7 +594,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     renderer.domElement.addEventListener("pointerup", onWildlifePointerUp);
     renderer.domElement.addEventListener("pointermove", onWildlifePointerMove);
     let frame = 0;
-    let lastFrameAt = -Infinity;
+    let nextFrameAt = 0;
     let lastNormalsAt = -Infinity;
     const foamMatrix = new THREE.Matrix4();
     const foamQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0));
@@ -596,9 +604,12 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     const waveBaseColor = new THREE.Color(colors[2]);
     const renderFrame = (frameAt: number) => {
       if (document.hidden) return;
-      const frameInterval = 1000 / 30;
-      if (!reducedMotion && frameAt - lastFrameAt < frameInterval) return;
-      lastFrameAt = frameAt;
+      if (!reducedMotion) {
+        // Browser timestamps may be quantized to whole milliseconds. Keep the
+        // 30 Hz phase instead of repeatedly turning 33 ms into a skipped frame.
+        if (frameAt + 1 < nextFrameAt) return;
+        nextFrameAt = advanceRenderDeadline(nextFrameAt, Math.max(frameAt, nextFrameAt), 30);
+      }
       const elapsed = clock3d.getElapsedTime();
       const motionTime = reducedMotion ? 0 : elapsed;
       ships.forEach((ship, index) => {
@@ -740,7 +751,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         delete container.dataset.renderedLayer;
         delete container.dataset.renderedTheme;
       }
-      dreamGlow.dispose();
+      dreamGlow.clearSubjects();
       dreamSubjects.forEach(detachDreamEmission);
       delete container.dataset.dreamGlowProfile;
       delete container.dataset.dreamGlowSources;
@@ -759,6 +770,8 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
   useEffect(() => () => {
     const renderer = rendererRef.current;
     const container = host.current;
+    dreamGlowRef.current?.dispose();
+    dreamGlowRef.current = null;
     if (renderer) {
       renderer.renderLists.dispose();
       renderer.dispose();
