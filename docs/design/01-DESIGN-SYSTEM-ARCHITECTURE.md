@@ -38,7 +38,7 @@ deterministic six-turn resolution -> record -> debrief -> Academy links
 | Planning model | Completion, environment fit, gaps, readiness, strategic framing | `planningAssessment.ts`, `operationalStrategy.ts` | Derived explanations must remain inspectable and deterministic. |
 | Command model | Orders, state transitions, undo, score, findings | `kriegsspiel.ts` | Same state + same orders = same next state. |
 | Uncertainty model | Precommitted disruptions, objectives, actor coordination, component ranges/draws | `scenarioMatrix.ts` | Commit before play; disclose only when rules permit. |
-| Visibility model | View layers, unknown contacts, celestial transmission and occlusion | `viewModel.ts`, `contactVisualization.ts`, `celestial.ts` | Lack of credited sensing reveals nothing. |
+| Visibility model | View layers, reserved unknown-contact projection, celestial transmission and occlusion | `viewModel.ts`, `contactVisualization.ts`, `celestial.ts` | A contact needs a shape-valid estimate whose authority is established upstream plus credited sensing; the current application supplies no estimates. |
 | Environmental model | Stars, atmosphere, clouds, fog, precipitation, aurora, sea, wildlife, emission | `starfield.ts`, `environmentVisuals.ts`, `wildlife.ts`, `wildlifeAvatar.ts`, `battlefieldScene.ts`, `dreamEmission.ts` | Visual motion must be bounded, non-flashing, depth-aware, and semantically distinct from tactical contacts. Wildlife ecology is pure data; articulated mesh construction and behavior belong to its avatar engine. |
 | Persistence boundary | Portable save format, browser minimization, import validation | `saveGame.ts`, `browserSaves.ts`, `inputSecurity.ts` | Imported state is untrusted until shape, domain, and replay checks pass. |
 | Command-intelligence domain | Typed opposing actions, modeled inflictions, observation domains, public projection, bounded staff hypotheses | `kriegsspiel.ts`, `commandIntelligence.ts`, `commandPhase.ts` | Facts, potentials, and adjudication remain separate; display prose is never authority. |
@@ -170,11 +170,11 @@ far sky gradient
   -> clouds and fog banks
   -> precipitation (above water only)
   -> waves, ice, terrain, aperture/reflection
-  -> vessels, aircraft, submarines, abstract contacts
+  -> vessels, aircraft, submarines, reserved abstract-contact layer (currently empty)
   -> HTML HUD controls and disclosures
 ```
 
-Depth testing, fog participation, water geometry, and render order preserve occlusion. Foreground subjects remain legible. Visual layers have text alternatives derived from the same plan data.
+Depth testing, fog participation, water geometry, and render order preserve occlusion. Foreground subjects remain legible. Implemented visual layers have text alternatives derived from the same plan data. The reserved positive contact layer is not a shipped visual state and still requires upstream authority, persistence, current-turn filtering, and spatially equivalent nonvisual semantics.
 
 ## 6. Security architecture
 

@@ -189,7 +189,7 @@ The Field Guide offers **How the game works**, **Security, privacy & saves**, **
 
 **Closed label:** SKY LIGHTS  
 **Open status:** {count} VISIBLE LIGHTS · {clarity}  
-**Supporting line:** Crystalline canopy · foreground weather and contacts stay clear
+**Supporting line:** Crystalline canopy · tactical contacts are omitted
 
 Keep the live disclosure scannable. Population construction, scale bounds, harmonic-density logic, motion ranges, palette, and occlusion behavior belong in the design and release documentation rather than the transient plot alert.
 
@@ -206,8 +206,9 @@ The control label is **Greet a visible animal**, not “select,” “track,” 
 
 ### Contact key
 
-**No detection:** The selected force has no mission-credited {domain} detection capability; no unknown markers are shown.  
-**Detection present:** {count} abstract unknown {domain} marker(s) are shown. They indicate uncertainty, not identity or opposing composition.
+**No rendered estimate (current application state):** No canonical disclosed {domain} estimate is available to render; sensing capability alone never creates a contact marker.
+
+**Future estimate supplied and detection permitted:** {count} abstract unknown {domain} marker(s) are shown. They indicate uncertainty, not identity or opposing composition. This state must not ship until upstream authority is established, the record is persisted and validated, current-turn capability permits it, and equivalent nonvisual spatial uncertainty is represented.
 
 ### Celestial disclosure
 

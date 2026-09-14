@@ -76,7 +76,7 @@ test("credited systems reveal only domains supported by their tracking role and 
   });
 });
 
-test("contact plans project canonical estimates and sensing never manufactures them", () => {
+test("contact plans validate caller-supplied estimates and sensing never manufactures them", () => {
   const all: ContactVisibility = { air: true, surface: true, subsurface: true };
   const estimates = [
     { id: "air-1", domain: "air" as const, x: 2, y: 7, z: -4, scale: 1, heading: 0.4 },
@@ -90,19 +90,44 @@ test("contact plans project canonical estimates and sensing never manufactures t
   assert.deepEqual(repeated, first);
   assert.deepEqual(different.contacts, first.contacts);
   assert.deepEqual(createContactVisualizationPlan(1, all, []).contacts, []);
-  assert.ok(first.counts.air <= CONTACT_LIMITS.air);
-  assert.ok(first.counts.surface <= CONTACT_LIMITS.surface);
-  assert.ok(first.counts.subsurface <= CONTACT_LIMITS.subsurface);
-  assert.ok(first.contacts.length <= CONTACT_LIMITS.total);
+  assert.deepEqual(createContactVisualizationPlan(1, none, estimates).contacts, []);
+  assert.deepEqual(first.counts, { air: 1, surface: 1, subsurface: 1 });
+  assert.equal(first.contacts.length, 3);
   first.contacts.forEach((contact) => {
     assert.deepEqual(Object.keys(contact).sort(), ["domain", "heading", "id", "scale", "x", "y", "z"]);
     assert.ok(Number.isFinite(contact.x));
     assert.ok(Number.isFinite(contact.y));
     assert.ok(Number.isFinite(contact.z));
   });
+
+  const overflow = [
+    ...Array.from({ length: 5 }, (_, index) => ({ ...estimates[0], id: `air-${index}` })),
+    ...Array.from({ length: 5 }, (_, index) => ({ ...estimates[1], id: `surface-${index}` })),
+    ...Array.from({ length: 4 }, (_, index) => ({ ...estimates[2], id: `subsurface-${index}` })),
+  ];
+  const capped = createContactVisualizationPlan(7, all, overflow);
+  assert.deepEqual(capped.counts, {
+    air: CONTACT_LIMITS.air,
+    surface: CONTACT_LIMITS.surface,
+    subsurface: CONTACT_LIMITS.subsurface,
+  });
+  assert.equal(capped.contacts.length, CONTACT_LIMITS.total);
+
+  const invalid = [
+    { ...estimates[0], id: "../hidden" },
+    { ...estimates[0], domain: "space" },
+    { ...estimates[0], x: 51 },
+    { ...estimates[0], y: 21 },
+    { ...estimates[0], z: -51 },
+    { ...estimates[0], scale: 0 },
+    { ...estimates[0], scale: 3.1 },
+    { ...estimates[0], heading: Math.PI * 2 + 0.01 },
+    { ...estimates[0], x: Number.NaN },
+  ];
+  assert.deepEqual(createContactVisualizationPlan(8, all, invalid as never).contacts, []);
 });
 
-test("view gating puts detectable air contacts in sky and air, with no cross-domain leakage", () => {
+test("view gating puts supplied permitted contacts only in their matching domains", () => {
   const plan = createContactVisualizationPlan(91, { air: true, surface: true, subsurface: true }, [
     { id: "air", domain: "air", x: 0, y: 7, z: 0, scale: 1, heading: 0 },
     { id: "surface", domain: "surface", x: 0, y: 0.58, z: 0, scale: 1, heading: 0 },
@@ -115,11 +140,10 @@ test("view gating puts detectable air contacts in sky and air, with no cross-dom
   assert.equal(contactDomainForView("surface"), "surface");
   assert.equal(contactDomainForView("subsurface"), "subsurface");
   assert.deepEqual(contactsForView(plan, "stars"), []);
-  assert.ok(contactsForView(plan, "sky").length >= 1);
+  assert.deepEqual(contactsForView(plan, "sky").map((contact) => contact.id), ["air"]);
   assert.deepEqual(contactsForView(plan, "air"), contactsForView(plan, "sky"));
-  assert.ok(contactsForView(plan, "air").every((contact) => contact.domain === "air"));
-  assert.ok(contactsForView(plan, "surface").every((contact) => contact.domain === "surface"));
-  assert.ok(contactsForView(plan, "subsurface").every((contact) => contact.domain === "subsurface"));
+  assert.deepEqual(contactsForView(plan, "surface").map((contact) => contact.id), ["surface"]);
+  assert.deepEqual(contactsForView(plan, "subsurface").map((contact) => contact.id), ["subsurface"]);
 });
 
 test("contact estimate accessors and inherited values fail closed", () => {

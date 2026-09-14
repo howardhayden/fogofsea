@@ -5,8 +5,9 @@ import { DreamGlowRenderer } from "../app/dreamGlowRenderer";
 import { attachDreamEmission, createDreamEmissionProfile, detachDreamEmission } from "../app/dreamEmission";
 import { advanceRenderDeadline } from "../app/visualPerformance";
 
-// No GL is needed to verify ownership. The browser test separately exercises
-// allocations, real shader compilation, and complete pixel equivalence.
+// No GL is needed to verify retained-resource ownership and disposal here. The
+// focused browser fixture separately exercises live shader compilation plus
+// core and outside-support framebuffer identity, not actual-scene equivalence.
 function stubRenderer(): THREE.WebGLRenderer {
   return { extensions: { has: () => true }, capabilities: { maxSamples: 4 },
     getContext: () => ({ getContextAttributes: () => ({ alpha: true }) }),

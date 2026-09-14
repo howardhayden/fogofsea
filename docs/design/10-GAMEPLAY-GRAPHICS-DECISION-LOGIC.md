@@ -133,14 +133,15 @@ The draw is fixed before turn resolution. Identical scenario, state, readiness, 
 
 ## 4. Fog of war and disclosure
 
-- Unknown air, surface, and subsurface markers require mission-credited compatible sensing in that domain.
-- Unsupported or merely selected equipment reveals nothing.
-- Visible markers communicate bounded domain uncertainty, never identity or opposing composition.
+- The contact adapter shape-checks caller-supplied air, surface, and subsurface estimate records, but upstream code must establish their authority.
+- A supplied record additionally requires mission-credited compatible sensing in its domain; unsupported or merely selected equipment reveals nothing.
+- The current scenario and turn models supply no coordinate-bearing estimates, so the production plot renders zero markers even with credited sensing.
+- Pure fixtures bound reserved positive projections to domain uncertainty without identity or opposing composition. A positive production path remains blocked on typed authority, persistence, current-turn capability, and spatially equivalent nonvisual semantics.
 - Generated opposing capability impacts remain assessed and cannot enter the
   absolute log. A future typed confirmed impact would still require the
   relevant observation basis before disclosure.
 - Future disruptions/objectives remain unrevealed until their turn.
-- The canvas and accessible copy derive from the same visibility model.
+- The shipped zero-marker canvas and accessible copy derive from the same empty projection. Positive visual/text spatial equivalence is not yet implemented.
 - Current own-force indices and modeled inflictions are direct game-state
   observations. Inflictions identify only the modeled source side, affected
   side, effect, and amount that the rules disclose; they do not establish
@@ -215,7 +216,7 @@ Stars participate in fog and render behind aurora, clouds, fog banks, water, ter
 - Aurora spline paths carry five unjoined depth veils; five to seven broad paths overlap across widely staggered depths and orientations, then snake, waver, drift, breathe, and evolve on asynchronous periods.
 - Selected subjects breathe more slowly and shallowly than stars twinkle.
 - Sea motion follows the environmental field.
-- Every recognizable creature is an articulated avatar rather than one rotating primitive. Its position advances continuously along a deterministic closed ecological route with a changing next waypoint, tangent-facing heading, and habitat-specific bounds: birds flap and bank; commuting penguins hop inside a floe; seals scoot or swim; and marine animals propel themselves with tail and fluke cycles. Route radius is generated per animal; lateral eccentricity remains 0.34–0.76, ice travel is clamped to 0.34–0.58 world units within its assigned floe, and a lying waypoint has zero travel radius. Dolphins use `0.14–0.195` display scale, `0.11–0.16` speed, and `1.8–3.2` route radius; their optional porpoising adds only a bounded wave-relative lift and pitch to continuous travel. Sharks use `0.12–0.18` scale and `2.2–3.8` radius below their local wave surface, except for a tightly bounded dorsal greeting. A deterministic minority—but never all—of a multi-penguin group may rest lying down (`resting < visible`, including zero resting when only one penguin is visible); greeting one stages a grounded brace-and-recovery, stand, puzzled head scratch, and return to its waypoint over 4.8 seconds, with no accumulated circle rotation. Reduced motion freezes a readable active anatomical pose and never removes the animal. None inherits tactical rings or dream emission.
+- Every recognizable creature is an articulated avatar rather than one rotating primitive. Its position advances continuously along a deterministic closed ecological route with a changing next waypoint, tangent-facing heading, and habitat-specific bounds: birds flap and bank; commuting penguins hop inside a floe; seals scoot or swim; and marine animals propel themselves with tail and fluke cycles. Route radius is generated per animal; lateral eccentricity remains 0.34–0.76, ice travel is clamped to 0.34–0.58 world units within its assigned floe, and a lying waypoint has zero travel radius. Dolphins use `0.14–0.195` display scale, `0.11–0.16` speed, and `1.8–3.2` route radius; their optional porpoising adds only a bounded wave-relative lift and pitch to continuous travel. Sharks use `0.12–0.18` scale and `2.2–3.8` radius below their local wave surface, except for a tightly bounded dorsal greeting. A deterministic minority—but never all—of a multi-penguin group may rest lying down (`resting < visible`, including zero resting when only one penguin is visible); greeting one stages a grounded brace-and-recovery, stand, puzzled head scratch, and return to its waypoint over 4.8 seconds, with no accumulated circle rotation. Reduced motion freezes a readable active anatomical pose and never removes the animal. No creature inherits tactical rings or authority; an already visible creature may contribute decorative dream glow without gaining contact, sensing, scoring, or persistence meaning.
 
 - WebGL retains hidden surface/depth coordinate helpers with `visible: false`, `opacity: 0`, and color/depth writes disabled; fallback CSS likewise fixes `.fallback-grid` at `display: none` with no background image. Heading, range, camera controls, wave sampling, water geometry, seabed geometry, and Plot Data telemetry remain unchanged.
 - Lightning/light cues are localized, eased, and non-flashing.

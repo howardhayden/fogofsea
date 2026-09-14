@@ -37,6 +37,13 @@ The documentation distinguishes three kinds of statement:
 | [17 — Turn intelligence and discovery chronology](17-TURN-INTELLIGENCE.md) | How are post-first-turn staff judgments, absolute facts, Immediate, late discovery, responsive layout, and typed persistence kept separate from hidden truth and adjudication? |
 | [18 — Visual smoothness and authoritative state](18-VISUAL-SMOOTHNESS.md) | What owns visual truth, what are the budgets, and how are visual systems tested without affecting adjudication? |
 | [19 — Visual authority concept map and CSD](19-VISUAL-AUTHORITY-CONCEPT-CSD.md) | What is certain, supposed, or still doubtful about the visual reconstruction? |
+| [20 — Dream glow normalized device-coordinate contract](20-DREAM-GLOW-NDCG.md) | How does the nocturnal glow remain bounded in screen space and preserve native scene color? |
+| [21 — Dream glow composition correction](21-DREAM-GLOW-COMPOSITION-CORRECTION.md) | Which failed glow composition was rejected, and what evidence governs its replacement? |
+| [22 — Dream glow view conditioning](22-DREAM-GLOW-VIEW-CONDITIONING.md) | How does source geometry keep the glow legible across overhead and side views? |
+| [24 — Approved rendering release](24-APPROVED-RENDERING-RELEASE.md) | Which exact glow and dense-starfield state did the owner approve for release? |
+| [25 — Mobile starfield gate](25-MOBILE-STARFIELD-GATE.md) | How is star density compared across unequal camera fields without changing the approved renderer? |
+| [26 — CI browser resource isolation](26-CI-BROWSER-RESOURCE-ISOLATION.md) | How does the release gate prevent rendered scenarios from competing for one runner? |
+| [27 — Post-merge release-gate cleanup](27-POST-MERGE-RELEASE-GATE-CLEANUP.md) | How were the post-merge gate failures, production-material and save-compatibility violations, and stale checked-in artifact corrected? |
 
 ## Interactive analytical-view contract
 

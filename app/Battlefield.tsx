@@ -1066,7 +1066,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
           <summary onClick={(event) => { event.preventDefault(); toggleHudDisclosure("environment", openHudDisclosure !== "environment"); }}><strong className="hud-label-long">SKY LIGHTS</strong><strong className="hud-label-short">STARS</strong><b aria-hidden="true" /></summary>
           <div className="environment-readout-details">
             <span>{starfieldPlan.stars.length} VISIBLE LIGHTS · {skyVisibility.clarity.toUpperCase()}</span>
-            <small>Crystalline canopy · foreground weather and contacts stay clear</small>
+            <small>Crystalline canopy · tactical contacts are omitted</small>
           </div>
         </details>
       )}

@@ -32,7 +32,7 @@ async function expectNoContacts(page: Page, layer: "sky" | "air" | "surface" | "
   );
 }
 
-test("sensing filters canonical disclosed contacts but never manufactures them", async ({ page }, testInfo) => {
+test("credited sensing does not manufacture absent contact estimates", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "Desktop force-to-plot integration contract");
   test.setTimeout(180_000);
 

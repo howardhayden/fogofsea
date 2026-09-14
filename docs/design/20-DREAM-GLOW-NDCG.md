@@ -4,7 +4,7 @@
 
 Implementation base: `78fd15225a763f6d535a96da2501b97e685ad6c9`, the head of `codex/visual-smoothness-reconstruction-2026-09-12` when inspected. Initial implementation commit: `88de32723c171967c6b2d792ecacc185388a5d74`. Main, deployment configuration, contact authorization, ecology, and the existing scene geometry were not rewritten.
 
-This applies the user's NDCG v0.1 proposal to already-authorized vessels (including submarines), aircraft, articulated wildlife, and vague/schooling underwater creatures. Unknown-contact glyphs remain observations; the renderer does not infer or reveal an undisclosed hull. Daylight remains off.
+This applies the user's NDCG v0.1 proposal to already-authorized vessels (including submarines), aircraft, articulated wildlife, and vague/schooling underwater creatures. The reserved unknown-contact glyph path is excluded from glow sources; the current application supplies no contact estimates, and the renderer never infers or reveals an undisclosed hull. Daylight remains off.
 
 The source proposal is not a recovered Night in the Woods shader and its parameters were not pixel-fitted. The accompanying implementation bundle preserves both originals:
 
@@ -16,8 +16,8 @@ The source proposal is not a recovered Night in the Woods shader and its paramet
 | Owner | Responsibility |
 | --- | --- |
 | `app/dreamGlowMath.ts` | Finite radial kernel, normalized quadrature, reference scale, bounded temporal function, scalar luminance shoulder, independent edge oracle. |
-| `app/dreamEmission.ts` | Source registration, native material regions, exclusions, authorization, fixed authored bounds, material ownership and cleanup. |
-| `app/dreamGlowRenderer.ts` | Linear source capture, depth gates, padded crop, three spatial scales, crisp-core protection, display conversion, resource limits. |
+| `app/dreamEmission.ts` | Source registration, native material regions, exclusions, authorization, fixed authored bounds, and production-material preservation. |
+| `app/dreamGlowRenderer.ts` | Emission-only proxy ownership, linear source capture, depth gates, padded crop, three spatial scales, crisp-core protection, display conversion, and resource limits. |
 | `app/Battlefield.tsx` | Binding all current entity families, renderer lifecycle, reduced motion, actual-profile telemetry and nonvisual descriptions. |
 | `tests/dream-glow-math.test.ts` | Nine independent numerical tests; local executed evidence. |
 | `tests/dream-emission.test.ts` | Material, geometry, registration, exclusions, visibility, temporal and cleanup contracts. |
@@ -28,11 +28,11 @@ The source proposal is not a recovered Night in the Woods shader and its paramet
 
 `E` is premultiplied, visible native-color emission. For each subject, evaluate a positive, centered radial kernel at sigma ratios `[0.012, 0.035, 0.075]`, with weights `[0.65, 0.30, 0.05]` and gain `0.28`. The Gaussian tap weight is smoothly tapered from 2.5 to 3 sigma. The 109-tap radial quadrature is normalized before visibility rejection. It is a sampled implementation requiring GPU qualification, not a claim of exact continuous convolution.
 
-The reference height is adapted to a fixed authored bounding-sphere diameter projected into physical screen pixels. This prevents articulated poses or viewport clipping from pumping the glow radius. Actual posed bounds determine only the padded capture rectangle. Radii are not inflated to a minimum bead size.
+As corrected by `22-DREAM-GLOW-VIEW-CONDITIONING.md`, the fixed authored bounding sphere supplies only an upper limit. The projected convex-hull area of a canonical local reference box view-conditions the physical-pixel reference, so genuine side-on foreshortening contracts the glow without enlarging the accepted overhead or broadside radius. The canonical box prevents articulated poses from pumping the radius, projection is not viewport-clipped, and actual posed bounds determine only the padded capture rectangle. Radii are not inflated to a minimum bead size.
 
-Emission is depth-tested against the main scene before filtering. Each filtered contribution is also depth-tested at its destination, without renormalizing surviving light. Fog attenuates emission toward black, rather than supplying fog color as an emitter. The shared composition preserves opaque core pixels and adds light outside their coverage and applies a scalar shoulder above linear luminance 0.22, asymptotically bounded by 0.35. Native colors are not replaced by a uniform cyan palette.
+Registration leaves every production mesh and material unchanged. Renderer-owned emission-only proxies sample filled visible source geometry and its native color without making hull, airframe, or creature surfaces emissive. Proxy emission is depth-tested against the main scene before filtering. Each filtered contribution is also depth-tested at its destination, without renormalizing surviving light. Fog attenuates emission toward black, rather than supplying fog color as an emitter. The shared composition preserves opaque directly rendered core pixels and all zero-contribution pixels, adds light only outside source coverage, and applies a scalar shoulder above linear luminance 0.22, asymptotically bounded by 0.35. Native colors are not replaced by a uniform cyan palette.
 
-The optional temporal profile is gain-only: `1 + 0.02 sin(2πt/31 + φ) + 0.01 sin(2πt/47 + ψ)`. Stable phases are subject-specific. Core alpha, geometry and radius do not breathe. Reduced motion evaluates to exactly one.
+The optional temporal profile is gain-only: `1 + 0.02 sin(2πt/31 + φ) + 0.01 sin(2πt/47 + ψ)`. Stable phases are subject-specific. Production materials, directly lit core pixels, geometry, and radius do not breathe. Reduced motion evaluates to exactly one.
 
 ## Explicit replacements and precedence
 
@@ -50,7 +50,7 @@ The optional temporal profile is gain-only: `1 + 0.02 sin(2πt/31 + φ) + 0.01 s
 - Three r179 state review: a bare depth clear after a `depthWrite=false` pass need not reset its write mask. Correction: source capture uses automatic clearing, which resets the mask before rendering.
 - API review caught a non-existent Color helper before runtime testing; replaced with supported color addition and scalar multiplication.
 - Boundary review caught overflow from huge finite time/projection values. Correction: reduce temporal arguments before multiplication and reject nonfinite projected results.
-- Empty geometry registration restores and disposes temporary material clones rather than leaving an unowned mutation.
+- Empty geometry registration returns without mutating the production model; the renderer alone creates, owns, and disposes emission-only proxy materials for valid registrations.
 
 These are source-review findings unless an execution record says otherwise. They are not fabricated runtime failures.
 
@@ -67,7 +67,7 @@ Core-only capability/budget profiles are named in `data-dream-glow-profile`; the
 ```sh
 npm ci
 npm run typecheck
-npx tsx --test tests/dream-glow-math.test.ts tests/dream-emission.test.ts
+node --import tsx --test tests/dream-glow-math.test.ts tests/dream-emission.test.ts tests/dream-reflectivity.test.ts
 npx playwright test tests/browser/dream-glow.spec.ts tests/browser/environment-visuals.spec.ts
 npm run release:check
 ```
@@ -84,9 +84,9 @@ The original 48-atom register remains authoritative for acceptance criteria, dep
 | E02 | Numerical profile remains provisional | Native-size reference approval open |
 | E03 | S exclusions; R registered sources only | Source tests; GPU review pending |
 | E04 | Explicit replacements above; parent commit retained | Git ancestry; no unrelated supersession |
-| S01 | S reuses original geometry | Source geometry/scale assertions |
-| S02 | S static native-color core; R optional exterior field | Source tests; GPU core comparison pending |
-| S03 | S native material regions; R RGB capture | Source tests; final hue fixture pending |
+| S01 | S registers original geometry without replacing production materials; R builds separate proxies | Source geometry/material/scale assertions |
+| S02 | S leaves the directly lit native core unchanged; R supplies only the optional exterior field | Source tests; GPU core comparison pending |
+| S03 | S records native material regions; R captures their RGB through emission-only proxies | Source tests; final hue fixture pending |
 | S04 | R source RGB multiplied by alpha before blur | Shader code; GPU fixture pending |
 | S05 | S explicit registration; no framebuffer bright-pass | Source tests and R input ownership |
 | S06 | S/R filled source independent of Fresnel | Source tests and shader review |
@@ -104,7 +104,7 @@ The original 48-atom register remains authoritative for acceptance criteria, dep
 | C04 | R final tone-map/encoding only | Shader review; GPU pending |
 | C05 | M/R scalar shoulder | Math continuity/bound tests |
 | C06 | M finite support; R padded/scissored contributions | Math support verified; full display identity open |
-| R01 | S fixed authored sphere; M projected reference | Source and math tests |
+| R01 | S fixed canonical box/sphere; M/R projected-box reference capped by the sphere | Source and math tests |
 | R02 | R physical target viewport/scissor | API review; two-DPR GPU fixtures pending |
 | R03 | R crop padded by full support plus sample margin | Code review; clipped-edge fixture open |
 | R04 | M/R no minimum radius inflation | Math tiny-source case; GPU subpixel qualification open |
@@ -125,6 +125,6 @@ The original 48-atom register remains authoritative for acceptance criteria, dep
 | Q07 | B readable core-only fallback and textual descriptions | Source review; full accessibility qualification open |
 | Q08 | M/S bounded finite inputs | Math/source boundary tests; unsupported source paths named |
 | I01 | S native colors separate from reference palette | Source tests; GPU color pipeline pending |
-| I02 | S no new lights or reflection emitters | Source no-light assertions |
+| I02 | S/R no halo geometry, scene lights, or production-material mutation | Source no-light/material assertions |
 | I03 | M continuous oracle independent of sampled GPU operator | Math executed; GPU output qualification pending |
 | I04 | R actual-profile status; B explicit reduced fallback | Source review; capability/budget browser qualification open |

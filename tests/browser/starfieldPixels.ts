@@ -5,6 +5,7 @@ export type StarfieldPixelMetrics = {
   height: number;
   bright: number;
   colorful: number;
+  gold: number;
   white: number;
   cool: number;
   roseViolet: number;
@@ -17,8 +18,13 @@ export type StarfieldPixelMetrics = {
   largest: number;
 };
 
-/** Measures the presented WebGL pixels by decoding a real element capture. */
-export async function measureStarfieldPixels(page: Page, canvas: Locator): Promise<StarfieldPixelMetrics> {
+export type StarfieldPixelCapture = {
+  base64: string;
+  metrics: StarfieldPixelMetrics;
+};
+
+/** Captures and measures the presented WebGL pixels from one real PNG. */
+export async function captureStarfieldPixels(page: Page, canvas: Locator): Promise<StarfieldPixelCapture> {
   // Element captures include overlapping higher-z-index siblings. Playwright's
   // temporary screenshot stylesheet is intentionally rejected by the app CSP,
   // so hide those panels through reversible DOM properties for one frame.
@@ -41,7 +47,8 @@ export async function measureStarfieldPixels(page: Page, canvas: Locator): Promi
       else htmlElement.style.setProperty("visibility", state.value, state.priority);
     }), previousVisibility);
   }
-  return page.evaluate(async (base64Capture) => {
+  const base64 = capture.toString("base64");
+  const metrics = await page.evaluate(async (base64Capture) => {
     const image = new Image();
     image.src = `data:image/png;base64,${base64Capture}`;
     await image.decode();
@@ -58,6 +65,7 @@ export async function measureStarfieldPixels(page: Page, canvas: Locator): Promi
     const coreMask = new Uint8Array(width * height);
     let bright = 0;
     let colorful = 0;
+    let gold = 0;
     let white = 0;
     let cool = 0;
     let roseViolet = 0;
@@ -81,6 +89,13 @@ export async function measureStarfieldPixels(page: Page, canvas: Locator): Promi
       if ((maximum >= 145 && maximum - minimum >= 35 && red + green + blue >= 350)
         || (minimum >= 155 && maximum - minimum <= 55)) coreMask[index] = 1;
       if (maximum >= 145 && maximum - minimum >= 35 && red + green + blue >= 350) colorful += 1;
+      // The authored dark-theme gold is #fff4b8: pale yellow has only an
+      // 11-step red/green separation but a much larger green/blue separation.
+      // This relationship admits only the dedicated gold palette entry.
+      const redGreen = red - green;
+      const greenBlue = green - blue;
+      if (red >= 115 && green >= 85 && redGreen >= 4 && greenBlue >= 18
+        && greenBlue >= redGreen * 1.2) gold += 1;
       if (minimum >= 155 && maximum - minimum <= 55) white += 1;
       if (maximum >= 145 && blue >= 130 && (blue - red >= 35 || green - red >= 35)) cool += 1;
       if (Math.max(red, blue) >= 145 && green + 22 <= Math.max(red, blue)) roseViolet += 1;
@@ -118,6 +133,7 @@ export async function measureStarfieldPixels(page: Page, canvas: Locator): Promi
       height,
       bright,
       colorful,
+      gold,
       white,
       cool,
       roseViolet,
@@ -129,5 +145,11 @@ export async function measureStarfieldPixels(page: Page, canvas: Locator): Promi
       fields: componentAreas.filter((area) => area > 180).length,
       largest: Math.max(0, ...componentAreas),
     };
-  }, capture.toString("base64"));
+  }, base64);
+  return { base64, metrics };
+}
+
+/** Measures the presented WebGL pixels while discarding the PNG payload. */
+export async function measureStarfieldPixels(page: Page, canvas: Locator): Promise<StarfieldPixelMetrics> {
+  return (await captureStarfieldPixels(page, canvas)).metrics;
 }

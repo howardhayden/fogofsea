@@ -322,7 +322,9 @@ test("all compact tactical disclosures are named, keyboard operable, and mutuall
   await expect(plotDisclosure).not.toHaveAttribute("open", "");
   await expect(plot).toHaveAttribute("data-hud-open", "none");
 
+  await expect(skyTrigger).toBeVisible();
   await skyTrigger.focus();
+  await expect(skyTrigger).toBeFocused();
   await skyTrigger.press("Enter");
   await expect(plot).toHaveAttribute("data-hud-open", "celestial");
   await expect(skyTrigger).toHaveAttribute("aria-expanded", "true");
@@ -334,7 +336,9 @@ test("all compact tactical disclosures are named, keyboard operable, and mutuall
   await expect(skyTrigger).toHaveAttribute("aria-expanded", "false");
   await expect(plot).toHaveAttribute("data-hud-open", "none");
 
+  await expect(environmentTrigger).toBeVisible();
   await environmentTrigger.focus();
+  await expect(environmentTrigger).toBeFocused();
   await environmentTrigger.press("Enter");
   await expect(environmentDisclosure).toHaveAttribute("open", "");
   await expect(plot).toHaveAttribute("data-hud-open", "environment");
@@ -344,7 +348,9 @@ test("all compact tactical disclosures are named, keyboard operable, and mutuall
   await expect(environmentDisclosure).not.toHaveAttribute("open", "");
   await expect(plot).toHaveAttribute("data-hud-open", "none");
 
+  await expect(contactTrigger).toBeVisible();
   await contactTrigger.focus();
+  await expect(contactTrigger).toBeFocused();
   await contactTrigger.press("Enter");
   await expect(contactDisclosure).toHaveAttribute("open", "");
   await expect(plot).toHaveAttribute("data-hud-open", "contacts");

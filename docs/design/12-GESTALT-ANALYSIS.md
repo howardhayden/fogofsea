@@ -147,7 +147,7 @@ Wave direction, cloud drift, fog advection, and aurora meander should continue a
 Low-poly forms ask the eye to complete shapes from facets:
 
 - octahedral stars read as crystalline glints;
-- merged subject silhouettes read through thin emission shells;
+- authorized filled native silhouettes seed a short-range exterior field through separate emission-only proxies, without copied shell geometry;
 - cloud topology reads as one atmospheric body;
 - aurora depth-separated translucent veils and winding centerlines read as a spatial volume without closing into cloth slabs;
 - wave facets imply a continuous sea.
@@ -162,7 +162,7 @@ Motion groups elements that belong to the same phenomenon:
 - cloud vertices share wind drift while individual masses breathe asynchronously;
 - aurora vertices share curtain motion while separate curtains retain phase differences;
 - each star twinkles and selects bounded wander targets independently;
-- a vessel’s core and halo breathe together;
+- a subject’s exterior glow gain breathes shallowly while its directly lit core, geometry, and material remain unchanged;
 - precipitation shares wind slant but varies depth and speed.
 
 Motion channels must remain perceptually distinct:
