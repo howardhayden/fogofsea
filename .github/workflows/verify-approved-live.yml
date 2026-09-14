@@ -2,6 +2,9 @@ name: Verify approved rendering on the public site
 on:
   push:
     branches: [codex/approved-rendering-live-check]
+concurrency:
+  group: approved-rendering-public-verification
+  cancel-in-progress: true
 permissions:
   contents: read
   actions: read
@@ -41,7 +44,7 @@ jobs:
           dist=indexes[0].parent
           expected={p.relative_to(dist).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((dist/'assets').rglob('*')) if p.is_file() and p.suffix in ('.js','.css')}
           assert expected and any(p.endswith('.css') for p in expected)
-          entries=re.findall(r'(?:src|href)="(/assets/[^"?]+\.(?:js|css))"',indexes[0].read_text())
+          entries=re.findall(r'(?:src|href)="((?:\./|/)assets/[^"?]+\.(?:js|css))"',indexes[0].read_text())
           assert entries
           attempts=[]; verified=False
           def fetch(url):
@@ -54,7 +57,7 @@ jobs:
               try:
                   html,content_type,ray=fetch('https://fogofsea.app/?approved-release=0c7fea1&probe='+str(int(time.time())))
                   text=html.decode();record['cf_ray']=ray
-                  record['entry_points_match']=all(entry in text for entry in entries)
+                  record['entry_points_match']=all(entry.lstrip('./') in text for entry in entries)
                   assert record['entry_points_match'], 'Public HTML still references a different release'
                   assets={}
                   for name,digest in expected.items():
