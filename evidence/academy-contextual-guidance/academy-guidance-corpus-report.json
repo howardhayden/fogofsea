@@ -1,0 +1,64 @@
+{
+  "format": "fog-of-sea-academy-guidance-corpus-v1",
+  "payloadSha256": "eb885473f7638cdbe9fc1ff6af4d7d0b1c4a08167cc49221014d3cf0bef6fc7e",
+  "payload": {
+    "capturedOn": "2026-09-14",
+    "baselineRevision": "795ea751b2615f26bd2d3eff2a826fbe079a062a",
+    "implementationStatus": "pass",
+    "academyModuleCount": 25,
+    "theoryLensCount": 13,
+    "theoryModuleMap": {
+      "sun-tzu": "sun-tzu",
+      "clausewitz": "clausewitz",
+      "mahan": "mahan",
+      "aube": "maritime-schools",
+      "corbett": "corbett",
+      "richmond": "maritime-schools",
+      "wegener": "maritime-schools",
+      "castex": "maritime-schools",
+      "panikkar": "global-seapower",
+      "gorshkov": "global-seapower",
+      "liu-huaqing": "global-seapower",
+      "till": "global-seapower",
+      "galula": "galula"
+    },
+    "gameplayPhases": ["strategy", "force", "command", "debrief"],
+    "workspaceContexts": ["mission", "decisions", "force", "command", "visualization"],
+    "authorityCases": {
+      "zeroSelections": "scenario",
+      "oneSelection": "scenario",
+      "duplicateSelections": "scenario",
+      "twoDistinctSelections": "player-selections"
+    },
+    "phaseContextPolicy": {
+      "strategy": "strategy-grammar",
+      "force": "one scenario-demand-derived force lesson",
+      "command": "compound-uncertainty without concealed actor-count input",
+      "debrief": "synthesis",
+      "visualizationOverride": "jomini"
+    },
+    "initialPriority": {
+      "strategy": "first relevant theory module",
+      "forceCommandDebrief": "bounded phase-context module when present",
+      "visualization": "jomini",
+      "explicitHelpTarget": "requested module without changing suggestion membership"
+    },
+    "generatedScenarioSample": {
+      "seed": 27183,
+      "count": 480,
+      "result": "pass",
+      "minimumMappedTheoryCount": 2,
+      "mappedProblemCount": 30,
+      "maximumContextLessonCount": 1,
+      "unresolvedModuleCount": 0
+    },
+    "verification": {
+      "focusedTestFileCases": 18,
+      "pureDerivationAndCorpusCases": 14,
+      "structuralRenderingTests": 4,
+      "requirementsTests": 2,
+      "fullNonBrowserSuite": "pass"
+    },
+    "granularityBoundary": "Aube, Richmond, Wegener, and Castex share the existing maritime-schools module; Panikkar, Gorshkov, Liu Huaqing, and Till share global-seapower. Guidance opens the narrowest existing module and does not claim thinker-fragment exclusivity."
+  }
+}

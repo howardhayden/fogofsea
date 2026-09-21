@@ -960,11 +960,16 @@ details:not([open]) > .legend-items { display: none; }
 .module-list button.active { box-shadow: inset 2px 0 var(--accent); }
 .module-list button > i { width: 26px; height: 26px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--faint); font: normal 600 7px var(--font-data); }
 .module-list button > i.complete { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); color: var(--accent-strong); }
+.module-list button.suggested > i { border-color: color-mix(in srgb, var(--accent) 62%, var(--line)); }
 .module-list button > span { min-width: 0; }
 .module-list strong { display: block; font-size: 10px; font-weight: 600; }
 .module-list small { display: block; margin-top: 4px; color: var(--faint); font: 500 7px var(--font-data); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.module-suggestion { display: block; width: max-content; max-width: 100%; margin-top: 4px; color: var(--accent-strong); font: 700 10px/1.3 var(--font-data); letter-spacing: .07em; white-space: normal; }
 .lesson { min-height: 0; padding: 32px clamp(28px, 5vw, 76px) 40px; }
 .lesson > section, .lesson > div, .lesson > footer { max-width: 900px; margin-left: auto; margin-right: auto; }
+.academy-guidance { margin-bottom: 22px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line)); border-radius: 5px; background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.academy-guidance span { color: var(--accent-strong); font: 700 8px var(--font-data); letter-spacing: .11em; }
+.academy-guidance p { margin: 6px 0 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
 .lesson-heading { display: flex; justify-content: space-between; gap: 30px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
 .lesson-heading span { color: var(--accent-strong); font: 600 8px var(--font-data); letter-spacing: 0.11em; }
 .lesson-heading h3, .academy-reference h3 { margin: 7px 0 3px; font-size: clamp(27px, 3.4vw, 44px); line-height: 1; letter-spacing: -0.05em; }

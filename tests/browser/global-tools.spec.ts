@@ -69,6 +69,10 @@ test("mobile Tools uses the same bounded glass drawer, scrim, and focus contract
   const scrim = menu.locator(":scope > .mobile-menu-scrim");
   await expect(nav).toBeVisible();
   await expect(scrim).toBeVisible();
+  await expect.poll(
+    () => nav.evaluate((element) => element.getBoundingClientRect().width >= innerWidth - 1),
+    { message: "mobile Tools drawer must settle at the live viewport width" },
+  ).toBe(true);
   const geometry = await nav.evaluate((element) => {
     const rect = element.getBoundingClientRect();
     const style = getComputedStyle(element);

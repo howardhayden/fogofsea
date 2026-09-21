@@ -165,7 +165,7 @@ Never use “available,” “valid,” or “supported” where one of these na
 
 ### Disclosure labels
 
-Summaries name what will be learned, not merely “more”: **MISSION BRIEF**, **LAST TURN**, **SCORE COMPONENTS**, **LESSON · READ WHEN READY**, and **READING TRAIL**. A count is included when it helps estimate effort. Closed explanatory regions must not conceal a required action, current state, error, consequence, or repair. Ordinary turn copy reports the outcome and metric changes only; probability math, committed draws, rule traces, and validation language belong in the Field Guide or bundled documentation.
+Summaries name what will be learned, not merely “more”: **MISSION BRIEF**, **LAST TURN**, **SCORE COMPONENTS**, **LESSON · READ WHEN READY**, and **READING TRAIL**. A context-derived Academy lesson instead says **LESSON · SUGGESTED FOR THIS CONTEXT**; a lesson opened from an explicit related-help link says **LESSON · REQUESTED HELP**. These labels describe why help is offered without claiming that the player chose, approved, or completed it. A count is included when it helps estimate effort. Closed explanatory regions must not conceal a required action, current state, error, consequence, or repair. Ordinary turn copy reports the outcome and metric changes only; probability math, committed draws, rule traces, and validation language belong in the Field Guide or bundled documentation.
 
 ### Command outcome
 

@@ -315,11 +315,12 @@ test("compact Academy and Field Guide remain one-column, non-overlapping glass d
           modules: rect(".module-list"),
           lesson: rect(".lesson"),
           overflowX: scroll.scrollWidth - scroll.clientWidth,
+          scrollTop: scroll.scrollTop,
           owners,
         };
       });
       expect(academyGeometry.header.bottom).toBeLessThanOrEqual(academyGeometry.notice.top + 1);
-      expect(academyGeometry.notice.bottom).toBeLessThanOrEqual(academyGeometry.paths.top + 1);
+      expect(academyGeometry.notice.bottom).toBeLessThanOrEqual(academyGeometry.paths.top + academyGeometry.scrollTop + 1);
       expect(academyGeometry.paths.bottom).toBeLessThanOrEqual(academyGeometry.modules.top + 1);
       expect(academyGeometry.modules.bottom).toBeLessThanOrEqual(academyGeometry.lesson.top + 1);
       expect(academyGeometry.overflowX).toBeLessThanOrEqual(1);

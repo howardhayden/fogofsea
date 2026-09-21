@@ -42,6 +42,7 @@ test("Academy links maritime thinkers to drones, wolfpacks, environment, and pol
   await expect(academy).toContainText("Preparedness develops warning");
   await expect(academy).toContainText("Residual risk");
   await expect(academy).toContainText("Ortwin Renn");
+  await academy.getByRole("navigation", { name: "Learning path" }).getByRole("button", { name: /Advanced Analysis/ }).click();
   await academy.getByRole("button", { name: /Multi-adversary strategy and escalation/ }).click();
   await expect(academy).toContainText("Plural adversaries are not one larger opponent");
   await expect(academy).toContainText("Mahanian concentration");

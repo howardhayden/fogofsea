@@ -156,7 +156,27 @@ The focusable **Greet a visible animal** action cycles through currently visible
 
 ### 7.6 Progressive information load
 
-FOG OF SEA follows an **essential state → next action → explanation on request** sequence. Scenario identity, current conditions, current decision, turn state, and the next required control remain visible. Mission prose, reference catalogs, method explanations, previous-turn summaries, detailed score components, Academy lesson bodies, concepts, seminar prompts, and reading trails begin in closed native disclosures. Opening a disclosure never changes simulation state; it only exposes explanatory text. Internal probability ranges, committed draws, matrix notes, and validation machinery do not appear in ordinary turn play. Plain-language explanations live in the Field Guide and its bundled player documents. After resolution, one learning note distinguishes a tracked mismatch, a committed matrix failure, and the absence of a tracked mismatch. Detailed findings open only when they provide a supported recovery path; breakdowns and history remain opt-in. No-finding copy avoids both invented blame and unsupported success claims.
+FOG OF SEA follows an **essential state → next action → explanation on request** sequence. Scenario identity, current conditions, current decision, turn state, and the next required control remain visible. Mission prose, reference catalogs, method explanations, previous-turn summaries, detailed score components, nonsuggested Academy lesson bodies, concepts, seminar prompts, and reading trails begin in closed native disclosures. Opening a disclosure never changes simulation state; it only exposes explanatory text. Internal probability ranges, committed draws, matrix notes, and validation machinery do not appear in ordinary turn play. Plain-language explanations live in the Field Guide and its bundled player documents. After resolution, one learning note distinguishes a tracked mismatch, a committed matrix failure, and the absence of a tracked mismatch. Detailed findings open only when they provide a supported recovery path; breakdowns and history remain opt-in. No-finding copy avoids both invented blame and unsupported success claims.
+
+The Academy makes one bounded exception for contextual help. Before both theory
+choices are complete, lesson bodies open only for the allowed theories bound to
+the generated comparative problem by typed mission metadata, plus at most one
+lesson tied to the current phase or explicit compact Visualization view. One provisional choice cannot
+steer that help. After two distinct choices exist, their lessons replace the
+scenario-theory defaults. Every other lesson remains closed until requested;
+the player may close any suggested lesson, and opening the Academy never writes
+a choice, changes a score, parses prose as authority, consults concealed actor
+count, or reveals committed future state. Visualization
+prioritizes the existing Jomini operational-geometry lesson without treating
+the rendered plot as a coordinate truth. Strategy opens on the first
+scenario-relevant theory; Force design, Command, and Debrief open on their one
+bounded phase lesson when one exists. An explicit related-help link remains the
+active lesson while the initial path continues to contain every derived
+suggestion. Opening or selecting a lesson focuses and reveals its heading on
+compact layouts rather than leaving the answer below the module rail.
+The Academy snapshots this context for one mounted dialog session, so a resize
+cannot mix new suggestion labels with stale active or expanded state; reopening
+uses the then-current layout context.
 
 This rule applies at every viewport. Compact layouts may reposition or mutually exclude overlays, but they may not force explanatory text open, hide the next action, or replace semantic `details`/`summary` behavior with a pointer-only affordance.
 Selecting a compact workspace or global-tool destination is atomic: update the active view or open the requested dialog, close the menu, remove its occupied drawer from layout and hit testing, then move focus into the chosen region. The open chooser is a full-width, scrollable two-tier drawer directly beneath the status bar; large workspace and tool tiles plus a neutral dismiss scrim prevent live workspace text from competing with navigation labels. Visualization remains an explicit destination during command review rather than being masked by the command form, while Academy, Save / Load, Field Guide, Credits, and Sound Settings remain directly reachable on narrow screens. A closed menu has no painted box and cannot intercept input.

@@ -29,10 +29,11 @@ async function openVisualizationOnCompactView(page: Page) {
 
 async function installDeterministicVisualEntropy(page: Page, seed = 0x00c0ffee) {
   await page.addInitScript((initialSeed) => {
-    let state = initialSeed >>> 0;
     Object.defineProperty(globalThis.crypto, "getRandomValues", {
       configurable: true,
       value: (view: Uint8Array) => {
+        // Render retries and remounts must receive the same visual fixture entropy.
+        let state = initialSeed >>> 0;
         const bytes = new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
         for (let index = 0; index < bytes.length; index += 1) {
           state ^= state << 13;
