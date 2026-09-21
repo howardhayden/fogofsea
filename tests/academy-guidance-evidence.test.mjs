@@ -80,7 +80,7 @@ test("the atom-to-diff manifest covers and hashes every non-evidence change", ()
 
   const git = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], { cwd: root, encoding: "utf8" });
   if (git.status !== 0 || git.stdout.trim() !== "true") return;
-  const tracked = spawnSync("git", ["diff", "--name-only", metadata.baselineRevision, "--"], { cwd: root, encoding: "utf8" });
+  const tracked = spawnSync("git", ["diff", "--no-renames", "--name-only", metadata.baselineRevision, "--"], { cwd: root, encoding: "utf8" });
   const untracked = spawnSync("git", ["ls-files", "--others", "--exclude-standard"], { cwd: root, encoding: "utf8" });
   assert.equal(tracked.status, 0);
   assert.equal(untracked.status, 0);
