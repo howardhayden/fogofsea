@@ -92,6 +92,12 @@ The ruleset is active with no bypass actors. If it is ever disabled or loses eit
 
 `workers_dev` is false, so the unversioned production `fog-of-sea.<account>.workers.dev` route remains disabled. `preview_urls` is intentionally true so an exact version can be inspected before the custom domain moves.
 
+### 2026-09-21 GitHub App access repair
+
+On 2026-09-21, the merged Academy revision did not produce a Workers Build because the installed Cloudflare Workers and Pages GitHub App had access only to `howardhayden/chorus`. The owner restored access for `howardhayden/fogofsea`, retained the existing `chorus` selection, and GitHub then listed the Cloudflare app for this repository. Zero runtime or service bindings remains the intended static-only configuration; repository access and a production route are separate concerns.
+
+This is account-connection evidence only. It does not establish that Workers Builds received a subsequent `main` push, built or deployed the current revision, or attached that revision to `fogofsea.app`. Use the next protected-`main` push as the trigger check, and keep deployment open until Cloudflare identifies that exact commit and the live checks in section 9 pass.
+
 ## 4. Add `fogofsea.app` to Cloudflare without losing DNS records
 
 1. In Cloudflare, open **Domains → Onboard a domain**, enter `fogofsea.app`, and select the desired plan.
@@ -167,7 +173,7 @@ For every correction, preserve: failed deployment/version ID → observed sympto
 The repository, workflow, static-host configuration, caching policy, tests, and runbook are complete in source. The following were not completed from this workspace and must not be represented as complete until verified in their respective accounts:
 
 - GitHub Pages unpublication.
-- Cloudflare Worker creation, GitHub App installation, Build settings, first deployment, preview protection, custom domains, redirect rule, TLS settings, and telemetry-product review.
+- Receipt of a post-repair protected-`main` push by Workers Builds, current-revision build and deployment, serving-target attachment, preview protection, custom domains, redirect rule, TLS settings, and telemetry-product review. The GitHub App repository-access repair recorded above does not close these items.
 - Cloudflare zone onboarding, DNS-record reconciliation, nameserver activation, and DNSSEC enablement.
 - Hover nameserver replacement and DS-record management.
 - Live-domain browser, response-header, cache, direct-navigation, save persistence, accessibility, and rollback verification.
