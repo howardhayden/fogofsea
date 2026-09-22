@@ -9,6 +9,77 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const evidenceRoot = path.join(root, "evidence", "academy-contextual-guidance");
 const evidencePrefix = "evidence/academy-contextual-guidance/";
+const baselineRevision = "795ea751b2615f26bd2d3eff2a826fbe079a062a";
+const baselineRepository = "https://github.com/howardhayden/fogofsea.git";
+
+function runGit(args, timeout = 10_000) {
+  const environment = Object.fromEntries(
+    Object.entries(process.env).filter(([name]) => !name.toUpperCase().startsWith("GIT_")),
+  );
+  return spawnSync("git", args, {
+    cwd: root,
+    encoding: "utf8",
+    env: {
+      ...environment,
+      GIT_NO_LAZY_FETCH: "1",
+      GIT_NO_REPLACE_OBJECTS: "1",
+      GIT_TERMINAL_PROMPT: "0",
+    },
+    killSignal: "SIGKILL",
+    maxBuffer: 512 * 1024,
+    shell: false,
+    timeout,
+  });
+}
+
+function failureSummary(result) {
+  if (result.error?.code === "ETIMEDOUT") return "timed out";
+  if (result.error?.code) return result.error.code;
+  return `exit ${result.status ?? "unknown"}`;
+}
+
+function probeBaseline() {
+  const result = runGit(["rev-parse", "--verify", "--quiet", `${baselineRevision}^{commit}`]);
+  const output = String(result.stdout ?? "").trim();
+  if (result.status === 0 && output === baselineRevision) return true;
+  if (result.status === 1 && output === "") return false;
+  throw new Error(`Cannot verify the Academy evidence baseline (${failureSummary(result)}).`);
+}
+
+function ensureBaseline() {
+  const topLevel = runGit(["rev-parse", "--show-toplevel"]);
+  if (topLevel.status !== 0 || path.resolve(String(topLevel.stdout ?? "").trim()) !== root) {
+    throw new Error(`Academy evidence requires the repository root (${failureSummary(topLevel)}).`);
+  }
+  if (probeBaseline()) return;
+
+  const shallow = runGit(["rev-parse", "--is-shallow-repository"]);
+  if (shallow.status !== 0 || String(shallow.stdout ?? "").trim() !== "true") {
+    throw new Error("The Academy evidence baseline is absent from a checkout that is not verifiably shallow.");
+  }
+
+  const fetched = runGit([
+    "-c", "protocol.allow=never",
+    "-c", "protocol.https.allow=always",
+    "-c", "credential.helper=",
+    "-c", "fetch.fsckObjects=true",
+    "fetch",
+    "--no-write-fetch-head",
+    "--no-tags",
+    "--no-recurse-submodules",
+    "--no-auto-maintenance",
+    "--no-write-commit-graph",
+    "--depth=1",
+    baselineRepository,
+    baselineRevision,
+  ], 45_000);
+  if (fetched.status !== 0) {
+    throw new Error(`Cannot fetch the immutable Academy evidence baseline (${failureSummary(fetched)}).`);
+  }
+  if (!probeBaseline()) throw new Error("The Academy evidence baseline is unavailable after the bounded fetch.");
+}
+
+ensureBaseline();
 
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
@@ -34,14 +105,15 @@ test("the pre-change Academy inventory is content-bound to the authoritative bas
   const artifact = readJson("prechange-academy-inventory.json");
   verifyPayloadArtifact(artifact);
   assert.equal(artifact.format, "fog-of-sea-academy-prechange-inventory-v1");
-  assert.equal(artifact.payload.baselineRevision, "795ea751b2615f26bd2d3eff2a826fbe079a062a");
+  assert.equal(artifact.payload.baselineRevision, baselineRevision);
   assert.equal(artifact.payload.academy.initialActiveModule, "strategy-grammar");
   assert.equal(artifact.payload.academy.receivedScenarioContext, false);
   assert.equal(artifact.payload.academy.lessonBodyControlled, false);
   assert.equal(artifact.payload.academy.moduleCount, 25);
 
   const git = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], { cwd: root, encoding: "utf8" });
-  if (git.status !== 0 || git.stdout.trim() !== "true") return;
+  assert.equal(git.status, 0, "Academy baseline evidence requires a Git worktree");
+  assert.equal(git.stdout.trim(), "true", "Academy baseline evidence requires a Git worktree");
   for (const source of artifact.payload.sources) {
     const baseline = spawnSync("git", ["show", `${artifact.payload.baselineRevision}:${source.path}`], {
       cwd: root,
@@ -57,7 +129,7 @@ test("the atom-to-diff manifest covers and hashes every non-evidence change", ()
   const [metadata, ...entries] = raw.map((line) => JSON.parse(line));
   assert.equal(metadata.type, "manifest");
   assert.equal(metadata.format, "fog-of-sea-academy-atom-diff-manifest-v1");
-  assert.equal(metadata.baselineRevision, "795ea751b2615f26bd2d3eff2a826fbe079a062a");
+  assert.equal(metadata.baselineRevision, baselineRevision);
   assert.deepEqual(metadata.excludedRuntimePrefixes, ["node_modules/", "playwright-report/", "test-results/"]);
   assert.equal(sha256(entries.map((entry) => JSON.stringify(entry)).join("\n")), metadata.entriesSha256);
 
@@ -79,7 +151,8 @@ test("the atom-to-diff manifest covers and hashes every non-evidence change", ()
   }
 
   const git = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], { cwd: root, encoding: "utf8" });
-  if (git.status !== 0 || git.stdout.trim() !== "true") return;
+  assert.equal(git.status, 0, "Academy diff evidence requires a Git worktree");
+  assert.equal(git.stdout.trim(), "true", "Academy diff evidence requires a Git worktree");
   const tracked = spawnSync("git", ["diff", "--no-renames", "--name-only", metadata.baselineRevision, "--"], { cwd: root, encoding: "utf8" });
   const untracked = spawnSync("git", ["ls-files", "--others", "--exclude-standard"], { cwd: root, encoding: "utf8" });
   assert.equal(tracked.status, 0);
