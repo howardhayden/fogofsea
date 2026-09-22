@@ -124,6 +124,9 @@ test("fallback stars wander independently as bounded faceted glints instead of m
   expect(css).toMatch(/\.fallback-stars i\.jewel \{[^}]*min-width: 3\.8px;[^}]*min-height: 3\.8px;[^}]*opacity: \.94;[^}]*drop-shadow\(0 0 5\.5px/);
   expect(css.match(/\.fallback-stars i:nth-of-type\(8n \+ [1-8]\)/g)?.length ?? 0, "direction families prevent shared sheet motion").toBe(8);
   expect(css).toContain(".fallback-stars i.still:nth-of-type(3n + 1)");
+  expect(css).toMatch(/\[data-webgl="ready"\] \.fallback-scene \{[^}]*visibility: hidden;[^}]*content-visibility: hidden;/);
+  expect(css).toMatch(/\[data-webgl="ready"\] \.fallback-scene \* \{ animation-play-state: paused !important; \}/);
+  expect(css).toMatch(/\[data-webgl="initializing"\] > canvas,[\s\S]*\[data-webgl="unavailable"\] > canvas \{ visibility: hidden; \}/);
   for (const phase of ["0%", "23%", "52%", "77%", "100%"] as const) expect(animation).toContain(phase);
   expect(animation.match(/translate:/g)?.length ?? 0, "bounded waypoint wandering is visibly positional").toBe(5);
   expect(animation).not.toMatch(/rotate|offset-path|motion-path/);

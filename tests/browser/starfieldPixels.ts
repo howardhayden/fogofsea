@@ -38,6 +38,12 @@ export async function captureStarfieldPixels(page: Page, canvas: Locator): Promi
   }));
   let capture: Buffer;
   try {
+    // Backdrop-filtered HUD layers can retain their last compositor tile for
+    // one presentation after becoming hidden. Wait through style invalidation
+    // and the following paint so an element capture contains only the canvas.
+    await page.evaluate(() => new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    }));
     capture = await canvas.screenshot();
   } finally {
     await overlapping.evaluateAll((elements, states) => elements.forEach((element, index) => {

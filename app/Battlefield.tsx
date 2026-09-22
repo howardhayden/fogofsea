@@ -35,6 +35,7 @@ import { advanceRenderDeadline } from "./visualPerformance";
 import {
   createStarfieldPlan,
   describeStarfield,
+  prepareStarfieldForCamera,
   STARFIELD_LIMITS,
   updateStarfield,
   visibleStarfieldPlan,
@@ -162,11 +163,19 @@ function unitIntervalFromIndex(index: number) {
   return value - Math.floor(value);
 }
 
+function setDatasetIfChanged(element: HTMLElement, key: string, value: string) {
+  if (element.dataset[key] !== value) element.dataset[key] = value;
+}
+
 function Battlefield({ climate, time, clouds, precipitation, seaState, visibility, season, scenarioDate, observerLatitude, observerLongitude, storming, lightningCapable, windHeading, windSpeed, currentHeading, currentSpeed, waveHeading, region, regionId, fleet, airWing, lowSignatureFleet, lowSignatureAircraft, exerciseId, result, theme, contactVisibility, disclosedContacts = [], visualActive = true, currentPhaseContentActive = false }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const wildlifeReactRef = useRef<(memberId: string) => void>(() => {});
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const dreamGlowRef = useRef<DreamGlowRenderer | null>(null);
+  const rendererContextGeneration = useRef(0);
+  const dreamGlowContextGeneration = useRef(0);
+  const rendererContextLostHandler = useRef<((event: Event) => void) | null>(null);
+  const rendererContextRestoredHandler = useRef<(() => void) | null>(null);
   const rendererUnavailable = useRef(false);
   const viewPoses = useRef<Partial<Record<ViewLayer, ViewPose>>>({});
   const [viewLayer, setViewLayer] = useState<ViewLayer>("surface");
@@ -374,14 +383,14 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       const renderingContext = renderCanvas.getContext("webgl2", { antialias: true, alpha: true });
       if (!renderingContext) {
         rendererUnavailable.current = true;
-        container.dataset.webgl = "unavailable";
+        setDatasetIfChanged(container, "webgl", "unavailable");
         return;
       }
       try {
         renderer = new THREE.WebGLRenderer({ canvas: renderCanvas, context: renderingContext, antialias: true, alpha: false });
       } catch {
         rendererUnavailable.current = true;
-        container.dataset.webgl = "unavailable";
+        setDatasetIfChanged(container, "webgl", "unavailable");
         return;
       }
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
@@ -389,11 +398,46 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.domElement.setAttribute("aria-hidden", "true");
       renderer.domElement.tabIndex = -1;
+      const trackLostContext = (event: Event) => {
+        event.preventDefault();
+        setDatasetIfChanged(container, "webgl", "unavailable");
+        delete container.dataset.renderedLayer;
+        delete container.dataset.renderedTheme;
+      };
+      const trackRestoredContext = () => {
+        rendererContextGeneration.current += 1;
+        setDatasetIfChanged(container, "webgl", "initializing");
+      };
+      renderer.domElement.addEventListener("webglcontextlost", trackLostContext);
+      renderer.domElement.addEventListener("webglcontextrestored", trackRestoredContext);
+      rendererContextLostHandler.current = trackLostContext;
+      rendererContextRestoredHandler.current = trackRestoredContext;
       container.appendChild(renderer.domElement);
       rendererRef.current = renderer;
-      container.dataset.webgl = "ready";
     }
     renderer.setSize(container.clientWidth, container.clientHeight);
+    let contextLost = renderer.getContext().isContextLost();
+    let renderAfterContextRestore = () => {};
+    const markContextUnavailable = () => {
+      contextLost = true;
+      setDatasetIfChanged(container, "webgl", "unavailable");
+      delete container.dataset.renderedLayer;
+      delete container.dataset.renderedTheme;
+    };
+    const onWebGLContextLost = (event: Event) => {
+      event.preventDefault();
+      markContextUnavailable();
+    };
+    const onWebGLContextRestored = () => {
+      contextLost = false;
+      setDatasetIfChanged(container, "webgl", "initializing");
+      renderAfterContextRestore();
+    };
+    renderer.domElement.addEventListener("webglcontextlost", onWebGLContextLost);
+    renderer.domElement.addEventListener("webglcontextrestored", onWebGLContextRestored);
+    // Keep the complete CSS fallback authoritative until this scene has
+    // produced its first successful WebGL frame.
+    setDatasetIfChanged(container, "webgl", contextLost ? "unavailable" : "initializing");
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = !reducedMotion;
@@ -427,8 +471,10 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     controls.addEventListener("change", onControlsChange);
     controls.update();
     updateViewTelemetry();
-
     const onPlotKeyDown = (event: KeyboardEvent) => {
+      // Let the React fallback keyboard path own unavailable-context input so
+      // telemetry is not advanced once here and a second time by the fallback.
+      if (contextLost || renderer.getContext().isContextLost()) return;
       const supported = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "+", "=", "-", "_"].includes(event.key);
       if (!supported) return;
       event.preventDefault();
@@ -539,8 +585,16 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     const dreamSubjects = [...ships, ...aircraft, ...seaCreatures, ...wildlife];
     // Scene changes must not repeatedly allocate the glow buffers or discard
     // the expensive convolution programs. The renderer owns their lifetime.
-    const dreamGlow = dreamGlowRef.current ?? new DreamGlowRenderer(renderer, []);
+    const retainedDreamGlow = dreamGlowRef.current;
+    const dreamGlow = retainedDreamGlow ?? new DreamGlowRenderer(renderer, []);
     dreamGlowRef.current = dreamGlow;
+    if (!retainedDreamGlow) dreamGlowContextGeneration.current = rendererContextGeneration.current;
+    const syncDreamGlowContext = () => {
+      if (dreamGlowContextGeneration.current === rendererContextGeneration.current) return;
+      dreamGlow.handleContextRestored();
+      dreamGlowContextGeneration.current = rendererContextGeneration.current;
+    };
+    syncDreamGlowContext();
     dreamGlow.setSubjects(dreamSubjects);
     const clock3d = new THREE.Clock();
     const wildlifeRaycaster = new THREE.Raycaster();
@@ -602,9 +656,14 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     const foamScale = new THREE.Vector3();
     const fogViewDirection = new THREE.Vector3();
     const waveBaseColor = new THREE.Color(colors[2]);
-    const renderFrame = (frameAt: number) => {
-      if (document.hidden) return;
-      if (!reducedMotion) {
+    const renderFrame = (frameAt: number, force = false) => {
+      if (contextLost) return;
+      if (renderer.getContext().isContextLost()) {
+        markContextUnavailable();
+        return;
+      }
+      if (document.hidden || !container.clientWidth || !container.clientHeight) return;
+      if (!reducedMotion && !force) {
         // Browser timestamps may be quantized to whole milliseconds. Keep the
         // 30 Hz phase instead of repeatedly turning 33 ms into a skipped frame.
         if (frameAt + 1 < nextFrameAt) return;
@@ -655,7 +714,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         camera.getWorldDirection(fogViewDirection);
         const elevation = Math.asin(Math.max(-1, Math.min(1, fogViewDirection.y))) * 180 / Math.PI;
         scene.fog.density = fogDensityAtView(atmospherePlan, elevation, camera.position.y);
-        container.dataset.fogDensity = scene.fog.density.toFixed(5);
+        setDatasetIfChanged(container, "fogDensity", scene.fog.density.toFixed(5));
       }
       if (underseaSilt) {
         underseaSilt.rotation.y = reducedMotion ? 0 : Math.sin(elapsed * 0.045) * 0.035;
@@ -705,12 +764,30 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       if (sunDisk) sunDisk.position.copy(camera.position).addScaledVector(sunDirection, celestialProminence.distance);
       if (moonDisk) moonDisk.position.copy(camera.position).addScaledVector(moonDirection, celestialProminence.distance);
       if (!reducedMotion) controls.update();
-      dreamGlow.render(scene, camera);
-      container.dataset.dreamGlowProfile = dreamGlow.status;
-      container.dataset.dreamGlowSources = String(dreamGlow.renderedSubjects);
-      container.dataset.renderedLayer = viewLayer;
-      container.dataset.renderedTheme = theme;
+      prepareStarfieldForCamera(starfield, camera);
+      dreamGlow.render(scene, camera, starfield?.root);
+      if (renderer.getContext().isContextLost()) {
+        markContextUnavailable();
+        return;
+      }
+      setDatasetIfChanged(container, "dreamGlowProfile", dreamGlow.status);
+      setDatasetIfChanged(container, "dreamGlowSources", String(dreamGlow.renderedSubjects));
+      setDatasetIfChanged(container, "renderedLayer", viewLayer);
+      setDatasetIfChanged(container, "renderedTheme", theme);
+      // This is deliberately last: CSS reveals the canvas and suppresses the
+      // fallback only after the replacement frame completed successfully.
+      setDatasetIfChanged(container, "webgl", "ready");
     };
+    renderAfterContextRestore = () => {
+      syncDreamGlowContext();
+      renderFrame(performance.now(), true);
+    };
+    const onVisibilityChange = () => {
+      if (!document.hidden && !contextLost && container.dataset.webgl !== "ready") {
+        renderFrame(performance.now(), true);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
     const animate = (frameAt: number) => {
       frame = requestAnimationFrame(animate);
       renderFrame(frameAt);
@@ -744,6 +821,9 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       renderer.domElement.removeEventListener("pointerdown", onWildlifePointerDown);
       renderer.domElement.removeEventListener("pointerup", onWildlifePointerUp);
       renderer.domElement.removeEventListener("pointermove", onWildlifePointerMove);
+      renderer.domElement.removeEventListener("webglcontextlost", onWebGLContextLost);
+      renderer.domElement.removeEventListener("webglcontextrestored", onWebGLContextRestored);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       renderer.domElement.style.removeProperty("cursor");
       wildlifeReactRef.current = () => {};
       container.removeEventListener("keydown", onPlotKeyDown);
@@ -755,6 +835,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       dreamSubjects.forEach(detachDreamEmission);
       delete container.dataset.dreamGlowProfile;
       delete container.dataset.dreamGlowSources;
+      starfield?.starBatches.forEach(({ mesh }) => mesh.dispose());
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh || object instanceof THREE.Points || object instanceof THREE.Line || object instanceof THREE.LineSegments) {
           object.geometry?.dispose();
@@ -773,12 +854,20 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     dreamGlowRef.current?.dispose();
     dreamGlowRef.current = null;
     if (renderer) {
+      const trackLostContext = rendererContextLostHandler.current;
+      const trackRestoredContext = rendererContextRestoredHandler.current;
+      if (trackLostContext) renderer.domElement.removeEventListener("webglcontextlost", trackLostContext);
+      if (trackRestoredContext) renderer.domElement.removeEventListener("webglcontextrestored", trackRestoredContext);
       renderer.renderLists.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
       if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
     }
     rendererRef.current = null;
+    rendererContextLostHandler.current = null;
+    rendererContextRestoredHandler.current = null;
+    rendererContextGeneration.current = 0;
+    dreamGlowContextGeneration.current = 0;
     rendererUnavailable.current = false;
     if (container) delete container.dataset.webgl;
   }, []);
