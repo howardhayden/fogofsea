@@ -154,9 +154,13 @@ type SourceTarget = {
 };
 export type DreamGlowStatus = "off" | "sampled-radial-native-color" | "core-only-capability" | "core-only-budget" | "partial-core-only-budget";
 
-function renderTarget(depth: boolean, samples: number): THREE.WebGLRenderTarget {
+function renderTarget(
+  depth: boolean,
+  samples: number,
+  type: THREE.TextureDataType = THREE.HalfFloatType,
+): THREE.WebGLRenderTarget {
   const target = new THREE.WebGLRenderTarget(1, 1, {
-    type: THREE.HalfFloatType, format: THREE.RGBAFormat,
+    type, format: THREE.RGBAFormat,
     minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
     depthBuffer: depth, stencilBuffer: false, samples,
   });
@@ -205,6 +209,10 @@ export class DreamGlowRenderer {
   private readonly referenceSize = new THREE.Vector3();
   private readonly worldBox = new THREE.Box3();
   private readonly scratchBox = new THREE.Box3();
+  private readonly previousViewport = new THREE.Vector4();
+  private readonly previousScissor = new THREE.Vector4();
+  private readonly previousClearColor = new THREE.Color();
+  private readonly copyOrigin = new THREE.Vector2();
   private readonly referencePoints: THREE.Vector2[] = Array.from({ length: 8 }, () => new THREE.Vector2());
   private disposed = false;
   private displayCopyVerified = false;
@@ -220,7 +228,9 @@ export class DreamGlowRenderer {
     this.supported = renderer.extensions.has("EXT_color_buffer_float")
       && renderer.getContext().getContextAttributes()?.alpha === true;
     const samples = Math.min(4, renderer.capabilities.maxSamples);
-    this.base = renderTarget(true, samples);
+    // The first scene pass contributes depth only. Keep multisample depth
+    // parity, but do not allocate/resolve an unused half-float color surface.
+    this.base = renderTarget(true, samples, THREE.UnsignedByteType);
     this.emission = renderTarget(true, samples);
     this.accumulation = renderTarget(false, 0);
     this.displayBase.colorSpace = THREE.NoColorSpace;
@@ -455,7 +465,7 @@ export class DreamGlowRenderer {
     renderer.setScissorTest(false);
   }
 
-  render(scene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
+  render(scene: THREE.Scene, camera: THREE.PerspectiveCamera, nonDepthWritingStars?: THREE.Group): void {
     if (this.disposed) throw new Error("DreamGlowRenderer has been disposed");
     const renderer = this.renderer;
     this.renderedSubjects = 0;
@@ -468,12 +478,14 @@ export class DreamGlowRenderer {
       renderer.render(scene, camera);
       return;
     }
-    const previous = {
-      target: renderer.getRenderTarget(), viewport: renderer.getViewport(new THREE.Vector4()),
-      scissor: renderer.getScissor(new THREE.Vector4()), scissorTest: renderer.getScissorTest(),
-      clearColor: renderer.getClearColor(new THREE.Color()), clearAlpha: renderer.getClearAlpha(),
-      autoClear: renderer.autoClear, toneMapping: renderer.toneMapping,
-    };
+    const previousTarget = renderer.getRenderTarget();
+    renderer.getViewport(this.previousViewport);
+    renderer.getScissor(this.previousScissor);
+    renderer.getClearColor(this.previousClearColor);
+    const previousScissorTest = renderer.getScissorTest();
+    const previousClearAlpha = renderer.getClearAlpha();
+    const previousAutoClear = renderer.autoClear;
+    const previousToneMapping = renderer.toneMapping;
     this.status = "sampled-radial-native-color";
     this.base.setSize(this.fullSize.x, this.fullSize.y);
     this.accumulation.setSize(this.fullSize.x, this.fullSize.y);
@@ -490,7 +502,17 @@ export class DreamGlowRenderer {
       renderer.toneMapping = THREE.NoToneMapping;
       renderer.setScissorTest(false);
       renderer.setRenderTarget(this.base);
-      renderer.render(scene, camera);
+      // This pass supplies depth only. Stars explicitly use depthWrite=false;
+      // drawing their dense translucent canopy here cannot affect that depth.
+      // Restore visibility even on failure; the authoritative color pass still
+      // draws every potentially visible star with its original shader.
+      const starsVisible = nonDepthWritingStars?.visible;
+      try {
+        if (nonDepthWritingStars) nonDepthWritingStars.visible = false;
+        renderer.render(scene, camera);
+      } finally {
+        if (nonDepthWritingStars && starsVisible !== undefined) nonDepthWritingStars.visible = starsVisible;
+      }
       // render(scene) has updated original mesh world matrices, including rigs.
       this.accumulation.scissorTest = false;
       renderer.setRenderTarget(this.accumulation);
@@ -533,17 +555,17 @@ export class DreamGlowRenderer {
       this.flushSources();
       if (this.skippedForBudget > 0) this.status = this.renderedSubjects > 0 ? "partial-core-only-budget" : "core-only-budget";
       renderer.setScissorTest(false);
-      renderer.setRenderTarget(previous.target);
-      renderer.setViewport(previous.viewport);
-      renderer.toneMapping = previous.toneMapping;
+      renderer.setRenderTarget(previousTarget);
+      renderer.setViewport(this.previousViewport);
+      renderer.toneMapping = previousToneMapping;
       // Preserve the existing display pipeline as authority. The first scene
       // pass supplies depth only; legacy custom shaders are not assumed to
       // follow the same output-transfer convention as standard materials.
       renderer.autoClear = true;
-      renderer.setClearColor(previous.clearColor, previous.clearAlpha);
+      renderer.setClearColor(this.previousClearColor, previousClearAlpha);
       renderer.render(scene, camera);
       if (this.renderedSubjects === 0) return;
-      renderer.copyFramebufferToTexture(this.displayBase, new THREE.Vector2(0, 0));
+      renderer.copyFramebufferToTexture(this.displayBase, this.copyOrigin);
       // Validate each new snapshot allocation once, not on every frame. If
       // capture fails, the just-rendered lit scene remains the output; never
       // cover it with an empty texture. Retry only with a new renderer instance.
@@ -562,14 +584,24 @@ export class DreamGlowRenderer {
     } finally {
       for (const entry of this.sourceTargets) entry.used = false;
       this.pendingSources.length = 0;
-      renderer.setRenderTarget(previous.target);
-      renderer.setViewport(previous.viewport);
-      renderer.setScissor(previous.scissor);
-      renderer.setScissorTest(previous.scissorTest);
-      renderer.setClearColor(previous.clearColor, previous.clearAlpha);
-      renderer.autoClear = previous.autoClear;
-      renderer.toneMapping = previous.toneMapping;
+      renderer.setRenderTarget(previousTarget);
+      renderer.setViewport(this.previousViewport);
+      renderer.setScissor(this.previousScissor);
+      renderer.setScissorTest(previousScissorTest);
+      renderer.setClearColor(this.previousClearColor, previousClearAlpha);
+      renderer.autoClear = previousAutoClear;
+      renderer.toneMapping = previousToneMapping;
     }
+  }
+
+  /** Three rebuilds GPU resources after a restored WebGL context. Re-run the
+   * one-time framebuffer-copy capability check instead of retaining an error
+   * that may have been observed while the old context was being lost. */
+  handleContextRestored(): void {
+    if (this.disposed) throw new Error("DreamGlowRenderer has been disposed");
+    this.displayCopyVerified = false;
+    this.displayCopyFailed = false;
+    this.status = "off";
   }
 
   /** Release old scene references without dropping renderer-owned programs. */

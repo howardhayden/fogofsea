@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { StarfieldCulling } from "./starfieldCulling";
 import { refractSkyDirection, type SubsurfaceOpticsPlan } from "./environmentVisuals";
 import { seededRandom, type StarPlacement, type ViewLayer } from "./viewModel";
 
@@ -619,6 +620,7 @@ export function visibleStarfieldPlan(plan: StarfieldPlan, input: StarfieldVisibi
 type StarBatchRuntime = {
   mesh: THREE.InstancedMesh;
   material: THREE.ShaderMaterial;
+  culling: StarfieldCulling;
 };
 
 export type StarfieldRuntime = {
@@ -864,7 +866,7 @@ function createStarBatches(plan: StarfieldPlan, root: THREE.Group) {
   // over the canopy. Opaque vessels and aircraft also occlude it via depth.
   mesh.renderOrder = -20;
   root.add(mesh);
-  return [{ mesh, material }];
+  return [{ mesh, material, culling: new StarfieldCulling(mesh) }];
 }
 
 export function createStarfield(scene: THREE.Scene, plan: StarfieldPlan): StarfieldRuntime {
@@ -894,6 +896,14 @@ export function updateStarfield(
   runtime.starBatches.forEach((batch) => {
     batch.material.uniforms.uTime.value = time;
   });
+}
+
+/** Run after camera controls settle and before Three uploads instance buffers.
+ * Culling uses the full animated envelope, never the instantaneous time sample.
+ */
+export function prepareStarfieldForCamera(runtime: StarfieldRuntime | null, camera: THREE.Camera): void {
+  if (!runtime) return;
+  for (const batch of runtime.starBatches) batch.culling.prepare(camera);
 }
 
 export function describeStarfield(plan: StarfieldPlan) {
