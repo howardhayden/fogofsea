@@ -146,6 +146,16 @@ export async function validateArtifact(buildRoot = defaultBuildRoot) {
   assert.match(headers, /connect-src 'none'/i);
   assert.match(headers, /frame-src 'none'/i);
   assert.match(headers, /object-src 'none'/i);
+  assert.match(
+    headers,
+    /\/\*\r?\n\s+Cache-Control: public, max-age=0, must-revalidate, no-transform(?:\r?\n|$)/u,
+    "Release shell must forbid intermediary payload transformation while retaining revalidation",
+  );
+  assert.match(
+    headers,
+    /\/assets\/\*\r?\n\s+! Cache-Control\r?\n\s+Cache-Control: public, max-age=31536000, immutable(?:\r?\n|$)/u,
+    "Release assets must restore immutable caching after detaching the document no-transform policy",
+  );
 
   for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     const reference = match[1];
