@@ -20,15 +20,15 @@
       "const": "FOS-LAT"
     },
     "version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "scope": {
       "$ref": "#/definitions/scope"
     },
     "provenance": {
       "type": "array",
-      "minItems": 5,
-      "maxItems": 5,
+      "minItems": 6,
+      "maxItems": 6,
       "uniqueItems": true,
       "items": {
         "$ref": "#/definitions/provenance"

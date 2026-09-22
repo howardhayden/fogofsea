@@ -11,7 +11,7 @@
   border-radius: 6px;
   background: color-mix(in srgb, var(--raised) 76%, var(--panel));
   color: var(--text);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .055), 0 18px 54px rgba(3, 12, 18, .34);
+  box-shadow: inset 0 1px 0 var(--glass-rim), 0 18px 54px rgba(3, 12, 18, .34);
   backdrop-filter: blur(18px);
 }
 
@@ -110,7 +110,7 @@
 .intelligence-last-known {
   margin-top: 8px;
   padding: 9px;
-  border-left: 3px solid var(--accent-strong);
+  border-left: 3px solid var(--state-line);
   background: var(--raised);
 }
 
@@ -194,7 +194,7 @@
   min-width: 0;
   padding: 8px;
   border: 1px solid var(--line);
-  border-left: 3px double var(--accent-strong);
+  border-left: 3px double var(--state-line);
   border-radius: 4px;
   background: var(--raised);
 }

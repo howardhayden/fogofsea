@@ -292,7 +292,7 @@ async function loadRequirementAuthority() {
   await validateAgainstRepositorySchema(inventoryPath, inventory);
   exactFields(adoption, ["format", "registerId", "version", "scope", "provenance", "requirements"], adoptionPath);
   if (adoption.format !== "fog-of-sea-lattice-adoption-requirements-v1" || adoption.registerId !== "FOS-LAT"
-    || adoption.version !== "1.0.0" || !semanticVersionPattern.test(adoption.version)) {
+    || adoption.version !== "1.1.0" || !semanticVersionPattern.test(adoption.version)) {
     fail(`${adoptionPath} has an unsupported authority identity.`);
   }
   exactFields(adoption.scope, ["authorized", "excluded", "broadAdoptionStatus", "statement"], `${adoptionPath} scope`);
@@ -300,7 +300,7 @@ async function loadRequirementAuthority() {
     || uniqueTextList(adoption.scope.excluded, `${adoptionPath} scope.excluded`, { minimum: 4, maximum: 4 }).length !== 4) fail(`${adoptionPath} scope lists are incomplete.`);
   if (adoption.scope.broadAdoptionStatus !== "blocked") fail(`${adoptionPath} must keep broad adoption blocked.`);
   metadataText(adoption.scope.statement, `${adoptionPath} scope.statement`, 10_000);
-  if (!Array.isArray(adoption.provenance) || adoption.provenance.length !== 5) fail(`${adoptionPath} must contain exactly five provenance records.`);
+  if (!Array.isArray(adoption.provenance) || adoption.provenance.length !== 6) fail(`${adoptionPath} must contain exactly six provenance records.`);
   const provenanceIds = new Set();
   for (const [index, record] of adoption.provenance.entries()) {
     exactFields(record, ["id", "kind", "locator", "revision", "role"], `${adoptionPath} provenance[${index}]`);
@@ -397,7 +397,7 @@ async function loadRequirementAuthority() {
     fail(`${inventoryPath} has an unsupported authority identity.`);
   }
   exactFields(inventory.scope, ["unitCount", "requestCount", "outputCount", "sourceSymbolCount", "academyLintMode", "broadAdoptionStatus", "statement"], `${inventoryPath} scope`);
-  if (!Array.isArray(inventory.units) || inventory.units.length !== 37 || inventory.scope.unitCount !== inventory.units.length
+  if (!Array.isArray(inventory.units) || inventory.units.length !== 42 || inventory.scope.unitCount !== inventory.units.length
     || inventory.scope.requestCount !== LATTICE_COPY_REQUEST_IDS.length
     || inventory.scope.outputCount !== LATTICE_COPY_PUBLISH_IDS.length || inventory.scope.sourceSymbolCount !== 12
     || inventory.scope.academyLintMode !== "advisory-curriculum-data" || inventory.scope.broadAdoptionStatus !== "blocked") {
@@ -1104,8 +1104,8 @@ if (stableStringify(observedRequestIds) !== stableStringify(LATTICE_COPY_REQUEST
     `expected ${LATTICE_COPY_REQUEST_IDS.length} requests and ${LATTICE_COPY_PUBLISH_IDS.length} outputs`,
   ]);
 }
-if (requestRecords.length !== 19 || Object.keys(copy).length !== 26) {
-  fail("The bounded adoption slice must contain exactly 19 requests and 26 published outputs.");
+if (requestRecords.length !== 24 || Object.keys(copy).length !== 31) {
+  fail("The bounded adoption slice must contain exactly 24 requests and 31 published outputs.");
 }
 
 const traceability = {

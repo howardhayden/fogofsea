@@ -35,8 +35,8 @@
     },
     "requests": {
       "type": "array",
-      "minItems": 19,
-      "maxItems": 19,
+      "minItems": 24,
+      "maxItems": 24,
       "items": {
         "$ref": "#/$defs/request"
       }
@@ -111,13 +111,13 @@
           "const": "relational-systems"
         },
         "profileVersion": {
-          "const": "v1.0.0"
+          "const": "v1.1.0"
         },
         "profileDigest": {
-          "const": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a"
+          "const": "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468"
         },
         "ownerPackageDigest": {
-          "const": "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0"
+          "const": "68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b"
         }
       }
     },
@@ -134,7 +134,7 @@
           "const": "70907a77cba735c151e52929dd5a56d795c3d04f"
         },
         "latticeCommit": {
-          "const": "d6cc85b275e3f14163a5a547f626832fd21b27b0"
+          "const": "029ca14570b3ebe5703f504ab4b4baed90883f84"
         },
         "requestAuthority": {
           "const": "FOG OF SEA source-controlled authoring contract"
@@ -212,7 +212,12 @@
             "fos.academy.sources-intro",
             "fos.academy.model-boundary",
             "fos.academy.independent-status",
-            "fos.academy.language-system"
+            "fos.academy.language-system",
+            "fos.academy.strategy-complement-theory",
+            "fos.academy.strategy-end-state",
+            "fos.academy.strategy-guardrail",
+            "fos.academy.strategy-primary-theory",
+            "fos.academy.strategy-warfare-areas"
           ]
         },
         "source": {
@@ -334,7 +339,12 @@
             "academy.sources.intro",
             "academy.sources.modelBoundary",
             "academy.sources.independentStatus",
-            "academy.sources.languageSystem"
+            "academy.sources.languageSystem",
+            "academy.strategy.complementTheory",
+            "academy.strategy.endState",
+            "academy.strategy.guardrail",
+            "academy.strategy.primaryTheory",
+            "academy.strategy.warfareAreas"
           ]
         },
         "layer": {

@@ -219,8 +219,8 @@ async function rebindOuterGraph(root: string, bundle: FixtureBundle, options: Re
 test("RT-LAT-ID-000: the independent verifier accepts an isolated canonical evidence closure", async () => {
   await withFixture(async (root) => {
     const result = await verifyLatticeCopy(root);
-    assert.equal(result.requestCount, 19);
-    assert.equal(result.outputCount, 26);
+    assert.equal(result.requestCount, 24);
+    assert.equal(result.outputCount, 31);
     assert.equal(result.academyEntryCount, 1_011);
     assert.equal(result.academyBatchCount, 2);
   });

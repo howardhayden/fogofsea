@@ -1,17 +1,17 @@
 {
   "schemaVersion": "fog-of-sea.lattice-copy.requests.v2",
-  "revision": "2.0.0",
+  "revision": "2.1.0",
   "lattice": {
     "engineName": "Lattice — Layered Register Engine",
     "engineVersion": "0.1.1",
     "profileId": "relational-systems",
-    "profileVersion": "v1.0.0",
-    "profileDigest": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a",
-    "ownerPackageDigest": "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0"
+    "profileVersion": "v1.1.0",
+    "profileDigest": "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468",
+    "ownerPackageDigest": "68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b"
   },
   "provenance": {
     "fogBaselineCommit": "70907a77cba735c151e52929dd5a56d795c3d04f",
-    "latticeCommit": "d6cc85b275e3f14163a5a547f626832fd21b27b0",
+    "latticeCommit": "029ca14570b3ebe5703f504ab4b4baed90883f84",
     "requestAuthority": "FOG OF SEA source-controlled authoring contract"
   },
   "sourceCatalog": [
@@ -7737,6 +7737,873 @@
         },
         "exactText": {
           "academy.sources.languageSystem": "Selected static in-game and Academy copy is processed through the pinned Lattice contract and profile. Automated checks test declared semantic coverage, prohibited claims, accessibility dependencies, and deterministic derivation; they do not establish factual truth, literary quality, human review, or endorsement."
+        }
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      }
+    },
+    {
+      "id": "fos.academy.strategy-warfare-areas",
+      "source": [
+        "app/Academy.tsx#academy-strategy-warfare-areas"
+      ],
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-ACA-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-009"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.comparison"
+        ]
+      },
+      "context": {
+        "domain": "naval-strategy-learning",
+        "surface": "tutorial",
+        "mode": "analysis",
+        "stakes": "consequential",
+        "safetyClass": "advisory",
+        "locale": "en-US",
+        "audience": {
+          "knowledgeTags": [
+            "strategy-student",
+            "decision-method"
+          ],
+          "readingLevel": 9
+        },
+        "channel": {
+          "visualAvailable": true,
+          "audioAvailable": false,
+          "spatialInferenceAllowed": false
+        },
+        "limits": {
+          "maxCharacters": 1200,
+          "maxSentences": 12,
+          "maxCandidates": 4
+        },
+        "sceneImportance": "minor"
+      },
+      "outputs": [
+        {
+          "publishId": "academy.strategy.warfareAreas",
+          "layer": "interpretive",
+          "representation": "standard"
+        }
+      ],
+      "contract": {
+        "id": "fos.contract.academy.strategy-warfare-areas",
+        "revision": "1.0.0",
+        "atoms": [
+          {
+            "id": "academy.strategy.warfare-areas.method",
+            "kind": "action",
+            "criticality": "domain",
+            "frame": {
+              "subject": "the player",
+              "predicate": "connects warfare-area choices to",
+              "object": "visible mission-brief tasks without receiving a scored choice",
+              "polarity": "positive",
+              "modality": "may",
+              "conditionIds": []
+            },
+            "requiredIn": [
+              "interpretive"
+            ],
+            "delivery": {
+              "interpretive": "explicit"
+            },
+            "protectedFields": [
+              "subject",
+              "predicate",
+              "object",
+              "polarity",
+              "modality"
+            ],
+            "prohibitedDependencies": [
+              "color",
+              "sound",
+              "timing-perception",
+              "spatial-inference"
+            ],
+            "literalForm": "Connect every warfare-area choice to a visible task in the mission brief. Name the effect that task requires, distinguish the effect from a platform or threat, and leave an area unselected when no visible evidence supports it. Availability alone is not evidence, and this guide does not identify a scored choice.",
+            "match": {
+              "allOf": [
+                "Connect every warfare-area choice to a visible task in the mission brief. Name the effect that task requires, distinguish the effect from a platform or threat, and leave an area unselected when no visible evidence supports it. Availability alone is not evidence, and this guide does not identify a scored choice."
+              ]
+            }
+          }
+        ],
+        "relations": [],
+        "prohibitedClaims": [
+          {
+            "id": "fos.prohibited.academy.strategy-warfare-areas.1",
+            "literalForm": "The scored warfare areas are identified here."
+          }
+        ],
+        "terminology": {}
+      },
+      "profileIds": [
+        "relational-systems"
+      ],
+      "candidates": [
+        {
+          "id": "academy.strategy.warfare-areas-v1",
+          "layer": "interpretive",
+          "representation": "standard",
+          "text": "Connect every warfare-area choice to a visible task in the mission brief. Name the effect that task requires, distinguish the effect from a platform or threat, and leave an area unselected when no visible evidence supports it. Availability alone is not evidence, and this guide does not identify a scored choice.",
+          "atomIds": [
+            "academy.strategy.warfare-areas.method"
+          ],
+          "metadata": {
+            "dependencies": [],
+            "claims": [
+              {
+                "id": "academy.strategy.warfare-areas.method.claim",
+                "status": "qualified",
+                "atomIds": [
+                  "academy.strategy.warfare-areas.method"
+                ],
+                "evidenceRefs": [
+                  "src.academy.modules",
+                  "src.academy.comparison"
+                ]
+              }
+            ],
+            "affectedParties": [
+              "player"
+            ],
+            "stateChanges": [
+              "academy.strategy.warfare-areas-selected"
+            ]
+          }
+        }
+      ],
+      "hostAssertions": {
+        "requiredPhrases": {
+          "academy.strategy.warfareAreas": [
+            "visible task in the mission brief",
+            "distinguish the effect from a platform or threat",
+            "Availability alone is not evidence",
+            "does not identify a scored choice"
+          ]
+        },
+        "prohibitedPhrases": {
+          "academy.strategy.warfareAreas": [
+            "The scored warfare areas are identified here."
+          ]
+        },
+        "exactText": {
+          "academy.strategy.warfareAreas": "Connect every warfare-area choice to a visible task in the mission brief. Name the effect that task requires, distinguish the effect from a platform or threat, and leave an area unselected when no visible evidence supports it. Availability alone is not evidence, and this guide does not identify a scored choice."
+        }
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      }
+    },
+    {
+      "id": "fos.academy.strategy-end-state",
+      "source": [
+        "app/Academy.tsx#academy-strategy-end-state"
+      ],
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-ACA-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-010"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.comparison"
+        ]
+      },
+      "context": {
+        "domain": "naval-strategy-learning",
+        "surface": "tutorial",
+        "mode": "analysis",
+        "stakes": "consequential",
+        "safetyClass": "advisory",
+        "locale": "en-US",
+        "audience": {
+          "knowledgeTags": [
+            "strategy-student",
+            "decision-method"
+          ],
+          "readingLevel": 9
+        },
+        "channel": {
+          "visualAvailable": true,
+          "audioAvailable": false,
+          "spatialInferenceAllowed": false
+        },
+        "limits": {
+          "maxCharacters": 1200,
+          "maxSentences": 12,
+          "maxCandidates": 4
+        },
+        "sceneImportance": "minor"
+      },
+      "outputs": [
+        {
+          "publishId": "academy.strategy.endState",
+          "layer": "interpretive",
+          "representation": "standard"
+        }
+      ],
+      "contract": {
+        "id": "fos.contract.academy.strategy-end-state",
+        "revision": "1.0.0",
+        "atoms": [
+          {
+            "id": "academy.strategy.end-state.method",
+            "kind": "action",
+            "criticality": "domain",
+            "frame": {
+              "subject": "the player",
+              "predicate": "frames and tests",
+              "object": "an observable political end state without receiving a scored choice",
+              "polarity": "positive",
+              "modality": "may",
+              "conditionIds": []
+            },
+            "requiredIn": [
+              "interpretive"
+            ],
+            "delivery": {
+              "interpretive": "explicit"
+            },
+            "protectedFields": [
+              "subject",
+              "predicate",
+              "object",
+              "polarity",
+              "modality"
+            ],
+            "prohibitedDependencies": [
+              "color",
+              "sound",
+              "timing-perception",
+              "spatial-inference"
+            ],
+            "literalForm": "Frame the end state as an observable political condition, not an activity or force position. Compare each option with the stated political aim, objective, success conditions, and constraints; then ask what must remain true at transition. This guide does not identify a scored choice.",
+            "match": {
+              "allOf": [
+                "Frame the end state as an observable political condition, not an activity or force position. Compare each option with the stated political aim, objective, success conditions, and constraints; then ask what must remain true at transition. This guide does not identify a scored choice."
+              ]
+            }
+          }
+        ],
+        "relations": [],
+        "prohibitedClaims": [
+          {
+            "id": "fos.prohibited.academy.strategy-end-state.1",
+            "literalForm": "The scored end state is identified here."
+          }
+        ],
+        "terminology": {}
+      },
+      "profileIds": [
+        "relational-systems"
+      ],
+      "candidates": [
+        {
+          "id": "academy.strategy.end-state-v1",
+          "layer": "interpretive",
+          "representation": "standard",
+          "text": "Frame the end state as an observable political condition, not an activity or force position. Compare each option with the stated political aim, objective, success conditions, and constraints; then ask what must remain true at transition. This guide does not identify a scored choice.",
+          "atomIds": [
+            "academy.strategy.end-state.method"
+          ],
+          "metadata": {
+            "dependencies": [],
+            "claims": [
+              {
+                "id": "academy.strategy.end-state.method.claim",
+                "status": "qualified",
+                "atomIds": [
+                  "academy.strategy.end-state.method"
+                ],
+                "evidenceRefs": [
+                  "src.academy.modules",
+                  "src.academy.comparison"
+                ]
+              }
+            ],
+            "affectedParties": [
+              "player"
+            ],
+            "stateChanges": [
+              "academy.strategy.end-state-selected"
+            ]
+          }
+        }
+      ],
+      "hostAssertions": {
+        "requiredPhrases": {
+          "academy.strategy.endState": [
+            "observable political condition",
+            "political aim, objective, success conditions, and constraints",
+            "what must remain true at transition",
+            "does not identify a scored choice"
+          ]
+        },
+        "prohibitedPhrases": {
+          "academy.strategy.endState": [
+            "The scored end state is identified here."
+          ]
+        },
+        "exactText": {
+          "academy.strategy.endState": "Frame the end state as an observable political condition, not an activity or force position. Compare each option with the stated political aim, objective, success conditions, and constraints; then ask what must remain true at transition. This guide does not identify a scored choice."
+        }
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      }
+    },
+    {
+      "id": "fos.academy.strategy-primary-theory",
+      "source": [
+        "app/Academy.tsx#academy-strategy-primary-theory"
+      ],
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-011"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.comparison"
+        ]
+      },
+      "context": {
+        "domain": "naval-strategy-learning",
+        "surface": "tutorial",
+        "mode": "analysis",
+        "stakes": "consequential",
+        "safetyClass": "advisory",
+        "locale": "en-US",
+        "audience": {
+          "knowledgeTags": [
+            "strategy-student",
+            "decision-method"
+          ],
+          "readingLevel": 9
+        },
+        "channel": {
+          "visualAvailable": true,
+          "audioAvailable": false,
+          "spatialInferenceAllowed": false
+        },
+        "limits": {
+          "maxCharacters": 1200,
+          "maxSentences": 12,
+          "maxCandidates": 4
+        },
+        "sceneImportance": "minor"
+      },
+      "outputs": [
+        {
+          "publishId": "academy.strategy.primaryTheory",
+          "layer": "interpretive",
+          "representation": "standard"
+        }
+      ],
+      "contract": {
+        "id": "fos.contract.academy.strategy-primary-theory",
+        "revision": "1.0.0",
+        "atoms": [
+          {
+            "id": "academy.strategy.primary-theory.method",
+            "kind": "action",
+            "criticality": "domain",
+            "frame": {
+              "subject": "the player",
+              "predicate": "tests a theory as",
+              "object": "a causal mechanism and makes the selection independently",
+              "polarity": "positive",
+              "modality": "may",
+              "conditionIds": []
+            },
+            "requiredIn": [
+              "interpretive"
+            ],
+            "delivery": {
+              "interpretive": "explicit"
+            },
+            "protectedFields": [
+              "subject",
+              "predicate",
+              "object",
+              "polarity",
+              "modality"
+            ],
+            "prohibitedDependencies": [
+              "color",
+              "sound",
+              "timing-perception",
+              "spatial-inference"
+            ],
+            "literalForm": "Treat each theory as a causal mechanism, not a famous name. Ask how maritime action is expected to create the chosen political condition, what assumptions it depends on, and what visible evidence would count against it. Study the scenario-relevant premises, then make the selection yourself.",
+            "match": {
+              "allOf": [
+                "Treat each theory as a causal mechanism, not a famous name. Ask how maritime action is expected to create the chosen political condition, what assumptions it depends on, and what visible evidence would count against it. Study the scenario-relevant premises, then make the selection yourself."
+              ]
+            }
+          }
+        ],
+        "relations": [],
+        "prohibitedClaims": [
+          {
+            "id": "fos.prohibited.academy.strategy-primary-theory.1",
+            "literalForm": "The scored primary theory is identified here."
+          }
+        ],
+        "terminology": {}
+      },
+      "profileIds": [
+        "relational-systems"
+      ],
+      "candidates": [
+        {
+          "id": "academy.strategy.primary-theory-v1",
+          "layer": "interpretive",
+          "representation": "standard",
+          "text": "Treat each theory as a causal mechanism, not a famous name. Ask how maritime action is expected to create the chosen political condition, what assumptions it depends on, and what visible evidence would count against it. Study the scenario-relevant premises, then make the selection yourself.",
+          "atomIds": [
+            "academy.strategy.primary-theory.method"
+          ],
+          "metadata": {
+            "dependencies": [],
+            "claims": [
+              {
+                "id": "academy.strategy.primary-theory.method.claim",
+                "status": "qualified",
+                "atomIds": [
+                  "academy.strategy.primary-theory.method"
+                ],
+                "evidenceRefs": [
+                  "src.academy.modules",
+                  "src.academy.comparison"
+                ]
+              }
+            ],
+            "affectedParties": [
+              "player"
+            ],
+            "stateChanges": [
+              "academy.strategy.primary-theory-selected"
+            ]
+          }
+        }
+      ],
+      "hostAssertions": {
+        "requiredPhrases": {
+          "academy.strategy.primaryTheory": [
+            "causal mechanism",
+            "what visible evidence would count against it",
+            "scenario-relevant premises",
+            "make the selection yourself"
+          ]
+        },
+        "prohibitedPhrases": {
+          "academy.strategy.primaryTheory": [
+            "The scored primary theory is identified here."
+          ]
+        },
+        "exactText": {
+          "academy.strategy.primaryTheory": "Treat each theory as a causal mechanism, not a famous name. Ask how maritime action is expected to create the chosen political condition, what assumptions it depends on, and what visible evidence would count against it. Study the scenario-relevant premises, then make the selection yourself."
+        }
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      }
+    },
+    {
+      "id": "fos.academy.strategy-complement-theory",
+      "source": [
+        "app/Academy.tsx#academy-strategy-complement-theory"
+      ],
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-012"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.comparison"
+        ]
+      },
+      "context": {
+        "domain": "naval-strategy-learning",
+        "surface": "tutorial",
+        "mode": "analysis",
+        "stakes": "consequential",
+        "safetyClass": "advisory",
+        "locale": "en-US",
+        "audience": {
+          "knowledgeTags": [
+            "strategy-student",
+            "decision-method"
+          ],
+          "readingLevel": 9
+        },
+        "channel": {
+          "visualAvailable": true,
+          "audioAvailable": false,
+          "spatialInferenceAllowed": false
+        },
+        "limits": {
+          "maxCharacters": 1200,
+          "maxSentences": 12,
+          "maxCandidates": 4
+        },
+        "sceneImportance": "minor"
+      },
+      "outputs": [
+        {
+          "publishId": "academy.strategy.complementTheory",
+          "layer": "interpretive",
+          "representation": "standard"
+        }
+      ],
+      "contract": {
+        "id": "fos.contract.academy.strategy-complement-theory",
+        "revision": "1.0.0",
+        "atoms": [
+          {
+            "id": "academy.strategy.complement-theory.method",
+            "kind": "action",
+            "criticality": "domain",
+            "frame": {
+              "subject": "the player",
+              "predicate": "assigns the second theory",
+              "object": "a distinct complementary or challenging job without receiving a scored pairing",
+              "polarity": "positive",
+              "modality": "may",
+              "conditionIds": []
+            },
+            "requiredIn": [
+              "interpretive"
+            ],
+            "delivery": {
+              "interpretive": "explicit"
+            },
+            "protectedFields": [
+              "subject",
+              "predicate",
+              "object",
+              "polarity",
+              "modality"
+            ],
+            "prohibitedDependencies": [
+              "color",
+              "sound",
+              "timing-perception",
+              "spatial-inference"
+            ],
+            "literalForm": "Use the second theory to add a missing mechanism or challenge the primary theory with a different prediction. State what each contributes, where their assumptions conflict, and how the strategy resolves that conflict. A second label without a distinct job is not a synthesis, and this guide does not identify a scored pairing.",
+            "match": {
+              "allOf": [
+                "Use the second theory to add a missing mechanism or challenge the primary theory with a different prediction. State what each contributes, where their assumptions conflict, and how the strategy resolves that conflict. A second label without a distinct job is not a synthesis, and this guide does not identify a scored pairing."
+              ]
+            }
+          }
+        ],
+        "relations": [],
+        "prohibitedClaims": [
+          {
+            "id": "fos.prohibited.academy.strategy-complement-theory.1",
+            "literalForm": "The scored theory pairing is identified here."
+          }
+        ],
+        "terminology": {}
+      },
+      "profileIds": [
+        "relational-systems"
+      ],
+      "candidates": [
+        {
+          "id": "academy.strategy.complement-theory-v1",
+          "layer": "interpretive",
+          "representation": "standard",
+          "text": "Use the second theory to add a missing mechanism or challenge the primary theory with a different prediction. State what each contributes, where their assumptions conflict, and how the strategy resolves that conflict. A second label without a distinct job is not a synthesis, and this guide does not identify a scored pairing.",
+          "atomIds": [
+            "academy.strategy.complement-theory.method"
+          ],
+          "metadata": {
+            "dependencies": [],
+            "claims": [
+              {
+                "id": "academy.strategy.complement-theory.method.claim",
+                "status": "qualified",
+                "atomIds": [
+                  "academy.strategy.complement-theory.method"
+                ],
+                "evidenceRefs": [
+                  "src.academy.modules",
+                  "src.academy.comparison"
+                ]
+              }
+            ],
+            "affectedParties": [
+              "player"
+            ],
+            "stateChanges": [
+              "academy.strategy.complement-theory-selected"
+            ]
+          }
+        }
+      ],
+      "hostAssertions": {
+        "requiredPhrases": {
+          "academy.strategy.complementTheory": [
+            "add a missing mechanism or challenge the primary theory",
+            "where their assumptions conflict",
+            "A second label without a distinct job is not a synthesis",
+            "does not identify a scored pairing"
+          ]
+        },
+        "prohibitedPhrases": {
+          "academy.strategy.complementTheory": [
+            "The scored theory pairing is identified here."
+          ]
+        },
+        "exactText": {
+          "academy.strategy.complementTheory": "Use the second theory to add a missing mechanism or challenge the primary theory with a different prediction. State what each contributes, where their assumptions conflict, and how the strategy resolves that conflict. A second label without a distinct job is not a synthesis, and this guide does not identify a scored pairing."
+        }
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      }
+    },
+    {
+      "id": "fos.academy.strategy-guardrail",
+      "source": [
+        "app/Academy.tsx#academy-strategy-guardrail"
+      ],
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-ACA-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-013"
+        ],
+        "sourceRefs": [
+          "src.academy.modules",
+          "src.academy.comparison"
+        ]
+      },
+      "context": {
+        "domain": "naval-strategy-learning",
+        "surface": "tutorial",
+        "mode": "analysis",
+        "stakes": "consequential",
+        "safetyClass": "advisory",
+        "locale": "en-US",
+        "audience": {
+          "knowledgeTags": [
+            "strategy-student",
+            "decision-method"
+          ],
+          "readingLevel": 9
+        },
+        "channel": {
+          "visualAvailable": true,
+          "audioAvailable": false,
+          "spatialInferenceAllowed": false
+        },
+        "limits": {
+          "maxCharacters": 1200,
+          "maxSentences": 12,
+          "maxCandidates": 4
+        },
+        "sceneImportance": "minor"
+      },
+      "outputs": [
+        {
+          "publishId": "academy.strategy.guardrail",
+          "layer": "interpretive",
+          "representation": "standard"
+        }
+      ],
+      "contract": {
+        "id": "fos.contract.academy.strategy-guardrail",
+        "revision": "1.0.0",
+        "atoms": [
+          {
+            "id": "academy.strategy.guardrail.method",
+            "kind": "action",
+            "criticality": "domain",
+            "frame": {
+              "subject": "the player",
+              "predicate": "tests guardrails against",
+              "object": "visible political obligations without receiving a scored choice",
+              "polarity": "positive",
+              "modality": "may",
+              "conditionIds": []
+            },
+            "requiredIn": [
+              "interpretive"
+            ],
+            "delivery": {
+              "interpretive": "explicit"
+            },
+            "protectedFields": [
+              "subject",
+              "predicate",
+              "object",
+              "polarity",
+              "modality"
+            ],
+            "prohibitedDependencies": [
+              "color",
+              "sound",
+              "timing-perception",
+              "spatial-inference"
+            ],
+            "literalForm": "Choose the guardrail whose breach would make apparent mission success politically self-defeating. Test each option against the visible constraints, civilian context, partner dependence, authority and trust, and endurance. One guardrail controls the plan, but the others remain obligations; this guide does not identify a scored choice.",
+            "match": {
+              "allOf": [
+                "Choose the guardrail whose breach would make apparent mission success politically self-defeating. Test each option against the visible constraints, civilian context, partner dependence, authority and trust, and endurance. One guardrail controls the plan, but the others remain obligations; this guide does not identify a scored choice."
+              ]
+            }
+          }
+        ],
+        "relations": [],
+        "prohibitedClaims": [
+          {
+            "id": "fos.prohibited.academy.strategy-guardrail.1",
+            "literalForm": "The scored guardrail is identified here."
+          }
+        ],
+        "terminology": {}
+      },
+      "profileIds": [
+        "relational-systems"
+      ],
+      "candidates": [
+        {
+          "id": "academy.strategy.guardrail-v1",
+          "layer": "interpretive",
+          "representation": "standard",
+          "text": "Choose the guardrail whose breach would make apparent mission success politically self-defeating. Test each option against the visible constraints, civilian context, partner dependence, authority and trust, and endurance. One guardrail controls the plan, but the others remain obligations; this guide does not identify a scored choice.",
+          "atomIds": [
+            "academy.strategy.guardrail.method"
+          ],
+          "metadata": {
+            "dependencies": [],
+            "claims": [
+              {
+                "id": "academy.strategy.guardrail.method.claim",
+                "status": "qualified",
+                "atomIds": [
+                  "academy.strategy.guardrail.method"
+                ],
+                "evidenceRefs": [
+                  "src.academy.modules",
+                  "src.academy.comparison"
+                ]
+              }
+            ],
+            "affectedParties": [
+              "player"
+            ],
+            "stateChanges": [
+              "academy.strategy.guardrail-selected"
+            ]
+          }
+        }
+      ],
+      "hostAssertions": {
+        "requiredPhrases": {
+          "academy.strategy.guardrail": [
+            "politically self-defeating",
+            "visible constraints, civilian context, partner dependence, authority and trust, and endurance",
+            "others remain obligations",
+            "does not identify a scored choice"
+          ]
+        },
+        "prohibitedPhrases": {
+          "academy.strategy.guardrail": [
+            "The scored guardrail is identified here."
+          ]
+        },
+        "exactText": {
+          "academy.strategy.guardrail": "Choose the guardrail whose breach would make apparent mission success politically self-defeating. Test each option against the visible constraints, civilian context, partner dependence, authority and trust, and endurance. One guardrail controls the plan, but the others remain obligations; this guide does not identify a scored choice."
         }
       },
       "review": {

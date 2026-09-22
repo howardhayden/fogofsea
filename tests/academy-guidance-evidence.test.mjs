@@ -180,36 +180,247 @@ test("runtime exclusions cannot hide an unmapped governed product path", () => {
 test("the Academy corpus report proves complete mappings and bounded generated coverage", () => {
   const artifact = readJson("academy-guidance-corpus-report.json");
   verifyPayloadArtifact(artifact);
-  assert.equal(artifact.format, "fog-of-sea-academy-guidance-corpus-v1");
-  assert.equal(artifact.payload.baselineRevision, "795ea751b2615f26bd2d3eff2a826fbe079a062a");
+  assert.equal(artifact.format, "fog-of-sea-academy-guidance-corpus-v2");
+  assert.equal(artifact.payload.baselineRevision, baselineRevision);
+  assert.equal(artifact.payload.requirementsVersion, "1.2.0");
+  assert.equal(artifact.payload.implementationStatus, "implemented-local-release-and-focused-browser-verified-hosted-public-pending");
+  assert.equal(artifact.payload.academyModuleCount, 25);
+  assert.deepEqual(artifact.payload.academyViews, ["NOW", "LIBRARY", "COMPARE", "SOURCES"]);
+
+  assert.deepEqual(artifact.payload.firstPhaseDecisionSupport.ids, [
+    "first-phase-warfare",
+    "first-phase-end-state",
+    "first-phase-primary-theory",
+    "first-phase-partner-theory",
+    "first-phase-guardrail",
+  ]);
+  assert.equal(artifact.payload.firstPhaseDecisionSupport.count, 5);
+  assert.match(artifact.payload.firstPhaseDecisionSupport.defaultPresentation, /all five.*open.*NOW/i);
+  assert.match(artifact.payload.firstPhaseDecisionSupport.answerPolicy, /no scored choice.*ranking.*recommendation.*hidden-answer/i);
+  assert.deepEqual(artifact.payload.safeScenarioProjection.fields, [
+    "brief",
+    "friendlySituation",
+    "opposingSituation",
+    "civilianContext",
+    "objective",
+    "intelligence",
+    "constraints",
+    "successConditions",
+    "navalProblem",
+    "politicalAim",
+  ]);
+  assert.equal(artifact.payload.safeScenarioProjection.fieldCount, 10);
+  for (const hidden of ["required", "recommended", "endState", "guardrail", "lenses", "minimumUncrewed", "matrix", "score"]) {
+    assert.ok(artifact.payload.safeScenarioProjection.prohibitedAnswerFields.includes(hidden), hidden);
+  }
+  assert.match(artifact.payload.safeScenarioProjection.noninterference, /does not change.*guidance.*rendered/i);
+
   assert.equal(artifact.payload.theoryLensCount, 13);
   assert.equal(Object.keys(artifact.payload.theoryModuleMap).length, 13);
+
+  const theoryAtomEntries = Object.entries(artifact.payload.theoryAtomMap);
+  assert.equal(artifact.payload.theoryAtomCount, 13);
+  assert.equal(theoryAtomEntries.length, 13);
+  assert.deepEqual(
+    theoryAtomEntries.map(([lens]) => lens).sort(),
+    Object.keys(artifact.payload.theoryModuleMap).sort(),
+  );
+  const theoryAtomIds = theoryAtomEntries.map(([, mapping]) => mapping.atomId);
+  assert.equal(new Set(theoryAtomIds).size, 13);
+  for (const [lens, mapping] of theoryAtomEntries) {
+    assert.match(mapping.atomId, /^theory-[a-z0-9-]+$/);
+    assert.equal(mapping.moduleId, artifact.payload.theoryModuleMap[lens]);
+  }
+  assert.deepEqual(
+    new Set(artifact.payload.sharedModuleDisclosureBoundary["maritime-schools"].theoryAtomIds),
+    new Set(["theory-aube", "theory-richmond", "theory-wegener", "theory-castex"]),
+  );
+  assert.deepEqual(
+    new Set(artifact.payload.sharedModuleDisclosureBoundary["global-seapower"].theoryAtomIds),
+    new Set(["theory-panikkar", "theory-gorshkov", "theory-liu-huaqing", "theory-till"]),
+  );
+  assert.deepEqual(artifact.payload.progressCompatibility, {
+    moduleCount: 25,
+    moduleIdsChanged: false,
+    newAtomProgressKeys: false,
+    saveSchemaChanged: false,
+  });
+  assert.equal(artifact.payload.helpSignalPolicy.automaticHelpSignal, "explicit Academy open on a new mount");
+  for (const prohibited of ["elapsed time", "click frequency", "analytics", "storage", "network", "model call"]) {
+    assert.ok(artifact.payload.helpSignalPolicy.prohibitedInferenceInputs.includes(prohibited), prohibited);
+  }
+  for (const open of [
+    "all five first-phase decision methods in NOW",
+    "public-brief-named or completed-selection-recorded strategist premises in NOW",
+  ]) assert.ok(artifact.payload.nestedDisclosureDefaults.open.includes(open), open);
+  for (const closed of [
+    "every Library lesson body unless explicitly requested or opened by the user",
+    "unrelated theory atoms",
+    "comparison frames",
+    "synthesis atoms",
+    "knowledge check",
+    "optional written-analysis question map",
+  ]) {
+    assert.ok(artifact.payload.nestedDisclosureDefaults.closed.includes(closed), closed);
+  }
+  assert.equal(
+    artifact.payload.nestedDisclosureDefaults.explicitSharedModule,
+    "requested outer Library lesson shell open; every unrelated nested atom closed",
+  );
+  assert.match(artifact.payload.nestedDisclosureDefaults.relevanceIdentification, /NAMED IN THE BRIEF.*YOUR RECORDED THEORY.*CURRENT PHASE/i);
+  assert.match(artifact.payload.nestedDisclosureDefaults.relevanceIdentification, /answer-signalling.*absent/i);
+  const academySource = readFileSync(path.join(root, "app", "Academy.tsx"), "utf8");
+  const legacySuggestionLabel = ["SUGGESTED", "NOW"].join(" ");
+  assert.equal(academySource.includes(legacySuggestionLabel), false);
+  assert.deepEqual(artifact.payload.nestedDisclosureDefaults.knowledgeCheck, {
+    contentChanged: false,
+    answersChanged: false,
+    completionSemanticsChanged: false,
+    presentationChanged: true,
+    defaultPresentation: "closed native details disclosure",
+  });
+  assert.equal(
+    artifact.payload.initialPriority.explicitHelpTarget,
+    "LIBRARY at the requested outer module without changing relevance membership",
+  );
+  assert.match(artifact.payload.phaseContextPolicy.consecutiveMounts, /current phase.*never reuse/i);
   assert.equal(new Set(artifact.payload.gameplayPhases).size, 4);
   assert.deepEqual(artifact.payload.workspaceContexts, ["mission", "decisions", "force", "command", "visualization"]);
+  assert.deepEqual(artifact.payload.latestLattice, {
+    repository: "howardhayden/lattice",
+    commit: "029ca14570b3ebe5703f504ab4b4baed90883f84",
+    engineVersion: "0.1.1",
+    profileId: "relational-systems",
+    profileVersion: "v1.1.0",
+    profileDigest: "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468",
+    profileFileSha256: "d5145998c2a43f6c1da5e718226dbce38cb81ee2eb3e58feb1fdb07cbf384c11",
+    ownerPackageDigest: "68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b",
+    snapshotId: "lattice-copy-5df6aa976920a5f286aebc03",
+    implementationAuthorityDigest: "fa28dbc8cfbe13361ae59fb16a0d909da5d54249bf2c96f7da6d054c5f887109",
+    copyDigest: "b0f1f86c0d4c19c48ceeafc7f18e805987c7b311cdcda0519268522954d7149c",
+    realizationDigest: "3f0cf9b2cca3f317d279ebac4a4e18799399efe112093a74aa85ef5e774b14cc",
+    requestCount: 24,
+    outputCount: 31,
+    inventoryUnitCount: 42,
+    requestHumanReviewStatus: "not-claimed",
+    requestHumanReviewStatusCount: 24,
+    scope: "owner-side bounded copy compilation only",
+    runtimeEngine: false,
+    advisoryControlIds: "RSR-CTL-001 through RSR-CTL-018",
+    unknownCanPass: false,
+  });
+  const latticeEvidence = JSON.parse(readFileSync(path.join(root, "evidence", "lattice", "current.json"), "utf8"));
+  const generatedCopy = JSON.parse(readFileSync(path.join(root, "app", "generated", "lattice-copy.json"), "utf8"));
+  const copyInventory = JSON.parse(readFileSync(path.join(root, "requirements", "lattice-copy-inventory.json"), "utf8"));
+  assert.equal(latticeEvidence.snapshotId, artifact.payload.latestLattice.snapshotId);
+  assert.equal(latticeEvidence.implementationAuthority.sha256, artifact.payload.latestLattice.implementationAuthorityDigest);
+  assert.equal(latticeEvidence.copySha256, artifact.payload.latestLattice.copyDigest);
+  assert.equal(latticeEvidence.realizationSha256, artifact.payload.latestLattice.realizationDigest);
+  assert.equal(latticeEvidence.requests.length, 24);
+  assert.ok(latticeEvidence.requests.every((request) => request.review.humanStatus === "not-claimed"));
+  assert.equal(Object.keys(generatedCopy.copy).length, 31);
+  assert.equal(copyInventory.scope.unitCount, 42);
   assert.deepEqual(artifact.payload.generatedScenarioSample, {
     seed: 27183,
     count: 480,
+    phase: "strategy",
     result: "pass",
+    firstPhaseQuestionCount: 5,
     minimumMappedTheoryCount: 2,
     mappedProblemCount: 30,
+    substantivePremiseLensCount: 13,
     maximumContextLessonCount: 1,
     unresolvedModuleCount: 0,
   });
-  assert.equal(artifact.payload.verification.focusedTestFileCases, 18);
-  assert.equal(artifact.payload.verification.structuralRenderingTests, 4);
+  assert.equal(artifact.payload.verification.focusedTestFileCases, 21);
+  assert.equal(artifact.payload.verification.allStrategistPremiseRenderCount, 13);
+  assert.equal(artifact.payload.verification.generatedStrategyScenarioCount, 480);
+  assert.match(artifact.payload.verification.focusedAcademySuite, /pass: 21 of 21/i);
+  assert.deepEqual(artifact.payload.verification.fullReleaseCheck, {
+    command: "npm run release:check",
+    result: "pass",
+    mjsTests: { passed: 40, total: 40 },
+    typescriptTests: { passed: 269, total: 269 },
+    redTeamTests: { passed: 66, total: 66 },
+    totalTests: 375,
+    productionBuild: "pass",
+    artifactValidation: "pass",
+    npmAuditVulnerabilities: 0,
+  });
+  assert.equal(artifact.payload.verification.hostedPublicStatus, "pending");
+  assert.equal(artifact.payload.verification.safariStatus, "unverified");
+  assert.match(artifact.payload.granularityBoundary, /distinct nested theory atom/i);
 });
 
-test("the visual report separates rendered evidence from the blocked browser gate", () => {
+test("the visual report binds local release and focused browser passes without promoting hosted or Safari gates", () => {
   const artifact = readJson("visual-verification-report.json");
   verifyPayloadArtifact(artifact);
-  assert.equal(artifact.format, "fog-of-sea-academy-visual-verification-v1");
-  assert.equal(artifact.payload.structuralRendering.result, "pass");
-  assert.equal(artifact.payload.structuralRendering.cases, 4);
-  assert.equal(artifact.payload.browserSpecification.discoveredCases, 6);
-  assert.equal(artifact.payload.browserSpecification.intendedExecutedCases, 3);
-  assert.equal(artifact.payload.browserExecution.result, "environment-blocked-before-product-assertion");
-  assert.equal(artifact.payload.browserExecution.launched, false);
-  assert.equal(artifact.payload.browserExecution.assertionsExecuted, 0);
-  assert.equal(artifact.payload.overallStatus, "implemented-pending-browser-verification");
+  assert.equal(artifact.format, "fog-of-sea-academy-visual-verification-v2");
+  assert.equal(artifact.payload.requirementsVersion, "1.2.0");
+  assert.equal(artifact.payload.structuralRendering.cases, 21);
+  assert.match(artifact.payload.structuralRendering.result, /pass: 21 of 21/i);
+  assert.equal(artifact.payload.browserSpecification.academyDiscoveredCases, 6);
+  assert.equal(artifact.payload.browserSpecification.academyIntendedExecutedCases, 3);
+  assert.equal(artifact.payload.browserSpecification.academyProjectSkips, 3);
+  assert.equal(artifact.payload.browserSpecification.flightGlassDiscoveredCases, 4);
+  assert.equal(artifact.payload.browserSpecification.flightGlassIntendedExecutedCases, 2);
+  assert.equal(artifact.payload.browserSpecification.flightGlassProjectSkips, 2);
+  assert.equal(artifact.payload.browserSpecification.result, "executed-for-current-candidate");
+  assert.match(artifact.payload.staticGlassContract.normalColorPolicy, /transparent/i);
+  assert.match(artifact.payload.staticGlassContract.normalColorPolicy, /background-clip: border-box/i);
+  for (const affordance of [
+    "focus-visible outlines",
+    "prefers-contrast: more borders",
+    "forced-colors system borders",
+    "startup fallback border in increased contrast and forced colors",
+  ]) {
+    assert.ok(artifact.payload.staticGlassContract.retainedAffordances.includes(affordance), affordance);
+  }
+  assert.match(artifact.payload.staticGlassContract.forcedColorsContract, /static CSS.*Academy summaries and controls.*ButtonText.*Highlight/i);
+  assert.ok(artifact.payload.staticGlassContract.notYetProved.some((claim) => /live forced-colors.*Chromium 131.*does not expose/i.test(claim)));
+
+  const execution = artifact.payload.browserExecution;
+  const browserExecutable = "/root/.cache/puppeteer/chrome-headless-shell/linux-131.0.6778.204/chrome-headless-shell-linux64/chrome-headless-shell";
+  assert.equal(execution.executable, browserExecutable);
+  assert.equal(
+    execution.command,
+    `FOG_TEST_BROWSER_PATH=${browserExecutable} npx playwright test tests/browser/academy-guidance.spec.ts tests/browser/flight-glass.spec.ts --project=desktop-chromium --project=mobile-chromium`,
+  );
+  assert.equal(execution.result, "pass: 5 passed, 5 intentional project skips");
+  assert.equal(execution.launched, true);
+  assert.equal(execution.assertionsExecuted, 5);
+  assert.equal(typeof execution.durationSeconds, "number");
+  assert.ok(execution.durationSeconds > 0);
+  assert.deepEqual(execution.academy, {
+    passed: 3,
+    intentionalProjectSkips: 3,
+  });
+  assert.deepEqual(execution.flightGlass, {
+    passed: 2,
+    intentionalProjectSkips: 2,
+  });
+  assert.equal(execution.mediaCoverage.normalDarkAndLight, "live pass");
+  assert.equal(execution.mediaCoverage.prefersContrastMore, "live pass");
+  assert.match(execution.mediaCoverage.forcedColors, /not live.*Chromium 131.*static CSS contract/i);
+  assert.match(execution.classification, /local focused browser verification passed.*live forced-colors.*hosted\/public.*Safari.*unverified/i);
+
+  assert.equal(artifact.payload.overallStatus, "local-release-and-focused-browser-pass-hosted-public-pending");
   assert.notEqual(artifact.payload.overallStatus, "pass");
+  assert.match(artifact.payload.structuralRendering.result, /^pass/);
+  assert.match(artifact.payload.staticGlassContract.result, /^pass/);
+  assert.deepEqual(artifact.payload.sourceAndReleaseChecks, {
+    command: "npm run release:check",
+    result: "pass",
+    mjsTests: { passed: 40, total: 40 },
+    typescriptTests: { passed: 269, total: 269 },
+    redTeamTests: { passed: 66, total: 66 },
+    totalTests: 375,
+    productionBuild: "pass",
+    artifactValidation: "pass",
+    npmAuditVulnerabilities: 0,
+  });
+  assert.ok(artifact.payload.unverified.includes("Hosted/public browser confirmation against the deployed candidate."));
+  assert.ok(artifact.payload.unverified.includes("Safari interaction and rendering behavior."));
+  assert.ok(artifact.payload.unverified.includes("Live forced-colors behavior in a browser that exposes forced-colors emulation."));
+  assert.match(artifact.payload.claimRule, /full local release gate and focused Chromium run support only.*executed.*Forced-colors coverage is static-only/i);
 });

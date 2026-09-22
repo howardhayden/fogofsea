@@ -1,13 +1,13 @@
 {
   "schemaVersion": "fog-of-sea.lattice-copy.evidence.v2",
-  "snapshotId": "lattice-copy-ee7876dcb6e4073eeaf00e45",
+  "snapshotId": "lattice-copy-5df6aa976920a5f286aebc03",
   "lattice": {
     "engineName": "Lattice — Layered Register Engine",
     "engineVersion": "0.1.1",
     "profileId": "relational-systems",
-    "profileVersion": "v1.0.0",
-    "profileDigest": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a",
-    "ownerPackageDigest": "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0"
+    "profileVersion": "v1.1.0",
+    "profileDigest": "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468",
+    "ownerPackageDigest": "68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b"
   },
   "implementationAuthority": {
     "format": "fog-of-sea.lattice-implementation-authority.v1",
@@ -23,43 +23,43 @@
       },
       {
         "path": "requirements/lattice-adoption.schema.json",
-        "sha256": "6bee0b26685f6b6348a388f9dbf0b9331c5005c64e14f113cd2339d1b0ea313d"
+        "sha256": "1cf4bf292f88d7d517fb1a570349eb3275b0325945416beaefcce115b84b13b5"
       },
       {
         "path": "requirements/lattice-copy-inventory.schema.json",
-        "sha256": "d069dce6756e75b825779c1348460b834474da6561e0b938530ebdfc67dcbaf1"
+        "sha256": "460f43985ab293bdaa483604d6b083de1b0a901fb7db448e9aab49f4aca947ee"
       },
       {
         "path": "schemas/lattice-copy-evidence.schema.json",
-        "sha256": "ea7092d776085ec4615f218e7383b85a9a5269660f3428a3f24947bdef4b5d1c"
+        "sha256": "241d3b24f964fb1736c70de930fd0a7cc09bf1b0afdc2a5a08d7df16227c8601"
       },
       {
         "path": "schemas/lattice-copy-generated.schema.json",
-        "sha256": "50d189547174517f7d86c30543f94a89b5532f94f92dafaec2da4b24af962dbf"
+        "sha256": "665fe9f9b4c30ee8dd35d96366a80b8d89f468b254955cc41e9b1c18feaab7cd"
       },
       {
         "path": "schemas/lattice-copy-index.schema.json",
-        "sha256": "267f1e07f6b1be3e4847fff961cc7d9096f630548ffd9a5a1bff2900229ad839"
+        "sha256": "edbf6c93c5329f33d4f458cd3ca968b7f82a9f743fa1a026aa9f2c43bd7e5572"
       },
       {
         "path": "schemas/lattice-copy-requests.schema.json",
-        "sha256": "e8f6f0aa40b5348613e0305a11964fa75f3d9ca8f27f8dc4e8f8825ac3d397d8"
+        "sha256": "020ee770120e135b33af69db0b0b2d9de3b084ba2089ccdf03eee6a99f24922b"
       },
       {
         "path": "schemas/lattice-copy-runtime.schema.json",
-        "sha256": "866838a2fbb82cc077143ff308a44899d09514b9a402ec5b0c3695a6b14ce201"
+        "sha256": "4de88b33db55f61977d9a42b4e33db2ae6bff6c11a80bf7bcd69a7dd113e34c0"
       },
       {
         "path": "scripts/compile-lattice-copy.mjs",
-        "sha256": "0db54206fd53ddf6264f03439f64dfea599eced14a65a375c01f0b260a309224"
+        "sha256": "3f73d0d10afd41c163ed201221bebaf4433927cb45eacbbba6004ea379ae1cad"
       },
       {
         "path": "scripts/lattice-copy-corpus.mjs",
-        "sha256": "e88542c76bdce286993bf65871b38cc1ceb887abaeeba109517880cc9e325703"
+        "sha256": "dec1b121439362f140a91b0a43b60d461eb84bf2b8e2839da4961c0e24a21bdf"
       },
       {
         "path": "scripts/validate-lattice-schemas.d.mts",
-        "sha256": "97f98f88847e402ef4d4d14a1fd3fa2936de452eaeb36a6579cd600c4f493219"
+        "sha256": "63646d919f113251fec1a8d28dc368bf5849bb3ba3a16689a46fe44b64e805bf"
       },
       {
         "path": "scripts/validate-lattice-schemas.mjs",
@@ -67,21 +67,21 @@
       },
       {
         "path": "scripts/verify-lattice-copy.mts",
-        "sha256": "04685547c726465cc7d67a8f6cff6712a595aa99750bacb9e38235c7e5636605"
+        "sha256": "ce11fe7f669e14fa1ea192ecdd2d733d5033f1ec4281be7dad5684763c90ccfd"
       }
     ],
-    "sha256": "73d257a835b10ea801ea6b2aa83d49971a953953e908516671c078b86458dda5"
+    "sha256": "fa28dbc8cfbe13361ae59fb16a0d909da5d54249bf2c96f7da6d054c5f887109"
   },
   "source": {
     "requestPath": "authoring/lattice-copy.requests.json",
-    "requestSha256": "0cc9ad480234c8ab0270612a4d9f5929c1ea5092ce7a8ee664342220b6cc7d86",
+    "requestSha256": "f8a43988dc83c7b6c712627f642da859890b547621c3ef54e1d6a31664bed7b5",
     "academySourcePath": "app/academyData.ts",
     "academySourceSha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41",
     "academyCorpusSha256": "340e3f88ac6a8b8e6d5731d6d5ca007333f266526b43203e50b0d780c8dd755b",
-    "academyLintSha256": "97ea9734510b064215bdd7e69835dca8e5faa466126fa09ddb66951e0580093a",
+    "academyLintSha256": "314cec316f2f2914ab4fee4762bfa100eee7108db3ab2d1463225546adaf07c3",
     "provenance": {
       "fogBaselineCommit": "70907a77cba735c151e52929dd5a56d795c3d04f",
-      "latticeCommit": "d6cc85b275e3f14163a5a547f626832fd21b27b0",
+      "latticeCommit": "029ca14570b3ebe5703f504ab4b4baed90883f84",
       "requestAuthority": "FOG OF SEA source-controlled authoring contract"
     }
   },
@@ -103,13 +103,18 @@
     "humanReviewStatus": "not-claimed"
   },
   "hostAssertions": {
-    "sha256": "943a0eb71d8765710860410fc851395d20d6d325e406214892a6ba9fd65a9dbc",
+    "sha256": "5eedb7e71554f2fd31e3b57f0e64dece5f4872d0fd66973a3236ed1eefac1b7e",
     "publishIds": [
       "academy.compare.intro",
       "academy.sources.independentStatus",
       "academy.sources.intro",
       "academy.sources.languageSystem",
       "academy.sources.modelBoundary",
+      "academy.strategy.complementTheory",
+      "academy.strategy.endState",
+      "academy.strategy.guardrail",
+      "academy.strategy.primaryTheory",
+      "academy.strategy.warfareAreas",
       "game.guide.commandTurns.interpretive",
       "game.guide.commandTurns.operative",
       "game.guide.missionCredit.interpretive",
@@ -132,20 +137,20 @@
       "game.learning.turn.uncertainty",
       "game.outcome.unscoredWriting"
     ],
-    "requiredPhraseCount": 110,
-    "prohibitedPhraseCount": 78,
-    "exactTextCount": 19
+    "requiredPhraseCount": 130,
+    "prohibitedPhraseCount": 83,
+    "exactTextCount": 24
   },
-  "traceabilitySha256": "189941935c3749ce7b1ddc92f6e66c71e2ca3566a6351a0a91d7cbeee5c18934",
+  "traceabilitySha256": "f46f7aba0d8486e0236a4d70201f210b2e3b8cf9fe84f6e091cf4a1eaeac7365",
   "traceability": {
     "authorityFiles": [
       {
         "path": "requirements/lattice-adoption.json",
-        "sha256": "b6c6d2cb373686c46f7cebf344c17a6903ded804a3487fd000ad0e5948d5b169"
+        "sha256": "66680349fd394e5509318c3a53142a21f3653295aca61cdf3042f5aabef7e35e"
       },
       {
         "path": "requirements/lattice-copy-inventory.json",
-        "sha256": "e28a84f6a4846f42f50570172903441b7aea080951271b4a44e4a849f51d07c1"
+        "sha256": "17baae93b0656257332d752416c7f3f796844db2aa23ba5ff57c59bcadeb49bf"
       }
     ],
     "sourceCatalog": [
@@ -390,6 +395,153 @@
         "sourceRefs": [
           "src.academy.modules",
           "src.academy.sources"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-complement-theory",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-012"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-end-state",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-010"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-guardrail",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-013"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-primary-theory",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-011"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-warfare-areas",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-009"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
         ],
         "review": {
           "authority": "FOG OF SEA source-controlled authoring contract",
@@ -819,15 +971,15 @@
       }
     ]
   },
-  "realizationSha256": "3867949568ac0d05a18563ca465242de6ebdce4ef70ff8efb0b885ef63280a5d",
-  "copySha256": "9d796bb2e8761e7287b8a11914459a95e1927ff2eeed829d18e7bcc44e179f57",
+  "realizationSha256": "3f0cf9b2cca3f317d279ebac4a4e18799399efe112093a74aa85ef5e774b14cc",
+  "copySha256": "b0f1f86c0d4c19c48ceeafc7f18e805987c7b311cdcda0519268522954d7149c",
   "generatedFile": {
     "path": "app/generated/lattice-copy.json",
-    "sha256": "4de459de079cdcaf94da81f844bbc6e138aff996e1c9cfd1b3d8773b3d3ff97a"
+    "sha256": "0c32d4137aaad34c5734fe4168d11850d3722205b03bd8050505f011da0bbb44"
   },
   "runtimeFile": {
     "path": "app/generated/lattice-copy.runtime.json",
-    "sha256": "812767b9d7c4706103f741dad829ea8a27f7e975adaf4ff284d1558e24f4e7f7"
+    "sha256": "025dbc63636dac4da890296bcd6ade900d112a05a9409aa7b4017a9b129020e9"
   },
   "academyCorpus": {
     "schemaVersion": "fog-of-sea.lattice-copy.academy-corpus.v1",
@@ -881,16 +1033,16 @@
     "sourceSha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41",
     "entryCount": 1011,
     "batchCount": 2,
-    "findingCount": 50,
-    "unresolvedFindingCount": 39,
+    "findingCount": 86,
+    "unresolvedFindingCount": 75,
     "statusCounts": {
       "not-applicable": 6,
       "pass": 5,
-      "unknown": 28,
+      "unknown": 64,
       "warn": 11
     },
     "codeCounts": {
-      "M_MANUAL_REVIEW": 28,
+      "M_MANUAL_REVIEW": 64,
       "N_NO_FOCALIZER": 4,
       "N_NOT_ACTION": 2,
       "P_NO_REDUNDANT_INFERENCE": 1,
@@ -1412,15 +1564,15 @@
         ],
         "entryCount": 506,
         "textSha256": "170046514f09358bbf128a250748c75216eff6895659954683270b0d3a77ca9e",
-        "findingCount": 25,
+        "findingCount": 43,
         "statusCounts": {
           "not-applicable": 3,
           "pass": 2,
-          "unknown": 14,
+          "unknown": 32,
           "warn": 6
         },
         "codeCounts": {
-          "M_MANUAL_REVIEW": 14,
+          "M_MANUAL_REVIEW": 32,
           "N_NO_FOCALIZER": 2,
           "N_NOT_ACTION": 1,
           "P_PUNCTUATION_RESTRAINED": 2,
@@ -1940,15 +2092,15 @@
         ],
         "entryCount": 505,
         "textSha256": "39ea1e7b246cb9dff5a589c515e1f325c767f930d38aa9d5763dedcf02ed8416",
-        "findingCount": 25,
+        "findingCount": 43,
         "statusCounts": {
           "not-applicable": 3,
           "pass": 3,
-          "unknown": 14,
+          "unknown": 32,
           "warn": 5
         },
         "codeCounts": {
-          "M_MANUAL_REVIEW": 14,
+          "M_MANUAL_REVIEW": 32,
           "N_NO_FOCALIZER": 2,
           "N_NOT_ACTION": 1,
           "P_NO_REDUNDANT_INFERENCE": 1,
@@ -1992,7 +2144,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "db7ecb4f8949f4852aaaea3e64146ccea5c1cc0280da603c8c4a4d475815d461",
-      "derivationDigest": "fd69c325253a6ca9d37bff3666204c2a708a5be5c2884a4ada2a668ca9de6951",
+      "derivationDigest": "f1e224a2e27ddc7fcf5e09de42f8d29485c098d6514a90b379beff115b884577",
       "outputs": [
         {
           "publishId": "academy.compare.intro",
@@ -2005,14 +2157,14 @@
           "coveredAtomCount": 5,
           "requiredAtomIdsSha256": "22a6f642220ce3016c57e96b2a2337bc6638a309d0bb2a1965750add38c9bfae",
           "coverageRatio": 1,
-          "findingCount": 45,
+          "findingCount": 63,
           "statusCounts": {
             "not-applicable": 5,
             "pass": 20,
-            "unknown": 20
+            "unknown": 38
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 20,
+            "M_MANUAL_REVIEW": 38,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "N_NOT_MAJOR_SCENE": 2,
@@ -2060,7 +2212,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "2ddb5f96e22a8068a3e34c2f035f4fb5b42d669251ea8bd6e52a50d7e14f25aa",
-      "derivationDigest": "359aa99f500f743588369f8338b280ae2f4cf713b762474959dfd42156a59c82",
+      "derivationDigest": "f700f104b9ed5289a26de84ddf2cdb8c7f2ea87c4e6d038982365e70cbc7d64a",
       "outputs": [
         {
           "publishId": "academy.sources.independentStatus",
@@ -2073,14 +2225,14 @@
           "coveredAtomCount": 1,
           "requiredAtomIdsSha256": "e3716f63418428ee8983b18579c3123d498d83ac0e6744bcf299f94ae1cf7059",
           "coverageRatio": 1,
-          "findingCount": 26,
+          "findingCount": 38,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 12,
-            "unknown": 11
+            "unknown": 23
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 11,
+            "M_MANUAL_REVIEW": 23,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2125,7 +2277,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "f090c441a95843186aac08c6a6d89868b6be9c7a79394e0d2c0aaa0af1b8b398",
-      "derivationDigest": "8990bae54f277278557d477165fa45f2eb9f12fcc9ea53deb4b4bedc0d5d7c28",
+      "derivationDigest": "49069603a262df545ab480669c144d4e53a0993a7cd1513b4df8aec63b91088e",
       "outputs": [
         {
           "publishId": "academy.sources.languageSystem",
@@ -2138,15 +2290,15 @@
           "coveredAtomCount": 6,
           "requiredAtomIdsSha256": "b6690e2194bec825962b0d479a2780fc073395a8cd2de61ab5d4d415884ca973",
           "coverageRatio": 1,
-          "findingCount": 29,
+          "findingCount": 47,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 11,
-            "unknown": 13,
+            "unknown": 31,
             "warn": 2
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 13,
+            "M_MANUAL_REVIEW": 31,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2195,7 +2347,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "4d26d570c977ac1b749a13866c77dc31202102bca115f312e07dadd5085c41bc",
-      "derivationDigest": "d11100b52d204a0a0b4ffee7733caa811dfb0d7fcb4de721654e066f0f62355f",
+      "derivationDigest": "101ce366014947a639eb51467219fe823ae3f3c045ace8b01b0a75744c8b6e41",
       "outputs": [
         {
           "publishId": "academy.sources.modelBoundary",
@@ -2208,15 +2360,15 @@
           "coveredAtomCount": 1,
           "requiredAtomIdsSha256": "83a9887cbab8fe1d90803ad7b73d23696349c6d305481e050953ca5a40fb2e89",
           "coverageRatio": 1,
-          "findingCount": 24,
+          "findingCount": 36,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 11,
-            "unknown": 9,
+            "unknown": 21,
             "warn": 1
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 9,
+            "M_MANUAL_REVIEW": 21,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2262,7 +2414,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "da2a402ad106379c351d2e8cb5fca85d383bb7d42f5eddd62da8b79ca21b6392",
-      "derivationDigest": "5f49cab2a1dcf1ed8a8f66ceb835c010be45e2f2b41d05e9eb3127e4cf2be34c",
+      "derivationDigest": "ebe9cfb6f03a6fa7b24347cbbc47d4823e3b59fc40d071b26b39e6a5280891d7",
       "outputs": [
         {
           "publishId": "academy.sources.intro",
@@ -2275,15 +2427,15 @@
           "coveredAtomCount": 5,
           "requiredAtomIdsSha256": "bfcdafa4745a5bbf03186c4291d7ec1c0297758a56f9695aac14b96cf8a9e29f",
           "coverageRatio": 1,
-          "findingCount": 27,
+          "findingCount": 45,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 8,
-            "unknown": 14,
+            "unknown": 32,
             "warn": 2
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 14,
+            "M_MANUAL_REVIEW": 32,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 1,
@@ -2292,6 +2444,335 @@
             "P_NO_REDUNDANT_INFERENCE": 1,
             "P_SEMANTIC_COVERAGE": 1,
             "W_PUNCTUATION_EXCESS": 2
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.academy.strategy-complement-theory",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-012"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "30d1b3d1c22fb00afd96f10c05b7a18485542a16f0697d2308cae28ae9243ca8",
+      "derivationDigest": "6542d7d2595cc02a1d3b4a3de08ffe226e6624f10433e063f1768daeba0e3f80",
+      "outputs": [
+        {
+          "publishId": "academy.strategy.complementTheory",
+          "key": "interpretive:standard",
+          "candidateId": "academy.strategy.complement-theory-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "e693d1a0b6187da3e4c6b8eaf50593276bbce10e00629d605be89282695a878d",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "5c1e11babf07e764a19d0310776b418e08cc59cc9bab750ca78186d180fc38d6",
+          "coverageRatio": 1,
+          "findingCount": 49,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 13,
+            "unknown": 33
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 33,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.academy.strategy-end-state",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-010"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "e9e9541dfd5e1e3bb1c1b091a2f70a242ba49488c4d27ffd8c7828d761ad4198",
+      "derivationDigest": "22c57847a18d81e628c89fcea4bb8db2112258588860148125d618c881e30f37",
+      "outputs": [
+        {
+          "publishId": "academy.strategy.endState",
+          "key": "interpretive:standard",
+          "candidateId": "academy.strategy.end-state-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "721f8f46928e4ff17af9d5759b1990a654e4e2215bddd6924abbf381dcb061e8",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "25e19a0c27d6d17361637ef459342af05664e538790ce81e2bde9a85e41cad32",
+          "coverageRatio": 1,
+          "findingCount": 49,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 11,
+            "unknown": 33,
+            "warn": 2
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 33,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 2
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.academy.strategy-guardrail",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-013"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "26cc8f8453b56e75998c21b729b46254554e05a77954d26d466ceefe1862dd1e",
+      "derivationDigest": "c1d4600018f90b14b7ffaa5a3ca1542dd80f2fa20dd18a4ccc0290b2d2c96b9c",
+      "outputs": [
+        {
+          "publishId": "academy.strategy.guardrail",
+          "key": "interpretive:standard",
+          "candidateId": "academy.strategy.guardrail-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "ec7a933be55e035eba3dff9ab7982269bfa0316c292607e762dc517dd505f2a5",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "57439fc9c410ec108ebb398ba0cf875f23a6f289bb7a7402d7e8fa50977239f9",
+          "coverageRatio": 1,
+          "findingCount": 49,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 11,
+            "unknown": 33,
+            "warn": 2
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 33,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_SEMANTIC_COVERAGE": 1,
+            "W_PUNCTUATION_EXCESS": 2
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.academy.strategy-primary-theory",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-011"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "4fadb3860bec44e8061d17802c8ea934956e0e529efea4b3a0151755fea99648",
+      "derivationDigest": "821074609f2b327c7d8f21c05f00e94850ba41bc24f55976479f098710eba697",
+      "outputs": [
+        {
+          "publishId": "academy.strategy.primaryTheory",
+          "key": "interpretive:standard",
+          "candidateId": "academy.strategy.primary-theory-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "85a94f031f56954b681966172a1c4e64ab4507bcdcc3ebd6c4982cea8d3d6560",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "5c6e7034307ae87d40fa9b6aa0c31cb3f2e9cdb82c93b894da6720ec4771441a",
+          "coverageRatio": 1,
+          "findingCount": 49,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 13,
+            "unknown": 33
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 33,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "fos.academy.strategy-warfare-areas",
+      "traceability": {
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-009"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ]
+      },
+      "review": {
+        "authority": "FOG OF SEA source-controlled authoring contract",
+        "humanStatus": "not-claimed",
+        "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+      },
+      "conformance": "degraded",
+      "inputDigest": "87b586b58f4bb83ba3aad24caf04cc71df4aa227c57a4569c622f638b9997dfd",
+      "derivationDigest": "d97cf30b01642410f4e6f1bd231f88472f3c0345aac4ed7a0e81f5d5f00f3337",
+      "outputs": [
+        {
+          "publishId": "academy.strategy.warfareAreas",
+          "key": "interpretive:standard",
+          "candidateId": "academy.strategy.warfare-areas-v1",
+          "source": "provided",
+          "conformance": "degraded",
+          "textSha256": "8e8b0758dda260f791f0c92c5bae385a537a35faedb6362310c00c96b6798c6b",
+          "requiredAtomCount": 1,
+          "coveredAtomCount": 1,
+          "requiredAtomIdsSha256": "0c8161da8832fe3f423d7c65a712879958e9666f8cc9b7f009f00005890c3e75",
+          "coverageRatio": 1,
+          "findingCount": 49,
+          "statusCounts": {
+            "not-applicable": 3,
+            "pass": 13,
+            "unknown": 33
+          },
+          "codeCounts": {
+            "M_MANUAL_REVIEW": 33,
+            "N_NO_FOCALIZER": 2,
+            "N_NOT_ACTION": 1,
+            "P_CLAIMS_SCOPED": 3,
+            "P_EXPOSITION_LINKED": 3,
+            "P_EXTERNALITIES_PRESENT": 3,
+            "P_NO_REDUNDANT_INFERENCE": 1,
+            "P_PUNCTUATION_RESTRAINED": 2,
+            "P_SEMANTIC_COVERAGE": 1
           }
         }
       ]
@@ -2329,7 +2810,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "44bfd3b7b75ea800ef8e22581d6c62859f4646eeff484955e2e86f4f341a0691",
-      "derivationDigest": "a05dbb51bae3e386183ee57633eb9f0a20400cab2bfe5a72350ac8920120e585",
+      "derivationDigest": "42752662b6d46443867374154d176f2984f33615ed5dd4c34fb7e455bac3f006",
       "outputs": [
         {
           "publishId": "game.guide.commandTurns.interpretive",
@@ -2342,15 +2823,15 @@
           "coveredAtomCount": 4,
           "requiredAtomIdsSha256": "b26a19f18c4b7610fb224e312676904ea94fc20e340e4646696814c9a8657eac",
           "coverageRatio": 1,
-          "findingCount": 26,
+          "findingCount": 44,
           "statusCounts": {
             "not-applicable": 2,
             "pass": 10,
-            "unknown": 12,
+            "unknown": 30,
             "warn": 2
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 12,
+            "M_MANUAL_REVIEW": 30,
             "N_NO_FOCALIZER": 2,
             "P_ACTION_GRAPH": 4,
             "P_CLAIMS_SCOPED": 1,
@@ -2371,15 +2852,15 @@
           "coveredAtomCount": 4,
           "requiredAtomIdsSha256": "2d27e84b5a4f5c8eeef9af15ee80c53feef42b60291b3db3dbd1fb970afc7cf1",
           "coverageRatio": 1,
-          "findingCount": 21,
+          "findingCount": 33,
           "statusCounts": {
             "not-applicable": 2,
             "pass": 10,
-            "unknown": 8,
+            "unknown": 20,
             "warn": 1
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 8,
+            "M_MANUAL_REVIEW": 20,
             "N_NO_FOCALIZER": 2,
             "P_ACTION_GRAPH": 4,
             "P_CLAIMS_SCOPED": 1,
@@ -2426,7 +2907,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "9eac9f361f5c30370ae831ff621bcf007c8020fa41317ac6617e6983db7aaafc",
-      "derivationDigest": "2add8635ba639b9cd68b988a74681cec85e796b7aa5cf43d81c73a4f47bbf9e1",
+      "derivationDigest": "ea21247faa58dc488574e6a798915f491fdc19ba2637407b9698279c7d441ca1",
       "outputs": [
         {
           "publishId": "game.guide.missionCredit.interpretive",
@@ -2439,15 +2920,15 @@
           "coveredAtomCount": 5,
           "requiredAtomIdsSha256": "b1eff36d213bc59aa9e4b80c7f5f1685acee4dc89a9cd82c922674fdcafde2ee",
           "coverageRatio": 1,
-          "findingCount": 26,
+          "findingCount": 44,
           "statusCounts": {
             "not-applicable": 2,
             "pass": 10,
-            "unknown": 12,
+            "unknown": 30,
             "warn": 2
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 12,
+            "M_MANUAL_REVIEW": 30,
             "N_NO_FOCALIZER": 2,
             "P_ACTION_GRAPH": 4,
             "P_CLAIMS_SCOPED": 1,
@@ -2468,14 +2949,14 @@
           "coveredAtomCount": 5,
           "requiredAtomIdsSha256": "d459037eadc0e11be7fd106168774421ca58b49320da2d2721e9562a8148e8d9",
           "coverageRatio": 1,
-          "findingCount": 21,
+          "findingCount": 33,
           "statusCounts": {
             "not-applicable": 2,
             "pass": 11,
-            "unknown": 8
+            "unknown": 20
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 8,
+            "M_MANUAL_REVIEW": 20,
             "N_NO_FOCALIZER": 2,
             "P_ACTION_GRAPH": 4,
             "P_CLAIMS_SCOPED": 1,
@@ -2523,7 +3004,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "51bb545fa7ef3d0bb4882916549cc5d0dae81ebb30a6a0c2d68f0667c033884c",
-      "derivationDigest": "c0199550fff5d96dbc089538398f3b9c8b5641a174b35c19167186beaa36f816",
+      "derivationDigest": "a755af1f163194bb41258df9251a3eb58e52d6d450491d687952b69c3432e379",
       "outputs": [
         {
           "publishId": "game.guide.missionLearning.interpretive",
@@ -2536,14 +3017,14 @@
           "coveredAtomCount": 4,
           "requiredAtomIdsSha256": "1f9bcd1b991b4f72ca5491c87fdc5dfc1c239366c080043fed9255290301c7e5",
           "coverageRatio": 1,
-          "findingCount": 23,
+          "findingCount": 41,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 8,
-            "unknown": 12
+            "unknown": 30
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 12,
+            "M_MANUAL_REVIEW": 30,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 1,
@@ -2564,15 +3045,15 @@
           "coveredAtomCount": 4,
           "requiredAtomIdsSha256": "665b9a693a46c12060834234a2187e3885d66edf612d929a4cf4406eb2b62bd4",
           "coverageRatio": 1,
-          "findingCount": 18,
+          "findingCount": 30,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 6,
-            "unknown": 8,
+            "unknown": 20,
             "warn": 1
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 8,
+            "M_MANUAL_REVIEW": 20,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 1,
@@ -2618,7 +3099,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "1d1a79409520d448b87f791f71fca637bb9b1464d2a77698f831348e9292ff8d",
-      "derivationDigest": "8ec17827c2efade452b563543018068cfdb6a3d6cb782c787a1772b94b63d586",
+      "derivationDigest": "f4a4c9c688a864d83b9f83a5e0da8b6e297cd4eded6905a2cf1fd7202da18e1d",
       "outputs": [
         {
           "publishId": "game.guide.modelBoundary.interpretive",
@@ -2631,14 +3112,14 @@
           "coveredAtomCount": 4,
           "requiredAtomIdsSha256": "acf0bf75b7213a4af33233db79f0ef5af2671c9d9c26dd0a8134855585ff1f8e",
           "coverageRatio": 1,
-          "findingCount": 29,
+          "findingCount": 47,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 13,
-            "unknown": 13
+            "unknown": 31
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 13,
+            "M_MANUAL_REVIEW": 31,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2660,14 +3141,14 @@
           "coveredAtomCount": 4,
           "requiredAtomIdsSha256": "de3a977a1975389f2f5a4034e40bb209ea93bcd8b0c41ebd0b57c5cdfa796fa1",
           "coverageRatio": 1,
-          "findingCount": 24,
+          "findingCount": 36,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 12,
-            "unknown": 9
+            "unknown": 21
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 9,
+            "M_MANUAL_REVIEW": 21,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2713,7 +3194,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "e9dcda448087f11588a5fe12f49f9d665b62ce2e2294cf0a2634d454863c55bd",
-      "derivationDigest": "8f70f39234ee01acd85dd90c6cb318e993ac6abe73d110e6bd6891aa3f88c86d",
+      "derivationDigest": "432770f5af1527884c3812bd7eda41c960c83ad4d4cd698ced41f27386233f1f",
       "outputs": [
         {
           "publishId": "game.guide.scenarioAcceptance.interpretive",
@@ -2726,14 +3207,14 @@
           "coveredAtomCount": 3,
           "requiredAtomIdsSha256": "d806956df2fd2862829bd26d45179e90b417189e0f02329285bf65055a41e7f3",
           "coverageRatio": 1,
-          "findingCount": 29,
+          "findingCount": 47,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 13,
-            "unknown": 13
+            "unknown": 31
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 13,
+            "M_MANUAL_REVIEW": 31,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2755,14 +3236,14 @@
           "coveredAtomCount": 3,
           "requiredAtomIdsSha256": "9756249ed130f801bb0d50404dbdbc52caa04ccb3b8be9e4f3ec5cfcab9a6392",
           "coverageRatio": 1,
-          "findingCount": 24,
+          "findingCount": 36,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 12,
-            "unknown": 9
+            "unknown": 21
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 9,
+            "M_MANUAL_REVIEW": 21,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2808,7 +3289,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "bb8c92a411f08770562955f70df74d7d69ca4d83f4467a135f2799fdb24abb4a",
-      "derivationDigest": "efe7c79aa0b4569be6c68a7923a7f17444c84b20c7d361c1df9372e23aa05697",
+      "derivationDigest": "ae989c75af7dab12ca9e3323e6750bd17f7d8aecaee4bb3d9f33b0a20e9aae43",
       "outputs": [
         {
           "publishId": "game.guide.strategicFit.interpretive",
@@ -2821,15 +3302,15 @@
           "coveredAtomCount": 3,
           "requiredAtomIdsSha256": "63488b6ba4ba65e86daae6f2bb43ae070dab495f8836797ea16eb0e900096233",
           "coverageRatio": 1,
-          "findingCount": 31,
+          "findingCount": 49,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 11,
-            "unknown": 15,
+            "unknown": 33,
             "warn": 2
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 15,
+            "M_MANUAL_REVIEW": 33,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2851,14 +3332,14 @@
           "coveredAtomCount": 3,
           "requiredAtomIdsSha256": "0678ecc410b1db1aad044edb7cfd5134cb50941531737c4e8abe87d32fd9fabc",
           "coverageRatio": 1,
-          "findingCount": 26,
+          "findingCount": 38,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 12,
-            "unknown": 11
+            "unknown": 23
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 11,
+            "M_MANUAL_REVIEW": 23,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2906,7 +3387,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "f3471fddbb8dec0637b56650fd44b8eb8828049a70aa179282d2e77ed88b0279",
-      "derivationDigest": "9a8b33a682717c78fdbe9a192e688f009f80dc0a5dae89ba0fc0c50537f5a8b3",
+      "derivationDigest": "3abb40d85588143b12ca61b229596ef3a1a02b11d535240d08c25e3425cba388",
       "outputs": [
         {
           "publishId": "game.guide.uncrewedUndersea.interpretive",
@@ -2919,15 +3400,15 @@
           "coveredAtomCount": 4,
           "requiredAtomIdsSha256": "618d072dbc9e6667fab1a97099d3e9e2b829ac550c35df8957848b4844b84d11",
           "coverageRatio": 1,
-          "findingCount": 29,
+          "findingCount": 47,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 11,
-            "unknown": 13,
+            "unknown": 31,
             "warn": 2
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 13,
+            "M_MANUAL_REVIEW": 31,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -2949,14 +3430,14 @@
           "coveredAtomCount": 4,
           "requiredAtomIdsSha256": "7f3a0ffe6a22a02860720f713a7cc9a1464653ee3f80b47cbafd93ccca401805",
           "coverageRatio": 1,
-          "findingCount": 24,
+          "findingCount": 36,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 12,
-            "unknown": 9
+            "unknown": 21
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 9,
+            "M_MANUAL_REVIEW": 21,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -3001,7 +3482,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "2b329247b0198c7688d4f1b2e761e863625b50a82faff48cd22f67bbec95a8d4",
-      "derivationDigest": "b96f8b771b5bfce6b8e2a49400281bc046a965bf6577deea50c7750135c6fd21",
+      "derivationDigest": "dadb8c86ed876da3548d10db3597668e1386dee7fb9f6c65013d7c404bd6d83a",
       "outputs": [
         {
           "publishId": "game.learning.outcome.adjustment",
@@ -3014,14 +3495,14 @@
           "coveredAtomCount": 5,
           "requiredAtomIdsSha256": "caf89ea3815fa1b4606008d2b4ef79de7b0db8c2411f2a89911f88ed8b0d86b5",
           "coverageRatio": 1,
-          "findingCount": 34,
+          "findingCount": 52,
           "statusCounts": {
             "not-applicable": 7,
             "pass": 13,
-            "unknown": 14
+            "unknown": 32
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 14,
+            "M_MANUAL_REVIEW": 32,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "N_NOT_MAJOR_SCENE": 2,
@@ -3069,7 +3550,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "359d392edafe70435da90de684784d16a2f3494bc32b0e6e625205850fd59be5",
-      "derivationDigest": "d1ec7ac1eb38410bae5b4e5e3906355c6d5f92170b1015dbe561403d820a02f6",
+      "derivationDigest": "4404fb15d7cfc80f8671ce898188b26e6f90427a7de3b195355d733f75370740",
       "outputs": [
         {
           "publishId": "game.learning.outcome.clear",
@@ -3082,14 +3563,14 @@
           "coveredAtomCount": 5,
           "requiredAtomIdsSha256": "e421cd986f8b59e27123d68fcac1d68f5109f4ae52f9be715f1861089afcc2e4",
           "coverageRatio": 1,
-          "findingCount": 34,
+          "findingCount": 52,
           "statusCounts": {
             "not-applicable": 7,
             "pass": 13,
-            "unknown": 14
+            "unknown": 32
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 14,
+            "M_MANUAL_REVIEW": 32,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "N_NOT_MAJOR_SCENE": 2,
@@ -3136,7 +3617,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "3fbf9bbf0c03513ee142b5c632592eed23cf663d76190230b54a6027b5c1601f",
-      "derivationDigest": "90fe7abc8c58f92a975917de155bb70f91837b5ef0c8b47cfb3ab7d7fb55611e",
+      "derivationDigest": "4e664a20493bc7118af8dc4dae6704c7b3858784cc656559a1ae7cd3f3877bbc",
       "outputs": [
         {
           "publishId": "game.learning.outcome.pending",
@@ -3149,14 +3630,14 @@
           "coveredAtomCount": 1,
           "requiredAtomIdsSha256": "b154d9b5c0a5404aede2aab4562dad827103ec8758010e15b3d1e73d28359cc4",
           "coverageRatio": 1,
-          "findingCount": 23,
+          "findingCount": 35,
           "statusCounts": {
             "not-applicable": 6,
             "pass": 8,
-            "unknown": 9
+            "unknown": 21
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 9,
+            "M_MANUAL_REVIEW": 21,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "N_NOT_MAJOR_SCENE": 2,
@@ -3202,7 +3683,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "25fc14c4304adc23ef23d46bb6c3a5d0e41c5cb1e89f88a81a797c429db5e318",
-      "derivationDigest": "c7864c4f1e4cf3b6b4ac895313bca4d84ed9bc86b8564462b38901c2f996f88d",
+      "derivationDigest": "a2198448d0491217cfd13a052c6ba0b3487f7673a674b8e8c1688a83aae13005",
       "outputs": [
         {
           "publishId": "game.learning.outcome.uncertainty",
@@ -3215,14 +3696,14 @@
           "coveredAtomCount": 5,
           "requiredAtomIdsSha256": "9747853b3e2f7e95ea7c3e635c672cd5de32067d7b2e28b8fe8b2217f0f2f0db",
           "coverageRatio": 1,
-          "findingCount": 34,
+          "findingCount": 52,
           "statusCounts": {
             "not-applicable": 7,
             "pass": 13,
-            "unknown": 14
+            "unknown": 32
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 14,
+            "M_MANUAL_REVIEW": 32,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "N_NOT_MAJOR_SCENE": 2,
@@ -3270,7 +3751,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "4a3b95248870009e054cb243f0b93bbe85f13f85d46e3c6979ba42bcac128eee",
-      "derivationDigest": "e4e4edfc3db393f062509cfb880ff32008b8ed1e7a86ebab8f32086e29119557",
+      "derivationDigest": "10ce57e8c1636f55450dca03fe96d89a4fe6ac45d21d7a30f120263141829468",
       "outputs": [
         {
           "publishId": "game.learning.turn.clear",
@@ -3283,14 +3764,14 @@
           "coveredAtomCount": 1,
           "requiredAtomIdsSha256": "fceb42461a0b94d873b4d672eca8de2b61785a4048995f51ed72e69d050ed7ee",
           "coverageRatio": 1,
-          "findingCount": 24,
+          "findingCount": 36,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 12,
-            "unknown": 9
+            "unknown": 21
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 9,
+            "M_MANUAL_REVIEW": 21,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -3335,7 +3816,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "b3d828345a643086479048a44049eb02d94fe78f91fc9a686a7d33b34ec9cb78",
-      "derivationDigest": "b4b01be2ff4ae1e3fd68f3b20467b141855116568be0a4004a3579527c32168b",
+      "derivationDigest": "91b7d2a4c5e2824619e71cec8943d537226858b620c63cbadab338343e5f3062",
       "outputs": [
         {
           "publishId": "game.learning.turn.uncertainty",
@@ -3348,15 +3829,15 @@
           "coveredAtomCount": 1,
           "requiredAtomIdsSha256": "0d18364ffaf58b60393d9ed8d2f6bd2fa9c14160266ea3a4108222ff061afbf5",
           "coverageRatio": 1,
-          "findingCount": 24,
+          "findingCount": 36,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 11,
-            "unknown": 9,
+            "unknown": 21,
             "warn": 1
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 9,
+            "M_MANUAL_REVIEW": 21,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,
@@ -3401,7 +3882,7 @@
       },
       "conformance": "degraded",
       "inputDigest": "340f5adfee8132edd5b3b8a1423c5adcda593a6de42410b476a60bb6329447ce",
-      "derivationDigest": "11bc26c74b01276c4025abc442e6f9972eb6c6825fa9d6221f8eed0546cdcab9",
+      "derivationDigest": "5ee8ba375299f493cb9520f30c6fa45dde33e6df4af20f4446c4dfa095b74efc",
       "outputs": [
         {
           "publishId": "game.outcome.unscoredWriting",
@@ -3414,14 +3895,14 @@
           "coveredAtomCount": 1,
           "requiredAtomIdsSha256": "66d1b64e73833a02884479c0a2e8ca9cc1595324ccfdfe4bdcdb28b80cd49c14",
           "coverageRatio": 1,
-          "findingCount": 24,
+          "findingCount": 36,
           "statusCounts": {
             "not-applicable": 3,
             "pass": 12,
-            "unknown": 9
+            "unknown": 21
           },
           "codeCounts": {
-            "M_MANUAL_REVIEW": 9,
+            "M_MANUAL_REVIEW": 21,
             "N_NO_FOCALIZER": 2,
             "N_NOT_ACTION": 1,
             "P_CLAIMS_SCOPED": 3,

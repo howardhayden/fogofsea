@@ -81,7 +81,7 @@
 
 .situation-turn-track li[aria-current="step"] {
   border-width: 2px;
-  border-color: var(--accent-strong);
+  border-color: var(--state-line);
   color: var(--accent-strong);
 }
 
@@ -101,12 +101,12 @@
 
 .situation-event[data-severity="extreme"] {
   border-left-style: solid;
-  border-left-color: var(--danger);
+  border-left-color: var(--state-line);
 }
 
 .situation-event[data-severity="major"] {
   border-left-style: dashed;
-  border-left-color: var(--accent-strong);
+  border-left-color: var(--state-line);
 }
 
 .situation-event > header {
@@ -263,7 +263,7 @@
 }
 
 .situation-objectives li[data-new="true"] {
-  border-color: var(--accent-strong);
+  border-color: var(--state-line);
 }
 
 .situation-objectives li > span {

@@ -1,10 +1,20 @@
 {
-  "version": "1.0.0",
-  "title": "Scenario-guided Academy disclosure",
+  "version": "1.2.0",
+  "title": "Answer-safe Academy decision guidance",
   "provenance": {
     "source": "User directive",
     "date": "2026-09-14",
     "summary": "Open only Academy lessons relevant to the generated holistic scenario until the player deliberately opens others; use completed player theory choices only after both choices exist; prioritize phase and visualization help so requesting help produces useful assistance."
+  },
+  "governanceUpdate": {
+    "source": "User directive",
+    "date": "2026-09-22",
+    "summary": "Atomize strategist guidance so only scenario-relevant theory atoms expand when the player opens the Academy in each phase; keep unrelated material closed through progressive disclosure; use the latest pinned Lattice owner workflow; and suppress cosmetic colored borders while retaining accessibility and meaning-bearing exceptions."
+  },
+  "coverageUpdate": {
+    "source": "User directive",
+    "date": "2026-09-22",
+    "summary": "Opening the Academy must expose non-answer-giving help for all five first-phase decisions, organize immediate help before the curriculum, keep everything else progressively disclosed, and process the five static decision methods through the latest pinned Lattice workflow."
   },
   "precedence": [
     "Player agency and simulation-state integrity",
@@ -14,51 +24,66 @@
     "Responsive parity",
     "Visual treatment"
   ],
-  "implementationStatus": "implemented-pending-browser-verification",
+  "implementationStatus": "implemented-local-browser-verified-hosted-public-pending",
   "atomDefaults": {
-    "provenance": ["User directive dated 2026-09-14"],
+    "provenance": ["User directive dated 2026-09-14", "User directive dated 2026-09-22"],
     "dependencies": [],
     "conflicts": [],
     "acceptance": [],
     "negative": [],
     "boundary": [],
-    "status": "implemented-pending-browser-verification",
+    "status": "implemented-local-browser-verified-hosted-public-pending",
     "supersession": null,
     "precedence": ["Use the register-level precedence order"]
   },
   "inheritance": "Every atom inherits each atomDefaults field it does not override. Inherited arrays remain explicit effective fields and may not be discarded during compilation or verification.",
   "scope": {
     "included": [
-      "Academy initial lesson and path",
-      "Academy lesson-body disclosure defaults",
+      "Academy initial lesson, theory atom, and path",
+      "A default Now workspace with five equally presented first-phase decision-method atoms",
+      "Player-visible mission evidence repeated without extracting or ranking candidate answers",
+      "A separate Library workspace retaining all twenty-five progress-bearing modules",
+      "Academy-open help signal and consecutive phase reopen behavior",
+      "Academy module-body and nested lesson-atom disclosure defaults",
       "Scenario and completed-selection relevance derivation",
       "Gameplay-phase and visualization-context support",
       "Accessible relevance labels and explanation",
+      "Owner-side latest-Lattice realization of five static first-phase method strings",
+      "Invisible cosmetic borders on canonical glass surfaces with accessibility exceptions",
       "Focused unit and browser verification",
       "Four machine-checkable implementation artifacts"
     ],
     "excluded": [
       "Scenario generation or scoring changes",
       "Automatic player selections",
-      "Academy curriculum rewrites",
-      "Quiz, completion, save, or persistence changes",
-      "Field Guide changes",
-      "Academy information-architecture refactoring"
+      "Changes to canonical lesson claims, quiz content, answers, or reading trails",
+      "Quiz content, answers, completion semantics, save, or persistence changes",
+      "Field Guide content, behavior, or information-architecture changes; the shared cosmetic glass-border treatment remains included",
+      "Changes to the existing twenty-five module identifiers or progress keys",
+      "Behavioral struggle inference, analytics, or hidden profiling",
+      "Runtime Lattice execution, network calls, or automated quality scoring",
+      "Removal of focus, forced-colors, high-contrast, error, or meaning-bearing graphical cues"
     ]
   },
   "terms": {
-    "expanded": "The existing native lesson-body details element is open when its module is active. The Academy continues to render one active lesson at a time.",
+    "expanded": "The default Now workspace visibly renders all five first-phase method atoms and every brief-named or player-recorded strategist premise open; deeper curriculum remains in the separate Library workspace and begins closed.",
     "completeTheoryDecision": "Two non-empty, distinct player theory selections exist.",
-    "scenarioTheorySet": "Scenario lenses bound to the selected comparative naval-theory problem by typed mission metadata, in the problem's authored order.",
+    "scenarioTheorySet": "Strategists mapped from an exact canonical match to the player-visible comparative naval-theory problem, in the problem's authored order; hidden scenario lens metadata is never consulted.",
     "contextLesson": "At most one lesson derived from the current gameplay phase or the explicit compact Visualization workspace.",
-    "suggestedNow": "A dedicated visible and semantic label for a context-derived module whose lesson body begins open when that module becomes active in the current Academy session."
+    "contextRelevance": "A visible and semantic NAMED IN THE BRIEF, YOUR RECORDED THEORY, or CURRENT PHASE label that describes public provenance without implying correctness, rank, or score.",
+    "safeScenarioContext": "An allowlisted copy of brief, friendly situation, opposing situation, civilian context, objective, intelligence, constraints, success conditions, naval problem, and political aim only; no answer, score, minimum-force, matrix, or adjudication field is present.",
+    "firstPhaseDecisionAtom": "One of five stable, non-progress-bearing native disclosures that teaches a reasoning method for warfare areas, end state, primary theory, complement or challenge, or controlling guardrail without naming a scored answer.",
+    "helpSeekingSignal": "The player's explicit act of opening the Academy, or selecting an exact help target, is the only signal needed to present scenario- and phase-relevant help. Elapsed time, clicks, quiz results, incomplete prose, score, storage, and network-derived behavior are not struggle signals.",
+    "theoryAtom": "A stable strategist-level native disclosure nested inside an existing Academy module. Theory atoms add no progress key and never rename or replace the existing twenty-five module identifiers.",
+    "invisibleCosmeticBorder": "A decorative panel, selector, state edge, inset stripe, or glass rim whose normal-color line token is transparent while geometry remains stable. Keyboard focus outlines, forced-colors or increased-contrast borders, and meaning-bearing scene or data graphics are not cosmetic borders.",
+    "latestLattice": "Owner-side Academy copy processing pinned to howardhayden/lattice commit 029ca14570b3ebe5703f504ab4b4baed90883f84, engine 0.1.1, relational-systems profile v1.1.0, profile digest d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468, profile-file SHA-256 d5145998c2a43f6c1da5e718226dbce38cb81ee2eb3e58feb1fdb07cbf384c11, and owner-package digest 68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b."
   },
   "atoms": [
     {
       "id": "ACA-REL-001",
       "modality": "MUST",
       "owner": "app/academyGuidance.ts",
-      "requirement": "Before a complete theory decision exists, derive theory relevance from the canonical generated scenario rather than player input.",
+      "requirement": "Before a complete theory decision exists, derive theory relevance only from an exact match to the canonical comparative problem already visible in the generated brief rather than player input or scored scenario metadata.",
       "dependencies": ["ACA-REL-002"],
       "acceptance": ["Zero or one player theory choices produce the same theory recommendation set for the same scenario."],
       "negative": ["A provisional primary choice changes Academy defaults."],
@@ -68,9 +93,9 @@
       "id": "ACA-REL-002",
       "modality": "MUST",
       "owner": "app/academyGuidance.ts",
-      "requirement": "Define the scenario theory set from typed lens metadata bound to the generated comparative naval-theory problem.",
-      "acceptance": ["Every current catalog problem has two or more typed lenses drawn from its mission lens set.", "Output order follows the authored typed mapping."],
-      "negative": ["Unmapped eligible lenses are expanded merely because they occur in scenario.lenses.", "Keyword or free-text matching creates recommendation authority."],
+      "requirement": "Define the scenario theory set from the closed exact-match mapping keyed only by the public comparative naval-theory problem.",
+      "acceptance": ["Every current catalog problem names and maps two or more strategists.", "Output order follows the authored public-problem mapping."],
+      "negative": ["scenario.lenses is read or passed into Academy guidance.", "Keyword or free-text matching creates recommendation authority.", "Unknown legacy prose falls back to scored lens metadata."],
       "evidence": ["tests/academy-guidance.test.ts", "tests/scenario-variety.test.ts"]
     },
     {
@@ -94,9 +119,10 @@
       "id": "ACA-MAP-001",
       "modality": "MUST",
       "owner": "app/academyGuidance.ts",
-      "requirement": "Map each theory lens to the narrowest existing Academy module that teaches it; use existing comparative modules when no individual module exists.",
-      "acceptance": ["Every TheoryLens maps to an existing Academy module.", "Duplicate mappings collapse without duplicating disclosures."],
-      "evidence": ["tests/academy-guidance.test.ts"]
+      "requirement": "Map each theory lens to one stable strategist-level theory atom and its narrowest existing Academy module; retain comparative module shells when no individual module exists.",
+      "acceptance": ["Every TheoryLens maps to one unique theory-* atom and an existing Academy module.", "All thirteen theory atoms have distinct identifiers even when multiple strategists share a module.", "Module-level duplicates collapse without erasing strategist-level identity."],
+      "negative": ["A shared comparative module makes an unrelated strategist appear suggested or expanded."],
+      "evidence": ["app/academyTheoryAtoms.ts", "tests/academy-guidance.test.ts"]
     },
     {
       "id": "ACA-PHASE-001",
@@ -118,8 +144,9 @@
       "id": "ACA-PHASE-003",
       "modality": "MUST",
       "owner": "app/academyGuidance.ts",
-      "requirement": "During Force design, select one contextual lesson from canonical scenario needs with precedence undersea operations, maritime safeguarding, then uncrewed force design.",
-      "acceptance": ["Required and recommended warfare areas determine undersea or safeguarding relevance.", "minimumUncrewed permits the bounded uncrewed fallback."],
+      "requirement": "During Force design, select one contextual lesson only from warfare areas the player has already recorded, with bounded precedence for undersea, safeguarding, uncrewed sensing, then risk and resilience.",
+      "acceptance": ["Player-selected warfare areas can steer later-phase help without revealing whether a selection is supported by the score model."],
+      "negative": ["Required, recommended, minimum-force, readiness, or alignment fields steer the lesson."],
       "evidence": ["tests/academy-guidance.test.ts"]
     },
     {
@@ -141,7 +168,7 @@
       "id": "ACA-PHASE-006",
       "modality": "MUST",
       "owner": "app/academyGuidance.ts",
-      "requirement": "Make the first scenario-relevant theory immediate during Strategy, but make the single phase-context lesson immediate during Force design, Command, or Debrief when one exists.",
+      "requirement": "Expose the strategy decision guide and relevant premises immediately in Now; during Force design, Command, Debrief, or Visualization also expose the single phase-context lesson as a compact current-phase focus.",
       "dependencies": ["ACA-PHASE-001", "ACA-REL-001", "ACA-REL-003"],
       "acceptance": ["primaryModuleId is theory-derived in Strategy.", "primaryModuleId is context-derived in later phases when contextModuleIds is nonempty."],
       "negative": ["A later-phase player asks for help and initially receives only an earlier theory-selection lesson."],
@@ -151,8 +178,8 @@
       "id": "ACA-GRID-001",
       "modality": "MUST",
       "owner": "app/academyGuidance.ts",
-      "requirement": "When the compact Visualization workspace is the explicit current view, prioritize Jomini and operational geometry as the contextual grid-reading lesson.",
-      "acceptance": ["Jomini is the initial active module and begins open.", "The scenario or completed-selection theory set remains present and unchanged."],
+      "requirement": "When the compact Visualization workspace is the explicit current view, prioritize Jomini and operational geometry as the contextual grid-reading focus in Now.",
+      "acceptance": ["Jomini is the visible current-phase focus and its full lesson remains one action away.", "The public-brief or completed-selection theory set remains present and unchanged."],
       "negative": ["Visualization replaces the scenario theory set.", "A coordinate grid or hidden tactical truth is invented."],
       "evidence": ["tests/academy-guidance.test.ts", "tests/browser/academy-guidance.spec.ts"]
     },
@@ -160,32 +187,34 @@
       "id": "ACA-OPEN-001",
       "modality": "MUST",
       "owner": "app/Academy.tsx",
-      "requirement": "Initialize the expanded lesson set to exactly the union of the derived theory modules and the bounded contextual module.",
-      "negative": ["Every lesson begins open.", "An unrelated lesson begins open."],
+      "requirement": "When the player opens a new Academy mount without an explicit lesson target, open the Now workspace with exactly five decision-method atoms and all public-brief-named or player-recorded strategist premise atoms visible and expanded.",
+      "acceptance": ["All five method atoms are rendered together rather than stored behind inactive module buttons.", "Relevant strategist premises are equally presented with answer-safe provenance labels.", "An explicit lesson target instead opens Library and only that lesson shell."],
+      "negative": ["Every lesson or nested atom begins open.", "An unrelated strategist or synthesis atom begins open."],
       "evidence": ["tests/academy-guidance.test.ts", "tests/browser/academy-guidance.spec.ts"]
     },
     {
       "id": "ACA-OPEN-002",
       "modality": "MUST",
       "owner": "app/Academy.tsx",
-      "requirement": "Keep every nonsuggested lesson body closed until the player opens its native disclosure.",
-      "acceptance": ["Selecting a nonsuggested module does not itself open its lesson body.", "Activating its summary opens it."],
+      "requirement": "Keep every subordinate disclosure outside the five methods and relevant premise atoms, including the optional-analysis map, unrelated strategist atoms, comparative synthesis, objectives, concepts, seminar prompts, readings, and the existing knowledge check, closed until requested.",
+      "acceptance": ["Selecting a module does not expand unrelated nested atoms.", "Activating a nested native summary opens only that disclosure."],
       "evidence": ["tests/browser/academy-guidance.spec.ts"]
     },
     {
       "id": "ACA-OPEN-003",
       "modality": "MUST",
       "owner": "app/Academy.tsx",
-      "requirement": "Respect user disclosure choices for the remainder of the mounted Academy session, including closing a suggested lesson or opening a nonsuggested lesson.",
-      "negative": ["Navigation forcibly reopens a lesson the player closed."],
-      "evidence": ["app/Academy.tsx"]
+      "requirement": "Respect user strategist-atom disclosure choices for the remainder of the mounted Academy session, then derive fresh defaults from the current safe scenario, phase, workspace, and completed-selection context on the next Academy mount.",
+      "acceptance": ["Closing a suggested atom or opening an unrelated atom persists while that Academy remains mounted.", "Closing and reopening the Academy resets nested disclosure defaults to current relevance rather than stale local toggles."],
+      "negative": ["Navigation forcibly reopens an atom the player closed.", "A consecutive Academy mount reuses the prior phase's atom or help target."],
+      "evidence": ["app/Academy.tsx", "tests/browser/academy-guidance.spec.ts"]
     },
     {
       "id": "ACA-OPEN-004",
       "modality": "MUST",
       "owner": "app/Academy.tsx",
       "requirement": "Treat an explicit initialModuleId as an intentional help request and open that module without broadening the derived recommendation set.",
-      "acceptance": ["The requested module begins open and is labelled as requested help.", "The chosen path contains both the explicit target and every derived suggestion."],
+      "acceptance": ["The requested module's outer lesson shell begins open and is labelled as requested help.", "A single-theory requested module may open its sole nested atom; a shared comparative requested module keeps all nonsuggested nested atoms closed.", "The chosen path contains both the explicit target and every derived suggestion."],
       "evidence": ["app/Academy.tsx"]
     },
     {
@@ -200,8 +229,8 @@
       "id": "ACA-NAV-002",
       "modality": "MUST",
       "owner": "app/Academy.tsx",
-      "requirement": "Mark every derived module with visible SUGGESTED NOW text and machine-readable data without relying on color alone.",
-      "acceptance": ["The marker occupies its own non-ellipsized element inside the module button."],
+      "requirement": "Mark every context-relevant module and theory atom with a visible provenance label and machine-readable relevance state without calling it correct, recommended, or suggested.",
+      "acceptance": ["The module marker occupies its own non-ellipsized element inside the module button.", "Brief-derived theory atoms say NAMED IN THE BRIEF; player-selected atoms say YOUR RECORDED THEORY; context lessons say CURRENT PHASE.", "data-academy-relevant and data-academy-atom-relevant expose relevance without answer semantics."],
       "evidence": ["app/Academy.tsx", "app/globals.css", "tests/browser/academy-guidance.spec.ts"]
     },
     {
@@ -224,7 +253,7 @@
       "modality": "MUST",
       "owner": "app/Academy.tsx",
       "requirement": "Preserve native details and summary semantics, keyboard operation, modal focus containment, focus return, readable labels, and non-color relevance identification.",
-      "acceptance": ["The active lesson heading receives focus and is revealed when contextual help opens or a lesson is selected, including compact layouts."],
+      "acceptance": ["The Now heading receives focus on an ordinary open; an explicitly requested or selected lesson heading receives focus in Library, including compact layouts."],
       "evidence": ["tests/browser/academy-guidance.spec.ts", "tests/browser/accessibility.spec.ts"]
     },
     {
@@ -232,15 +261,15 @@
       "modality": "MUST",
       "owner": "app/page.tsx",
       "requirement": "Provide the same contextual guidance semantics on desktop and compact layouts while allowing explicit compact Visualization context to affect priority.",
-      "acceptance": ["The mounted Academy snapshots one coherent context; a breakpoint change cannot mix new suggestion labels with stale active or expanded state, and reopening uses the current layout context."],
+      "acceptance": ["The mounted Academy snapshots one coherent context; a breakpoint change cannot mix new suggestion labels with stale active or expanded state, and reopening uses the current layout context.", "A new mount after a gameplay-phase transition derives the current phase help target and current theory atoms."],
       "evidence": ["tests/browser/academy-guidance.spec.ts"]
     },
     {
       "id": "ACA-COMPAT-001",
       "modality": "MUST",
       "owner": "app/academyGuidance.ts",
-      "requirement": "For older valid scenarios whose comparative problem has no typed catalog mapping, use only the first two canonical scenario lenses as a bounded fallback.",
-      "negative": ["Open all eligible lenses.", "Infer recommendations from uncontrolled prose outside navalProblem."],
+      "requirement": "For older valid scenarios whose public comparative problem has no exact catalog mapping, fail closed to generic comparison help with no automatically expanded strategist.",
+      "negative": ["Read scenario.lenses as a fallback.", "Infer recommendations from uncontrolled prose outside navalProblem."],
       "evidence": ["tests/academy-guidance.test.ts"]
     },
     {
@@ -258,11 +287,161 @@
       "evidence": ["app/academyGuidance.ts"]
     },
     {
+      "id": "ACA-TRIGGER-001",
+      "modality": "MUST",
+      "owner": "app/page.tsx",
+      "requirement": "Treat the player's explicit Academy open action as a privacy-safe request for help and snapshot only the bounded scenario, current gameplay phase, current workspace, and completed theory-selection context for that Academy mount.",
+      "dependencies": ["ACA-DET-001", "ACA-PERF-001"],
+      "acceptance": ["Opening the Academy in the first or any consecutive phase yields contextual defaults without a separate struggle classifier.", "The mounted Academy receives no free-form player prose, score history, elapsed-time stream, or concealed scenario truth."],
+      "evidence": ["app/page.tsx", "tests/browser/academy-guidance.spec.ts"]
+    },
+    {
+      "id": "ACA-TRIGGER-002",
+      "modality": "MUST_NOT",
+      "owner": "change-set",
+      "requirement": "Do not infer struggle or change Academy expansion from elapsed time, click frequency, quiz failure, incomplete notes, scores, hidden game state, analytics, storage, network requests, or model calls.",
+      "dependencies": ["ACA-TRIGGER-001"],
+      "acceptance": ["The only automatic-help trigger is the player's explicit Academy open or explicit help target."],
+      "negative": ["Persist or transmit a struggle classification.", "Use lack of interaction as evidence of confusion."],
+      "evidence": ["app/academyGuidance.ts", "app/Academy.tsx", "app/page.tsx", "tests/academy-guidance.test.ts"]
+    },
+    {
+      "id": "ACA-ATOM-001",
+      "modality": "MUST",
+      "owner": "app/academyTheoryAtoms.ts",
+      "requirement": "Define one unique, stable theory-* atom for each of the thirteen TheoryLens values and place each atom inside its existing narrowest Academy module.",
+      "dependencies": ["ACA-MAP-001"],
+      "acceptance": ["Thirteen theory lenses yield thirteen unique theory atom identifiers.", "Aube, Richmond, Wegener, and Castex remain individually addressable inside maritime-schools.", "Panikkar, Gorshkov, Liu Huaqing, and Till remain individually addressable inside global-seapower."],
+      "negative": ["Create a new progress-bearing module for a strategist.", "Use module identity as a substitute for strategist identity."],
+      "evidence": ["app/academyTheoryAtoms.ts", "tests/academy-guidance.test.ts"]
+    },
+    {
+      "id": "ACA-ATOM-002",
+      "modality": "MUST_NOT",
+      "owner": "app/academyTheoryAtoms.ts",
+      "requirement": "Do not rename, remove, duplicate, or add progress semantics to the existing twenty-five Academy module identifiers while extracting strategist-level disclosures.",
+      "dependencies": ["ACA-ATOM-001"],
+      "acceptance": ["Academy module count remains twenty-five.", "Existing lesson progress and path membership remain keyed by the original module identifiers."],
+      "evidence": ["app/academyData.ts", "app/academyTheoryAtoms.ts", "tests/academy-guidance.test.ts"]
+    },
+    {
+      "id": "ACA-PHASE-007",
+      "modality": "MUST",
+      "owner": "app/Academy.tsx",
+      "requirement": "On every new Academy mount, including after each gameplay-phase transition, derive the primary phase-help module and relevant theory atoms from the current bounded context rather than a prior mount.",
+      "dependencies": ["ACA-PHASE-006", "ACA-OPEN-003", "ACA-TRIGGER-001"],
+      "acceptance": ["A Force-to-Command reopen replaces the Force help target with compound uncertainty while retaining theory relevance derived from the current authority source."],
+      "negative": ["A consecutive phase inherits stale local disclosure state or an earlier phase's primary help target."],
+      "evidence": ["tests/browser/academy-guidance.spec.ts"]
+    },
+    {
+      "id": "ACA-DISC-001",
+      "modality": "MUST",
+      "owner": "app/Academy.tsx",
+      "requirement": "Apply progressive disclosure recursively: open exactly the five first-phase methods and relevant premise atoms in Now, and leave Library lessons, unrelated theory atoms, comparison frames, synthesis atoms, optional writing map, objectives, concepts, seminar prompts, readings, and the existing knowledge check closed.",
+      "dependencies": ["ACA-OPEN-001", "ACA-OPEN-002", "ACA-ATOM-001"],
+      "acceptance": ["Every nested disclosure uses native details and summary semantics.", "A grouped module can start with exactly its relevant strategists open and all other nested material closed.", "Requesting a shared comparative module does not broaden nested atom expansion; requesting a single-theory module may open only its sole atom.", "Knowledge-check questions, answers, validation, and completion behavior remain unchanged inside a default-closed native disclosure."],
+      "evidence": ["app/Academy.tsx", "tests/academy-guidance.test.ts", "tests/browser/academy-guidance.spec.ts"]
+    },
+    {
+      "id": "ACA-GUIDE-001",
+      "modality": "MUST",
+      "owner": "app/academyDecisionAtoms.ts",
+      "requirement": "Define exactly five stable, ordered, non-progress-bearing first-phase decision atoms covering warfare areas, desired end state, primary theory, complement or challenge, and controlling guardrail.",
+      "dependencies": ["ACA-SAFE-001", "ACA-DISC-001"],
+      "acceptance": ["Every generated scenario yields all five atoms in gameplay order.", "Each atom has a nonempty Lattice method and at least one whole player-visible evidence field.", "The optional written prompts map back to these methods inside a default-closed disclosure."],
+      "negative": ["Create a sixth scored question.", "Add a module-progress key for a decision atom."],
+      "evidence": ["app/academyDecisionAtoms.ts", "app/Academy.tsx", "tests/academy-guidance.test.ts", "tests/browser/academy-guidance.spec.ts"]
+    },
+    {
+      "id": "ACA-SAFE-001",
+      "modality": "MUST",
+      "owner": "app/academyGuidance.ts",
+      "requirement": "Project scenario data into the exact safeScenarioContext allowlist before it reaches Academy derivation or rendering.",
+      "acceptance": ["Only brief, friendlySituation, opposingSituation, civilianContext, objective, intelligence, constraints, successConditions, navalProblem, and politicalAim are copied.", "Each copied field is already visible in the mission brief."],
+      "negative": ["Pass required, recommended, endState, guardrail, lenses, minima, matrix, readiness, result, score, or hidden intelligence authority."],
+      "evidence": ["app/academyGuidance.ts", "tests/academy-guidance.test.ts"]
+    },
+    {
+      "id": "ACA-SAFE-002",
+      "modality": "MUST_NOT",
+      "owner": "app/academyGuidance.ts",
+      "requirement": "Do not let hidden or scored scenario truth change Academy content, ordering, labels, active view, open state, data attributes, or accessible names when public context and player-recorded choices are unchanged.",
+      "dependencies": ["ACA-SAFE-001", "ACA-REL-002"],
+      "acceptance": ["Counterfactual mutations of every scored answer field produce identical projected context and guidance.", "Incomplete selections cannot be used as a repeated-query answer oracle."],
+      "negative": ["Use correctness, score alignment, or availability as a relevance signal."],
+      "evidence": ["tests/academy-guidance.test.ts", "tests/browser/academy-guidance.spec.ts"]
+    },
+    {
+      "id": "ACA-ORG-001",
+      "modality": "MUST",
+      "owner": "app/Academy.tsx",
+      "requirement": "Organize the Academy as Now, Library, Compare, and Sources workspaces; default ordinary openings to Now, preserve explicit lesson targets in Library, and group relevant modules before the full curriculum without duplication.",
+      "dependencies": ["ACA-GUIDE-001", "ACA-NAV-001"],
+      "acceptance": ["Now precedes the full curriculum on desktop and compact layouts.", "Each of the twenty-five modules appears once in the selected Library path.", "Four tabs use roving keyboard navigation and hidden inactive tabpanels."],
+      "evidence": ["app/Academy.tsx", "app/globals.css", "tests/browser/academy-guidance.spec.ts"]
+    },
+    {
+      "id": "ACA-LAT-001",
+      "modality": "MUST",
+      "owner": "requirements/lattice-adoption.json",
+      "requirement": "Use the latest verified Lattice only in the bounded owner-side Academy copy workflow: commit 029ca14570b3ebe5703f504ab4b4baed90883f84, engine 0.1.1, relational-systems profile v1.1.0, profile digest d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468, profile-file SHA-256 d5145998c2a43f6c1da5e718226dbce38cb81ee2eb3e58feb1fdb07cbf384c11, and owner-package digest 68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b.",
+      "acceptance": ["Academy-relevant generated copy evidence reproduces from the exact pinned source set.", "No Lattice package ships in the browser bundle or runs at gameplay time."],
+      "negative": ["Resolve latest from an unpinned branch at release time.", "Treat Lattice as disclosure or recommendation authority."],
+      "evidence": ["requirements/lattice-adoption.json", "evidence/lattice/current.json", "evidence/lattice/index.json", "scripts/verify-lattice-copy.mts"]
+    },
+    {
+      "id": "ACA-LAT-002",
+      "modality": "MUST_NOT",
+      "owner": "scripts/verify-lattice-copy.mts",
+      "requirement": "Do not convert Lattice relational-systems v1.1 advisory controls into an automated quality score, human-review approval, domain correctness claim, accessibility approval, or passing result when evidence is unknown.",
+      "dependencies": ["ACA-LAT-001"],
+      "acceptance": ["RSR-CTL-001 through RSR-CTL-018 remain advisory manual-review controls.", "Unknown remains unknown and cannot satisfy a release gate."],
+      "evidence": ["requirements/lattice-adoption.json", "scripts/verify-lattice-copy.mts", "tests/lattice-copy.test.mts"]
+    },
+    {
+      "id": "ACA-LAT-003",
+      "modality": "MUST",
+      "owner": "authoring/lattice-copy.requests.json",
+      "requirement": "Realize the five generic first-phase decision methods as five static latest-Lattice outputs while keeping runtime scenario evidence and disclosure authority in typed host code.",
+      "dependencies": ["ACA-LAT-001", "ACA-LAT-002", "ACA-SAFE-001"],
+      "acceptance": ["The runtime exposes one nonempty method string for each first-phase atom.", "Every method explicitly avoids answer-key authority or candidate ranking.", "No scenario value, placeholder, Lattice engine, profile, receipt, or owner metadata enters the browser payload."],
+      "negative": ["Run Lattice at gameplay time.", "Send scenario data into a Lattice request.", "Parse generated prose to choose relevance or disclosure."],
+      "evidence": ["authoring/lattice-copy.requests.json", "app/generated/lattice-copy.runtime.json", "tests/lattice-copy.test.ts", "scripts/verify-lattice-copy.mts"]
+    },
+    {
+      "id": "ACA-GLASS-001",
+      "modality": "MUST",
+      "owner": "app/globals.css",
+      "requirement": "In normal light and dark color modes, make decorative borders, glass rims, state edges, active pseudo-lines, and inset stripes on canonical panels, phase surfaces, Academy disclosures, and selectors visually transparent while preserving their layout geometry.",
+      "acceptance": ["Shared line, strong-line, state-line, and glass-rim tokens are transparent in normal color modes.", "Canonical glass uses border-box background clipping so retained transparent border geometry does not create a perceptible unfilled moat.", "Glass tint, blur, shadow, spacing, and shape continue to distinguish surfaces without colored outlines."],
+      "negative": ["Remove border dimensions in a way that shifts layout.", "Leave a perceptible unfilled gap where a transparent border meets the glass fill.", "Use an alternate colored edge token for an active or selected state."],
+      "evidence": ["app/globals.css", "app/CommandIntelligencePanel.css", "app/TurnSituationPanel.css", "tests/flight-glass.test.mjs", "tests/browser/flight-glass.spec.ts"]
+    },
+    {
+      "id": "ACA-GLASS-002",
+      "modality": "MUST",
+      "owner": "app/globals.css",
+      "requirement": "Communicate selected, current, relevant, warning, and error state through fill, text, iconography, copy, and semantic attributes rather than a colored border alone.",
+      "dependencies": ["ACA-GLASS-001"],
+      "acceptance": ["Relevant Academy atoms retain visible provenance text and machine-readable state with transparent cosmetic edges.", "State remains distinguishable without color-only border cues."],
+      "evidence": ["app/Academy.tsx", "app/globals.css", "tests/browser/academy-guidance.spec.ts", "tests/browser/accessibility.spec.ts"]
+    },
+    {
+      "id": "ACA-GLASS-003",
+      "modality": "MUST_NOT",
+      "owner": "app/globals.css",
+      "requirement": "Do not suppress visible keyboard focus outlines, increased-contrast or forced-colors borders, form validity cues, scroll affordances, source-link underlines, or meaning-bearing scene, trajectory, legend, chart, and SVG strokes when removing cosmetic borders.",
+      "dependencies": ["ACA-GLASS-001"],
+      "acceptance": ["Focus-visible remains accent-visible.", "prefers-contrast: more restores structural line tokens to currentColor.", "Existing forced-colors rules continue to use system colors.", "The startup fallback restores a visible boundary in increased-contrast and forced-colors modes."],
+      "evidence": ["app/globals.css", "app/CommandIntelligencePanel.css", "app/TurnSituationPanel.css", "tests/flight-glass.test.mjs", "tests/browser/accessibility.spec.ts", "tests/browser/flight-glass.spec.ts"]
+    },
+    {
       "id": "ACA-SCOPE-001",
       "modality": "MUST_NOT",
       "owner": "change-set",
-      "requirement": "Do not refactor or change behavior outside the contextual Academy guidance described by this register.",
-      "negative": ["Change curriculum prose or answers.", "Change game phases, scoring, scenario synthesis, saves, Field Guide, or tactical rendering.", "Reconstruct the product."],
+      "requirement": "Do not refactor or change behavior outside the answer-safe Academy decision guide, its Library organization, bounded latest-Lattice owner workflow, shared strategic option labels, and cosmetic-border treatment described by this register.",
+      "negative": ["Change canonical curriculum claims, quizzes, or answers.", "Change game phases, scoring, scenario synthesis, saves, Field Guide content or behavior, or tactical rendering; applying the shared cosmetic glass-border treatment to Field Guide surfaces remains authorized.", "Change selections, progress semantics, or gameplay authority.", "Reconstruct the product."],
       "evidence": ["git diff"]
     },
     {
@@ -287,16 +466,16 @@
       "id": "ACA-EVID-003",
       "modality": "MUST",
       "owner": "evidence/academy-contextual-guidance/academy-guidance-corpus-report.json",
-      "requirement": "Record complete theory-to-module, phase, workspace, legacy-fallback, and deterministic generated-scenario coverage.",
-      "acceptance": ["All thirteen theory lenses resolve to existing modules.", "All gameplay phases are represented.", "A deterministic 480-scenario sample passes the bounded relevance rules."],
+      "requirement": "Record complete five-question support, safe-context noninterference, theory-to-atom-to-module mapping, explicit help signal, nested disclosure, consecutive-phase, latest-Lattice, workspace, legacy fail-closed behavior, and deterministic generated-scenario coverage.",
+      "acceptance": ["All thirteen theory lenses resolve to unique theory atoms and existing modules.", "All 480 samples are evaluated in Strategy and expose the same five decision atoms.", "All gameplay phases and the current-mount reset contract are represented.", "Exact Lattice source, engine, profile, profile-file, and owner-package digests are recorded."],
       "evidence": ["tests/academy-guidance.test.ts", "tests/academy-guidance-evidence.test.mjs"]
     },
     {
       "id": "ACA-EVID-004",
       "modality": "MUST",
       "owner": "evidence/academy-contextual-guidance/visual-verification-report.json",
-      "requirement": "Record structural rendering and browser-interaction verification separately, including any environment blocker without promoting it to a pass.",
-      "acceptance": ["Server-rendered desktop, completed-selection, and compact-Visualization cases are recorded.", "Browser execution status states whether product assertions actually ran."],
+      "requirement": "Record structural strategist rendering, static glass-token checks, browser interaction, hosted visual verification, and human-judgment limits separately, including any environment blocker without promoting it to a pass.",
+      "acceptance": ["Server-rendered desktop, grouped-strategist, completed-selection, and compact-Visualization cases are recorded.", "Normal-color border suppression and accessibility exceptions are enumerated.", "Browser execution status states whether product assertions actually ran."],
       "negative": ["Treat browser-test discovery as browser execution.", "Treat a missing browser executable as a product assertion failure or a pass."],
       "evidence": ["tests/academy-guidance.test.ts", "tests/browser/academy-guidance.spec.ts", "tests/academy-guidance-evidence.test.mjs"]
     },
@@ -311,8 +490,9 @@
       "id": "ACA-GATE-001",
       "modality": "MUST",
       "owner": "tests",
-      "requirement": "Do not claim production readiness unless focused unit tests, browser interaction tests, type checking, lint, the existing complete test suite, and the production build pass.",
-      "evidence": ["tests/academy-guidance.test.ts", "tests/browser/academy-guidance.spec.ts", "package.json"]
+      "requirement": "Do not claim production readiness unless Academy and flight-glass unit tests, browser interaction and hosted visual checks, type checking, lint, Lattice verification, the existing complete test suite, and the production build pass.",
+      "negative": ["Promote source inspection, static token checks, test discovery, or a prior candidate's browser result to current hosted visual acceptance.", "Promote subjective cognitive-welcomingness or premium-signaling claims without human review."],
+      "evidence": ["tests/academy-guidance.test.ts", "tests/flight-glass.test.mjs", "tests/browser/academy-guidance.spec.ts", "tests/browser/flight-glass.spec.ts", "package.json"]
     }
   ]
 }

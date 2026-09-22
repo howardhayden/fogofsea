@@ -71,11 +71,12 @@ The academy is an original independent synthesis that provides declared primary 
 ## Lattice copy boundary
 
 Selected in-game and Academy copy is prepared through a pinned, owner-side
-Lattice workflow: engine `0.1.1`, relational-systems profile `v1.0.0`, profile
-digest `379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a`,
+Lattice workflow at commit `029ca14570b3ebe5703f504ab4b4baed90883f84`:
+engine `0.1.1`, relational-systems profile `v1.1.0`, profile
+digest `d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468`,
 and derived owner-package digest
-`58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0`.
-The bounded snapshot contains 19 requests, 26 published outputs, and 12 hashed
+`68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b`.
+The bounded snapshot contains 24 requests, 31 published outputs, and 12 hashed
 TypeScript source-symbol declarations. Hashes establish which declarations
 were used; they do not establish that the declarations or resulting prose are
 true, accessible, educationally complete, or human-approved.
@@ -84,7 +85,7 @@ The owner-package digest is SHA-256 over a closed stable-JSON manifest of the
 pinned commit, package metadata, selected profile definition, and complete
 `dist/index.js` module graph. Owner compilation hashes those files before and
 after realization. The snapshot also binds the package manifest and lockfile,
-the seven governing schemas, compiler, corpus extractor, pinned Ajv `8.17.1`
+the seven governing schemas, compiler, corpus extractor, pinned Ajv `8.20.0`
 schema validator and declaration, and independent verifier as its fourteen-file
 implementation authority. Draft-07 and Draft 2020-12 validation runs before
 owner emission, during offline verification, and as an explicit release check.
@@ -92,9 +93,11 @@ owner emission, during offline verification, and as an explicit release check.
 The browser receives a compact text map only. It does not receive or execute
 the Lattice engine, profile, requests, atoms, assertions, receipts, source
 catalog, or review metadata. This pass covers seven paired Field Guide topics,
-seven turn/outcome learning messages, and five Academy Compare or Sources &
-Scope messages. Academy curriculum data is linted in an advisory, read-only
-pass and is not rewritten. Product-wide adoption remains blocked while prose
+seven turn/outcome learning messages, five Academy Compare or Sources & Scope
+messages, and five first-phase decision-method guides. Those guides explain
+how to reason from player-visible evidence; they do not identify scored choices
+or participate in scoring. Academy curriculum data is linted in an advisory,
+read-only pass and is not rewritten. Product-wide adoption remains blocked while prose
 still participates in logic in `gameModel.ts`, `catalogMath.ts`, and
 `contactVisualization.ts`. Safety, accessibility, privacy, persistence,
 contact-disclosure, score, and recovery instructions remain exact operative
