@@ -170,10 +170,14 @@ test("scheduled ambiance produces a non-silent rendered signal at the applicatio
     message: "scheduled sources must render a materially audible signal, not merely call start()",
     timeout: 4_000,
   }).toBeGreaterThan(0.0015);
+  await expect.poll(async () => (await sampleRenderedAudio(page)).peak, {
+    intervals: [40, 60, 100, 160, 240],
+    message: "scheduled sources must render a materially audible peak",
+    timeout: 4_000,
+  }).toBeGreaterThan(0.003);
 
   const rendered = await sampleRenderedAudio(page);
   expect(rendered.contextState).toBe("running");
-  expect(rendered.peak).toBeGreaterThan(0.003);
   await testInfo.attach("rendered-audio-metrics.json", {
     body: JSON.stringify(rendered, null, 2),
     contentType: "application/json",
