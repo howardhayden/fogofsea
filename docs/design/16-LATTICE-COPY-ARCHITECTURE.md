@@ -14,16 +14,17 @@ storage, and accessibility behavior owned by typed application state.
 
 The authorized slice is fixed at:
 
-- 19 authoring requests;
-- 26 published outputs;
+- 24 authoring requests;
+- 31 published outputs;
 - 12 hashed TypeScript source-symbol declarations;
 - seven Field Guide subjects with paired operative and interpretive outputs;
 - seven turn/outcome learning outputs;
-- five Academy Compare or Sources & Scope outputs; and
+- five Academy Compare or Sources & Scope outputs;
+- five Academy first-phase decision-method outputs; and
 - a read-only advisory lint over 1,011 Academy curriculum-data strings in two
   bounded batches.
 
-No count above implies comprehensive coverage. Thirty-seven inventory units
+No count above implies comprehensive coverage. Forty-two inventory units
 make the adopted, advisory, exempt, out-of-scope, and blocked families visible.
 An adopted unit's `targetAssurance` is a governance review target, not emitted
 Lattice conformance; current owner outputs remain capped at `degraded`.
@@ -32,11 +33,12 @@ Lattice conformance; current owner outputs remain capped at `degraded`.
 
 | Input | Pin |
 | --- | --- |
-| Lattice repository | `d6cc85b275e3f14163a5a547f626832fd21b27b0` |
+| Lattice repository | `029ca14570b3ebe5703f504ab4b4baed90883f84` |
 | Engine | `0.1.1` |
-| Profile | `relational-systems` `v1.0.0` |
-| Profile digest | `379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a` |
-| Owner-package digest | `58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0` |
+| Profile | `relational-systems` `v1.1.0` |
+| Profile digest | `d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468` |
+| Profile definition SHA-256 | `d5145998c2a43f6c1da5e718226dbce38cb81ee2eb3e58feb1fdb07cbf384c11` |
+| Owner-package digest | `68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b` |
 | FOG OF SEA inventory baseline | `70907a77cba735c151e52929dd5a56d795c3d04f` |
 
 The owner-package digest is derived as SHA-256 over stable JSON containing the
@@ -81,7 +83,7 @@ generated snapshot, evidence, index, and snapshot identity. Any change to those
 executable gates or their locked toolchain therefore requires recompilation
 under a new snapshot identity.
 
-The schema validator pins Ajv `8.17.1`, executes Draft-07 and Draft 2020-12 as
+The schema validator pins Ajv `8.20.0`, executes Draft-07 and Draft 2020-12 as
 declared by each schema, and runs in the compiler before emission, in the
 offline verifier, and as an explicit release check. It uses `allErrors: true`,
 `validateSchema: true`, `strictSchema: true`, and `strictNumbers: true`.
@@ -170,7 +172,7 @@ reasonable, whether Resolve is enabled, or which occurrence/discovery group
 owns a fact. Adding optional interpretive coaching for this feature would
 require a separately versioned inventory/request/output/evidence expansion;
 it could not replace the operative layer or silently expand the governed
-19-request/26-output snapshot.
+24-request/31-output snapshot.
 
 ### Academy routes
 
@@ -181,11 +183,25 @@ it could not replace the operative layer or silently expand the governed
 | `FOS-COPY-ACADEMY-006` | Sources introduction | Interpretive · public notice · exposition · consequential |
 | `FOS-COPY-ACADEMY-007` | Model boundary | Operative · public notice · technical · consequential |
 | `FOS-COPY-ACADEMY-008` | Language-system explanation | Interpretive · public notice · technical · consequential |
+| `FOS-COPY-ACADEMY-009` | Warfare-area decision method | Interpretive · tutorial · analysis · consequential |
+| `FOS-COPY-ACADEMY-010` | End-state decision method | Interpretive · tutorial · analysis · consequential |
+| `FOS-COPY-ACADEMY-011` | Primary-theory decision method | Interpretive · tutorial · analysis · consequential |
+| `FOS-COPY-ACADEMY-012` | Complement-theory decision method | Interpretive · tutorial · analysis · consequential |
+| `FOS-COPY-ACADEMY-013` | Guardrail decision method | Interpretive · tutorial · analysis · consequential |
 
+The five decision methods teach how to use player-visible evidence without
+identifying a scored choice or pairing. They are presentation copy downstream
+of typed scenario state and cannot decide selection, score, or adjudication.
 Lesson bodies, knowledge checks, answers, source claims, and player-authored
 notes are not rewritten. The 1,011-string Academy corpus pass is automated,
 read-only, and advisory. It does not establish complete sourcing, factual
 accuracy, quiz validity, or comprehension.
+
+Strategist-atom selection, phase-aware default expansion, disclosure state,
+and panel presentation remain typed host-interface behavior. Profile `v1.1.0`
+can add advisory or manual-review control findings over text; it cannot infer
+that a player is struggling, open a panel, or establish cognitive or premium
+experience outcomes.
 
 ## 6. Mechanics and replay isolation
 

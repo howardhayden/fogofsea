@@ -1,44 +1,108 @@
 {
-  "format": "fog-of-sea-academy-visual-verification-v1",
-  "payloadSha256": "416020dd8648feab3410021a374165c6bd1980acbdab2234f936891af784ce90",
+  "format": "fog-of-sea-academy-visual-verification-v2",
+  "payloadSha256": "a07b12f8e78b9de4a73fd0525accbf33b78c2881979198372c4a8956f967e854",
   "payload": {
-    "capturedOn": "2026-09-14",
-    "overallStatus": "implemented-pending-browser-verification",
+    "capturedOn": "2026-09-22",
+    "requirementsVersion": "1.2.0",
+    "overallStatus": "local-release-and-focused-browser-pass-hosted-public-pending",
     "structuralRendering": {
       "command": "node --import tsx --test tests/academy-guidance.test.ts",
-      "result": "pass",
-      "cases": 4,
+      "result": "pass: 21 of 21 answer-safe Academy cases",
+      "cases": 21,
       "verified": [
-        "Scenario-derived active lesson renders open with visible suggestion labels.",
-        "One provisional selection retains scenario defaults; two distinct selections render player-selection defaults.",
-        "Compact Visualization context renders Jomini open while retaining scenario theory suggestions.",
-        "An explicit help target stays active and open on a path that retains every derived suggestion without broadening suggestion membership."
+        "NOW renders exactly five open first-phase decision-method disclosures in gameplay order from a ten-field player-visible scenario projection.",
+        "Every one of the thirteen strategist mappings renders a substantive open premise when named by exact public problem prose.",
+        "Concealed answer mutations do not change guidance derivation or rendered Academy markup.",
+        "All 480 sampled generated scenarios receive all five methods and every public-prose-linked strategist premise in Strategy.",
+        "Library lessons and deeper material remain closed by default; explicit targets enter Library without broadening relevance.",
+        "NOW, LIBRARY, COMPARE, and SOURCES retain independent, progressively disclosed navigation."
       ]
     },
-    "sourceAndReleaseChecks": {
-      "result": "pass",
-      "checks": ["lint", "typecheck", "Lattice schemas", "Lattice copy", "licenses", "notices", "SBOM", "content", "hosting", "browser-suite discovery", "complete non-browser tests", "production build", "artifact validation"]
+    "staticGlassContract": {
+      "command": "node --test tests/flight-glass.test.mjs",
+      "result": "pass: 3 of 3 static flight-glass cases",
+      "normalColorPolicy": "decorative line, strong-line, state-line, and glass-rim tokens are transparent while border geometry remains stable; canonical glass uses background-clip: border-box so no unfilled transparent-border moat remains",
+      "retainedAffordances": [
+        "focus-visible outlines",
+        "prefers-contrast: more borders",
+        "forced-colors system borders",
+        "startup fallback border in increased contrast and forced colors",
+        "form validity",
+        "scroll affordances",
+        "source-link underlines",
+        "meaning-bearing scene, trajectory, legend, chart, and SVG strokes"
+      ],
+      "forcedColorsContract": "static CSS verifies Academy summaries and controls receive ButtonText borders and Highlight focus under forced-colors: active",
+      "stateChannels": ["fill", "text", "iconography", "explicit copy", "semantic attributes"],
+      "notYetProved": [
+        "live forced-colors rendering because the pinned Chromium 131 shell does not expose forced-colors emulation",
+        "computed-style parity beyond the tested canonical surfaces, desktop and compact cases, and configured Chromium projects",
+        "human assessment of cognitive welcomingness",
+        "human assessment of premium signaling"
+      ]
     },
     "browserSpecification": {
-      "path": "tests/browser/academy-guidance.spec.ts",
-      "discoveredCases": 6,
-      "intendedExecutedCases": 3,
-      "projectSkips": 3,
-      "result": "discovered-not-executed"
+      "academyPath": "tests/browser/academy-guidance.spec.ts",
+      "academyDiscoveredCases": 6,
+      "academyIntendedExecutedCases": 3,
+      "academyProjectSkips": 3,
+      "flightGlassPath": "tests/browser/flight-glass.spec.ts",
+      "flightGlassDiscoveredCases": 4,
+      "flightGlassIntendedExecutedCases": 2,
+      "flightGlassProjectSkips": 2,
+      "result": "executed-for-current-candidate"
     },
     "browserExecution": {
-      "command": "npx playwright test tests/browser/academy-guidance.spec.ts",
-      "result": "environment-blocked-before-product-assertion",
-      "launched": false,
-      "assertionsExecuted": 0,
-      "failure": "Pinned Chromium headless-shell executable was absent. One bounded npx playwright install chromium attempt timed out against cdn.playwright.dev and was stopped rather than retried in a loop.",
-      "classification": "verification-environment blocker, not a product assertion failure and not a pass"
+      "command": "FOG_TEST_BROWSER_PATH=/root/.cache/puppeteer/chrome-headless-shell/linux-131.0.6778.204/chrome-headless-shell-linux64/chrome-headless-shell npx playwright test tests/browser/academy-guidance.spec.ts tests/browser/flight-glass.spec.ts --project=desktop-chromium --project=mobile-chromium",
+      "executable": "/root/.cache/puppeteer/chrome-headless-shell/linux-131.0.6778.204/chrome-headless-shell-linux64/chrome-headless-shell",
+      "result": "pass: 5 passed, 5 intentional project skips",
+      "launched": true,
+      "assertionsExecuted": 5,
+      "durationSeconds": 37.3,
+      "academy": {
+        "passed": 3,
+        "intentionalProjectSkips": 3
+      },
+      "flightGlass": {
+        "passed": 2,
+        "intentionalProjectSkips": 2
+      },
+      "mediaCoverage": {
+        "normalDarkAndLight": "live pass",
+        "prefersContrastMore": "live pass",
+        "forcedColors": "not live: pinned Chromium 131 returned false for (forced-colors: active); test annotated the capability limitation and the static CSS contract remains authoritative"
+      },
+      "verified": [
+        "Academy NOW exposes all five first-phase methods and relevant premises without changing strategy state or browser storage.",
+        "Within-mount disclosure choices persist, while reopening derives fresh defaults from current safe context.",
+        "Force and consecutive Command mounts change only the current phase focus and preserve the player's recorded theory pair.",
+        "Compact Visualization keeps NOW active, exposes Jomini phase help, and does not broaden theory relevance.",
+        "Canonical glass, phase, selection, Academy, and command edges are transparent in normal dark and light themes and visibly restored under prefers-contrast: more.",
+        "Keyboard focus remains visible; forced-colors Academy summary and control styling is verified statically rather than claimed as live browser coverage."
+      ],
+      "priorEnvironmentBlocker": "The earlier 2026-09-14 candidate could not launch because the pinned Chromium headless-shell executable was absent; one bounded install attempt timed out and was not retried in a loop.",
+      "classification": "local focused browser verification passed for normal-color and prefers-contrast coverage; live forced-colors, hosted/public visual acceptance, and Safari remain unverified"
+    },
+    "sourceAndReleaseChecks": {
+      "command": "npm run release:check",
+      "result": "pass",
+      "mjsTests": { "passed": 40, "total": 40 },
+      "typescriptTests": { "passed": 269, "total": 269 },
+      "redTeamTests": { "passed": 66, "total": 66 },
+      "totalTests": 375,
+      "productionBuild": "pass",
+      "artifactValidation": "pass",
+      "npmAuditVulnerabilities": 0
     },
     "unverified": [
-      "Live disclosure toggling and persistence within one mounted Academy session.",
-      "Live focus, screen-reader, forced-colors, and pointer behavior after contextual defaults.",
-      "Rendered containment at desktop and compact breakpoints."
+      "Hosted/public browser confirmation against the deployed candidate.",
+      "Safari interaction and rendering behavior.",
+      "Live forced-colors behavior in a browser that exposes forced-colors emulation.",
+      "Live screen-reader announcements and assistive-technology interpretation of nested contextual defaults.",
+      "Pointer behavior and visual containment outside the focused desktop and compact cases.",
+      "Complete cross-browser and device coverage beyond the configured Chromium projects.",
+      "Human cognitive-welcomingness and premium-signaling judgment."
     ],
-    "claimRule": "No browser, device, or human-comprehension claim may be promoted from structural rendering or browser-test discovery."
+    "claimRule": "The full local release gate and focused Chromium run support only the checks, interactions, and computed styles they executed. Forced-colors coverage is static-only because the pinned browser did not expose emulation. Hosted/public browser, Safari, cross-browser, device-wide, assistive-technology, human-comprehension, cognitive-welcomingness, and premium-signaling claims require their own evidence."
   }
 }

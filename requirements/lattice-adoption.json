@@ -1,12 +1,12 @@
 {
   "format": "fog-of-sea-lattice-adoption-requirements-v1",
   "registerId": "FOS-LAT",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scope": {
     "authorized": [
       "Selected in-game Field Guide explanations",
       "Post-resolution turn and outcome learning copy",
-      "Selected Academy comparison and Sources & Scope copy",
+      "Selected Academy comparison, Sources & Scope, and first-phase decision-method copy",
       "Advisory lint of Academy curriculum data"
     ],
     "excluded": [
@@ -29,8 +29,8 @@
     {
       "id": "PROV-002",
       "kind": "repository",
-      "locator": "howardhayden/lattice commit d6cc85b275e3f14163a5a547f626832fd21b27b0",
-      "revision": "engine 0.1.1; relational-systems profile v1.0.0; profile digest 379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a; derived owner-package digest 58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0",
+      "locator": "howardhayden/lattice commit 029ca14570b3ebe5703f504ab4b4baed90883f84",
+      "revision": "engine 0.1.1; relational-systems profile v1.1.0; profile digest d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468; derived owner-package digest 68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b",
       "role": "Pins the owner-side compiler inputs"
     },
     {
@@ -53,14 +53,21 @@
       "locator": "ACCESSIBILITY.md; SECURITY.md; docs/design/11-TRACEABILITY.md",
       "revision": "current bounded-adoption worktree",
       "role": "Supplies accessibility, trust-boundary, and evidence constraints"
+    },
+    {
+      "id": "PROV-006",
+      "kind": "user-directive",
+      "locator": "Conversation directives: atomize Academy guidance, apply progressive disclosure, use the latest howardhayden/lattice release, and provide non-answer-giving support for every first-phase question",
+      "revision": "2026-09-22",
+      "role": "Requires the latest pinned Academy copy pipeline and non-answer-giving first-phase decision support while leaving disclosure behavior and presentation to the host interface"
     }
   ],
   "requirements": [
     {
       "id": "FOS-LAT-ARC-001",
       "title": "Pinned owner-side compilation",
-      "statement": "Lattice copy must be compiled only in the owner workflow with engine 0.1.1, relational-systems profile v1.0.0, profile digest 379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a, and derived owner-package digest 58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0.",
-      "provenanceIds": ["PROV-001", "PROV-002"],
+      "statement": "Lattice copy must be compiled only in the owner workflow with engine 0.1.1, relational-systems profile v1.1.0, profile digest d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468, and derived owner-package digest 68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b.",
+      "provenanceIds": ["PROV-001", "PROV-002", "PROV-006"],
       "priority": "mandatory",
       "precedence": 1,
       "dependencies": [],
@@ -213,7 +220,7 @@
       "dependencies": ["FOS-LAT-ARC-001"],
       "conflicts": ["Shipping owner-only Lattice material to the browser"],
       "owners": ["app/generated/lattice-copy.runtime.json", "scripts/validate-artifact.mjs"],
-      "acceptanceCriteria": [{"id": "FOS-LAT-ARC-003-AC-01", "assertion": "Built assets contain all 26 selected strings and none of the owner-only Lattice materials."}],
+      "acceptanceCriteria": [{"id": "FOS-LAT-ARC-003-AC-01", "assertion": "Built assets contain all 31 selected strings and none of the owner-only Lattice materials."}],
       "tests": [
         {"id": "FOS-LAT-ARC-003-T-P01", "kind": "positive", "assertion": "The runtime payload has exactly the allowed envelope and text map.", "evidence": "Runtime schema test"},
         {"id": "FOS-LAT-ARC-003-T-N01", "kind": "negative", "assertion": "Owner request IDs, digests, receipts, atoms, or traceability fields in any textual asset fail validation.", "evidence": "Artifact scanner"},
@@ -257,7 +264,7 @@
       "owners": ["requirements/lattice-adoption.json", "requirements/lattice-copy-inventory.json", "scripts/verify-lattice-copy.mts"],
       "acceptanceCriteria": [{"id": "FOS-LAT-TRC-001-AC-01", "assertion": "Traceability closes in both request-to-register and inventory-to-request directions."}],
       "tests": [
-        {"id": "FOS-LAT-TRC-001-T-P01", "kind": "positive", "assertion": "All 19 requests resolve their requirement, inventory, and source references.", "evidence": "Traceability verifier"},
+        {"id": "FOS-LAT-TRC-001-T-P01", "kind": "positive", "assertion": "All 24 requests resolve their requirement, inventory, and source references.", "evidence": "Traceability verifier"},
         {"id": "FOS-LAT-TRC-001-T-N01", "kind": "negative", "assertion": "An unknown or exempt adopted reference fails.", "evidence": "Reference mutation"},
         {"id": "FOS-LAT-TRC-001-T-B01", "kind": "boundary", "assertion": "Shared route inventory units accept only their declared request set.", "evidence": "Exact owner-set comparison"}
       ],
@@ -279,7 +286,7 @@
       "acceptanceCriteria": [{"id": "FOS-LAT-EVI-002-AC-01", "assertion": "Candidate identity is checked before operative-content assertions and again offline."}],
       "tests": [
         {"id": "FOS-LAT-EVI-002-T-P01", "kind": "positive", "assertion": "Every provided output matches its candidate byte-for-byte.", "evidence": "Selected-candidate test"},
-        {"id": "FOS-LAT-EVI-002-T-N01", "kind": "negative", "assertion": "Substituting any of the 26 texts while retaining metadata fails.", "evidence": "All-output substitution mutation"},
+        {"id": "FOS-LAT-EVI-002-T-N01", "kind": "negative", "assertion": "Substituting any of the 31 texts while retaining metadata fails.", "evidence": "All-output substitution mutation"},
         {"id": "FOS-LAT-EVI-002-T-B01", "kind": "boundary", "assertion": "A literal fallback is governed by its distinct source type rather than treated as provided.", "evidence": "Source-kind branch test"}
       ],
       "evidenceMethods": ["unit-test", "red-team-mutation", "static-analysis"],
@@ -299,7 +306,7 @@
       "owners": ["authoring/lattice-copy.requests.json", "README.md", "ACCESSIBILITY.md", "docs/design/16-LATTICE-COPY-ARCHITECTURE.md"],
       "acceptanceCriteria": [{"id": "FOS-LAT-GOV-001-AC-01", "assertion": "Human review is consistently recorded as not claimed."}],
       "tests": [
-        {"id": "FOS-LAT-GOV-001-T-P01", "kind": "positive", "assertion": "All 19 request review objects carry humanStatus not-claimed.", "evidence": "Exact-shape request test"},
+        {"id": "FOS-LAT-GOV-001-T-P01", "kind": "positive", "assertion": "All 24 request review objects carry humanStatus not-claimed.", "evidence": "Exact-shape request test"},
         {"id": "FOS-LAT-GOV-001-T-N01", "kind": "negative", "assertion": "Changing any review status to approved fails.", "evidence": "Review-status mutation"},
         {"id": "FOS-LAT-GOV-001-T-B01", "kind": "boundary", "assertion": "Automated checks are described as automated evidence, not human review.", "evidence": "Documentation scan"}
       ],
@@ -458,17 +465,17 @@
     {
       "id": "FOS-LAT-ACA-002",
       "title": "Academy selected-surface adoption",
-      "statement": "Lattice output may replace only the Academy compare introduction, sources introduction, model boundary, independence status, and language-system explanation in this slice.",
-      "provenanceIds": ["PROV-001", "PROV-004"],
+      "statement": "Lattice output may replace only the Academy compare introduction, sources introduction, model boundary, independence status, language-system explanation, and five non-answer-giving first-phase decision methods in this slice.",
+      "provenanceIds": ["PROV-001", "PROV-004", "PROV-006"],
       "priority": "mandatory",
       "precedence": 2,
       "dependencies": ["FOS-LAT-SEM-001", "FOS-LAT-LAY-001", "FOS-LAT-ACA-001"],
       "conflicts": ["Representing the full Academy curriculum as transformed or reviewed"],
       "owners": ["app/Academy.tsx", "app/latticeCopy.ts", "requirements/lattice-copy-inventory.json"],
-      "acceptanceCriteria": [{"id": "FOS-LAT-ACA-002-AC-01", "assertion": "Exactly five selected Academy chrome outputs are consumed and curriculum content remains unchanged by compilation."}],
+      "acceptanceCriteria": [{"id": "FOS-LAT-ACA-002-AC-01", "assertion": "Exactly ten selected Academy interface outputs are consumed, the five decision methods do not identify scored choices, and curriculum content remains unchanged by compilation."}],
       "tests": [
-        {"id": "FOS-LAT-ACA-002-T-P01", "kind": "positive", "assertion": "All five exact Academy keys render from generated copy.", "evidence": "Academy source test"},
-        {"id": "FOS-LAT-ACA-002-T-N01", "kind": "negative", "assertion": "No request owns a lesson answer or citation claim.", "evidence": "Inventory and request scan"},
+        {"id": "FOS-LAT-ACA-002-T-P01", "kind": "positive", "assertion": "All ten exact Academy keys render from generated copy.", "evidence": "Academy source test"},
+        {"id": "FOS-LAT-ACA-002-T-N01", "kind": "negative", "assertion": "No request owns a lesson answer, scored scenario choice, or citation claim.", "evidence": "Inventory and request scan"},
         {"id": "FOS-LAT-ACA-002-T-B01", "kind": "boundary", "assertion": "Compare user notes remain user-authored and untransformed.", "evidence": "Input boundary test"}
       ],
       "evidenceMethods": ["static-analysis", "unit-test", "manual-review-not-claimed"],
@@ -572,7 +579,7 @@
       "owners": ["README.md", "app/Academy.tsx", "docs/design/16-LATTICE-COPY-ARCHITECTURE.md"],
       "acceptanceCriteria": [{"id": "FOS-LAT-ACA-003-AC-01", "assertion": "Current documentation identifies the selected UI copy and advisory lint scope and names unverified educational questions."}],
       "tests": [
-        {"id": "FOS-LAT-ACA-003-T-P01", "kind": "positive", "assertion": "The Academy scope statement is bounded to five outputs and advisory curriculum-data lint.", "evidence": "Documentation assertion"},
+        {"id": "FOS-LAT-ACA-003-T-P01", "kind": "positive", "assertion": "The Academy scope statement is bounded to ten outputs and advisory curriculum-data lint.", "evidence": "Documentation assertion"},
         {"id": "FOS-LAT-ACA-003-T-N01", "kind": "negative", "assertion": "Comprehensive, approved, or fully sourced Academy language is prohibited.", "evidence": "Claim scan"},
         {"id": "FOS-LAT-ACA-003-T-B01", "kind": "boundary", "assertion": "Existing reading lists may be described without claiming the lint authenticated them.", "evidence": "Scope-boundary review"}
       ],

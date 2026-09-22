@@ -1,14 +1,14 @@
 {
   "schemaVersion": "fog-of-sea.lattice-copy.generated.v2",
-  "snapshotId": "lattice-copy-ee7876dcb6e4073eeaf00e45",
+  "snapshotId": "lattice-copy-5df6aa976920a5f286aebc03",
   "staticOnly": true,
   "lattice": {
     "engineName": "Lattice — Layered Register Engine",
     "engineVersion": "0.1.1",
     "profileId": "relational-systems",
-    "profileVersion": "v1.0.0",
-    "profileDigest": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a",
-    "ownerPackageDigest": "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0"
+    "profileVersion": "v1.1.0",
+    "profileDigest": "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468",
+    "ownerPackageDigest": "68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b"
   },
   "implementationAuthority": {
     "format": "fog-of-sea.lattice-implementation-authority.v1",
@@ -24,43 +24,43 @@
       },
       {
         "path": "requirements/lattice-adoption.schema.json",
-        "sha256": "6bee0b26685f6b6348a388f9dbf0b9331c5005c64e14f113cd2339d1b0ea313d"
+        "sha256": "1cf4bf292f88d7d517fb1a570349eb3275b0325945416beaefcce115b84b13b5"
       },
       {
         "path": "requirements/lattice-copy-inventory.schema.json",
-        "sha256": "d069dce6756e75b825779c1348460b834474da6561e0b938530ebdfc67dcbaf1"
+        "sha256": "460f43985ab293bdaa483604d6b083de1b0a901fb7db448e9aab49f4aca947ee"
       },
       {
         "path": "schemas/lattice-copy-evidence.schema.json",
-        "sha256": "ea7092d776085ec4615f218e7383b85a9a5269660f3428a3f24947bdef4b5d1c"
+        "sha256": "241d3b24f964fb1736c70de930fd0a7cc09bf1b0afdc2a5a08d7df16227c8601"
       },
       {
         "path": "schemas/lattice-copy-generated.schema.json",
-        "sha256": "50d189547174517f7d86c30543f94a89b5532f94f92dafaec2da4b24af962dbf"
+        "sha256": "665fe9f9b4c30ee8dd35d96366a80b8d89f468b254955cc41e9b1c18feaab7cd"
       },
       {
         "path": "schemas/lattice-copy-index.schema.json",
-        "sha256": "267f1e07f6b1be3e4847fff961cc7d9096f630548ffd9a5a1bff2900229ad839"
+        "sha256": "edbf6c93c5329f33d4f458cd3ca968b7f82a9f743fa1a026aa9f2c43bd7e5572"
       },
       {
         "path": "schemas/lattice-copy-requests.schema.json",
-        "sha256": "e8f6f0aa40b5348613e0305a11964fa75f3d9ca8f27f8dc4e8f8825ac3d397d8"
+        "sha256": "020ee770120e135b33af69db0b0b2d9de3b084ba2089ccdf03eee6a99f24922b"
       },
       {
         "path": "schemas/lattice-copy-runtime.schema.json",
-        "sha256": "866838a2fbb82cc077143ff308a44899d09514b9a402ec5b0c3695a6b14ce201"
+        "sha256": "4de88b33db55f61977d9a42b4e33db2ae6bff6c11a80bf7bcd69a7dd113e34c0"
       },
       {
         "path": "scripts/compile-lattice-copy.mjs",
-        "sha256": "0db54206fd53ddf6264f03439f64dfea599eced14a65a375c01f0b260a309224"
+        "sha256": "3f73d0d10afd41c163ed201221bebaf4433927cb45eacbbba6004ea379ae1cad"
       },
       {
         "path": "scripts/lattice-copy-corpus.mjs",
-        "sha256": "e88542c76bdce286993bf65871b38cc1ceb887abaeeba109517880cc9e325703"
+        "sha256": "dec1b121439362f140a91b0a43b60d461eb84bf2b8e2839da4961c0e24a21bdf"
       },
       {
         "path": "scripts/validate-lattice-schemas.d.mts",
-        "sha256": "97f98f88847e402ef4d4d14a1fd3fa2936de452eaeb36a6579cd600c4f493219"
+        "sha256": "63646d919f113251fec1a8d28dc368bf5849bb3ba3a16689a46fe44b64e805bf"
       },
       {
         "path": "scripts/validate-lattice-schemas.mjs",
@@ -68,21 +68,21 @@
       },
       {
         "path": "scripts/verify-lattice-copy.mts",
-        "sha256": "04685547c726465cc7d67a8f6cff6712a595aa99750bacb9e38235c7e5636605"
+        "sha256": "ce11fe7f669e14fa1ea192ecdd2d733d5033f1ec4281be7dad5684763c90ccfd"
       }
     ],
-    "sha256": "73d257a835b10ea801ea6b2aa83d49971a953953e908516671c078b86458dda5"
+    "sha256": "fa28dbc8cfbe13361ae59fb16a0d909da5d54249bf2c96f7da6d054c5f887109"
   },
   "source": {
     "requestPath": "authoring/lattice-copy.requests.json",
-    "requestSha256": "0cc9ad480234c8ab0270612a4d9f5929c1ea5092ce7a8ee664342220b6cc7d86",
+    "requestSha256": "f8a43988dc83c7b6c712627f642da859890b547621c3ef54e1d6a31664bed7b5",
     "academySourcePath": "app/academyData.ts",
     "academySourceSha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41",
     "academyCorpusSha256": "340e3f88ac6a8b8e6d5731d6d5ca007333f266526b43203e50b0d780c8dd755b",
-    "academyLintSha256": "97ea9734510b064215bdd7e69835dca8e5faa466126fa09ddb66951e0580093a",
+    "academyLintSha256": "314cec316f2f2914ab4fee4762bfa100eee7108db3ab2d1463225546adaf07c3",
     "provenance": {
       "fogBaselineCommit": "70907a77cba735c151e52929dd5a56d795c3d04f",
-      "latticeCommit": "d6cc85b275e3f14163a5a547f626832fd21b27b0",
+      "latticeCommit": "029ca14570b3ebe5703f504ab4b4baed90883f84",
       "requestAuthority": "FOG OF SEA source-controlled authoring contract"
     }
   },
@@ -102,13 +102,18 @@
     "sourceTruthEstablished": false
   },
   "hostAssertions": {
-    "sha256": "943a0eb71d8765710860410fc851395d20d6d325e406214892a6ba9fd65a9dbc",
+    "sha256": "5eedb7e71554f2fd31e3b57f0e64dece5f4872d0fd66973a3236ed1eefac1b7e",
     "publishIds": [
       "academy.compare.intro",
       "academy.sources.independentStatus",
       "academy.sources.intro",
       "academy.sources.languageSystem",
       "academy.sources.modelBoundary",
+      "academy.strategy.complementTheory",
+      "academy.strategy.endState",
+      "academy.strategy.guardrail",
+      "academy.strategy.primaryTheory",
+      "academy.strategy.warfareAreas",
       "game.guide.commandTurns.interpretive",
       "game.guide.commandTurns.operative",
       "game.guide.missionCredit.interpretive",
@@ -131,20 +136,20 @@
       "game.learning.turn.uncertainty",
       "game.outcome.unscoredWriting"
     ],
-    "requiredPhraseCount": 110,
-    "prohibitedPhraseCount": 78,
-    "exactTextCount": 19
+    "requiredPhraseCount": 130,
+    "prohibitedPhraseCount": 83,
+    "exactTextCount": 24
   },
-  "traceabilitySha256": "189941935c3749ce7b1ddc92f6e66c71e2ca3566a6351a0a91d7cbeee5c18934",
+  "traceabilitySha256": "f46f7aba0d8486e0236a4d70201f210b2e3b8cf9fe84f6e091cf4a1eaeac7365",
   "traceability": {
     "authorityFiles": [
       {
         "path": "requirements/lattice-adoption.json",
-        "sha256": "b6c6d2cb373686c46f7cebf344c17a6903ded804a3487fd000ad0e5948d5b169"
+        "sha256": "66680349fd394e5509318c3a53142a21f3653295aca61cdf3042f5aabef7e35e"
       },
       {
         "path": "requirements/lattice-copy-inventory.json",
-        "sha256": "e28a84f6a4846f42f50570172903441b7aea080951271b4a44e4a849f51d07c1"
+        "sha256": "17baae93b0656257332d752416c7f3f796844db2aa23ba5ff57c59bcadeb49bf"
       }
     ],
     "sourceCatalog": [
@@ -389,6 +394,153 @@
         "sourceRefs": [
           "src.academy.modules",
           "src.academy.sources"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-complement-theory",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-012"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-end-state",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-010"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-guardrail",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-013"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-primary-theory",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ACA-003",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-011"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
+        ],
+        "review": {
+          "authority": "FOG OF SEA source-controlled authoring contract",
+          "humanStatus": "not-claimed",
+          "claimScope": "Automated Lattice realization and host assertions only; no human review claim."
+        }
+      },
+      {
+        "requestId": "fos.academy.strategy-warfare-areas",
+        "requirementIds": [
+          "FOS-LAT-ACA-002",
+          "FOS-LAT-ARC-001",
+          "FOS-LAT-ARC-002",
+          "FOS-LAT-BLK-001",
+          "FOS-LAT-EVI-001",
+          "FOS-LAT-EVI-002",
+          "FOS-LAT-GOV-001",
+          "FOS-LAT-GOV-002",
+          "FOS-LAT-LAY-001",
+          "FOS-LAT-SEM-001",
+          "FOS-LAT-TRC-001",
+          "FOS-LAT-TRC-002"
+        ],
+        "inventoryIds": [
+          "FOS-COPY-ACADEMY-009"
+        ],
+        "sourceRefs": [
+          "src.academy.comparison",
+          "src.academy.modules"
         ],
         "review": {
           "authority": "FOG OF SEA source-controlled authoring contract",
@@ -818,8 +970,8 @@
       }
     ]
   },
-  "realizationSha256": "3867949568ac0d05a18563ca465242de6ebdce4ef70ff8efb0b885ef63280a5d",
-  "copySha256": "9d796bb2e8761e7287b8a11914459a95e1927ff2eeed829d18e7bcc44e179f57",
+  "realizationSha256": "3f0cf9b2cca3f317d279ebac4a4e18799399efe112093a74aa85ef5e774b14cc",
+  "copySha256": "b0f1f86c0d4c19c48ceeafc7f18e805987c7b311cdcda0519268522954d7149c",
   "copy": {
     "academy.compare.intro": {
       "text": "Compare thinkers who confronted overlapping historical problems, then test whether ideas from different settings can form one coherent theory. These summaries compress complex works. Return to the lessons and primary texts before drawing conclusions.",
@@ -869,6 +1021,56 @@
       "conformance": "degraded",
       "requestId": "fos.academy.model-boundary",
       "candidateId": "academy.model-boundary-v1",
+      "source": "provided"
+    },
+    "academy.strategy.complementTheory": {
+      "text": "Use the second theory to add a missing mechanism or challenge the primary theory with a different prediction. State what each contributes, where their assumptions conflict, and how the strategy resolves that conflict. A second label without a distinct job is not a synthesis, and this guide does not identify a scored pairing.",
+      "textSha256": "e693d1a0b6187da3e4c6b8eaf50593276bbce10e00629d605be89282695a878d",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.strategy-complement-theory",
+      "candidateId": "academy.strategy.complement-theory-v1",
+      "source": "provided"
+    },
+    "academy.strategy.endState": {
+      "text": "Frame the end state as an observable political condition, not an activity or force position. Compare each option with the stated political aim, objective, success conditions, and constraints; then ask what must remain true at transition. This guide does not identify a scored choice.",
+      "textSha256": "721f8f46928e4ff17af9d5759b1990a654e4e2215bddd6924abbf381dcb061e8",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.strategy-end-state",
+      "candidateId": "academy.strategy.end-state-v1",
+      "source": "provided"
+    },
+    "academy.strategy.guardrail": {
+      "text": "Choose the guardrail whose breach would make apparent mission success politically self-defeating. Test each option against the visible constraints, civilian context, partner dependence, authority and trust, and endurance. One guardrail controls the plan, but the others remain obligations; this guide does not identify a scored choice.",
+      "textSha256": "ec7a933be55e035eba3dff9ab7982269bfa0316c292607e762dc517dd505f2a5",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.strategy-guardrail",
+      "candidateId": "academy.strategy.guardrail-v1",
+      "source": "provided"
+    },
+    "academy.strategy.primaryTheory": {
+      "text": "Treat each theory as a causal mechanism, not a famous name. Ask how maritime action is expected to create the chosen political condition, what assumptions it depends on, and what visible evidence would count against it. Study the scenario-relevant premises, then make the selection yourself.",
+      "textSha256": "85a94f031f56954b681966172a1c4e64ab4507bcdcc3ebd6c4982cea8d3d6560",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.strategy-primary-theory",
+      "candidateId": "academy.strategy.primary-theory-v1",
+      "source": "provided"
+    },
+    "academy.strategy.warfareAreas": {
+      "text": "Connect every warfare-area choice to a visible task in the mission brief. Name the effect that task requires, distinguish the effect from a platform or threat, and leave an area unselected when no visible evidence supports it. Availability alone is not evidence, and this guide does not identify a scored choice.",
+      "textSha256": "8e8b0758dda260f791f0c92c5bae385a537a35faedb6362310c00c96b6798c6b",
+      "layer": "interpretive",
+      "representation": "standard",
+      "conformance": "degraded",
+      "requestId": "fos.academy.strategy-warfare-areas",
+      "candidateId": "academy.strategy.warfare-areas-v1",
       "source": "provided"
     },
     "game.guide.commandTurns.interpretive": {

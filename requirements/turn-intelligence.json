@@ -689,9 +689,9 @@
       "precedence": 1,
       "dependencies": ["FOS-TI-KNW-001", "FOS-TI-ACC-001"],
       "externalDependencies": ["FOS-LAT-SEM-002", "FOS-LAT-ACC-001", "FOS-LAT-ARC-002", "FOS-LAT-BLK-001"],
-      "conflicts": ["Dynamic Lattice copy deciding knowledge or option eligibility", "Silent expansion beyond 19 requests and 26 outputs", "Register imagery weakening certainty or recovery", "Claiming product-wide adoption"],
+      "conflicts": ["Dynamic Lattice copy deciding knowledge or option eligibility", "Silent expansion beyond 24 requests and 31 outputs", "Register imagery weakening certainty or recovery", "Claiming product-wide adoption"],
       "ownerIds": ["OWN-TI-LATTICE", "OWN-TI-DOMAIN", "OWN-TI-UI"],
-      "acceptanceCriteria": [{"id": "FOS-TI-LAT-001-AC-01", "assertion": "All operative feature strings remain exact, accessible, and downstream of typed state; the current Lattice runtime stays at its governed 19-request/26-output boundary unless a separately versioned expansion is authorized and regenerated."}],
+      "acceptanceCriteria": [{"id": "FOS-TI-LAT-001-AC-01", "assertion": "All operative feature strings remain exact, accessible, and downstream of typed state; the current Lattice runtime stays at its governed 24-request/31-output boundary unless a separately versioned expansion is authorized and regenerated."}],
       "tests": [
         {"id": "FOS-TI-LAT-001-T-P01", "kind": "positive", "assertion": "The feature uses controlled literal labels and typed formatting for state, turn, certainty, discovery, dependency, and recovery messages.", "evidence": "tests/command-intelligence-layout.test.mjs; tests/browser/accessibility.spec.ts; requirements/lattice-copy-inventory.json review", "evidenceStatus": "planned"},
         {"id": "FOS-TI-LAT-001-T-N01", "kind": "negative", "assertion": "No new feature string is selected by a Lattice publish ID, and no Lattice/runtime prose is parsed to classify knowledge, generate reasonable options, gate Resolve, or place history.", "evidence": "tests/lattice-copy.test.ts; static dependency scan", "evidenceStatus": "planned"},

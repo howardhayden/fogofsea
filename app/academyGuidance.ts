@@ -1,39 +1,62 @@
-import type { Scenario, TheoryLens } from "./gameModel";
+import type { Scenario, TheoryLens, Warfare } from "./gameModel";
+import { ACADEMY_STRATEGY_DECISION_ATOMS, type AcademyDecisionAtomId } from "./academyDecisionAtoms";
+import { THEORY_ACADEMY_ATOM } from "./academyTheoryAtoms";
+
+export { THEORY_ACADEMY_ATOM } from "./academyTheoryAtoms";
 
 export type AcademyGameplayPhase = "strategy" | "force" | "command" | "debrief";
 export type AcademyWorkspaceView = "mission" | "decisions" | "force" | "command" | "visualization";
 
 export type AcademyScenarioContext = Pick<
   Scenario,
-  "navalProblem" | "lenses" | "required" | "recommended" | "minimumUncrewed"
+  | "brief"
+  | "friendlySituation"
+  | "opposingSituation"
+  | "civilianContext"
+  | "objective"
+  | "intelligence"
+  | "constraints"
+  | "successConditions"
+  | "navalProblem"
+  | "politicalAim"
 >;
 
 export type AcademyGuidanceInput = {
   scenario: AcademyScenarioContext;
   gameplayPhase: AcademyGameplayPhase;
   workspaceView: AcademyWorkspaceView;
+  selectedWarfare: readonly Warfare[];
   selectedLens: TheoryLens | "";
   selectedPartnerLens: TheoryLens | "";
 };
 
 export type AcademyGuidance = {
-  source: "scenario" | "player-selections";
+  source: "brief" | "player-selections";
+  decisionAtomIds: AcademyDecisionAtomId[];
   theoryLenses: TheoryLens[];
+  theoryAtomIds: string[];
   theoryModuleIds: string[];
   contextModuleIds: string[];
   defaultExpandedModuleIds: string[];
   primaryModuleId: string;
+  theoryRelevanceLabel: "NAMED IN THE BRIEF" | "YOUR RECORDED THEORY";
+  contextRelevanceLabel: "CURRENT PHASE";
   heading: string;
   explanation: string;
 };
 
 export function selectAcademyScenarioContext(scenario: AcademyScenarioContext): AcademyScenarioContext {
   return {
+    brief: scenario.brief,
+    friendlySituation: scenario.friendlySituation,
+    opposingSituation: scenario.opposingSituation,
+    civilianContext: scenario.civilianContext,
+    objective: scenario.objective,
+    intelligence: scenario.intelligence,
+    constraints: scenario.constraints,
+    successConditions: scenario.successConditions,
     navalProblem: scenario.navalProblem,
-    lenses: [...scenario.lenses],
-    required: [...scenario.required],
-    recommended: [...scenario.recommended],
-    minimumUncrewed: scenario.minimumUncrewed,
+    politicalAim: scenario.politicalAim,
   };
 }
 
@@ -163,52 +186,38 @@ export const NAVAL_THEORY_PROBLEM_MAPPINGS: ReadonlyArray<{
   },
 ];
 
-export function theoryLensesForNavalProblem(scenario: AcademyScenarioContext): TheoryLens[] {
+export function theoryLensesForNavalProblem(navalProblem: string): TheoryLens[] {
   const mapping = NAVAL_THEORY_PROBLEM_MAPPINGS.find(({ problem, lenses }) => (
-    problem === scenario.navalProblem
+    problem === navalProblem
     && lenses.length >= 2
-    && lenses.every((lens) => scenario.lenses.includes(lens))
   ));
   return mapping ? [...mapping.lenses] : [];
 }
 
-export const THEORY_ACADEMY_MODULE: Record<TheoryLens, string> = {
-  "sun-tzu": "sun-tzu",
-  clausewitz: "clausewitz",
-  mahan: "mahan",
-  aube: "maritime-schools",
-  corbett: "corbett",
-  richmond: "maritime-schools",
-  wegener: "maritime-schools",
-  castex: "maritime-schools",
-  panikkar: "global-seapower",
-  gorshkov: "global-seapower",
-  "liu-huaqing": "global-seapower",
-  till: "global-seapower",
-  galula: "galula",
-};
+export const THEORY_ACADEMY_MODULE = Object.fromEntries(
+  Object.entries(THEORY_ACADEMY_ATOM).map(([lens, target]) => [lens, target.moduleId]),
+) as Record<TheoryLens, string>;
 
 function unique<T>(values: readonly T[]) {
   return [...new Set(values)];
 }
 
 export function scenarioTheoryLenses(scenario: AcademyScenarioContext): TheoryLens[] {
-  const mapped = theoryLensesForNavalProblem(scenario);
-
-  // Current scenario synthesis binds every comparative problem to typed lens
-  // metadata. The bounded fallback preserves older valid saves whose prose
-  // predates that catalog without treating their wording as authority.
-  return unique(mapped.length >= 2 ? mapped : scenario.lenses.slice(0, 2));
+  // Exact canonical public prose is the sole authority. Unknown legacy prose
+  // fails closed to generic comparison help instead of consulting scored lens
+  // metadata that is not visible to the player.
+  return unique(theoryLensesForNavalProblem(scenario.navalProblem));
 }
 
 function contextModules(input: AcademyGuidanceInput): string[] {
   if (input.workspaceView === "visualization") return ["jomini"];
 
   if (input.gameplayPhase === "force") {
-    const warfare = new Set([...input.scenario.required, ...input.scenario.recommended]);
+    const warfare = new Set(input.selectedWarfare);
     if (warfare.has("undersea-operations")) return ["undersea-campaigns"];
-    if (warfare.has("maritime-interdiction")) return ["littoral-safeguarding"];
-    if (input.scenario.minimumUncrewed > 0) return ["maritime-uncrewed"];
+    if (warfare.has("maritime-interdiction") || warfare.has("mine-countermeasures")) return ["littoral-safeguarding"];
+    if (warfare.has("reconnaissance") || warfare.has("electromagnetic-operations")) return ["maritime-uncrewed"];
+    return ["risk-resilience"];
   }
 
   if (input.gameplayPhase === "command") {
@@ -236,10 +245,11 @@ export function deriveAcademyGuidance(input: AcademyGuidanceInput): AcademyGuida
     && input.selectedPartnerLens
     && input.selectedLens !== input.selectedPartnerLens,
   );
-  const source = selectionsComplete ? "player-selections" : "scenario";
-  const theoryLenses = source === "player-selections"
+  const guidanceSource = selectionsComplete ? "player-selections" : "brief";
+  const theoryLenses = guidanceSource === "player-selections"
     ? unique([input.selectedLens as TheoryLens, input.selectedPartnerLens as TheoryLens])
     : scenarioTheoryLenses(input.scenario);
+  const theoryAtomIds = unique(theoryLenses.map((lens) => THEORY_ACADEMY_ATOM[lens].atomId));
   const theoryModuleIds = unique(theoryLenses.map((lens) => THEORY_ACADEMY_MODULE[lens]));
   const contextModuleIds = contextModules(input).filter((id) => !theoryModuleIds.includes(id));
   const defaultExpandedModuleIds = unique([...theoryModuleIds, ...contextModuleIds]);
@@ -249,29 +259,37 @@ export function deriveAcademyGuidance(input: AcademyGuidanceInput): AcademyGuida
     ? contextModuleIds[0] || theoryModuleIds[0] || "strategy-grammar"
     : theoryModuleIds[0] || contextModuleIds[0] || "strategy-grammar";
 
-  if (source === "player-selections") {
+  if (guidanceSource === "player-selections") {
     return {
-      source,
+      source: guidanceSource,
+      decisionAtomIds: ACADEMY_STRATEGY_DECISION_ATOMS.map((atom) => atom.id),
       theoryLenses,
+      theoryAtomIds,
       theoryModuleIds,
       contextModuleIds,
       defaultExpandedModuleIds,
       primaryModuleId,
+      theoryRelevanceLabel: "YOUR RECORDED THEORY",
+      contextRelevanceLabel: "CURRENT PHASE",
       heading: `Help for ${currentContext}`,
-      explanation: "The recorded theory pair now guides this review. Help for both recorded theories is open; the Academy neither changes nor judges either selection. Every other lesson remains within reach and opens when requested.",
+      explanation: "Your recorded theory pair is shown for review without being checked or endorsed. The Academy never changes a selection, and scored answer fields do not enter this guide. Deeper curriculum stays closed until requested.",
     };
   }
 
   return {
-    source,
+    source: guidanceSource,
+    decisionAtomIds: ACADEMY_STRATEGY_DECISION_ATOMS.map((atom) => atom.id),
     theoryLenses,
+    theoryAtomIds,
     theoryModuleIds,
     contextModuleIds,
     defaultExpandedModuleIds,
     primaryModuleId,
+    theoryRelevanceLabel: "NAMED IN THE BRIEF",
+    contextRelevanceLabel: "CURRENT PHASE",
     heading: `Help for ${currentContext}`,
     explanation: recordedSelectionCount === 0
-      ? "Help begins with the generated operation before a theory pair is chosen. The Academy makes no selection for the player. The most relevant lessons are open; every other lesson remains within reach and opens when requested."
-      : "Help remains anchored to the generated operation until two distinct theory selections are recorded. The incomplete pair does not steer this guidance. The most relevant lessons are open; every other lesson remains within reach and opens when requested.",
+      ? "This guide uses only the mission text already visible to you. Thinkers named in the comparative problem are open for study, not marked correct. The Academy makes no selection and receives no scored answer fields."
+      : "Until two distinct theories are recorded, this guide stays anchored to the public mission text. An incomplete choice cannot steer or probe the guidance, and the Academy receives no scored answer fields.",
   };
 }

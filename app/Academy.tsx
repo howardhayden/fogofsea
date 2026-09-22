@@ -12,15 +12,18 @@ import {
 } from "./academyData";
 import { INPUT_LIMITS, sanitizeAcademyNote } from "./inputSecurity";
 import { latticeCopy } from "./latticeCopy";
+import { ACADEMY_STRATEGY_DECISION_ATOMS, type AcademyDecisionAtomId } from "./academyDecisionAtoms";
 import {
   deriveAcademyGuidance,
   type AcademyGameplayPhase,
   type AcademyScenarioContext,
   type AcademyWorkspaceView,
 } from "./academyGuidance";
-import type { TheoryLens } from "./gameModel";
+import { academyLessonAtoms } from "./academyTheoryAtoms";
+import type { TheoryLens, Warfare } from "./gameModel";
+import { END_STATES, GUARDRAILS, WARFARE } from "./strategicDecisionOptions";
 
-type AcademyView = "course" | "compare" | "sources";
+type AcademyView = "guide" | "course" | "compare" | "sources";
 
 type AcademyProps = {
   initialModuleId?: string;
@@ -31,6 +34,7 @@ type AcademyProps = {
   scenario: AcademyScenarioContext;
   gameplayPhase: AcademyGameplayPhase;
   workspaceView: AcademyWorkspaceView;
+  selectedWarfare: readonly Warfare[];
   selectedLens: TheoryLens | "";
   selectedPartnerLens: TheoryLens | "";
 };
@@ -42,6 +46,54 @@ function pathCoveringGuidance(moduleIds: readonly string[]): AcademyPath {
     || "grand";
 }
 
+const THEORY_COMPARE_NAMES: Readonly<Record<TheoryLens, string>> = {
+  "sun-tzu": "Sun Tzu",
+  clausewitz: "Clausewitz",
+  mahan: "Mahan",
+  aube: "Théophile Aube",
+  corbett: "Julian Corbett",
+  richmond: "Herbert Richmond",
+  wegener: "Wolfgang Wegener",
+  castex: "Raoul Castex",
+  panikkar: "K. M. Panikkar",
+  gorshkov: "Sergei Gorshkov",
+  "liu-huaqing": "Liu Huaqing",
+  till: "Geoffrey Till",
+  galula: "David Galula",
+};
+
+function DecisionMethod({ atomId }: { atomId: AcademyDecisionAtomId }) {
+  if (atomId === "first-phase-warfare") {
+    return <p id="academy-strategy-warfare-areas">{latticeCopy("academy.strategy.warfareAreas")}</p>;
+  }
+  if (atomId === "first-phase-end-state") {
+    return <p id="academy-strategy-end-state">{latticeCopy("academy.strategy.endState")}</p>;
+  }
+  if (atomId === "first-phase-primary-theory") {
+    return <p id="academy-strategy-primary-theory">{latticeCopy("academy.strategy.primaryTheory")}</p>;
+  }
+  if (atomId === "first-phase-partner-theory") {
+    return <p id="academy-strategy-complement-theory">{latticeCopy("academy.strategy.complementTheory")}</p>;
+  }
+  return <p id="academy-strategy-guardrail">{latticeCopy("academy.strategy.guardrail")}</p>;
+}
+
+function DecisionOptions({ optionSet }: { optionSet: "warfare" | "end-state" | "guardrail" }) {
+  if (optionSet === "warfare") {
+    return (
+      <ul className="decision-option-list warfare-options" aria-label="Warfare-area definitions">
+        {WARFARE.map((option) => <li key={option.id}><b>{option.label}</b><span>{option.detail}</span></li>)}
+      </ul>
+    );
+  }
+  const options = optionSet === "end-state" ? END_STATES : GUARDRAILS;
+  return (
+    <ul className="decision-option-list" aria-label={optionSet === "end-state" ? "End-state options" : "Guardrail options"}>
+      {options.map((option) => <li key={option.id}>{option.label}</li>)}
+    </ul>
+  );
+}
+
 export default function Academy({
   initialModuleId,
   onClose,
@@ -51,11 +103,13 @@ export default function Academy({
   scenario,
   gameplayPhase,
   workspaceView,
+  selectedWarfare,
   selectedLens,
   selectedPartnerLens,
 }: AcademyProps) {
   const dialogRef = useRef<HTMLElement>(null);
   const scrollSurfaceRef = useRef<HTMLDivElement>(null);
+  const guideHeadingRef = useRef<HTMLHeadingElement>(null);
   const lessonHeadingRef = useRef<HTMLHeadingElement>(null);
   const viewTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const onCloseRef = useRef(onClose);
@@ -63,6 +117,7 @@ export default function Academy({
     scenario,
     gameplayPhase,
     workspaceView,
+    selectedWarfare: [...selectedWarfare],
     selectedLens,
     selectedPartnerLens,
   }));
@@ -70,22 +125,35 @@ export default function Academy({
   const explicitInitialModule = ACADEMY_MODULES.find((module) => module.id === initialModuleId);
   const guidedInitialModule = ACADEMY_MODULES.find((module) => module.id === guidance.primaryModuleId);
   const initialModule = explicitInitialModule || guidedInitialModule;
+  const explicitInitialAtoms = explicitInitialModule ? academyLessonAtoms(explicitInitialModule) : [];
+  const explicitInitialAtomIds = explicitInitialAtoms.length === 1
+    ? [explicitInitialAtoms[0].atomId]
+    : [];
   const [path, setPath] = useState<AcademyPath>(
     pathCoveringGuidance([
       ...guidance.defaultExpandedModuleIds,
       ...(explicitInitialModule ? [explicitInitialModule.id] : []),
     ]),
   );
-  const [view, setView] = useState<AcademyView>("course");
+  const [view, setView] = useState<AcademyView>(explicitInitialModule ? "course" : "guide");
   const [activeId, setActiveId] = useState(initialModule?.id || "strategy-grammar");
-  const [expandedLessonIds, setExpandedLessonIds] = useState<Set<string>>(() => new Set([
-    ...guidance.defaultExpandedModuleIds,
-    ...(explicitInitialModule ? [explicitInitialModule.id] : []),
-  ]));
+  const [expandedLessonIds, setExpandedLessonIds] = useState<Set<string>>(
+    () => new Set(explicitInitialModule ? [explicitInitialModule.id] : []),
+  );
+  const [expandedLessonAtomIds, setExpandedLessonAtomIds] = useState<Set<string>>(
+    () => new Set([...guidance.theoryAtomIds, ...explicitInitialAtomIds]),
+  );
+  const [expandedDecisionAtomIds, setExpandedDecisionAtomIds] = useState<Set<AcademyDecisionAtomId>>(
+    () => new Set(guidance.decisionAtomIds),
+  );
+  const [expandedGuideTheoryAtomIds, setExpandedGuideTheoryAtomIds] = useState<Set<string>>(
+    () => new Set(guidance.theoryAtomIds),
+  );
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [comparePrimary, setComparePrimary] = useState("Mahan");
-  const [comparePartner, setComparePartner] = useState("Théophile Aube");
+  const compareDefaults = guidance.theoryLenses.map((lens) => THEORY_COMPARE_NAMES[lens]);
+  const [comparePrimary, setComparePrimary] = useState(compareDefaults[0] || "Mahan");
+  const [comparePartner, setComparePartner] = useState(compareDefaults[1] || "Théophile Aube");
   const [compareNote, setCompareNote] = useState("");
 
   useEffect(() => {
@@ -101,28 +169,53 @@ export default function Academy({
       }
       if (dialogRef.current) containDialogTab(event, dialogRef.current);
     };
-    const focusTimer = window.setTimeout(() => lessonHeadingRef.current?.focus(), 0);
+    const focusTimer = window.setTimeout(
+      () => (explicitInitialModule ? lessonHeadingRef.current : guideHeadingRef.current)?.focus(),
+      0,
+    );
     window.addEventListener("keydown", onKeyDown);
     return () => {
       window.clearTimeout(focusTimer);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [initialModuleId]);
+  }, [initialModuleId, explicitInitialModule]);
 
-  const modules = useMemo(() => ACADEMY_MODULES.filter((module) => module.paths.includes(path)), [path]);
+  const pathModules = useMemo(() => ACADEMY_MODULES.filter((module) => module.paths.includes(path)), [path]);
+  const relevantModuleIds = useMemo(
+    () => new Set(guidance.defaultExpandedModuleIds),
+    [guidance.defaultExpandedModuleIds],
+  );
+  const modules = useMemo(() => [
+    ...pathModules.filter((module) => relevantModuleIds.has(module.id)),
+    ...pathModules.filter((module) => !relevantModuleIds.has(module.id)),
+  ], [pathModules, relevantModuleIds]);
+  const relevantModuleCount = modules.filter((module) => relevantModuleIds.has(module.id)).length;
   const active = ACADEMY_MODULES.find((module) => module.id === activeId) ?? modules[0];
   const activeIndex = modules.findIndex((module) => module.id === active.id);
   const completedInPath = modules.filter((module) => completed.includes(module.id)).length;
   const progress = Math.round((completedInPath / modules.length) * 100);
-  const views: AcademyView[] = ["course", "compare", "sources"];
-  const suggestedModuleIds = useMemo(
-    () => new Set(guidance.defaultExpandedModuleIds),
-    [guidance.defaultExpandedModuleIds],
+  const views: AcademyView[] = ["guide", "course", "compare", "sources"];
+  const relevantAtomIds = useMemo(
+    () => new Set(guidance.theoryAtomIds),
+    [guidance.theoryAtomIds],
   );
+  const activeLessonAtoms = useMemo(() => academyLessonAtoms(active), [active]);
+  const relevantTheoryAtoms = useMemo(() => guidance.theoryLenses.flatMap((lens) => {
+    const module = ACADEMY_MODULES.find((candidate) => (
+      academyLessonAtoms(candidate).some((atom) => atom.theoryLens === lens)
+    ));
+    const atom = module && academyLessonAtoms(module).find((candidate) => candidate.theoryLens === lens);
+    return atom && module ? [{ ...atom, moduleTitle: module.title, premise: atom.paragraphs[0] || "" }] : [];
+  }), [guidance.theoryLenses]);
+  const phaseFocusModule = ACADEMY_MODULES.find((module) => module.id === guidance.contextModuleIds[0]);
 
   const selectView = (next: AcademyView) => {
     setView(next);
     scrollSurfaceRef.current?.scrollTo({ top: 0 });
+  };
+  const openLibraryFromGuide = () => {
+    selectView("course");
+    window.setTimeout(() => viewTabRefs.current[1]?.focus(), 0);
   };
   const moveViewTab = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
@@ -155,6 +248,15 @@ export default function Academy({
     window.setTimeout(() => lessonHeadingRef.current?.focus(), 0);
   };
 
+  const openFullLesson = (moduleId: string, atomId?: string) => {
+    const module = ACADEMY_MODULES.find((candidate) => candidate.id === moduleId);
+    if (!module) return;
+    if (!module.paths.includes(path)) setPath(module.paths[0]);
+    setExpandedLessonIds((current) => new Set(current).add(moduleId));
+    if (atomId) setExpandedLessonAtomIds((current) => new Set(current).add(atomId));
+    selectModule(moduleId);
+  };
+
   const recordCompletion = () => {
     if (selectedAnswer !== active.quiz.correct) return;
     const next = completed.includes(active.id) ? completed : [...completed, active.id];
@@ -181,7 +283,40 @@ export default function Academy({
     });
   };
 
-  const activeSuggested = suggestedModuleIds.has(active.id);
+  const setLessonAtomExpanded = (atomId: string, open: boolean) => {
+    setExpandedLessonAtomIds((current) => {
+      const next = new Set(current);
+      if (open) next.add(atomId);
+      else next.delete(atomId);
+      return next;
+    });
+  };
+
+  const setDecisionAtomExpanded = (atomId: AcademyDecisionAtomId, open: boolean) => {
+    setExpandedDecisionAtomIds((current) => {
+      const next = new Set(current);
+      if (open) next.add(atomId);
+      else next.delete(atomId);
+      return next;
+    });
+  };
+
+  const setGuideTheoryAtomExpanded = (atomId: string, open: boolean) => {
+    setExpandedGuideTheoryAtomIds((current) => {
+      const next = new Set(current);
+      if (open) next.add(atomId);
+      else next.delete(atomId);
+      return next;
+    });
+  };
+
+  const relevanceLabel = (moduleId: string) => (
+    guidance.theoryModuleIds.includes(moduleId)
+      ? guidance.theoryRelevanceLabel
+      : guidance.contextRelevanceLabel
+  );
+
+  const activeRelevant = relevantModuleIds.has(active.id);
 
   return (
     <div className="academy-backdrop" role="presentation" onMouseDown={onClose}>
@@ -191,7 +326,7 @@ export default function Academy({
         role="dialog"
         aria-modal="true"
         aria-labelledby="academy-title"
-        aria-describedby="academy-independence academy-guidance-copy"
+        aria-describedby="academy-independence academy-summary"
         data-guidance-source={guidance.source}
         data-gameplay-phase={guidanceContext.gameplayPhase}
         data-workspace-view={guidanceContext.workspaceView}
@@ -204,9 +339,10 @@ export default function Academy({
             <h2 id="academy-title">THE ACADEMY</h2>
           </div>
           <div className="academy-view-tabs" role="tablist" aria-label="Academy views">
-            <button ref={(node) => { viewTabRefs.current[0] = node; }} id="academy-view-course" type="button" role="tab" aria-selected={view === "course"} aria-controls="academy-panel-course" tabIndex={view === "course" ? 0 : -1} className={view === "course" ? "active" : ""} onKeyDown={(event) => moveViewTab(event, 0)} onClick={() => selectView("course")}>LESSONS</button>
-            <button ref={(node) => { viewTabRefs.current[1] = node; }} id="academy-view-compare" type="button" role="tab" aria-selected={view === "compare"} aria-controls="academy-panel-compare" tabIndex={view === "compare" ? 0 : -1} className={view === "compare" ? "active" : ""} onKeyDown={(event) => moveViewTab(event, 1)} onClick={() => selectView("compare")}>COMPARE</button>
-            <button ref={(node) => { viewTabRefs.current[2] = node; }} id="academy-view-sources" type="button" role="tab" aria-selected={view === "sources"} aria-controls="academy-panel-sources" tabIndex={view === "sources" ? 0 : -1} className={view === "sources" ? "active" : ""} onKeyDown={(event) => moveViewTab(event, 2)} onClick={() => selectView("sources")}>SOURCES &amp; SCOPE</button>
+            <button ref={(node) => { viewTabRefs.current[0] = node; }} id="academy-view-guide" type="button" role="tab" aria-selected={view === "guide"} aria-controls="academy-panel-guide" tabIndex={view === "guide" ? 0 : -1} className={view === "guide" ? "active" : ""} onKeyDown={(event) => moveViewTab(event, 0)} onClick={() => selectView("guide")}>NOW</button>
+            <button ref={(node) => { viewTabRefs.current[1] = node; }} id="academy-view-course" type="button" role="tab" aria-selected={view === "course"} aria-controls="academy-panel-course" tabIndex={view === "course" ? 0 : -1} className={view === "course" ? "active" : ""} onKeyDown={(event) => moveViewTab(event, 1)} onClick={() => selectView("course")}>LIBRARY</button>
+            <button ref={(node) => { viewTabRefs.current[2] = node; }} id="academy-view-compare" type="button" role="tab" aria-selected={view === "compare"} aria-controls="academy-panel-compare" tabIndex={view === "compare" ? 0 : -1} className={view === "compare" ? "active" : ""} onKeyDown={(event) => moveViewTab(event, 2)} onClick={() => selectView("compare")}>COMPARE</button>
+            <button ref={(node) => { viewTabRefs.current[3] = node; }} id="academy-view-sources" type="button" role="tab" aria-selected={view === "sources"} aria-controls="academy-panel-sources" tabIndex={view === "sources" ? 0 : -1} className={view === "sources" ? "active" : ""} onKeyDown={(event) => moveViewTab(event, 3)} onClick={() => selectView("sources")}>SOURCES</button>
           </div>
           <button className="academy-close" type="button" onClick={onClose} aria-label="Close academy">×</button>
         </header>
@@ -214,8 +350,109 @@ export default function Academy({
         <div id="academy-independence" className="academy-independence" role="note">
           Original independent curriculum · reading and analysis · no account, academic credit, or certification · {savingEnabled ? "progress included in this browser save" : "progress is session-only"}
         </div>
+        <p id="academy-summary" className="visually-hidden">Decision methods use only player-visible mission evidence and do not identify or change scored selections.</p>
 
         <div ref={scrollSurfaceRef} className="academy-scroll-surface">
+          <div id="academy-panel-guide" className="academy-now" role="tabpanel" aria-labelledby="academy-view-guide" hidden={view !== "guide"}>
+            <header className="academy-now-heading">
+              <span>{guidanceContext.gameplayPhase === "strategy" ? "DECIDE THIS PHASE" : "DECISION SUPPORT"}</span>
+              <h3 ref={guideHeadingRef} tabIndex={-1}>{guidanceContext.gameplayPhase === "strategy" ? "A guide to all five strategy questions" : "Revisit the five strategy decisions"}</h3>
+              <p>{guidance.explanation}</p>
+            </header>
+
+            {phaseFocusModule && (guidanceContext.gameplayPhase !== "strategy" || guidanceContext.workspaceView === "visualization") && (
+              <section className="academy-phase-focus" aria-labelledby="academy-phase-focus-title">
+                <span>{guidance.contextRelevanceLabel}</span>
+                <h4 id="academy-phase-focus-title">{phaseFocusModule.title}</h4>
+                <p>{phaseFocusModule.thesis}</p>
+                <button type="button" onClick={() => openFullLesson(phaseFocusModule.id)}>OPEN PHASE LESSON</button>
+              </section>
+            )}
+
+            <section className="phase-support" aria-labelledby="phase-support-title">
+              <div className="phase-support-heading">
+                <span>FIRST PHASE · METHOD, NOT ANSWERS</span>
+                <h4 id="phase-support-title">Five decisions, one visible evidence trail</h4>
+                <p>Each section starts open. Collapse what you have settled; reopen any method when you need it.</p>
+              </div>
+              <ol className="phase-support-list">
+                {ACADEMY_STRATEGY_DECISION_ATOMS.map((atom) => (
+                  <li key={atom.id}>
+                    <details
+                      className="phase-support-atom"
+                      data-academy-decision-atom={atom.id}
+                      open={expandedDecisionAtomIds.has(atom.id)}
+                      onToggle={(event) => setDecisionAtomExpanded(atom.id, event.currentTarget.open)}
+                    >
+                      <summary>
+                        <i>{atom.number}</i>
+                        <span><small>{atom.group}</small><strong>{atom.title}</strong></span>
+                      </summary>
+                      <div className="phase-support-content">
+                        <h5>{atom.prompt}</h5>
+                        <DecisionMethod atomId={atom.id} />
+                        <dl className="decision-evidence" aria-label={`Visible evidence for ${atom.title}`}>
+                          {atom.evidence.map((evidence) => (
+                            <div key={evidence.key}>
+                              <dt>{evidence.label}</dt>
+                              <dd>{scenario[evidence.key]}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                        {atom.optionSet && <DecisionOptions optionSet={atom.optionSet} />}
+                      </div>
+                    </details>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            <section className="academy-relevant-theories" aria-labelledby="academy-relevant-theories-title">
+              <div>
+                <span>RELEVANT THINKERS</span>
+                <h4 id="academy-relevant-theories-title">{guidance.theoryRelevanceLabel}</h4>
+                <p>{guidance.source === "brief"
+                  ? "These premises belong to thinkers explicitly named in the public comparative problem. Their equal presentation is a study aid, not a ranking or answer key."
+                  : "These are the two theories you recorded. The Academy repeats them without testing whether either matches the scoring model."}</p>
+              </div>
+              {relevantTheoryAtoms.length > 0 ? (
+                <div className="relevant-theory-list">
+                  {relevantTheoryAtoms.map((atom) => (
+                    <details
+                      key={atom.atomId}
+                      className="relevant-theory-atom"
+                      data-academy-guide-theory-atom={atom.atomId}
+                      open={expandedGuideTheoryAtomIds.has(atom.atomId)}
+                      onToggle={(event) => setGuideTheoryAtomExpanded(atom.atomId, event.currentTarget.open)}
+                    >
+                      <summary><span>{atom.title}</span><b>{guidance.theoryRelevanceLabel}</b></summary>
+                      <p>{atom.premise}</p>
+                      <button type="button" onClick={() => openFullLesson(atom.moduleId, atom.atomId)}>OPEN FULL LESSON</button>
+                    </details>
+                  ))}
+                </div>
+              ) : (
+                <p className="academy-no-theory-match">This legacy problem has no exact public-prose mapping. Use the Compare workspace to test mechanisms; no thinker has been inferred from hidden scenario data.</p>
+              )}
+            </section>
+
+            <details className="academy-optional-map">
+              <summary>OPTIONAL WRITTEN ANALYSIS · QUESTION MAP</summary>
+              <p>These prompts never affect the score. Reuse the five methods above instead of inventing a separate answer framework.</p>
+              <dl>
+                <div><dt>Naval-theory synthesis</dt><dd>Use decisions 03–04: mechanism, contribution, contradiction, and resolution.</dd></div>
+                <div><dt>Commander&apos;s logic</dt><dd>Use decisions 02–03: desired condition, causal mechanism, and maritime action.</dd></div>
+                <div><dt>Key assumptions</dt><dd>Use decision 03: name what must be true and what visible evidence would count against it.</dd></div>
+                <div><dt>Termination / transition</dt><dd>Use decisions 02 and 05: observable completion, handoff, and the boundary that still must hold.</dd></div>
+              </dl>
+            </details>
+
+            <footer className="academy-now-footer">
+              <div><span>FULL ACADEMY</span><p>All 25 lessons, comparisons, sources, quizzes, and reading trails remain available on request.</p></div>
+              <button type="button" onClick={openLibraryFromGuide}>EXPLORE THE LIBRARY</button>
+            </footer>
+          </div>
+
           <nav className="path-tabs" aria-label="Learning path" hidden={view !== "course"}>
             {PATHS.map((item) => (
               <button type="button" key={item.id} aria-current={path === item.id ? "page" : undefined} className={path === item.id ? "active" : ""} onClick={() => changePath(item.id)}>
@@ -232,13 +469,15 @@ export default function Academy({
                 <p>{completedInPath} of {modules.length} knowledge checks passed</p>
               </div>
               <nav className="module-list" aria-label="Lessons in this learning path">
-                {modules.map((module) => (
-                  <button
+                {modules.map((module, index) => (
+                  <div className="module-list-item" key={module.id}>
+                    {index === 0 && relevantModuleCount > 0 && <h3>RELEVANT TO THIS CONTEXT</h3>}
+                    {index === relevantModuleCount && relevantModuleCount < modules.length && <h3>FULL ACADEMY</h3>}
+                    <button
                     type="button"
-                    key={module.id}
                     aria-current={active.id === module.id ? "page" : undefined}
-                    className={`${active.id === module.id ? "active" : ""} ${suggestedModuleIds.has(module.id) ? "suggested" : ""}`.trim()}
-                    data-academy-suggested={suggestedModuleIds.has(module.id) ? "true" : undefined}
+                    className={`${active.id === module.id ? "active" : ""} ${relevantModuleIds.has(module.id) ? "relevant" : ""}`.trim()}
+                    data-academy-relevant={relevantModuleIds.has(module.id) ? "true" : undefined}
                     data-academy-module-id={module.id}
                     onClick={() => selectModule(module.id)}
                   >
@@ -246,9 +485,10 @@ export default function Academy({
                     <span>
                       <strong>{module.title}</strong>
                       <small>{module.era} · {module.level}</small>
-                      {suggestedModuleIds.has(module.id) && <b className="module-suggestion">SUGGESTED NOW</b>}
+                      {relevantModuleIds.has(module.id) && <b className="module-suggestion">{relevanceLabel(module.id)}</b>}
                     </span>
                   </button>
+                  </div>
                 ))}
               </nav>
             </aside>
@@ -268,7 +508,7 @@ export default function Academy({
                 <span>CORE CLAIM</span><p>{active.thesis}</p>
               </section>
 
-              <details className="lesson-objectives">
+              <details className="lesson-objectives" key={`${active.id}-objectives`}>
                 <summary>LEARNING OBJECTIVES · {active.objectives.length}</summary>
                 <ol>{active.objectives.map((objective) => <li key={objective}>{objective}</li>)}</ol>
               </details>
@@ -281,20 +521,46 @@ export default function Academy({
               >
                 <summary>{explicitInitialModule?.id === active.id
                   ? "LESSON · REQUESTED HELP"
-                  : activeSuggested
-                    ? "LESSON · SUGGESTED FOR THIS CONTEXT"
+                  : activeRelevant
+                    ? "LESSON · RELEVANT TO THIS CONTEXT"
                     : "LESSON · READ WHEN READY"}</summary>
-                {active.lesson.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                {activeLessonAtoms.length > 0 ? (
+                  <div className="lesson-atom-list">
+                    {activeLessonAtoms.map((atom) => {
+                      const atomRelevant = relevantAtomIds.has(atom.atomId);
+                      return (
+                        <details
+                          className="lesson-atom"
+                          data-academy-atom-id={atom.atomId}
+                          data-academy-atom-relevant={atomRelevant ? "true" : undefined}
+                          key={atom.atomId}
+                          open={expandedLessonAtomIds.has(atom.atomId)}
+                          onToggle={(event) => setLessonAtomExpanded(atom.atomId, event.currentTarget.open)}
+                        >
+                          <summary>
+                            <span>{atom.title}</span>
+                            {atomRelevant && <b className="lesson-atom-suggestion">{guidance.theoryRelevanceLabel}</b>}
+                          </summary>
+                          {atom.paragraphs.map((paragraph, index) => (
+                            <p key={`${atom.atomId}-${index}`}>{paragraph}</p>
+                          ))}
+                        </details>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  active.lesson.map((paragraph) => <p key={paragraph}>{paragraph}</p>)
+                )}
               </details>
 
-              <details className="academy-disclosure">
+              <details className="academy-disclosure" key={`${active.id}-concepts`}>
                 <summary>KEY CONCEPTS · {active.concepts.length}</summary>
               <div className="concept-grid">
                 {active.concepts.map((concept) => <section key={concept.term}><span>{concept.term}</span><p>{concept.definition}</p></section>)}
               </div>
               </details>
 
-              <details className="academy-disclosure">
+              <details className="academy-disclosure" key={`${active.id}-application`}>
                 <summary>COMMON MISREADING &amp; GAME APPLICATION</summary>
               <div className="critical-grid">
                 <section><span>COMMON MISREADING</span><p>{active.misreading}</p></section>
@@ -302,12 +568,12 @@ export default function Academy({
               </div>
               </details>
 
-              <details className="seminar-prompt">
+              <details className="seminar-prompt" key={`${active.id}-seminar`}>
                 <summary>SEMINAR QUESTION</summary><p>{active.discussion}</p>
               </details>
 
-              <section className="knowledge-check">
-                <div><span>KNOWLEDGE CHECK</span>{completed.includes(active.id) && <b>COMPLETE ✓</b>}</div>
+              <details className="knowledge-check" key={`${active.id}-knowledge-check`}>
+                <summary>KNOWLEDGE CHECK{completed.includes(active.id) && <b>COMPLETE ✓</b>}</summary>
                 <h4>{active.quiz.question}</h4>
                 <fieldset className="answer-list">
                   <legend className="visually-hidden">{active.quiz.question}</legend>
@@ -327,9 +593,9 @@ export default function Academy({
                   </p>
                 )}
                 <button className="check-button" type="button" onClick={submitAnswer} disabled={selectedAnswer === null}>CHECK ANSWER</button>
-              </section>
+              </details>
 
-              <details className="reading-list">
+              <details className="reading-list" key={`${active.id}-reading-list`}>
                 <summary>READING TRAIL · {active.readings.length}</summary>
                 <p>Suggested primary and scholarly starting points for independent study.</p>
                 <ul>{active.readings.map((reading) => <li key={reading}>{reading}</li>)}</ul>

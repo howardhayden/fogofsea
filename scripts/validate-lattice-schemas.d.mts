@@ -13,7 +13,7 @@ export interface LatticeSchemaValidationInput extends LatticeSchemaDocumentRoute
 
 export interface LatticeSchemaValidatorIdentity {
   readonly engine: "ajv";
-  readonly version: "8.17.1";
+  readonly version: "8.20.0";
   readonly dialects: readonly LatticeSchemaDialect[];
   readonly options: Readonly<{
     allErrors: true;

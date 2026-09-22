@@ -32,16 +32,22 @@ Browser and operating-system defects, compromised extensions, a compromised loca
 ## Lattice owner/runtime boundary
 
 Lattice is an owner-side static-copy dependency, not a browser runtime
-dependency. Compilation is pinned to engine `0.1.1`, relational-systems profile
-`v1.0.0`, profile digest
-`379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a`,
+dependency. Compilation is pinned to Lattice commit
+`029ca14570b3ebe5703f504ab4b4baed90883f84`, engine `0.1.1`,
+relational-systems profile `v1.1.0`, profile digest
+`d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468`,
 and derived owner-package digest
-`58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0`.
+`68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b`.
 The release carries only the current canonical text rendering. Request atoms,
 candidate sets, assertions, receipts, source-symbol catalog, traceability, and
 review metadata remain owner-side and are prohibited from every emitted
 textual asset. Source hashes prove identity and drift detection, not semantic
 truth, domain approval, or human review.
+
+The closed runtime map contains 31 strings from 24 owner requests. Five of
+those strings provide first-phase decision methods using only player-visible
+evidence. They neither contain scenario answer keys nor determine selections,
+score, validation, or adjudication; those decisions remain in typed game state.
 
 The derived owner-package digest covers the pinned commit, package metadata,
 profile definition, and complete imported engine module graph. The owner

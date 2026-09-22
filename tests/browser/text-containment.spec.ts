@@ -281,7 +281,12 @@ async function expectNarrativeCopyWithoutNestedSlabs(surface: Locator, state: st
       const box = target.getBoundingClientRect();
       return style.display !== "none" && style.visibility !== "hidden" && box.width > 0 && box.height > 0;
     };
-    return [...element.querySelectorAll("p, li, dd")]
+    const narrativeNodes = [...element.querySelectorAll("p, li, dd")].flatMap((target) =>
+      target.matches(".decision-option-list > li")
+        ? [...target.querySelectorAll(":scope > b, :scope > span")]
+        : [target]
+    );
+    return narrativeNodes
       .filter(visible)
       .map((target) => {
         const style = getComputedStyle(target);

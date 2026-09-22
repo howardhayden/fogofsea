@@ -299,6 +299,7 @@ test("compact Academy and Field Guide remain one-column, non-overlapping glass d
       await page.locator(".global-tools-menu > summary").click();
       await page.locator(".global-tools-menu").getByRole("button", { name: "ACADEMY", exact: true }).click();
       const academy = page.locator(".academy");
+      await academy.getByRole("tab", { name: "LIBRARY", exact: true }).click();
       const academyGeometry = await academy.evaluate((surface) => {
         const rect = (selector: string) => {
           const box = surface.querySelector<HTMLElement>(selector)!.getBoundingClientRect();

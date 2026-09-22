@@ -29,6 +29,7 @@ test("Academy links maritime thinkers to drones, wolfpacks, environment, and pol
   await page.getByRole("button", { name: "ACADEMY", exact: true }).first().click();
   const academy = page.getByRole("dialog", { name: "THE ACADEMY" });
   await expect(academy).toBeVisible();
+  await academy.getByRole("tab", { name: "LIBRARY", exact: true }).click();
   await academy.getByRole("button", { name: /Uncrewed systems in maritime strategy/ }).click();
   await expect(academy).toContainText("Distributed sensing, autonomous lanes, attritable mass");
   await expect(academy).toContainText("Paul Scharre");

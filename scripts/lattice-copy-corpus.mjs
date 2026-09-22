@@ -21,6 +21,11 @@ export const LATTICE_COPY_REQUEST_IDS = Object.freeze([
   "fos.academy.language-system",
   "fos.academy.model-boundary",
   "fos.academy.sources-intro",
+  "fos.academy.strategy-complement-theory",
+  "fos.academy.strategy-end-state",
+  "fos.academy.strategy-guardrail",
+  "fos.academy.strategy-primary-theory",
+  "fos.academy.strategy-warfare-areas",
   "fos.game.guide.command-turns",
   "fos.game.guide.mission-credit",
   "fos.game.guide.mission-learning",
@@ -43,6 +48,11 @@ export const LATTICE_COPY_PUBLISH_IDS = Object.freeze([
   "academy.sources.intro",
   "academy.sources.languageSystem",
   "academy.sources.modelBoundary",
+  "academy.strategy.complementTheory",
+  "academy.strategy.endState",
+  "academy.strategy.guardrail",
+  "academy.strategy.primaryTheory",
+  "academy.strategy.warfareAreas",
   "game.guide.commandTurns.interpretive",
   "game.guide.commandTurns.operative",
   "game.guide.missionCredit.interpretive",
@@ -94,14 +104,14 @@ export const LATTICE_COPY_PIN = Object.freeze({
   engineName: "Lattice — Layered Register Engine",
   engineVersion: "0.1.1",
   profileId: "relational-systems",
-  profileVersion: "v1.0.0",
-  profileDigest: "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a",
-  ownerPackageDigest: "58648d097c863090a95f48ebca2b20d5a6f6c2b832c915b9bac04f479d51d3b0",
+  profileVersion: "v1.1.0",
+  profileDigest: "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468",
+  ownerPackageDigest: "68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b",
 });
 
 export const LATTICE_COPY_PROVENANCE = Object.freeze({
   fogBaselineCommit: "70907a77cba735c151e52929dd5a56d795c3d04f",
-  latticeCommit: "d6cc85b275e3f14163a5a547f626832fd21b27b0",
+  latticeCommit: "029ca14570b3ebe5703f504ab4b4baed90883f84",
   requestAuthority: "FOG OF SEA source-controlled authoring contract",
 });
 
@@ -127,7 +137,7 @@ export const LATTICE_OWNER_PACKAGE_MANIFEST = Object.freeze({
     Object.freeze({ path: "dist/util.js", sha256: "9951fa8eafdb9316303a52c24f6e9127cd1772b8c5bed5a4ee3c9c1356083ba7" }),
     Object.freeze({ path: "dist/validators.js", sha256: "d08c62412eacc996192553d1ca53d7360b0505f1270794cab7c2c19a196d50d5" }),
     Object.freeze({ path: "package.json", sha256: "5ae1e33376032d0ecdb2ee429f9e07c65b6155a54cbc77f2e9597943a9e2efed" }),
-    Object.freeze({ path: "profiles/relational-systems.profile.json", sha256: "1868a428c0f3ffd55671cf8de5d1b549ffd309a920aaf01ff1db24e93536a996" }),
+    Object.freeze({ path: "profiles/relational-systems.profile.json", sha256: "d5145998c2a43f6c1da5e718226dbce38cb81ee2eb3e58feb1fdb07cbf384c11" }),
   ]),
 });
 

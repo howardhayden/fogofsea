@@ -123,8 +123,8 @@
         "conformance": { "$ref": "#/$defs/conformance" },
         "humanReviewStatus": { "const": "not-claimed" },
         "engineVersion": { "const": "0.1.1" },
-        "profileVersion": { "const": "v1.0.0" },
-        "profileDigest": { "const": "379ed01484574edc779efdc502ffbd6d9b8ffef3c9154fb027b0f0c8475ed21a" },
+        "profileVersion": { "const": "v1.1.0" },
+        "profileDigest": { "const": "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468" },
         "implementationAuthority": { "$ref": "#/$defs/implementationAuthority" }
       }
     }

@@ -93,8 +93,8 @@ test("dense instructional copy stays disclosed with bounded contextual Academy d
   assert.match(academy, /className="lesson-body"/);
   assert.match(academy, /open=\{expandedLessonIds\.has\(active\.id\)\}/);
   assert.match(academy, /guidance\.defaultExpandedModuleIds/);
-  assert.match(academy, /<details className="academy-disclosure">/);
-  assert.match(academy, /<details className="reading-list">/);
+  assert.match(academy, /<details[^>]*className="academy-disclosure"[^>]*>/);
+  assert.match(academy, /<details[^>]*className="reading-list"[^>]*>/);
   assert.match(command, /<details id="last-turn-learning" className="kriegsspiel-report">\s*<summary>LAST TURN/);
   assert.doesNotMatch(command, /<details id="last-turn-learning"[^>]*\sopen(?:=|>)/);
   assert.doesNotMatch(command, /HOW THIS TURN IS ADJUDICATED|umpireNotes\.map|matrixPreview/);

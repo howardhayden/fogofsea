@@ -202,10 +202,16 @@ export async function validateArtifact(buildRoot = defaultBuildRoot) {
     );
   }
 
-  assert.equal(Object.keys(runtimeCopy).length, 26, "Runtime Lattice copy must contain the pinned output set");
+  assert.equal(Object.keys(runtimeCopy).length, 31, "Runtime Lattice copy must contain the pinned output set");
   for (const [publishId, selectedText] of Object.entries(runtimeCopy)) {
     assert.equal(typeof selectedText, "string", `Runtime Lattice output must be text: ${publishId}`);
-    assert(releaseScripts.includes(selectedText), `Release must include selected Lattice output: ${publishId}`);
+    const jsonEmbeddedText = JSON.stringify(selectedText).slice(1, -1);
+    const templateEmbeddedJsonText = JSON.stringify(jsonEmbeddedText).slice(1, -1);
+    assert(
+      [selectedText, jsonEmbeddedText, templateEmbeddedJsonText]
+        .some((representation) => releaseScripts.includes(representation)),
+      `Release must include selected Lattice output: ${publishId}`,
+    );
   }
   return { emittedFileCount: emitted.length, textualAssetCount: textualAssets.length };
 }

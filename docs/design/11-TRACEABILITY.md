@@ -17,7 +17,7 @@
 | Absolute intelligence chronology | Left-side known picture, Immediate, and occurrence-turn History with “Discovered during Turn N” | `commandIntelligence.ts`, `CommandIntelligencePanel.tsx`, `ResultDebrief.tsx` | Command-intelligence and debrief tests | Concealed fact leaks, late fact moves to discovery turn, or an empty resolved turn disappears |
 | Optional writing never scored | Point-of-entry note, TXT label | `StrategicDecisionFlow.tsx`, `kriegsspiel.ts` inputs | Source/unit tests | Resolution reads prose content |
 | Diagnostic loss and win | Recorded finding → evidence → adjustment; bounded no-finding state | `kriegsspiel.ts`, `ResultDebrief.tsx`, generated Lattice text map | Debrief/unit tests; browser suite inventory | Finding has no cited evidence or repair, or absent finding is called proof of correct play |
-| Bounded Lattice copy | Paired Field Guide layers, typed learning copy, selected Academy chrome | Owner-side compiler; `latticeCopy.ts`; 19 requests / 26 outputs | Closed requirements/inventory; pinned evidence; artifact scan | Runtime ships owner materials, copy alters mechanics, or bounded adoption is called product-wide |
+| Bounded Lattice copy | Paired Field Guide layers, typed learning copy, selected Academy interface and decision methods | Owner-side compiler; `latticeCopy.ts`; 24 requests / 31 outputs | Closed requirements/inventory; pinned evidence; artifact scan | Runtime ships owner materials, copy alters mechanics, reveals scored choices, or bounded adoption is called product-wide |
 | Complete keyboard path | Skip link, native controls, dialog focus | `page.tsx`, dialog components | `ACCESSIBILITY.md`, browser tests | A required action is pointer-only |
 | Reduced motion completeness | Static representative scene | CSS and WebGL update functions | Reduced-motion browser/model tests | Essential object/state disappears |
 | Compact scene remains usable | Bounded mutually exclusive cards | `globals.css`, Battlefield HUD | Layout/text-containment tests | Wrapper paints or card consumes main plot |
@@ -42,8 +42,8 @@
 | Authority or artifact | Bound identity | What it does not establish |
 | --- | --- | --- |
 | `requirements/lattice-adoption.json` | Active semantic requirements, dependencies, conflicts, owners, acceptance, adversarial tests, status, supersession | That an implemented status has passed every test |
-| `requirements/lattice-copy-inventory.json` | 37 exact product-family units, routes, owners, adopted/exempt/blocked status | Product-wide adoption |
-| `authoring/lattice-copy.requests.json` | 19 requests, 26 targets, source references, selected candidates, `not-claimed` human status | Source truth or human approval |
+| `requirements/lattice-copy-inventory.json` | 42 exact product-family units, routes, owners, adopted/exempt/blocked status | Product-wide adoption |
+| `authoring/lattice-copy.requests.json` | 24 requests, 31 targets, source references, selected candidates, `not-claimed` human status | Source truth or human approval |
 | Twelve hashed TypeScript declarations | Exact source file/declaration identity and drift | Domain correctness or semantic truth |
 | Owner generated output and evidence | Pinned realization, traceability, assertions, copy and file digests | Authentication, external anchoring, or full conformance |
 | Four-field runtime JSON | Snapshot ID, copy digest, and selected text map | Engine/profile execution or owner evidence in the browser |

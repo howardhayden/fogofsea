@@ -1,12 +1,58 @@
 {
-  "format": "fog-of-sea-academy-guidance-corpus-v1",
-  "payloadSha256": "eb885473f7638cdbe9fc1ff6af4d7d0b1c4a08167cc49221014d3cf0bef6fc7e",
+  "format": "fog-of-sea-academy-guidance-corpus-v2",
+  "payloadSha256": "aece8a9e3d6b320c43d76b8bc29d034498ce8704cb2e22e4edf3eb93daa94b09",
   "payload": {
-    "capturedOn": "2026-09-14",
+    "capturedOn": "2026-09-22",
     "baselineRevision": "795ea751b2615f26bd2d3eff2a826fbe079a062a",
-    "implementationStatus": "pass",
+    "requirementsVersion": "1.2.0",
+    "implementationStatus": "implemented-local-release-and-focused-browser-verified-hosted-public-pending",
     "academyModuleCount": 25,
+    "academyViews": ["NOW", "LIBRARY", "COMPARE", "SOURCES"],
+    "firstPhaseDecisionSupport": {
+      "count": 5,
+      "ids": [
+        "first-phase-warfare",
+        "first-phase-end-state",
+        "first-phase-primary-theory",
+        "first-phase-partner-theory",
+        "first-phase-guardrail"
+      ],
+      "gameplayOrder": ["warfare areas", "end state", "primary theory", "partner theory", "guardrail"],
+      "defaultPresentation": "all five native decision-method disclosures open in NOW",
+      "answerPolicy": "method, player-visible evidence, and symmetric option descriptions only; no scored choice, ranking, recommendation, or hidden-answer input"
+    },
+    "safeScenarioProjection": {
+      "fieldCount": 10,
+      "fields": [
+        "brief",
+        "friendlySituation",
+        "opposingSituation",
+        "civilianContext",
+        "objective",
+        "intelligence",
+        "constraints",
+        "successConditions",
+        "navalProblem",
+        "politicalAim"
+      ],
+      "prohibitedAnswerFields": [
+        "required",
+        "recommended",
+        "endState",
+        "guardrail",
+        "lenses",
+        "minimumEscort",
+        "minimumAirDefense",
+        "minimumAsw",
+        "minimumUncrewed",
+        "matrix",
+        "adversaryCount",
+        "score"
+      ],
+      "noninterference": "mutating concealed answer fields before projection does not change derived guidance or rendered Academy markup"
+    },
     "theoryLensCount": 13,
+    "theoryAtomCount": 13,
     "theoryModuleMap": {
       "sun-tzu": "sun-tzu",
       "clausewitz": "clausewitz",
@@ -22,43 +68,168 @@
       "till": "global-seapower",
       "galula": "galula"
     },
+    "theoryAtomMap": {
+      "sun-tzu": { "atomId": "theory-sun-tzu", "moduleId": "sun-tzu" },
+      "clausewitz": { "atomId": "theory-clausewitz", "moduleId": "clausewitz" },
+      "mahan": { "atomId": "theory-mahan", "moduleId": "mahan" },
+      "aube": { "atomId": "theory-aube", "moduleId": "maritime-schools" },
+      "corbett": { "atomId": "theory-corbett", "moduleId": "corbett" },
+      "richmond": { "atomId": "theory-richmond", "moduleId": "maritime-schools" },
+      "wegener": { "atomId": "theory-wegener", "moduleId": "maritime-schools" },
+      "castex": { "atomId": "theory-castex", "moduleId": "maritime-schools" },
+      "panikkar": { "atomId": "theory-panikkar", "moduleId": "global-seapower" },
+      "gorshkov": { "atomId": "theory-gorshkov", "moduleId": "global-seapower" },
+      "liu-huaqing": { "atomId": "theory-liu-huaqing", "moduleId": "global-seapower" },
+      "till": { "atomId": "theory-till", "moduleId": "global-seapower" },
+      "galula": { "atomId": "theory-galula", "moduleId": "galula" }
+    },
+    "sharedModuleDisclosureBoundary": {
+      "maritime-schools": {
+        "theoryAtomIds": ["theory-aube", "theory-richmond", "theory-wegener", "theory-castex"],
+        "otherAtomIds": ["maritime-schools-comparison-frame", "maritime-schools-synthesis"],
+        "default": "relevant premises open in NOW; Library lesson shell closed; if opened, only relevant theory atoms open while comparison and synthesis stay closed"
+      },
+      "global-seapower": {
+        "theoryAtomIds": ["theory-gorshkov", "theory-panikkar", "theory-liu-huaqing", "theory-till"],
+        "otherAtomIds": ["global-seapower-synthesis"],
+        "default": "relevant premises open in NOW; Library lesson shell closed; if opened, only relevant theory atoms open while synthesis stays closed"
+      }
+    },
+    "progressCompatibility": {
+      "moduleCount": 25,
+      "moduleIdsChanged": false,
+      "newAtomProgressKeys": false,
+      "saveSchemaChanged": false
+    },
+    "helpSignalPolicy": {
+      "automaticHelpSignal": "explicit Academy open on a new mount",
+      "explicitTargetSignal": "explicit initialModuleId opens Library at that lesson without changing relevance membership",
+      "safeInputs": [
+        "ten-field player-visible scenario projection",
+        "current gameplay phase",
+        "current workspace",
+        "player-selected warfare areas",
+        "completed distinct theory-selection pair"
+      ],
+      "prohibitedInferenceInputs": [
+        "elapsed time",
+        "click frequency",
+        "quiz results",
+        "incomplete prose",
+        "score",
+        "concealed game truth",
+        "analytics",
+        "storage",
+        "network",
+        "model call"
+      ],
+      "persistence": "user disclosure toggles persist only within the mounted Academy; each later mount derives fresh defaults from current safe context"
+    },
+    "nestedDisclosureDefaults": {
+      "open": [
+        "all five first-phase decision methods in NOW",
+        "public-brief-named or completed-selection-recorded strategist premises in NOW",
+        "the sole atom of an explicitly requested single-theory Library module"
+      ],
+      "closed": [
+        "every Library lesson body unless explicitly requested or opened by the user",
+        "unrelated theory atoms",
+        "comparison frames",
+        "synthesis atoms",
+        "objectives",
+        "concepts",
+        "seminar prompts",
+        "readings",
+        "knowledge check",
+        "optional written-analysis question map"
+      ],
+      "semantics": "native details and summary",
+      "relevanceIdentification": "relevance is labelled NAMED IN THE BRIEF, YOUR RECORDED THEORY, or CURRENT PHASE; answer-signalling suggestion terminology is absent",
+      "explicitSharedModule": "requested outer Library lesson shell open; every unrelated nested atom closed",
+      "knowledgeCheck": {
+        "contentChanged": false,
+        "answersChanged": false,
+        "completionSemanticsChanged": false,
+        "presentationChanged": true,
+        "defaultPresentation": "closed native details disclosure"
+      }
+    },
     "gameplayPhases": ["strategy", "force", "command", "debrief"],
     "workspaceContexts": ["mission", "decisions", "force", "command", "visualization"],
     "authorityCases": {
-      "zeroSelections": "scenario",
-      "oneSelection": "scenario",
-      "duplicateSelections": "scenario",
-      "twoDistinctSelections": "player-selections"
+      "zeroTheorySelections": "public brief",
+      "oneTheorySelection": "public brief",
+      "duplicateTheorySelections": "public brief",
+      "twoDistinctTheorySelections": "player selections"
     },
     "phaseContextPolicy": {
       "strategy": "strategy-grammar",
-      "force": "one scenario-demand-derived force lesson",
+      "force": "one lesson derived only from the player's recorded warfare selections, with risk-resilience as the no-selection fallback",
       "command": "compound-uncertainty without concealed actor-count input",
       "debrief": "synthesis",
-      "visualizationOverride": "jomini"
+      "visualizationOverride": "jomini",
+      "consecutiveMounts": "derive from the current phase, workspace, and player-authored state; never reuse the prior mount's local toggles or phase target"
     },
     "initialPriority": {
-      "strategy": "first relevant theory module",
-      "forceCommandDebrief": "bounded phase-context module when present",
-      "visualization": "jomini",
-      "explicitHelpTarget": "requested module without changing suggestion membership"
+      "ordinaryOpen": "NOW with all five first-phase methods plus every relevant strategist premise",
+      "laterPhase": "NOW with one current-phase focus plus relevant strategist premises",
+      "explicitHelpTarget": "LIBRARY at the requested outer module without changing relevance membership"
+    },
+    "latestLattice": {
+      "repository": "howardhayden/lattice",
+      "commit": "029ca14570b3ebe5703f504ab4b4baed90883f84",
+      "engineVersion": "0.1.1",
+      "profileId": "relational-systems",
+      "profileVersion": "v1.1.0",
+      "profileDigest": "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468",
+      "profileFileSha256": "d5145998c2a43f6c1da5e718226dbce38cb81ee2eb3e58feb1fdb07cbf384c11",
+      "ownerPackageDigest": "68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b",
+      "snapshotId": "lattice-copy-5df6aa976920a5f286aebc03",
+      "implementationAuthorityDigest": "fa28dbc8cfbe13361ae59fb16a0d909da5d54249bf2c96f7da6d054c5f887109",
+      "copyDigest": "b0f1f86c0d4c19c48ceeafc7f18e805987c7b311cdcda0519268522954d7149c",
+      "realizationDigest": "3f0cf9b2cca3f317d279ebac4a4e18799399efe112093a74aa85ef5e774b14cc",
+      "requestCount": 24,
+      "outputCount": 31,
+      "inventoryUnitCount": 42,
+      "requestHumanReviewStatus": "not-claimed",
+      "requestHumanReviewStatusCount": 24,
+      "scope": "owner-side bounded copy compilation only",
+      "runtimeEngine": false,
+      "advisoryControlIds": "RSR-CTL-001 through RSR-CTL-018",
+      "unknownCanPass": false
     },
     "generatedScenarioSample": {
       "seed": 27183,
       "count": 480,
+      "phase": "strategy",
       "result": "pass",
+      "firstPhaseQuestionCount": 5,
       "minimumMappedTheoryCount": 2,
       "mappedProblemCount": 30,
+      "substantivePremiseLensCount": 13,
       "maximumContextLessonCount": 1,
       "unresolvedModuleCount": 0
     },
     "verification": {
-      "focusedTestFileCases": 18,
-      "pureDerivationAndCorpusCases": 14,
-      "structuralRenderingTests": 4,
+      "focusedTestFileCases": 21,
+      "allStrategistPremiseRenderCount": 13,
+      "generatedStrategyScenarioCount": 480,
       "requirementsTests": 2,
-      "fullNonBrowserSuite": "pass"
+      "focusedAcademySuite": "pass: 21 of 21 answer-safe Academy cases",
+      "fullReleaseCheck": {
+        "command": "npm run release:check",
+        "result": "pass",
+        "mjsTests": { "passed": 40, "total": 40 },
+        "typescriptTests": { "passed": 269, "total": 269 },
+        "redTeamTests": { "passed": 66, "total": 66 },
+        "totalTests": 375,
+        "productionBuild": "pass",
+        "artifactValidation": "pass",
+        "npmAuditVulnerabilities": 0
+      },
+      "hostedPublicStatus": "pending",
+      "safariStatus": "unverified"
     },
-    "granularityBoundary": "Aube, Richmond, Wegener, and Castex share the existing maritime-schools module; Panikkar, Gorshkov, Liu Huaqing, and Till share global-seapower. Guidance opens the narrowest existing module and does not claim thinker-fragment exclusivity."
+    "granularityBoundary": "Aube, Richmond, Wegener, and Castex retain the maritime-schools module shell, while Panikkar, Gorshkov, Liu Huaqing, and Till retain the global-seapower shell. Each of all thirteen lenses has a distinct nested theory atom and substantive NOW premise, so shared module identity does not broaden automatic disclosure."
   }
 }
