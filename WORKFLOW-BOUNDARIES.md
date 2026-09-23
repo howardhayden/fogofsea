@@ -1,30 +1,17 @@
 # Workflow licensing boundary
 
-The repository's default noncommercial software terms apply to the
-copyrightable implementation and expression of:
+The proprietary terms cover the Owner's copyrightable implementation and
+expression of the workflows listed in `LICENSE-MAP.json` and `LICENSING.md`.
+They do not claim exclusive ownership of unprotected ideas, methods, systems,
+facts, functionality, or independently created expression.
 
-- scenario composition, validation, regeneration, mission framing, and briefing workflows
-- warfare-area, objective, platform, aircraft, armament, compatibility, and point-allocation logic
-- turn commitment, deterministic adjudication, uncertainty, scoring, undo, and debrief workflows
-- Academy sequencing, knowledge checks, strategic comparisons, and field-guide presentation
-- environment, weather, celestial, ocean, wildlife, audio, camera, and accessibility engines
-- the authored force families, scenarios, thresholds, taxonomies, labels, and test contracts
+A small or general-purpose function is not separately reusable merely because
+it could be useful elsewhere. Source visibility, a successful build, a free
+Official Product, and a product purchase do not grant code reuse. There are no
+automatic permissive carve-outs. `PERMISSIVE-EXCEPTIONS.md` records this boundary.
 
-The boundary is based on **task and product workflows**, not on an attempt to
-claim every programming technique inside them. A small or general-purpose
-function remains under the license of its containing file unless deliberately
-extracted and separately licensed.
-
-## No current permissive carve-outs
-
-`LICENSE-MAP.json` contains an empty `permissive_exceptions` list. Function-level
-mixed licensing is hard to audit and easy to misread. A reusable utility must
-first become a separate, self-contained module with independent tests and an
-explicit SPDX notice.
-
-## Legal boundary
-
-Copyright generally protects source expression, authored text, diagrams,
-selection and arrangement, and other original expression; it does not by itself
-create exclusive ownership of abstract ideas, methods, systems, facts, or
-functionality.
+Owner-authorized maintenance and cross-project work remain possible within the
+Owner's express authorization; they do not grant third parties independent
+rights. Permissions validly attached to earlier distributed copies remain
+governed by their own terms and do not automatically attach to later copies or
+snapshots. Third-party terms retain their own scope.

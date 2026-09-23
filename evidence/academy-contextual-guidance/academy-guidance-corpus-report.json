@@ -1,6 +1,6 @@
 {
   "format": "fog-of-sea-academy-guidance-corpus-v2",
-  "payloadSha256": "aece8a9e3d6b320c43d76b8bc29d034498ce8704cb2e22e4edf3eb93daa94b09",
+  "payloadSha256": "39d50128cbca22202d3e19aa1d3aa2bd6d0faa9f6f2ca67e375a5d6e46a7f81e",
   "payload": {
     "capturedOn": "2026-09-22",
     "baselineRevision": "795ea751b2615f26bd2d3eff2a826fbe079a062a",
@@ -184,8 +184,8 @@
       "profileDigest": "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468",
       "profileFileSha256": "d5145998c2a43f6c1da5e718226dbce38cb81ee2eb3e58feb1fdb07cbf384c11",
       "ownerPackageDigest": "68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b",
-      "snapshotId": "lattice-copy-5df6aa976920a5f286aebc03",
-      "implementationAuthorityDigest": "fa28dbc8cfbe13361ae59fb16a0d909da5d54249bf2c96f7da6d054c5f887109",
+      "snapshotId": "lattice-copy-8f1b56ecaab9b6c4f75509ea",
+      "implementationAuthorityDigest": "28ec42aa9a69826c388295b14da535920bb322d61eb375502c788670707357bc",
       "copyDigest": "b0f1f86c0d4c19c48ceeafc7f18e805987c7b311cdcda0519268522954d7149c",
       "realizationDigest": "3f0cf9b2cca3f317d279ebac4a4e18799399efe112093a74aa85ef5e774b14cc",
       "requestCount": 24,

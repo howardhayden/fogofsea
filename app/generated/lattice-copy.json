@@ -1,6 +1,6 @@
 {
   "schemaVersion": "fog-of-sea.lattice-copy.generated.v2",
-  "snapshotId": "lattice-copy-5df6aa976920a5f286aebc03",
+  "snapshotId": "lattice-copy-8f1b56ecaab9b6c4f75509ea",
   "staticOnly": true,
   "lattice": {
     "engineName": "Lattice — Layered Register Engine",
@@ -16,11 +16,11 @@
     "files": [
       {
         "path": "package-lock.json",
-        "sha256": "e933875b533f95c74691ed261f40cf3e3ec482ee113a6e818a458c400336cbe5"
+        "sha256": "d30acbfc79b59f60438daf689448ca9a8899b4677488e0716bb9d27d5dcca890"
       },
       {
         "path": "package.json",
-        "sha256": "8d6ded4120bfae7a65ea29840171b94e8dce4239a837d9e25789dc7c3a6acfb7"
+        "sha256": "23a4ac50e4ae2c914b3c356abd191f65ae1dd33e36df55daf0b1aa650eaabd3a"
       },
       {
         "path": "requirements/lattice-adoption.schema.json",
@@ -71,7 +71,7 @@
         "sha256": "ce11fe7f669e14fa1ea192ecdd2d733d5033f1ec4281be7dad5684763c90ccfd"
       }
     ],
-    "sha256": "fa28dbc8cfbe13361ae59fb16a0d909da5d54249bf2c96f7da6d054c5f887109"
+    "sha256": "28ec42aa9a69826c388295b14da535920bb322d61eb375502c788670707357bc"
   },
   "source": {
     "requestPath": "authoring/lattice-copy.requests.json",

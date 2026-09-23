@@ -1,7 +1,7 @@
 {
   "name": "fog-of-sea",
   "version": "0.1.0",
-  "license": "PolyForm-Noncommercial-1.0.0",
+  "license": "LicenseRef-Hayden-Proprietary-1.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -21,6 +21,7 @@
     "verify:browser-suite": "playwright test --list",
     "lint": "eslint app tests scripts eslint.config.mjs vite.config.ts playwright.config.ts",
     "typecheck": "tsc --noEmit",
+    "verify:policy": "node scripts/verify-license-policy.mjs",
     "verify:licenses": "node scripts/verify-licenses.mjs",
     "verify:notices": "node scripts/generate-notices.mjs --check",
     "verify:sbom": "node scripts/generate-sbom.mjs --check",
@@ -30,7 +31,7 @@
     "notices": "node scripts/generate-notices.mjs",
     "sbom": "node scripts/generate-sbom.mjs",
     "audit:dependencies": "npm audit --package-lock-only --audit-level=high",
-    "check": "npm run lint && npm run typecheck && npm run verify:lattice-schemas && npm run verify:lattice-copy && npm run verify:licenses && npm run verify:notices && npm run verify:sbom && npm run verify:content && npm run verify:hosting && npm run verify:browser-suite && npm test && npm run build && npm run verify:artifact",
+    "check": "npm run lint && npm run typecheck && npm run verify:lattice-schemas && npm run verify:lattice-copy && npm run verify:policy && npm run verify:licenses && npm run verify:notices && npm run verify:sbom && npm run verify:content && npm run verify:hosting && npm run verify:browser-suite && npm test && npm run build && npm run verify:artifact",
     "release:check": "npm run check && npm run audit:dependencies",
     "deploy:cloudflare": "npx --yes wrangler@4.127.1 deploy",
     "preview:cloudflare": "npx --yes wrangler@4.127.1 versions upload"
