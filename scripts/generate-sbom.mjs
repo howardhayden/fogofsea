@@ -9,6 +9,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const lockText = await readFile(path.join(root, "package-lock.json"), "utf8");
 const lock = JSON.parse(lockText);
 const lockHash = createHash("sha256").update(lockText).digest("hex");
+const policyLicenseId = "LicenseRef-Hayden-Proprietary-1.0";
+const policyLicenseName = "Hayden Howard Proprietary Product and Source License 1.0";
+const policyLicenseText = await readFile(path.join(root, "LICENSE"), "utf8");
 
 function packageNameFromPath(packagePath) {
   return packagePath ? packagePath.split("node_modules/").at(-1) : lock.name;
@@ -143,6 +146,13 @@ async function createDocument(scope, relativePath) {
       comment: `Generated deterministically from package-lock.json SHA-256 ${lockHash}.`,
     },
     documentDescribes: ["SPDXRef-Package-root"],
+    hasExtractedLicensingInfos: [
+      {
+        licenseId: policyLicenseId,
+        extractedText: policyLicenseText,
+        name: policyLicenseName,
+      },
+    ],
     packages,
     relationships,
   };

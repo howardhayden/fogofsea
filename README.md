@@ -189,9 +189,16 @@ Vite, React, Three.js, Astronomy Engine, standards-based CSS, and the self-hoste
 
 ## Licensing
 
-FOG OF SEA is **source-available for noncommercial use** under
-**PolyForm-Noncommercial-1.0.0**; commercial use requires a separate written license. Separable original documentation and media use **CC-BY-NC-SA-4.0**.
-No current source file or function has a permissive commercial-use exception.
+FOG OF SEA is proprietary software. Owner-controlled source, documentation,
+media, and generated material are offered under the
+**Hayden Howard Proprietary Product and Source License 1.0**
+(`LicenseRef-Hayden-Proprietary-1.0`). No general right to run, copy, modify,
+redistribute, self-host, or reuse the implementation is granted. Official-product
+use is limited to the offering or entitlement described in [`LICENSE`](LICENSE).
+No current source file or function has a permissive or blanket noncommercial
+reuse exception. Permissions validly attached to earlier distributed copies
+remain governed by their own terms and do not automatically attach to later
+copies or snapshots. Third-party terms retain their own scope.
 See [`LICENSING.md`](LICENSING.md),
 [`WORKFLOW-BOUNDARIES.md`](WORKFLOW-BOUNDARIES.md), and
 [`LICENSE-MAP.json`](LICENSE-MAP.json) for scope and historical limits.
