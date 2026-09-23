@@ -9,8 +9,8 @@ attach to later copies or snapshots.
 ## Controlling terms
 
 Original Owner-controlled material is proprietary under the
-[Hayden Howard Proprietary Product and Source License 1.0](LICENSE).
-The identifier is `LicenseRef-Hayden-Proprietary-1.0`. It is not open source and has
+[Hayden Howard Proprietary Product and Source License 1.1](LICENSE).
+The identifier is `LicenseRef-Hayden-Proprietary-1.1`. It is not open source and has
 no general noncommercial, educational, nonprofit, or governmental reuse grant.
 `LICENSE-MAP.json` identifies material scopes; it does not relicense third-party
 components or determine whether a permission attached to an earlier distributed

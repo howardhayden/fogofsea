@@ -191,8 +191,8 @@ Vite, React, Three.js, Astronomy Engine, standards-based CSS, and the self-hoste
 
 FOG OF SEA is proprietary software. Owner-controlled source, documentation,
 media, and generated material are offered under the
-**Hayden Howard Proprietary Product and Source License 1.0**
-(`LicenseRef-Hayden-Proprietary-1.0`). No general right to run, copy, modify,
+**Hayden Howard Proprietary Product and Source License 1.1**
+(`LicenseRef-Hayden-Proprietary-1.1`). No general right to run, copy, modify,
 redistribute, self-host, or reuse the implementation is granted. Official-product
 use is limited to the offering or entitlement described in [`LICENSE`](LICENSE).
 No current source file or function has a permissive or blanket noncommercial
