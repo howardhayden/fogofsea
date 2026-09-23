@@ -1,19 +1,19 @@
 {
   "schemaVersion": "fog-of-sea.lattice-copy.index.v2",
   "current": {
-    "snapshotId": "lattice-copy-8f1b56ecaab9b6c4f75509ea",
+    "snapshotId": "lattice-copy-e26a62a6ecdcf263649fe029",
     "path": "evidence/lattice/current.json",
-    "sha256": "bd441dbf1194c7d4af5fe22a718273b3eb5a89790453379cf70b7d5f74564dd4"
+    "sha256": "5256c952131c35d2c3656d45ebbf801246cd4cc26e1c0b7ddf2a1d39ec522cbb"
   },
   "entries": [
     {
-      "snapshotId": "lattice-copy-8f1b56ecaab9b6c4f75509ea",
+      "snapshotId": "lattice-copy-e26a62a6ecdcf263649fe029",
       "evidencePath": "evidence/lattice/current.json",
-      "evidenceSha256": "bd441dbf1194c7d4af5fe22a718273b3eb5a89790453379cf70b7d5f74564dd4",
+      "evidenceSha256": "5256c952131c35d2c3656d45ebbf801246cd4cc26e1c0b7ddf2a1d39ec522cbb",
       "generatedPath": "app/generated/lattice-copy.json",
-      "generatedSha256": "5148fe207b54e94b2d0a07e23cd2c956925598b3baef8a3f6715b99e5144c0c7",
+      "generatedSha256": "eae2c57c268bdf8ba2a0e30352a79d297f4ded17a332dd58f8a309909469ee22",
       "runtimePath": "app/generated/lattice-copy.runtime.json",
-      "runtimeSha256": "e56dfdc49c622284807d92a69961667178923d7449285c4a441df9f0c8a00192",
+      "runtimeSha256": "bb3f723af156fd028bc139fb5d4e8e81afab7a31900cc002f3f0431a88d74e62",
       "requestSha256": "f8a43988dc83c7b6c712627f642da859890b547621c3ef54e1d6a31664bed7b5",
       "academySourceSha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41",
       "academyCorpusSha256": "340e3f88ac6a8b8e6d5731d6d5ca007333f266526b43203e50b0d780c8dd755b",
@@ -32,11 +32,11 @@
         "files": [
           {
             "path": "package-lock.json",
-            "sha256": "d30acbfc79b59f60438daf689448ca9a8899b4677488e0716bb9d27d5dcca890"
+            "sha256": "be1766603eb2fbd5b9a34f3338d8e186b7b36c261fd165a71ebe23e6c6e98592"
           },
           {
             "path": "package.json",
-            "sha256": "23a4ac50e4ae2c914b3c356abd191f65ae1dd33e36df55daf0b1aa650eaabd3a"
+            "sha256": "89beeab3c3c932e7dbe5fcfd9fc2779e3001df876040b96c8fdc2a3d35d65839"
           },
           {
             "path": "requirements/lattice-adoption.schema.json",
@@ -87,7 +87,7 @@
             "sha256": "ce11fe7f669e14fa1ea192ecdd2d733d5033f1ec4281be7dad5684763c90ccfd"
           }
         ],
-        "sha256": "28ec42aa9a69826c388295b14da535920bb322d61eb375502c788670707357bc"
+        "sha256": "93e529d8f2b995cd1e96932b16b377d7bee2eb17ecc1686ec761f9accd1dd8ff"
       }
     }
   ]

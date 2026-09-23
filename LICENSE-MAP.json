@@ -3,7 +3,7 @@
   "audited": "2026-08-24",
   "project": "FOG OF SEA",
   "source_available_not_open_source": true,
-  "default_license": "LicenseRef-Hayden-Proprietary-1.0",
+  "default_license": "LicenseRef-Hayden-Proprietary-1.1",
   "commercial_use_granted": false,
   "precedence": [
     "applicable-law-and-platform-rights",
@@ -26,7 +26,7 @@
         "docs/**",
         "notebooks/**"
       ],
-      "license": "LicenseRef-Hayden-Proprietary-1.0",
+      "license": "LicenseRef-Hayden-Proprietary-1.1",
       "scope": "original prose and non-code figures; code, substantive code excerpts, and code-embedded data remain under the default software license"
     },
     {
@@ -40,7 +40,7 @@
         "public/**/*.mp3",
         "public/**/*.ogg"
       ],
-      "license": "LicenseRef-Hayden-Proprietary-1.0",
+      "license": "LicenseRef-Hayden-Proprietary-1.1",
       "scope": "separable original media only; third-party notices and source-identifying marks override"
     },
     {

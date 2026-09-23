@@ -25,3 +25,13 @@ public-domain, and third-party scopes likewise retain their own applicable terms
 This record identifies a prospective rights boundary. It does not claim that
 deleting refs, changing visibility, or changing a current notice recovers prior
 copies or extinguishes permissions validly attached to those copies.
+
+## Successor policy — 2026-09-23
+
+The baseline facts above remain historical facts: the commercial baseline was
+introduced under version 1.0. The commit containing this note adopts the
+canonical Hayden Howard Proprietary Product and Source License 1.1
+(`LicenseRef-Hayden-Proprietary-1.1`) for current and subsequent snapshots.
+The exact former 1.0 text is retained at
+`LICENSES/HISTORICAL/Hayden-Howard-Proprietary-Product-and-Source-License-1.0.txt`
+as evidence only; it does not grant version 1.0 terms over this later snapshot.
