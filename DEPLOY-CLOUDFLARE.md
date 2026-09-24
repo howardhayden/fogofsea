@@ -26,6 +26,7 @@ Do not treat this document as proof that every account-side step is complete. Th
 ## What the repository now enforces
 
 - `.github/workflows/main.yml` runs on pull requests to `main`, pushes to `main`, and manual dispatch. `release-gate` installs the exact lockfile, runs `npm run release:check`, and preserves the verified `dist/` artifact for 14 days. `browser-gate` installs Chromium and executes the actual Playwright suite.
+- The browser workflows publish check results and logs but do not upload `test-results/`: Playwright traces can embed source and network responses. The verified static `dist/` artifact remains available for build review.
 - The GitHub workflow has read-only repository permission and contains no Pages or Cloudflare deployment credential. Cloudflare's GitHub App owns deployment; GitHub Actions owns evidence.
 - `.node-version` pins the Cloudflare and GitHub build runtime to Node.js `22.23.2`.
 - `wrangler.jsonc` names the Worker `fog-of-sea`, serves `./dist`, enables SPA fallback, and disables the production `workers.dev` alias and Version URL routing.
