@@ -20,15 +20,16 @@ Do not treat this document as proof that every account-side step is complete. Th
 | HOST-008 | The apex is canonical and `www` does not become a duplicate application origin. | `fogofsea.app` serves the Worker; `www.fogofsea.app` returns a permanent path- and query-preserving redirect. | Pending Cloudflare zone activation. |
 | HOST-009 | DNSSEC must fail safely across the nameserver transition. | Any old DS record is removed before delegation changes; Cloudflare DNSSEC is enabled and its new DS values are added at Hover only after the zone is active. | Pending account access. |
 | HOST-010 | Rollback must remain bounded. | A known prior Worker version and the pre-cutover DNS record inventory are retained; rollback steps are tested without deleting repository history. | Repository procedure documented; live evidence pending. |
-| HOST-011 | Preview exposure must be deliberate. | Non-production builds stay disabled until Cloudflare Access protects preview URLs, or public-preview risk is explicitly accepted. | Preview capability explicit; Access/branch setting pending. |
+| HOST-011 | Preview exposure must be deliberate. | Version URL routing stays disabled; disable non-production builds before branch pushes unless Cloudflare Access protects any preview routes or public-preview risk is explicitly accepted. | Owner screenshots showed non-production builds enabled; the later Version URL toggle is verified by anonymous probes, while the current branch-build setting requires account-side readback. |
 | HOST-012 | GitHub Pages must not remain a competing publisher. | The Pages site is unpublished only after the Cloudflare custom domain is verified. | Pages workflow removed; account-side unpublish pending. |
 
 ## What the repository now enforces
 
 - `.github/workflows/main.yml` runs on pull requests to `main`, pushes to `main`, and manual dispatch. `release-gate` installs the exact lockfile, runs `npm run release:check`, and preserves the verified `dist/` artifact for 14 days. `browser-gate` installs Chromium and executes the actual Playwright suite.
+- The browser workflows publish check results and logs but do not upload `test-results/`: Playwright traces can embed source and network responses. The verified static `dist/` artifact remains available for build review.
 - The GitHub workflow has read-only repository permission and contains no Pages or Cloudflare deployment credential. Cloudflare's GitHub App owns deployment; GitHub Actions owns evidence.
 - `.node-version` pins the Cloudflare and GitHub build runtime to Node.js `22.23.2`.
-- `wrangler.jsonc` names the Worker `fog-of-sea`, serves `./dist`, enables SPA fallback, disables the production `workers.dev` alias, and explicitly enables version preview URLs.
+- `wrangler.jsonc` names the Worker `fog-of-sea`, serves `./dist`, enables SPA fallback, and disables the production `workers.dev` alias and Version URL routing.
 - Wrangler is deliberately not included in the application lockfile, SBOM, or shipped artifact. The deployment scripts pin the infrastructure CLI to `wrangler@4.127.1`; this avoids importing Wrangler's deployment-only dependency tree into FOG OF SEA's application license boundary.
 - `public/_headers` is copied by Vite to `dist/_headers`. Cloudflare Workers Static Assets applies the security policy to every static response and gives fingerprinted `/assets/*` files a one-year immutable browser cache. The HTML shell retains Cloudflare's normal revalidation behavior.
 - The three player-facing references in `public/docs/` are copied into `dist/docs/` and remain reachable from the in-game Field Guide; internal design and red-team records remain repository evidence rather than player help.
@@ -86,11 +87,11 @@ The ruleset is active with no bypass actors. If it is ever disabled or loses eit
    | Build variable | `SKIP_DEPENDENCY_INSTALL=1` |
 
 6. Add no runtime variables, secrets, KV namespaces, D1 databases, R2 buckets, service bindings, analytics bindings, or server-side logs. The game requires none.
-7. Initially disable **Builds for non-production branches** under **Settings → Build → Branch control**. Version previews are public when enabled. Enable branch previews only after configuring Cloudflare Access for this Worker's preview URLs, unless public previews are an explicit decision.
+7. Verify **Builds for non-production branches** is disabled under **Settings → Build → Branch control** before pushing a branch. The configured preview command uploads a Worker version; if branch builds are enabled, a branch push can invoke that command. Enable branch builds only after separately verifying the preview route is protected by Cloudflare Access, unless public previews are an explicit decision.
 8. Select **Save and Deploy**. The pinned deploy command creates a static-only Worker version from the verified `dist/`.
-9. Open the generated version preview URL from the deployment record. Confirm the privacy gate appears, direct navigation such as `/academy` returns the SPA rather than a Cloudflare 404, browser saving remains opt-in, and the browser network panel shows no application requests to third-party origins.
+9. After a controlled production deployment, open `fogofsea.app` and confirm the privacy gate appears, direct navigation such as `/academy` returns the SPA rather than a Cloudflare 404, browser saving remains opt-in, and the browser network panel shows no application requests to third-party origins. Verify separately that known Version URLs no longer route.
 
-`workers_dev` is false, so the unversioned production `fog-of-sea.<account>.workers.dev` route remains disabled. `preview_urls` is intentionally true so an exact version can be inspected before the custom domain moves.
+`workers_dev` is false, so the unversioned production `fog-of-sea.<account>.workers.dev` route remains disabled. `preview_urls` is explicitly false so a future Wrangler deployment does not re-enable Version URL routing.
 
 ### 2026-09-21 GitHub App access repair
 
