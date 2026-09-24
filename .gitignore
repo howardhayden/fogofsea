@@ -1,4 +1,7 @@
 
+# Reproducible Node dependency installs
+node_modules/
+
 # macOS Finder metadata
 .DS_Store
 
