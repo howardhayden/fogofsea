@@ -25,7 +25,7 @@ const assetHeaders = headerRules.get("/assets/*") ?? [];
 assert.equal(wrangler.name, "fog-of-sea");
 assert.match(wrangler.compatibility_date, /^\d{4}-\d{2}-\d{2}$/);
 assert.equal(wrangler.workers_dev, false, "The production workers.dev alias must remain disabled");
-assert.equal(wrangler.preview_urls, true, "Version previews must be an explicit choice");
+assert.equal(wrangler.preview_urls, false, "Version URL routing must remain disabled");
 assert.deepEqual(wrangler.assets, {
   directory: "./dist",
   not_found_handling: "single-page-application",
