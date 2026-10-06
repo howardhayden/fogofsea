@@ -295,7 +295,7 @@ test("the Academy corpus report proves complete mappings and bounded generated c
     profileDigest: "d28c72daeda482e6fce5f976894181751391ecd819e84c026ea1d4ce9879a468",
     profileFileSha256: "d5145998c2a43f6c1da5e718226dbce38cb81ee2eb3e58feb1fdb07cbf384c11",
     ownerPackageDigest: "68c04a2870951fc7a1e08c17d949b7f60db3010f0c683b4b0534dd3ea325828b",
-    snapshotId: "lattice-copy-6bae02e4df7e11fcdb9d62d5",
+    snapshotId: "lattice-copy-5d039eb4131e9872c0d9a507",
     implementationAuthorityDigest: "ae65d9cf0dfd6bbb4c712329b534cf1c6268b59a38a6b974abd8d06450c43a10",
     copyDigest: "b0f1f86c0d4c19c48ceeafc7f18e805987c7b311cdcda0519268522954d7149c",
     realizationDigest: "3f0cf9b2cca3f317d279ebac4a4e18799399efe112093a74aa85ef5e774b14cc",

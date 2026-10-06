@@ -65,7 +65,7 @@ export type SecondaryObjective = {
 };
 
 export type ScenarioMatrix = {
-  version: 1;
+  version: 1 | 2;
   seed: number;
   forceScale: ForceScale;
   forceScaleLabel: string;
@@ -95,11 +95,40 @@ export type MatrixComponentResolution = {
   draw: number;
   result: MatrixResult;
 };
-export type ResolutionMatrix = {
+export type LegacyResolutionMatrix = {
+  version?: never;
   turn: number;
   components: MatrixComponentResolution[];
   ultimate: Omit<MatrixComponentResolution, "key"> & { key: "ultimate" };
 };
+
+/** Outcome order is success, partial, failure; every row sums to one. */
+export type StochasticOutcomeRow = readonly [number, number, number];
+export type MatrixComponentAssessment = Omit<MatrixComponentResolution, "draw" | "result"> & {
+  probabilities: StochasticOutcomeRow;
+  /** Normalized share of the complete turn's probability mixture. */
+  influence: number;
+};
+export type MatrixGroupResolution = {
+  key: "execution" | "support";
+  label: string;
+  componentKeys: MatrixComponentKey[];
+  weights: number[];
+  probabilities: StochasticOutcomeRow;
+};
+export type StochasticResolutionMatrix = {
+  version: 2;
+  turn: number;
+  components: MatrixComponentAssessment[];
+  groups: MatrixGroupResolution[];
+  ultimate: Omit<MatrixComponentResolution, "key"> & {
+    key: "ultimate";
+    weights: number[];
+    /** Actual probability mass after quantizing the two cumulative draw boundaries. */
+    probabilities: StochasticOutcomeRow;
+  };
+};
+export type ResolutionMatrix = LegacyResolutionMatrix | StochasticResolutionMatrix;
 
 export type ResolutionMatrixInput = {
   turn: number;
@@ -108,6 +137,8 @@ export type ResolutionMatrixInput = {
   environmentFit: number;
   coordinationFit: number;
   sustainment: number;
+  /** Positive relative importance, assessed from the current orders and scenario. */
+  componentWeights?: Record<MatrixComponentKey, number>;
 };
 
 const DIFFICULTY_LEVEL: Readonly<Record<Difficulty, number>> = { guided: 0, standard: 1, challenge: 2 };
@@ -335,6 +366,8 @@ export function createScenarioMatrix(input: {
   season: Season;
   adversaryCount?: number;
   random?: () => number;
+  /** Preserve the original adjudicator when replaying an existing scenario. */
+  version?: 1 | 2;
 }): ScenarioMatrix {
   const seed = hashText(`${input.exerciseId}|${input.climate}|${input.regionId}|${input.season}|compound-v1`);
   const random = input.random ?? seededRandom(seed);
@@ -354,7 +387,7 @@ export function createScenarioMatrix(input: {
     opportunisticActorDisruption(seed),
   ].filter((item): item is ScenarioDisruption => item !== null);
   return {
-    version: 1,
+    version: input.version ?? 2,
     seed,
     forceScale,
     forceScaleLabel: forceDetail.label,
@@ -413,7 +446,7 @@ function resolveComponent(key: MatrixComponentKey, label: string, base: number, 
   return { key, label, range, committedChance, draw, result };
 }
 
-export function estimateResolutionMatrix(matrix: ActivatedScenarioMatrix, input: ResolutionMatrixInput): ResolutionMatrix {
+function estimateLegacyResolutionMatrix(matrix: ActivatedScenarioMatrix, input: ResolutionMatrixInput): LegacyResolutionMatrix {
   const turn = Math.max(1, Math.min(6, Math.round(input.turn)));
   const draw = matrix.committedTurnDraws[turn - 1];
   const active = activeCapabilityFactors(matrix, turn);
@@ -447,6 +480,126 @@ export function estimateResolutionMatrix(matrix: ActivatedScenarioMatrix, input:
   };
 }
 
+const COMPONENT_KEYS: readonly MatrixComponentKey[] = ["contact", "task", "environment", "coordination", "sustainment"];
+const COMPONENT_LABELS: Readonly<Record<MatrixComponentKey, string>> = {
+  contact: "Contact and classification",
+  task: "Task and objective fit",
+  environment: "Environmental execution",
+  coordination: "Coordination contest",
+  sustainment: "Sustainment and recovery",
+};
+const MIXTURE_GROUPS = [
+  { key: "execution", label: "Execution conditions", componentKeys: ["contact", "task", "environment"] },
+  { key: "support", label: "Coordination and endurance", componentKeys: ["coordination", "sustainment"] },
+] as const;
+
+function outcomeRow(chance: number): StochasticOutcomeRow {
+  const success = chance / 100;
+  const partial = Math.min(12, 100 - chance) / 100;
+  return [success, partial, Math.max(0, 1 - success - partial)];
+}
+
+function normalizedWeights(weights: readonly number[]) {
+  const total = weights.reduce((sum, weight) => sum + weight, 0);
+  return weights.map((weight) => weight / total);
+}
+
+/** Marginalize conditional rows; this never treats shared influences as independent trials. */
+function mixOutcomeRows(rows: readonly StochasticOutcomeRow[], weights: readonly number[]): StochasticOutcomeRow {
+  const success = rows.reduce((sum, row, index) => sum + row[0] * weights[index], 0);
+  const partial = rows.reduce((sum, row, index) => sum + row[1] * weights[index], 0);
+  return [success, partial, Math.max(0, 1 - success - partial)];
+}
+
+function cumulativeDrawBoundary(probability: number) {
+  // Normalization and two matrix products can place a mathematical x.5% tie
+  // infinitesimally below x.5. Remove that floating-point dust before rounding
+  // to the integer draw lattice, preserving equivalent relative weights.
+  return Math.round(Number((probability * 100).toFixed(10)));
+}
+
+function summarizeComponents(components: readonly MatrixComponentAssessment[], draw: number) {
+  const groupMasses = MIXTURE_GROUPS.map((group) => group.componentKeys.reduce(
+    (sum, key) => sum + components.find((component) => component.key === key)!.influence,
+    0,
+  ));
+  const groups: MatrixGroupResolution[] = MIXTURE_GROUPS.map((group) => {
+    const members = group.componentKeys.map((key) => components.find((component) => component.key === key)!);
+    const weights = normalizedWeights(members.map((component) => component.influence));
+    return {
+      key: group.key,
+      label: group.label,
+      componentKeys: [...group.componentKeys],
+      weights,
+      probabilities: mixOutcomeRows(members.map((component) => component.probabilities), weights),
+    };
+  });
+  const weights = normalizedWeights(groupMasses);
+  const cumulative = mixOutcomeRows(groups.map((group) => group.probabilities), weights);
+  // One integer draw has exactly 100 equally sized bins. Round cumulative
+  // boundaries, rather than three separate masses, so no mass is lost or added.
+  const successBoundary = cumulativeDrawBoundary(cumulative[0]);
+  const partialBoundary = cumulativeDrawBoundary(cumulative[0] + cumulative[1]);
+  const probabilities: StochasticOutcomeRow = [
+    successBoundary / 100,
+    (partialBoundary - successBoundary) / 100,
+    (100 - partialBoundary) / 100,
+  ];
+  const result: MatrixResult = draw <= successBoundary ? "success" : draw <= partialBoundary ? "partial" : "failure";
+  return {
+    groups,
+    ultimate: {
+      key: "ultimate" as const,
+      label: "Outer turn matrix",
+      range: [clamp(successBoundary - 9), clamp(successBoundary + 9)] as const,
+      committedChance: successBoundary,
+      weights,
+      probabilities,
+      draw,
+      result,
+    },
+  };
+}
+
+/**
+ * Current games marginalize two levels of row-stochastic conditional mixtures:
+ * component distributions -> execution/support distributions -> turn outcome.
+ * Scores and influence weights contain the assessed choices and current state;
+ * only the outer distribution consumes the scenario's committed turn draw.
+ * This is an explicit game mixture model, not an empirical independence claim.
+ */
+export function estimateResolutionMatrix(matrix: ActivatedScenarioMatrix, input: ResolutionMatrixInput): ResolutionMatrix {
+  if (matrix.version === 1) return estimateLegacyResolutionMatrix(matrix, input);
+  if (!isResolutionMatrixInput(input)) throw new RangeError("Invalid stochastic matrix inputs.");
+  const forceScalePressure = { tiny: -6, small: -3, medium: 0, large: 4, massive: 8 }[matrix.forceScale];
+  const bases: Record<MatrixComponentKey, number> = {
+    contact: input.contactQuality,
+    task: input.taskFit - forceScalePressure,
+    environment: input.environmentFit,
+    coordination: input.coordinationFit - forceScalePressure,
+    sustainment: input.sustainment,
+  };
+  const weights = normalizedWeights(COMPONENT_KEYS.map((key) => input.componentWeights?.[key] ?? 1));
+  const components = COMPONENT_KEYS.map((key, index): MatrixComponentAssessment => {
+    const range = componentRange(bases[key], matrix.adverseBias);
+    const committedChance = clamp((range[0] + range[1]) / 2);
+    return {
+      key,
+      label: COMPONENT_LABELS[key],
+      range,
+      committedChance,
+      probabilities: outcomeRow(committedChance),
+      influence: weights[index],
+    };
+  });
+  return {
+    version: 2,
+    turn: input.turn,
+    components,
+    ...summarizeComponents(components, matrix.committedTurnDraws[input.turn - 1]),
+  };
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
@@ -458,13 +611,19 @@ export function isResolutionMatrixInput(value: unknown): value is ResolutionMatr
       .every((key) => typeof value[key] === "number"
         && Number.isFinite(value[key])
         && (value[key] as number) >= 0
-        && (value[key] as number) <= 100);
+        && (value[key] as number) <= 100)
+    && (value.componentWeights === undefined || (isRecord(value.componentWeights)
+      && Object.keys(value.componentWeights).length === COMPONENT_KEYS.length
+      && COMPONENT_KEYS.every((key) => typeof (value.componentWeights as Record<string, unknown>)[key] === "number"
+        && Number.isFinite((value.componentWeights as Record<string, number>)[key])
+        && (value.componentWeights as Record<string, number>)[key] >= Number.EPSILON
+        && (value.componentWeights as Record<string, number>)[key] <= 100)));
 }
 
 export function isScenarioMatrix(value: unknown): value is ScenarioMatrix {
   if (!isRecord(value)) return false;
   const range = value.estimatedOpposingElements;
-  return value.version === 1
+  return (value.version === 1 || value.version === 2)
     && Number.isInteger(value.seed) && (value.seed as number) >= 0
     && FORCE_SCALES.includes(value.forceScale as ForceScale)
     && value.forceScaleLabel === FORCE_SCALE_DETAILS[value.forceScale as ForceScale].label
@@ -541,13 +700,46 @@ function isMatrixResolutionComponent(value: unknown, ultimate = false) {
     && value.result === expectedResult(value.draw as number, value.committedChance as number);
 }
 
-export function isResolutionMatrix(value: unknown): value is ResolutionMatrix {
+function isLegacyResolutionMatrix(value: unknown): value is LegacyResolutionMatrix {
   if (!isRecord(value)) return false;
   return Number.isInteger(value.turn) && (value.turn as number) >= 1 && (value.turn as number) <= 6
     && Array.isArray(value.components) && value.components.length === 5
     && value.components.every((component) => isMatrixResolutionComponent(component))
     && new Set(value.components.map((component) => isRecord(component) ? component.key : undefined)).size === 5
     && isMatrixResolutionComponent(value.ultimate, true);
+}
+
+function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]) {
+  return Object.keys(value).length === keys.length && keys.every((key) => Object.hasOwn(value, key));
+}
+
+function isStochasticComponent(value: unknown, index: number): value is MatrixComponentAssessment {
+  if (!isRecord(value) || !hasExactKeys(value, ["key", "label", "range", "committedChance", "probabilities", "influence"])) return false;
+  const key = COMPONENT_KEYS[index];
+  return value.key === key
+    && value.label === COMPONENT_LABELS[key]
+    && Array.isArray(value.range) && value.range.length === 2
+    && value.range.every((item) => typeof item === "number" && Number.isFinite(item) && item >= 1 && item <= 99)
+    && value.range[0] <= value.range[1]
+    && typeof value.committedChance === "number"
+    && value.committedChance === clamp((value.range[0] + value.range[1]) / 2)
+    && jsonSemanticEqual(value.probabilities, outcomeRow(value.committedChance))
+    && typeof value.influence === "number" && Number.isFinite(value.influence)
+    && value.influence > 0 && value.influence <= 1;
+}
+
+export function isResolutionMatrix(value: unknown): value is ResolutionMatrix {
+  if (!isRecord(value)) return false;
+  if (value.version === undefined) return isLegacyResolutionMatrix(value);
+  if (value.version !== 2 || !hasExactKeys(value, ["version", "turn", "components", "groups", "ultimate"])) return false;
+  if (!Number.isInteger(value.turn) || (value.turn as number) < 1 || (value.turn as number) > 6
+    || !Array.isArray(value.components) || value.components.length !== COMPONENT_KEYS.length
+    || !value.components.every(isStochasticComponent)
+    || Math.abs(value.components.reduce((sum, component) => sum + component.influence, 0) - 1) > 1e-12
+    || !isRecord(value.ultimate) || !Number.isInteger(value.ultimate.draw)
+    || (value.ultimate.draw as number) < 1 || (value.ultimate.draw as number) > 100) return false;
+  const summary = summarizeComponents(value.components, value.ultimate.draw as number);
+  return jsonSemanticEqual(value.groups, summary.groups) && jsonSemanticEqual(value.ultimate, summary.ultimate);
 }
 
 function expectedResult(draw: number, chance: number): MatrixResult {
@@ -566,7 +758,9 @@ export function isCanonicalResolutionMatrix(
   input?: ResolutionMatrixInput,
 ): value is ResolutionMatrix {
   if (!isResolutionMatrix(value)) return false;
+  if ((matrix.version === 2) !== (value.version === 2)) return false;
   if (input) return jsonSemanticEqual(value, estimateResolutionMatrix(matrix, input));
+  if (value.version === 2) return value.ultimate.draw === matrix.committedTurnDraws[value.turn - 1];
 
   const canonicalLabels: Readonly<Record<MatrixComponentKey | "ultimate", string>> = {
     contact: "Contact and classification",

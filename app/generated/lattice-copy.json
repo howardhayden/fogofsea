@@ -1,6 +1,6 @@
 {
   "schemaVersion": "fog-of-sea.lattice-copy.generated.v2",
-  "snapshotId": "lattice-copy-6bae02e4df7e11fcdb9d62d5",
+  "snapshotId": "lattice-copy-5d039eb4131e9872c0d9a507",
   "staticOnly": true,
   "lattice": {
     "engineName": "Lattice — Layered Register Engine",
@@ -75,11 +75,11 @@
   },
   "source": {
     "requestPath": "authoring/lattice-copy.requests.json",
-    "requestSha256": "f8a43988dc83c7b6c712627f642da859890b547621c3ef54e1d6a31664bed7b5",
+    "requestSha256": "a65af2fd8e87bda313d50344d7f38d2ff900f35744c123ef15f51c31dba60754",
     "academySourcePath": "app/academyData.ts",
-    "academySourceSha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41",
-    "academyCorpusSha256": "340e3f88ac6a8b8e6d5731d6d5ca007333f266526b43203e50b0d780c8dd755b",
-    "academyLintSha256": "314cec316f2f2914ab4fee4762bfa100eee7108db3ab2d1463225546adaf07c3",
+    "academySourceSha256": "e83d5bdacaa201fe5d544de91943a7dd114a7f45d0808599aa2455d2de9c6ccb",
+    "academyCorpusSha256": "8845610a9f25228f8fa695c850dbf03d68829755bc9a37050a04157a73c4050b",
+    "academyLintSha256": "cc9a6c12398434d43d90af72da7f16f648bf35b419b2b23cdf1d229068de2338",
     "provenance": {
       "fogBaselineCommit": "70907a77cba735c151e52929dd5a56d795c3d04f",
       "latticeCommit": "029ca14570b3ebe5703f504ab4b4baed90883f84",
@@ -140,7 +140,7 @@
     "prohibitedPhraseCount": 83,
     "exactTextCount": 24
   },
-  "traceabilitySha256": "f46f7aba0d8486e0236a4d70201f210b2e3b8cf9fe84f6e091cf4a1eaeac7365",
+  "traceabilitySha256": "230da4314d87174482ed051a44cc1cb432dcdb4ba3221d6db7fc64242051428b",
   "traceability": {
     "authorityFiles": [
       {
@@ -159,7 +159,7 @@
         "symbol": "THINKER_COMPARISON",
         "kind": "variable",
         "exported": true,
-        "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+        "sha256": "e83d5bdacaa201fe5d544de91943a7dd114a7f45d0808599aa2455d2de9c6ccb"
       },
       {
         "id": "src.academy.modules",
@@ -167,7 +167,7 @@
         "symbol": "ACADEMY_MODULE_DEFINITIONS",
         "kind": "variable",
         "exported": false,
-        "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+        "sha256": "e83d5bdacaa201fe5d544de91943a7dd114a7f45d0808599aa2455d2de9c6ccb"
       },
       {
         "id": "src.academy.sources",
@@ -175,7 +175,7 @@
         "symbol": "SOURCE_GROUPS",
         "kind": "variable",
         "exported": true,
-        "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+        "sha256": "e83d5bdacaa201fe5d544de91943a7dd114a7f45d0808599aa2455d2de9c6ccb"
       },
       {
         "id": "src.catalog.aircraft",
@@ -199,7 +199,7 @@
         "symbol": "finalOutcome",
         "kind": "function",
         "exported": false,
-        "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+        "sha256": "01d90ce8efe42e43157afe5cbb97db0411ba0aff48afc5013b486640220a91a2"
       },
       {
         "id": "src.game.outcome-learning",
@@ -207,7 +207,7 @@
         "symbol": "outcomeLearningAssessment",
         "kind": "function",
         "exported": true,
-        "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+        "sha256": "01d90ce8efe42e43157afe5cbb97db0411ba0aff48afc5013b486640220a91a2"
       },
       {
         "id": "src.game.turn-learning",
@@ -215,7 +215,7 @@
         "symbol": "turnLearningNote",
         "kind": "function",
         "exported": true,
-        "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+        "sha256": "01d90ce8efe42e43157afe5cbb97db0411ba0aff48afc5013b486640220a91a2"
       },
       {
         "id": "src.model.armaments",
@@ -223,7 +223,7 @@
         "symbol": "ARMAMENTS",
         "kind": "variable",
         "exported": true,
-        "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+        "sha256": "19f5406402d7d809fc850ef7f4da16e1e6a1035832bd496ec41f047d9b680999"
       },
       {
         "id": "src.model.mission-credit",
@@ -231,7 +231,7 @@
         "symbol": "calculateMissionCreditedForcePoints",
         "kind": "function",
         "exported": true,
-        "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+        "sha256": "19f5406402d7d809fc850ef7f4da16e1e6a1035832bd496ec41f047d9b680999"
       },
       {
         "id": "src.model.scenario-coexistence",
@@ -239,7 +239,7 @@
         "symbol": "validateScenarioCoexistence",
         "kind": "function",
         "exported": true,
-        "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+        "sha256": "19f5406402d7d809fc850ef7f4da16e1e6a1035832bd496ec41f047d9b680999"
       },
       {
         "id": "src.planning.readiness-gaps",

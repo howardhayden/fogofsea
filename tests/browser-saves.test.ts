@@ -25,7 +25,7 @@ class MemoryStorage implements Storage {
 function sampleSave(): PortableSave {
   return {
     format: "fog-of-sea-save",
-    version: 4,
+    version: 5,
     savedAt: "2026-08-10T12:00:00.000Z",
     game: {
       scenario: generateScenario(0, () => 0.31),

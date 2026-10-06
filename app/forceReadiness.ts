@@ -199,6 +199,56 @@ export function deriveForceReadiness(input: ForceReadinessInput) {
       return quantity ? [{ id: item.id, label: item.name, domain: "mission-pack" as const, quantity, capabilities: [item.role, item.reach] }] : [];
     }),
   ];
+  const capabilityProfile: NonNullable<RigidReadiness["capabilityProfile"]> = {};
+  const domainCredit = (domain: keyof typeof capabilityProfile) => capabilityProfile[domain] ??= {
+    trackCapacity: 0, trackingMethods: [], escortValue: 0, airDefenseValue: 0, underseaValue: 0, unitCount: 0, lowSignatureCount: 0,
+  };
+  for (const platform of creditedPlatforms) {
+    const credit = domainCredit(platform.id.includes("submarine") ? "subsurface" : "surface");
+    credit.unitCount += 1;
+    credit.lowSignatureCount += platform.visualSignature === "low" ? 1 : 0;
+    credit.escortValue += platform.screenUnit ? 1 : 0;
+    credit.airDefenseValue += platform.airDefenseValue;
+    credit.underseaValue += platform.aswValue;
+  }
+  for (const aircraft of creditedAircraft) {
+    const credit = domainCredit("air");
+    const quantity = pointCredit.creditedAircraft[aircraft.id] || 0;
+    credit.unitCount += quantity;
+    credit.lowSignatureCount += aircraft.visualSignature === "low" ? quantity : 0;
+    credit.trackCapacity += aircraft.trackCapacity * quantity;
+    credit.trackingMethods.push(...aircraft.trackingMethods);
+    if (aircraft.id === "maritime-mission-helicopter" || aircraft.id === "maritime-patrol-aircraft") credit.underseaValue += Math.floor(quantity / 2);
+    if (aircraft.id === "uncrewed-surveillance-rotorcraft") credit.underseaValue += Math.floor(quantity / 4);
+  }
+  for (const armament of creditedArmaments) {
+    const credit = domainCredit("mission-pack");
+    credit.trackCapacity += armament.trackCapacity * (pointCredit.missionCreditedArmaments[armament.id] || 0);
+    credit.trackingMethods.push(...armament.trackingMethods);
+  }
+  for (const credit of Object.values(capabilityProfile)) credit.trackingMethods = [...new Set(credit.trackingMethods)].sort();
+  const hostedMissionPacks: NonNullable<RigidReadiness["hostedMissionPacks"]> = [];
+  for (const armament of creditedArmaments) {
+    let remaining = pointCredit.missionCreditedArmaments[armament.id] || 0;
+    for (const [hostId, assigned] of Object.entries(armamentFit.assignmentsByArmament[armament.id] || {})) {
+      if (!(pointCredit.creditedAircraft[hostId] || pointCredit.creditedPlatforms[hostId])) continue;
+      const quantity = Math.min(remaining, assigned);
+      if (quantity <= 0) continue;
+      remaining -= quantity;
+      const aircraft = AIRCRAFT.find((candidate) => candidate.id === hostId);
+      const hostDomain = aircraft ? "air" : hostId.includes("submarine") ? "subsurface" : "surface";
+      let credit = hostedMissionPacks.find((candidate) => candidate.hostDomain === hostDomain);
+      if (!credit) {
+        credit = { hostDomain, quantity: 0, trackCapacity: 0, trackingMethods: [], maxReachNm: 0 };
+        hostedMissionPacks.push(credit);
+      }
+      credit.quantity += quantity;
+      credit.trackCapacity += armament.trackCapacity * quantity;
+      credit.trackingMethods.push(...armament.trackingMethods);
+      credit.maxReachNm = Math.max(credit.maxReachNm, largestInventedDistance(armament.reach) + (aircraft ? largestInventedDistance(aircraft.missionReach) : 0));
+    }
+  }
+  for (const credit of hostedMissionPacks) credit.trackingMethods = [...new Set(credit.trackingMethods)].sort();
   const rigidReadiness: RigidReadiness = {
     planningScore: planning.assessment.score,
     missionReady: planning.fullyReady,
@@ -228,6 +278,10 @@ export function deriveForceReadiness(input: ForceReadinessInput) {
       ...forceAdaptation.gaps.filter((gap) => !forceAdaptation.criticalGaps.includes(gap)),
     ],
     forceManifest,
+    capabilityProfile,
+    missionAircraftCount: missionAircraftCredited,
+    hostedMissionPacks,
+    reachByDomain: { air: aircraftReach },
   };
 
   return { metrics, forceAdaptation, ...planning, rigidReadiness };

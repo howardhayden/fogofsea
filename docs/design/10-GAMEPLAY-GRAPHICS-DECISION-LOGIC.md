@@ -125,11 +125,17 @@ Each turn estimates five inspectable components:
 | Coordination | posture, coordination, uncrewed/undersea methods, actor pressure |
 | Sustainment | supply, tempo, readiness, risk treatment, disruptions |
 
-Each component has a range, committed chance, precommitted draw, and success/partial/failure result. The ultimate matrix combines them into another disclosed range and committed result.
+New campaigns use adjudication version 2. Each component produces a conditional probability row for success, partial success, and failure. Every row is nonnegative and sums to one. The ten command selections, strategic policy, mission-credited capabilities, current state, and signed scenario effects shape the component scores and their relative weights. Favorable and adverse events contribute through their modeled effects, rather than an automatic penalty for the number of events.
+
+The contact, task, and environment rows form an execution matrix; coordination and sustainment form a support matrix. Normalized weights combine the rows within each group. The outer matrix then combines those two group distributions, weighted by their accumulated component weights. This is a nested conditional mixture: it does not multiply shared dependencies as if they were independent evidence, and its probabilities are game-model assumptions, not calibrated real-world forecasts.
+
+Only the outer matrix resolves luck. Its cumulative success and partial-success boundaries are rounded onto the 100 possible committed draw values, preserving a complete, non-overlapping partition. One precommitted draw selects the turn's shared outcome. Inner components and groups never draw or resolve their own outcomes. The recorded resolution retains the component rows, weights, group distributions, final distribution, and final draw for canonical replay; ordinary player-facing copy retains the existing fog-of-war boundary.
+
+That shared result governs uncertain effects; deterministic orders and operating costs still apply, and capability, contact, and reach requirements still gate progress. The resulting state carries the consequences into the next turn's conditional inputs. Mission completion summarizes the realized state and explicit thresholds without another random draw.
 
 ### 3.3 Determinism and undo
 
-The draw is fixed before turn resolution. Identical scenario, state, readiness, and orders therefore produce identical output. Undo restores one exact state and cannot change the commitment.
+The draw is fixed before turn resolution. Identical scenario, state, readiness, and orders therefore produce identical output. Undo restores one exact state and cannot change the commitment. Saves pin the scenario's adjudication version: existing version-1 campaigns retain their original component draws and resolver, including on subsequent turns. Canonical scenario recreation uses the stored version, so an engine update cannot silently change a campaign's recorded history or future rules.
 
 ## 4. Fog of war and disclosure
 

@@ -116,7 +116,10 @@ export default function SaveManager({
         <div className="history-preview">
           <div className="section-title"><span>RECENT DECISIONS</span><i>{history.length}</i></div>
           {history.length ? history.slice(-4).reverse().map((entry) => (
-            <article key={entry.id}><div><strong>{entry.operation}</strong><small>{new Date(entry.at).toLocaleString()}</small></div><span>{entry.outcome}</span><b>{entry.score}</b></article>
+            <article key={entry.id}><div><strong>{entry.operation}</strong><small>{new Date(entry.at).toLocaleString()}</small></div><span
+              aria-label={entry.legacyResultArchive ? `Archived pre-umpire reported result: ${entry.outcome}. Original score ${entry.legacyResultArchive.originalScore}; normalized score ${entry.score}. No replayable command turns were recorded.` : undefined}
+              title={entry.legacyResultArchive ? `Reported original score ${entry.legacyResultArchive.originalScore}; no replayable command turns were recorded.` : undefined}
+            >{entry.legacyResultArchive ? "ARCHIVED · " : ""}{entry.outcome}</span><b>{entry.score}</b></article>
           )) : <p>No completed decisions yet. Execute a plan to create the first record.</p>}
         </div>
         <div className="reset-zone">

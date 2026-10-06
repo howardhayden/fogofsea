@@ -161,6 +161,26 @@ export type RigidReadiness = {
   adaptationGaps?: string[];
   /** Credited selections used only to name transparent disruption impacts. */
   forceManifest?: RigidForceManifestEntry[];
+  /** Version-two adjudication uses domain credits without rewriting legacy saves. */
+  capabilityProfile?: Partial<Record<Exclude<CapabilityDomain, "communications">, {
+    trackCapacity: number;
+    trackingMethods: string[];
+    escortValue: number;
+    airDefenseValue: number;
+    underseaValue: number;
+    unitCount: number;
+    lowSignatureCount: number;
+  }>>;
+  missionAircraftCount?: number;
+  /** At most one aggregate per host domain; pack and host outages both apply. */
+  hostedMissionPacks?: Array<{
+    hostDomain: "surface" | "air" | "subsurface";
+    quantity: number;
+    trackCapacity: number;
+    trackingMethods: string[];
+    maxReachNm: number;
+  }>;
+  reachByDomain?: Partial<Record<"surface" | "air" | "subsurface", number>>;
 };
 
 export type RigidForceManifestEntry = {
@@ -680,12 +700,76 @@ function readinessWithCapabilityFactors(readiness: RigidReadiness, matrix: Activ
     compatibleArmamentCount: readiness.compatibleArmamentCount * selected["mission-pack"],
     trackCapacity: readiness.trackCapacity * selected.communications * Math.max(selected.air, selected.surface, selected.subsurface),
   };
+  if (matrix.version === 2) {
+    const splitUncrewed = readiness.uncrewedAirCount !== undefined || readiness.uncrewedSurfaceCount !== undefined || readiness.uncrewedUnderseaCount !== undefined;
+    adjusted.uncrewedCount = splitUncrewed
+      ? adjusted.uncrewedAirCount! + adjusted.uncrewedSurfaceCount! + adjusted.uncrewedUnderseaCount!
+      : readiness.uncrewedCount * selected.air;
+    adjusted.supportedAircraftCount = (readiness.missionAircraftCount ?? readiness.supportedAircraftCount) * selected.air;
+    if (readiness.capabilityProfile) {
+      adjusted.trackCapacity = 0;
+      adjusted.escortValue = 0;
+      adjusted.airDefenseValue = 0;
+      adjusted.underseaValue = 0;
+      adjusted.selectedUnitCount = 0;
+      adjusted.lowSignatureCount = 0;
+      const methods = new Set<string>();
+      for (const domain of ["surface", "air", "subsurface", "mission-pack"] as const) {
+        const credit = readiness.capabilityProfile[domain];
+        if (!credit) continue;
+        const factor = selected[domain];
+        if (domain !== "mission-pack" || !readiness.hostedMissionPacks) {
+          adjusted.trackCapacity += credit.trackCapacity * factor * selected.communications;
+          if (factor * selected.communications > 0) credit.trackingMethods.forEach((method) => methods.add(method));
+        }
+        adjusted.escortValue += credit.escortValue * factor;
+        adjusted.airDefenseValue += credit.airDefenseValue * factor;
+        adjusted.underseaValue += credit.underseaValue * factor;
+        adjusted.selectedUnitCount += credit.unitCount * factor;
+        adjusted.lowSignatureCount += credit.lowSignatureCount * factor;
+      }
+      if (readiness.hostedMissionPacks) {
+        adjusted.compatibleArmamentCount = 0;
+        for (const pack of readiness.hostedMissionPacks) {
+          const factor = selected[pack.hostDomain] * selected["mission-pack"];
+          adjusted.compatibleArmamentCount += pack.quantity * factor;
+          adjusted.trackCapacity += pack.trackCapacity * factor * selected.communications;
+          if (factor * selected.communications > 0) pack.trackingMethods.forEach((method) => methods.add(method));
+        }
+      }
+      if (readiness.reachByDomain) {
+        adjusted.maxReachNm = 0;
+        for (const domain of ["surface", "air", "subsurface"] as const) {
+          if (selected[domain] > 0) adjusted.maxReachNm = Math.max(adjusted.maxReachNm, readiness.reachByDomain[domain] ?? 0);
+        }
+        for (const pack of readiness.hostedMissionPacks ?? []) {
+          if (selected[pack.hostDomain] * selected["mission-pack"] > 0) adjusted.maxReachNm = Math.max(adjusted.maxReachNm, pack.maxReachNm);
+        }
+      }
+      adjusted.trackingMethods = [...methods].sort();
+    } else {
+      // Earlier integrations lack domain credits. Their tracking was primarily
+      // airborne; never let an unaffected empty surface domain mask an outage.
+      adjusted.trackCapacity = readiness.trackCapacity * selected.communications * selected.air;
+    }
+  }
   const opposingMultiplier = Object.values(factors.opposing).reduce((sum, value) => sum + value, 0) / 5;
   return { readiness: adjusted, opposingMultiplier, activeDisruptions: factors.active };
 }
 
 function matrixResultMultiplier(result: MatrixResult) {
   return result === "success" ? 1.08 : result === "partial" ? 0.97 : 0.85;
+}
+
+function cumulativeRiskEffects(input: Parameters<typeof assessRiskEffects>[0]) {
+  const effects = assessRiskEffects(input);
+  if (input.treatment === "recover") {
+    // Smooth the legacy threshold bonuses: having one more point of supply or
+    // integrity must not suddenly make the next turn's prospects worse.
+    effects.integrity += 2 + 5 * clamp((75 - input.currentIntegrity) / 50, 0, 1) - (input.currentIntegrity < 75 ? 7 : 2);
+    effects.supply += 1 + 3 * clamp((65 - input.currentSupply) / 50, 0, 1) - (input.currentSupply < 65 ? 4 : 1);
+  }
+  return effects;
 }
 
 function opposingScalePressureMultiplier(matrix: ActivatedScenarioMatrix | undefined) {
@@ -1173,6 +1257,7 @@ function rigidTurnMatrixInput(
 ): ResolutionMatrixInput | null {
   const matrix = current.matrix ?? (scenario.matrix ? activateMatrixForDifficulty(scenario.matrix, scenarioDifficulty(scenario)) : undefined);
   if (!matrix || current.phase !== "active") return null;
+  if (matrix.version === 2) return cumulativeTurnMatrixInput(current, orders, readiness, scenario, matrix);
   const turn = current.turn + 1;
   const capability = readinessWithCapabilityFactors(readiness, matrix, turn);
   const taskFit = scenario.required.includes(orders.task) ? 84 : scenario.recommended.includes(orders.task) ? 66 : 32;
@@ -1193,6 +1278,102 @@ function rigidTurnMatrixInput(
     environmentFit: environmentalFit,
     coordinationFit,
     sustainment: clamp((current.supply + current.integrity + current.readiness) / 3),
+  };
+}
+
+/**
+ * Version two assesses the intended turn before drawing. These are bounded
+ * chances and relative importance, not additional random outcomes. Persistent
+ * state carries the consequences of earlier turns into this turn's matrix.
+ */
+function cumulativeTurnMatrixInput(
+  current: RigidGameState,
+  orders: RigidOrders,
+  readiness: RigidReadiness,
+  scenario: RigidScenario,
+  matrix: ActivatedScenarioMatrix,
+): ResolutionMatrixInput {
+  const turn = current.turn + 1;
+  const capability = readinessWithCapabilityFactors(readiness, matrix, turn);
+  const ready = capability.readiness;
+  const operational = deriveOperationalStrategy(scenario);
+  const riskTreatment = orders.riskTreatment ?? "prepare";
+  const coordination = orders.coordination ?? "federated";
+  const strategicPolicy = orders.strategicPolicy ?? "conventional-restraint";
+  const uncrewed = orders.uncrewed ?? "distributed-scouting";
+  const undersea = orders.undersea ?? "independent-patrol";
+  const risk = cumulativeRiskEffects({
+    treatment: riskTreatment, coordination, strategicPolicy, turn,
+    adversaryCount: scenario.adversaryCount ?? 1,
+    selectedLens: scenario.selectedLens, guardrail: scenario.guardrail,
+    currentIntegrity: current.integrity, currentSupply: current.supply,
+  });
+  const doctrine = uncrewedDoctrineFit(uncrewed, operational.recommendedUncrewed, ready.uncrewedCount)
+    + underseaDoctrineFit(undersea, operational.recommendedUndersea, (ready.submarineCount ?? 0) + (ready.uncrewedUnderseaCount ?? 0));
+  const tempoRange = { hold: 0, "measured-advance": -28, "high-speed-dash": -44, withdraw: 30 }[orders.tempo];
+  const formationRange = orders.formation === "protected-column" && tempoRange < 0 ? 7 : orders.formation === "distributed-barrier" && tempoRange < 0 ? -4 : 0;
+  const intendedRange = clamp(current.rangeNm + tempoRange + formationRange, 18, 280);
+  const contactQuality = clamp(current.contactQuality + sensorGain(orders, ready, scenario)
+    + (orders.engagement === "shadow" ? 5 : orders.engagement === "avoid" ? -2 : 0)
+    + risk.contact - (orders.tempo === "high-speed-dash" ? 7 : 0),
+  0, Math.max(current.contactQuality, contactCapabilityCeiling(ready)));
+  const required = scenario.required.includes(orders.task);
+  const relevant = required || scenario.recommended.includes(orders.task);
+  const coverage = ready.requiredCount > 0 ? clamp(100 * ready.requiredCoverage / ready.requiredCount) : 0;
+  const reaching = !requiresEffectReach(orders) || ready.maxReachNm >= intendedRange || intendedRange <= 45;
+  const methodFit = operational.friendlyMethod === "fleet-action"
+    ? orders.formation === "concentrated-screen" && orders.engagement !== "avoid"
+    : orders.formation === "distributed-barrier" || orders.engagement === "shadow";
+  const postureFit = operational.friendlyPosture === "offensive"
+    ? orders.tempo === "measured-advance" || orders.tempo === "high-speed-dash"
+    : orders.engagement === "contain" || orders.tempo === "hold";
+  // Apply directional event pressure once in the assessment. Enemy capacity
+  // losses help the selected force; an extra event is not inherently adverse.
+  const eventPressure = capability.opposingMultiplier * capability.activeDisruptions
+    .reduce((product, event) => product * event.opposingPressureMultiplier, 1);
+  const pressureAdjustment = clamp((1 - eventPressure) * 25, -30, 20);
+  const escalationStrain = Math.max(0, current.escalation + risk.escalation - escalationLimit(scenario));
+  const defensiveFit = clamp(defensivePower(ready, scenario, orders, contactQuality), 0, 100);
+  const secondary = matrix.activeSecondaryObjective;
+  const secondaryActive = secondary && turn >= secondary.revealTurn;
+  const secondaryGap = secondaryActive ? Math.max(0, secondaryObjectiveThreshold(scenarioDifficulty(scenario)) - (current.secondaryObjectiveProgress ?? 0)) : 0;
+  const secondaryFit = secondaryActive ? secondaryObjectiveOrderFit(secondary, orders).multiplier : 1;
+  const supplyCost = ({ hold: 3, "measured-advance": 8, "high-speed-dash": 15, withdraw: 6 }[orders.tempo]
+    + (orders.sensors === "active-sweep" ? 3 : orders.sensors === "cooperative-fusion" ? 2 : 0)
+    + (orders.engagement === "bounded-effects" ? 4 : 0)
+    + (undersea === "coordinated-wolfpack" ? 2 : 0)
+    + (uncrewed === "attritable-massing" ? 2 : 0)) * difficultyRules(scenario).supplyUseMultiplier;
+  const friction = environmentalFriction(scenario);
+  const taskFit = clamp((required ? 78 : relevant ? 62 : 24)
+    + (ready.planningScore - 70) * 0.12 + (coverage - 70) * 0.1
+    + doctrine * 0.45 + (methodFit ? 3 : -2) + (postureFit ? 2 : -2)
+    + (defensiveFit - 50) * 0.1 + risk.objective * 0.6 + risk.cohesion * 0.15
+    + current.objectiveProgress * 0.04 + (100 - current.opposingCohesion) * 0.08 + pressureAdjustment
+    - (reaching ? 0 : 28) - (ready.missionReady ? 0 : 18)
+    - (ready.selectedUnitCount > 0 ? 0 : 30) - escalationStrain * 0.3
+    - (secondaryActive ? (2 - secondaryFit) * secondaryGap * 0.15 : 0));
+  const environmentFit = clamp(90 - friction * 4 + (forceAdaptationScore(ready) - 70) * 0.2
+    - (orders.tempo === "high-speed-dash" ? 8 : orders.tempo === "hold" ? -3 : 0)
+    - (scenario.storming ? 5 : 0));
+  const communications = activeCapabilityFactors(matrix, turn).selected.communications;
+  const coordinationFit = clamp((52
+    + (coordination === "centralized" ? 18 : coordination === "federated" ? 14 : coordination === "mutual-support" ? 12 : 3)
+    + Math.min(8, ready.uncrewedCount / 2) + (current.readiness - 70) * 0.12
+    + (ready.planningScore - 70) * 0.08 + risk.contact * 0.5 - risk.pressure * 1.5
+    + (orders.formation === "concentrated-screen" ? 3 : coordination === "independent" ? -4 : 0)) * communications
+    + pressureAdjustment - escalationStrain * 0.2);
+  const sustainment = clamp((clamp(current.supply - supplyCost + risk.supply)
+    + clamp(current.integrity + risk.integrity)
+    + clamp(current.readiness + risk.readiness - (orders.tempo === "high-speed-dash" ? 4 : 1))) / 3);
+  return {
+    turn, contactQuality, taskFit, environmentFit, coordinationFit, sustainment,
+    componentWeights: {
+      contact: 2 + (orders.engagement === "bounded-effects" ? 2 : 0) + (orders.task === "reconnaissance" || orders.task === "electromagnetic-operations" ? 2 : 0),
+      task: 3 + (requiresEffectReach(orders) ? 1.5 : 0) + (secondaryActive ? secondary.weight / 20 : 0),
+      environment: 1 + friction / 6 + (orders.tempo === "high-speed-dash" ? 1 : 0),
+      coordination: 1 + Math.max(0, (scenario.adversaryCount ?? 1) - 1) * 0.5 + (orders.formation === "distributed-barrier" ? 1 : 0) + (orders.sensors === "cooperative-fusion" ? 1 : 0),
+      sustainment: 1 + supplyCost / 8 + (riskTreatment === "recover" ? 2 : 0) + (scenario.guardrail === "sustainability" ? 1 : 0),
+    },
   };
 }
 
@@ -1239,7 +1420,16 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const turnReadiness = capabilityState.readiness;
   const matrixInput = rigidTurnMatrixInput(current, orders, readiness, scenario);
   const matrixResolution = current.matrix && matrixInput ? estimateResolutionMatrix(current.matrix, matrixInput) : null;
-  const matrixMultiplier = matrixResolution ? matrixResultMultiplier(matrixResolution.ultimate.result) : 1;
+  const cumulativeMatrix = current.matrix?.version === 2;
+  const result = matrixResolution?.ultimate.result;
+  const matrixMultiplier = cumulativeMatrix
+    ? result === "success" ? 1.5 : result === "partial" ? 0.8 : 0
+    : matrixResolution ? matrixResultMultiplier(matrixResolution.ultimate.result) : 1;
+  // Movement, expenditure, and escalation are commanded costs. Uncertain gains
+  // share this one turn outcome; no lower component is sampled separately.
+  const recovery = (value: number) => cumulativeMatrix && value > 0
+    ? value * (turnReadiness.selectedUnitCount <= 0 ? 0 : result === "success" ? 1 : result === "partial" ? 0.6 : 0)
+    : value;
   const underseaElements = (turnReadiness.submarineCount ?? 0) + (turnReadiness.uncrewedUnderseaCount ?? 0);
   const uncrewedOrder = orders.uncrewed ?? "distributed-scouting";
   const underseaOrder = orders.undersea ?? "independent-patrol";
@@ -1250,7 +1440,7 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const riskTreatment = orders.riskTreatment ?? "prepare";
   const coordination = orders.coordination ?? "federated";
   const strategicPolicy = orders.strategicPolicy ?? "conventional-restraint";
-  const riskEffects = assessRiskEffects({
+  const riskEffects = (cumulativeMatrix ? cumulativeRiskEffects : assessRiskEffects)({
     treatment: riskTreatment,
     coordination,
     strategicPolicy,
@@ -1269,8 +1459,12 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const nextRange = rounded(clamp(current.rangeNm + tempoRange + formationRange, 18, 280));
   const highTempoSensorPenalty = orders.tempo === "high-speed-dash" ? 7 : 0;
   const engagementContact = orders.engagement === "shadow" ? 5 : orders.engagement === "avoid" ? -2 : 0;
+  const intendedContactGain = sensor + engagementContact + riskEffects.contact - highTempoSensorPenalty;
+  const contactGain = cumulativeMatrix && intendedContactGain > 0
+    ? intendedContactGain * (result === "success" ? 1 : result === "partial" ? 0.7 : 0.3)
+    : intendedContactGain;
   const nextContact = rounded(clamp(
-    current.contactQuality + sensor + engagementContact + riskEffects.contact - highTempoSensorPenalty,
+    current.contactQuality + contactGain,
     0,
     Math.max(current.contactQuality, contactCapabilityCeiling(turnReadiness)),
   ));
@@ -1279,7 +1473,9 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const pressure = (13 + turn * 2 + scenario.required.length * 1.5 + environmentalFriction(scenario) * 0.65 + riskEffects.pressure * 2.5)
     * rules.opposingPressureMultiplier * capabilityState.opposingMultiplier * disruptionPressureMultiplier
     * opposingScalePressureMultiplier(current.matrix)
-    * (matrixResolution?.ultimate.result === "failure" ? 1.03 : matrixResolution?.ultimate.result === "success" ? 0.97 : 1);
+    * (cumulativeMatrix
+      ? result === "failure" ? 1.15 : result === "success" ? 0.9 : 1.03
+      : result === "failure" ? 1.03 : result === "success" ? 0.97 : 1);
   const defense = defensivePower(turnReadiness, scenario, orders, nextContact);
   const exposure = orders.formation === "distributed-barrier" && nextContact < 45 ? 6 : 0;
   const avoidReduction = orders.engagement === "avoid" || orders.tempo === "withdraw" ? 5 : 0;
@@ -1309,6 +1505,7 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
     && withinReach
     && nextContact >= contactThreshold
     && turnReadiness.missionReady
+    && (!cumulativeMatrix || current.readiness > 0 && current.integrity > 0 && current.supply > 0)
     && hasCreditedMissionEffect;
   const effectBase = orders.engagement === "bounded-effects" ? 13 : orders.engagement === "contain" ? 9 : orders.engagement === "shadow" ? 4 : 0;
   const effectSupport = Math.min(15, turnReadiness.compatibleArmamentCount * 0.9 + turnReadiness.supportedAircraftCount * 0.18 + turnReadiness.trackCapacity / 90 + Math.max(-4, doctrineFit * 0.55));
@@ -1333,8 +1530,12 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
   const secondaryObjective = current.matrix?.activeSecondaryObjective;
   const secondaryActive = Boolean(secondaryObjective && turn >= secondaryObjective.revealTurn);
   const secondaryFit = secondaryActive && secondaryObjective ? secondaryObjectiveOrderFit(secondaryObjective, orders) : null;
-  const secondaryGain = secondaryActive
-    ? rounded(Math.max(0, objectiveGain * 0.55 + 3) * (secondaryFit?.multiplier ?? 0.35))
+  // Recovery, escort, and handoff work may progress without firing-range or
+  // hostile-contact requirements, but require an available, ready force.
+  const secondaryEligible = !cumulativeMatrix || turnReadiness.missionReady && turnReadiness.selectedUnitCount > 0
+    && current.readiness > 0 && current.integrity > 0 && current.supply > 0;
+  const secondaryGain = secondaryActive && secondaryEligible
+    ? rounded(Math.max(0, objectiveGain * 0.55 + (cumulativeMatrix ? 6 * matrixMultiplier : 3)) * (secondaryFit?.multiplier ?? 0.35))
     : 0;
 
   const escalationGain = (orders.sensors === "active-sweep" ? 5 : orders.sensors === "emission-control" ? -2 : 0)
@@ -1350,9 +1551,9 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
     turn,
     rangeNm: nextRange,
     contactQuality: nextContact,
-    readiness: rounded(clamp(current.readiness - readinessLoss + riskEffects.readiness)),
-    integrity: rounded(clamp(current.integrity - integrityLoss + riskEffects.integrity)),
-    supply: rounded(clamp(current.supply - supplyLoss + riskEffects.supply)),
+    readiness: rounded(clamp(current.readiness - readinessLoss + recovery(riskEffects.readiness))),
+    integrity: rounded(clamp(current.integrity - integrityLoss + recovery(riskEffects.integrity))),
+    supply: rounded(clamp(current.supply - supplyLoss + recovery(riskEffects.supply))),
     escalation: rounded(clamp(current.escalation + escalationGain)),
     objectiveProgress: rounded(clamp(current.objectiveProgress + objectiveGain)),
     opposingCohesion: rounded(clamp(current.opposingCohesion - cohesionLoss)),
@@ -1431,9 +1632,12 @@ export function resolveRigidTurn(current: RigidGameState, orders: RigidOrders, r
         : doctrineFit >= 6
           ? "The uncrewed and undersea employment methods fit the assessed environment and available force."
           : "The selected uncrewed and undersea methods are workable but not mutually reinforcing.",
-      `${riskEffects.note} Coordination used ${coordination.replaceAll("-", " ")} against ${scenario.adversaryCount ?? 1} assessed adversary actor${(scenario.adversaryCount ?? 1) === 1 ? "" : "s"}.`,
+      `${cumulativeMatrix ? `The ${riskTreatment} treatment was attempted under the shared ${result} turn outcome; realized readiness, integrity, and supply changes are recorded below.` : riskEffects.note} Coordination used ${coordination.replaceAll("-", " ")} against ${scenario.adversaryCount ?? 1} assessed adversary actor${(scenario.adversaryCount ?? 1) === 1 ? "" : "s"}.`,
       secondaryFit?.note ?? "No secondary objective required a separate command posture on this turn.",
-      strategicPolicy === "nuclear-employment" ? "Nuclear employment disrupted opposition while imposing extreme escalation, legitimacy, coordination, and recovery costs." : strategicPolicy === "nuclear-demonstration" ? "Nuclear demonstration increased reciprocal mobilization and escalation risk." : strategicPolicy === "nuclear-deterrent" ? "Nuclear capability remained a deterrent reserve; its effect depended on adversary interpretation rather than guaranteed compliance." : "Strategic force policy retained conventional restraint.",
+      strategicPolicy === "nuclear-employment" ? cumulativeMatrix
+        ? `Nuclear employment attempted strategic effects under the ${result} turn outcome; it imposed extreme escalation, legitimacy, coordination, and recovery costs regardless of success.`
+        : "Nuclear employment disrupted opposition while imposing extreme escalation, legitimacy, coordination, and recovery costs."
+        : strategicPolicy === "nuclear-demonstration" ? "Nuclear demonstration increased reciprocal mobilization and escalation risk." : strategicPolicy === "nuclear-deterrent" ? "Nuclear capability remained a deterrent reserve; its effect depended on adversary interpretation rather than guaranteed compliance." : "Strategic force policy retained conventional restraint.",
       matrixResolution ? `The nested matrix committed a ${matrixResolution.ultimate.committedChance}% ultimate chance against draw ${matrixResolution.ultimate.draw}/100: ${matrixResolution.ultimate.result}. The draw was fixed by the scenario and turn before this resolution.` : "This legacy scenario used the fixed-rule adjudicator without a compound probability matrix.",
       disruptionNote,
       integrityLoss > 0 ? `Opposing pressure reduced force integrity by ${integrityLoss}.` : "The screen and contact picture absorbed the turn’s opposing pressure without integrity loss.",
@@ -1804,6 +2008,7 @@ export function canonicalRigidState(
   state: RigidGameState,
   scenario: RigidScenario,
   readiness: RigidReadiness,
+  options: { legacyOutcome?: boolean } = {},
 ): RigidGameState | null {
   if (!isRigidGameState(state)) return null;
   const includeIntelligence = state.version === 2;
@@ -1825,7 +2030,18 @@ export function canonicalRigidState(
     rigidStateAdjudication(replay, includeIntelligence),
     rigidStateAdjudication(state, includeIntelligence),
   )) return null;
-  if (!rigidOutcomeAdjudicationEqual(replay.outcome, state.outcome)) return null;
+  if (options.legacyOutcome) {
+    // Pre-v3 portable outcomes recorded only these adjudication scalars. The
+    // caller validates that no breakdown/findings were present. All preceding
+    // state, order, delta and matrix comparisons remain exact; only absent
+    // explanatory breakdown/findings may be reconstructed from the replay.
+    if (replay.outcome === null || state.outcome === null) {
+      if (replay.outcome !== state.outcome) return null;
+    } else if (replay.outcome.won !== state.outcome.won
+      || replay.outcome.score !== state.outcome.score
+      || replay.outcome.title !== state.outcome.title
+      || replay.outcome.difficulty !== state.outcome.difficulty) return null;
+  } else if (!rigidOutcomeAdjudicationEqual(replay.outcome, state.outcome)) return null;
   return replay;
 }
 

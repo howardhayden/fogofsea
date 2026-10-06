@@ -20,7 +20,7 @@ import {
 import { formatPortableSave, minimizePortableSaveForBrowser, parsePortableSave, type PortableSave, type SavedResult } from "../app/saveGame";
 import { createInitialRigidState, resolveRigidTurn, type RigidOrders, type RigidReadiness, type RigidScenario } from "../app/kriegsspiel";
 import { deriveForceReadiness } from "../app/forceReadiness";
-import { estimateResolutionMatrix, isScenarioMatrix } from "../app/scenarioMatrix";
+import { createScenarioMatrix, estimateResolutionMatrix, isScenarioMatrix } from "../app/scenarioMatrix";
 import { createStarPlacements, getSkyVisibility, getSubsurfaceLifeProfile, headingToCompass, nextViewLayer, stableSeed, VIEW_CONFIG, viewTelemetryFromDirection } from "../app/viewModel";
 import { deriveCommandIntelligence } from "../app/commandIntelligence";
 
@@ -28,10 +28,15 @@ const sampleEnvironment = deriveScenarioEnvironment({ id: 4, region: "Test Secto
 
 function deterministicScenario(previousId: number) {
   let state = (previousId * 2654435761) >>> 0;
-  return generateScenario(previousId, () => {
+  const scenario = generateScenario(previousId, () => {
     state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
     return state / 4294967296;
   });
+  // This existing corpus covers historical nested-draw transcript validation.
+  // New resolver and cross-version coverage lives in save-matrix-compatibility.
+  scenario.matrix = createScenarioMatrix({ exerciseId: scenario.id, climate: scenario.climate,
+    regionId: scenario.regionId, season: scenario.season, adversaryCount: scenario.adversaryCount, version: 1 });
+  return scenario;
 }
 
 // Portable JSON cannot preserve own properties whose value is undefined.
@@ -46,7 +51,7 @@ const sampleScenarioEnvironment = deriveScenarioEnvironment({
 
 const sample: PortableSave = {
   format: "fog-of-sea-save",
-  version: 4,
+  version: 5,
   savedAt: "2026-08-04T12:00:00.000Z",
   game: {
     scenario: sampleScenario,
@@ -248,7 +253,7 @@ test("mid-game rigid state round-trips and resumes identically", () => {
   assert.throws(() => parsePortableSave(JSON.stringify(corrupted)), /Rigid umpire state is invalid/);
 });
 
-test("completed v2 rigid state migrates its legacy outcome before validation", () => {
+test("completed v2 state from a different scenario cannot be relabeled as a canonical current campaign", () => {
   const gameScenario: RigidScenario = {
     id: 4, climate: "ocean", time: "dawn", clouds: "overcast", precipitation: "rain", seaState: 6, visibility: 3,
     required: ["air-defense"], recommended: ["reconnaissance"], guardrail: "escalation",
@@ -289,14 +294,7 @@ test("completed v2 rigid state migrates its legacy outcome before validation", (
   completedV2.game.rigidState = { ...completed, outcome: { ...legacyOutcome } } as unknown as typeof completedV2.game.rigidState;
   completedV2.game.rigidOrders = orders;
 
-  const parsed = parsePortableSave(JSON.stringify(completedV2));
-  assert.equal(parsed.game.rigidState?.phase, "complete");
-  assert.equal(parsed.game.rigidState?.turn, completed.turn);
-  assert.deepEqual(parsed.game.rigidState?.reports, completed.reports);
-  assert.deepEqual(parsed.game.rigidState?.outcome, parsed.game.result);
-  assert.equal(parsed.game.result?.difficulty, "standard");
-  assert.equal(parsed.game.result?.breakdown.total, legacyOutcome.score);
-  assert.deepEqual(parsed.game.result?.findings, []);
+  assert.throws(() => parsePortableSave(JSON.stringify(completedV2)), /matrix|report chain|umpire/i);
 });
 
 test("only supported aircraft and hosted armament packs receive force-point credit", () => {
@@ -558,7 +556,7 @@ test("v3 rejects unknown domain values in current decisions and decision history
 test("portable-save trust boundary rejects code-shaped keys, unknown catalog entries, and hidden controls", () => {
   const encoded = JSON.stringify(sample);
   assert.throws(
-    () => parsePortableSave(encoded.replace('"version":4', '"version":4,"__proto__":{"polluted":true}')),
+    () => parsePortableSave(encoded.replace('"version":5', '"version":5,"__proto__":{"polluted":true}')),
     /unsafe object key/,
   );
   const unknownCatalog = structuredClone(sample);
@@ -651,7 +649,9 @@ test("compound imports reject rerolled matrices, edited report chains, and impos
   assert.throws(() => parsePortableSave(JSON.stringify(rerolled)), /Rigid umpire state|committed matrix|report chain/i);
 
   const rewrittenChance = structuredClone(completed);
-  const component = rewrittenChance.game.rigidState!.reports[0].matrixResolution!.components[0];
+  const rewrittenMatrix = rewrittenChance.game.rigidState!.reports[0].matrixResolution!;
+  assert.ok(rewrittenMatrix.version !== 2);
+  const component = rewrittenMatrix.components[0];
   component.range = [80, 98];
   component.committedChance = 89;
   component.result = component.draw <= 89 ? "success" : component.draw <= 101 ? "partial" : "failure";
@@ -1005,14 +1005,15 @@ test("legacy saves are normalized to the 100-point model", () => {
   legacy.game.history[0].score = 102;
   legacy.game.history[0].context.budget = 102;
   const parsed = parsePortableSave(JSON.stringify(legacy));
-  assert.equal(parsed.version, 4);
+  assert.equal(parsed.version, 5);
   assert.equal(parsed.game.rigidState, null);
   assert.equal(parsed.game.rigidOrders, null);
   assert.equal(parsed.game.scenario.budget, 100);
-  assert.equal(parsed.game.result?.score, 100);
-  assert.equal(parsed.game.result?.difficulty, "standard");
-  assert.equal(parsed.game.result?.breakdown.total, 100);
-  assert.deepEqual(parsed.game.result?.findings, []);
+  assert.equal(parsed.game.result, null);
+  assert.equal(parsed.game.history.length, legacy.game.history.length + 1);
+  assert.deepEqual(parsed.game.history.at(-1)?.legacyResultArchive, { sourceVersion: 1, won: true, originalScore: 102 });
+  assert.match(parsed.game.history.at(-1)!.notes.join("\n"), /pre-umpire result; no replayable command turns/i);
+  assert.deepEqual(parsePortableSave(formatPortableSave(parsed)), parsed);
   assert.equal(parsed.game.history[0].score, 100);
   assert.equal(parsed.game.history[0].context.budget, 100);
   assert.equal(parsed.preferences.difficulty, "standard");
@@ -1042,7 +1043,7 @@ test("legacy saves are normalized to the 100-point model", () => {
 
   (legacy as { version: number }).version = 2;
   const parsedV2 = parsePortableSave(JSON.stringify(legacy));
-  assert.equal(parsedV2.version, 4);
+  assert.equal(parsedV2.version, 5);
   assert.deepEqual(parsedV2.game.scenario, parsed.game.scenario);
   assert.deepEqual(parsedV2.game.history[0].context, parsed.game.history[0].context);
 });

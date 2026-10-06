@@ -162,7 +162,7 @@ test("classification integrity, undo, and evidence-rich debrief remain wired", a
   assert.doesNotMatch(engine, /Math\.random|Date\.now|theorySynthesis|rationale|assumptions|termination/);
 });
 
-test("portable saves are v4, device-local, environment-complete, and prose-preserving", async () => {
+test("portable saves are v5, device-local, environment-complete, and prose-preserving", async () => {
   const [page, save, browserSaves, saveHook, saveManager] = await Promise.all([
     read("../app/page.tsx"),
     read("../app/saveGame.ts"),
@@ -170,7 +170,7 @@ test("portable saves are v4, device-local, environment-complete, and prose-prese
     read("../app/useBrowserSaveManager.ts"),
     read("../app/SaveManager.tsx"),
   ]);
-  assert.match(save, /version: 4/);
+  assert.match(save, /version: 5/);
   assert.match(save, /scenarioDate/);
   assert.match(save, /windHeading/);
   assert.match(save, /currentHeading/);

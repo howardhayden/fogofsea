@@ -52,6 +52,7 @@ import {
   createScenarioMatrix,
   isScenarioMatrix,
   type IllicitNetworkType,
+  type ScenarioMatrix,
 } from "./scenarioMatrix";
 
 export type SavedResult = RigidOutcome;
@@ -113,12 +114,18 @@ export type DecisionRecord = {
   airWing: Record<string, number>;
   selectedArmaments?: Record<string, number>;
   rigidTurns?: RigidTurnReport[];
+  /** Historical display-only transcript predating typed intelligence. It is
+   * never a live-state validation mode; omitted means the current transcript. */
+  transcriptVersion?: 1;
+  /** A detached pre-umpire result is historical information, never a live
+   * outcome or a replayable transcript. Preserve its original reported index. */
+  legacyResultArchive?: { sourceVersion: 1 | 2; won: boolean; originalScore: number };
   notes: string[];
 };
 
 export type PortableSave = {
   format: "fog-of-sea-save";
-  version: 4;
+  version: 5;
   savedAt: string;
   game: {
     scenario: Scenario;
@@ -333,6 +340,9 @@ function writeRecord(record: DecisionRecord, index: number) {
     `Comparative maritime-theory problem: ${record.context.navalProblem || "Not recorded"}`,
     `Historical mode: ${record.context.historicalMode}`,
     `Outcome: ${record.outcome} (${record.score}/100)`,
+    ...(record.legacyResultArchive ? [
+      `Archived legacy result: ${record.legacyResultArchive.won ? "reported victory" : "reported no victory"}; original score ${record.legacyResultArchive.originalScore}. No replayable command turns were recorded.`,
+    ] : []),
     `Warfare areas: ${record.warfare.join(", ") || "None selected"}`,
     `End state: ${label(record.endState)}`,
     `Theory lens: ${label(record.theoryLens)}`,
@@ -705,6 +715,7 @@ function isScenarioV3(value: unknown): value is Scenario {
       regionId: value.regionId as string,
       season: value.season as Season,
       adversaryCount: value.adversaryCount as number | undefined,
+      version: (value.matrix as ScenarioMatrix).version,
     });
     if (!jsonSemanticEqual(value.matrix, expected)) return false;
     if (value.illicitNetworkType !== undefined && value.illicitNetworkType !== expected.illicitNetworkType) return false;
@@ -803,14 +814,16 @@ function isDiagnosticFinding(value: unknown): value is RigidDiagnosticFinding {
 }
 
 type LegacySavedResult = Pick<SavedResult, "won" | "score" | "title" | "notes">;
+const LEGACY_RESULT_KEYS = new Set(["won", "score", "title", "notes"]);
 
-function isLegacySavedResult(value: unknown): value is LegacySavedResult | null {
+function isLegacySavedResult(value: unknown, allowHistoricalScore = false): value is LegacySavedResult | null {
   if (value === null) return true;
   if (!isRecord(value)) return false;
-  return typeof value.won === "boolean"
+  return hasOnlyKeys(value, LEGACY_RESULT_KEYS)
+    && typeof value.won === "boolean"
     && typeof value.score === "number"
-    && Number.isFinite(value.score)
-    && typeof value.title === "string"
+    && Number.isFinite(value.score) && (allowHistoricalScore || value.score >= 0 && value.score <= 100)
+    && isBoundedCleanText(value.title, INPUT_LIMITS.recordText, false)
     && isStringArray(value.notes);
 }
 
@@ -874,8 +887,13 @@ function migrateLegacyCompletedState(
 ) {
   const rigidState = value ?? null;
   if (!isRecord(rigidState) || rigidState.phase !== "complete") return { rigidState, result: gameResult };
-  if (rigidState.outcome === null || !isLegacySavedResult(rigidState.outcome)) return { rigidState, result: gameResult };
+  if (rigidState.outcome === null) return { rigidState, result: gameResult };
+  if (!isLegacySavedResult(rigidState.outcome)) throw new Error("The legacy umpire outcome is invalid.");
   const nestedResult = legacyResult(rigidState.outcome, difficulty, scenario);
+  if (gameResult && nestedResult && (gameResult.won !== nestedResult.won
+    || gameResult.score !== nestedResult.score || gameResult.title !== nestedResult.title)) {
+    throw new Error("The completed legacy result does not match its umpire outcome.");
+  }
   const result = gameResult ?? nestedResult;
   return {
     rigidState: { ...rigidState, outcome: result },
@@ -933,6 +951,29 @@ type LegacyDecisionRecord = {
   [key: string]: unknown;
 };
 
+function isLegacyResultArchive(value: unknown): value is NonNullable<DecisionRecord["legacyResultArchive"]> {
+  return isRecord(value)
+    && Object.keys(value).every((key) => ["sourceVersion", "won", "originalScore"].includes(key))
+    && (value.sourceVersion === 1 || value.sourceVersion === 2)
+    && typeof value.won === "boolean"
+    && typeof value.originalScore === "number" && Number.isFinite(value.originalScore);
+}
+
+const LEGACY_RESULT_ARCHIVE_NOTE = "Archived pre-umpire result; no replayable command turns were recorded.";
+
+function hasLegacyArchiveNote(notes: unknown): boolean {
+  return Array.isArray(notes) && notes.some((note) => typeof note === "string"
+    && (note === LEGACY_RESULT_ARCHIVE_NOTE || note.endsWith(`\n${LEGACY_RESULT_ARCHIVE_NOTE}`)));
+}
+
+function annotateLegacyArchive(notes: string[]): string[] {
+  if (hasLegacyArchiveNote(notes)) return [...notes];
+  if (notes.length < 200) return [...notes, LEGACY_RESULT_ARCHIVE_NOTE];
+  const available = notes.findIndex((note) => note.length + 1 + LEGACY_RESULT_ARCHIVE_NOTE.length <= INPUT_LIMITS.recordText);
+  if (available < 0) throw new Error("The historical pre-umpire result has no room for its required archive note.");
+  return notes.map((note, index) => index === available ? `${note}\n${LEGACY_RESULT_ARCHIVE_NOTE}` : note);
+}
+
 function hasDecisionRecordCore(
   value: unknown,
   strictScore: boolean,
@@ -944,9 +985,19 @@ function hasDecisionRecordCore(
   const context = record.context as Record<string, unknown> | undefined;
   const contextStrings = ["brief", "objective", "politicalAim", "intelligence", "historicalMode", "climate", "time", "clouds", "precipitation"];
   const optionalContextStrings = ["geography", "friendlySituation", "opposingSituation", "civilianContext", "constraints", "timing", "successConditions", "navalProblem"];
+  const archivalTranscript = record.transcriptVersion === 1;
+  const archivalResult = isLegacyResultArchive(record.legacyResultArchive) ? record.legacyResultArchive : null;
+  const validArchivalResult = record.legacyResultArchive === undefined || archivalResult !== null
+    && record.rigidTurns === undefined && record.transcriptVersion === undefined
+    && hasLegacyArchiveNote(record.notes)
+    && record.score === Math.max(0, Math.min(100, archivalResult.originalScore));
+  const validTranscriptVersion = record.transcriptVersion === undefined || archivalTranscript;
   const validRigidTurns = record.rigidTurns === undefined || Array.isArray(record.rigidTurns)
     && record.rigidTurns.length <= 6
-    && record.rigidTurns.every((turn, index) => isRigidTurnReport(turn, index, strictIntelligence ? 2 : 1));
+    && record.rigidTurns.every((turn, index) => isRigidTurnReport(turn, index, strictIntelligence && !archivalTranscript ? 2 : 1))
+    && (!archivalTranscript || record.rigidTurns.every((turn) => (
+      turn.matrixResolution?.version !== 2 && turn.matrixInput?.componentWeights === undefined
+    )));
   const rigidIntelligenceIds = validRigidTurns && Array.isArray(record.rigidTurns)
     ? (record.rigidTurns as RigidTurnReport[]).flatMap((turn) => [
       ...(turn.adversaryActions ?? []).map((action) => action.id),
@@ -972,6 +1023,8 @@ function hasDecisionRecordCore(
     && isNumberRecord(record.airWing, AIRCRAFT_IDS)
     && (record.selectedArmaments === undefined || isNumberRecord(record.selectedArmaments, ARMAMENT_IDS))
     && validRigidTurns
+    && validTranscriptVersion
+    && validArchivalResult
     && new Set(rigidIntelligenceIds).size === rigidIntelligenceIds.length;
 }
 
@@ -979,6 +1032,7 @@ function isDecisionRecordV3(value: unknown, strictIntelligence = false): value i
   if (!hasDecisionRecordCore(value, true, strictIntelligence)) return false;
   const context = value.context as Record<string, unknown>;
   const climate = context.climate as Climate;
+  const archivalResult = isLegacyResultArchive(value.legacyResultArchive);
   return CLIMATES.includes(climate)
     && TIMES.includes(context.time as typeof TIMES[number])
     && CLOUDS.includes(context.clouds as typeof CLOUDS[number])
@@ -986,10 +1040,10 @@ function isDecisionRecordV3(value: unknown, strictIntelligence = false): value i
     && isIntegerBetween(context.seaState, 1, 7)
     && isIntegerBetween(context.visibility, 1, 20)
     && context.budget === 100
-    && isEndState(value.endState)
-    && isTheoryLens(value.theoryLens)
+    && (isEndState(value.endState) || archivalResult && value.endState === "")
+    && (isTheoryLens(value.theoryLens) || archivalResult && value.theoryLens === "")
     && (value.partnerLens === undefined || value.partnerLens === "" || isTheoryLens(value.partnerLens))
-    && isGuardrail(value.guardrail)
+    && (isGuardrail(value.guardrail) || archivalResult && value.guardrail === "")
     && hasStrictEnvironmentFields(context, value.exercise as number, value.region as string, climate);
 }
 
@@ -997,10 +1051,11 @@ function migrateLegacyDecisionRecord(value: unknown, scenario: Scenario): Decisi
   if (!hasDecisionRecordCore(value, false)) return null;
   const record = value;
   const context = record.context;
-  if (!isEndState(record.endState)
-    || !isTheoryLens(record.theoryLens)
+  const archivalResult = isLegacyResultArchive(record.legacyResultArchive) ? record.legacyResultArchive : null;
+  if (!(isEndState(record.endState) || archivalResult && record.endState === "")
+    || !(isTheoryLens(record.theoryLens) || archivalResult && record.theoryLens === "")
     || record.partnerLens !== undefined && record.partnerLens !== "" && !isTheoryLens(record.partnerLens)
-    || !isGuardrail(record.guardrail)) return null;
+    || !(isGuardrail(record.guardrail) || archivalResult && record.guardrail === "")) return null;
   const climate = CLIMATES.includes(context.climate as Climate) ? context.climate as Climate : scenario.climate;
   const exercise = record.exercise;
   const region = record.region;
@@ -1045,6 +1100,7 @@ function migrateLegacyDecisionRecord(value: unknown, scenario: Scenario): Decisi
     airWing: { ...record.airWing },
     ...(record.selectedArmaments !== undefined ? { selectedArmaments: { ...record.selectedArmaments } } : {}),
     ...(record.rigidTurns !== undefined ? { rigidTurns: structuredClone(record.rigidTurns) } : {}),
+    ...(archivalResult ? { legacyResultArchive: { ...archivalResult } } : {}),
     notes: [...record.notes],
     context: {
       brief: context.brief,
@@ -1086,6 +1142,45 @@ function migrateLegacyDecisionRecord(value: unknown, scenario: Scenario): Decisi
   return isDecisionRecordV3(migrated) ? migrated : null;
 }
 
+/** Preserve pre-umpire outcomes as bounded history without fabricating a turn
+ * chain or granting them the authority of a current campaign result. */
+function archiveDetachedLegacyResult(save: PortableSave, legacy: LegacySavedResult, sourceVersion: 1 | 2) {
+  const game = save.game;
+  const scenario = game.scenario;
+  const archived = migrateLegacyDecisionRecord({
+    id: `${scenario.id}-${save.savedAt}-legacy-result`, at: save.savedAt,
+    exercise: scenario.id, operation: scenario.operation, region: scenario.region,
+    context: { ...scenario, historicalMode: scenario.history },
+    score: Math.max(0, Math.min(100, legacy.score)), outcome: legacy.title,
+    warfare: game.selectedWarfare, endState: game.selectedEndState,
+    theoryLens: game.selectedLens, partnerLens: game.selectedPartnerLens ?? "",
+    theorySynthesis: game.theorySynthesis ?? "", guardrail: game.selectedGuardrail,
+    rationale: game.rationale, assumptions: game.assumptions, termination: game.termination,
+    fleet: game.fleet, airWing: game.airWing, selectedArmaments: game.selectedArmaments ?? {},
+    notes: annotateLegacyArchive(legacy.notes),
+    legacyResultArchive: { sourceVersion, won: legacy.won, originalScore: legacy.score },
+  }, scenario);
+  if (!archived) throw new Error("The historical pre-umpire result cannot be safely archived.");
+  const comparable = (record: DecisionRecord) => {
+    const { id: _id, at: _at, legacyResultArchive: _archive, ...decision } = record;
+    return { ...decision, partnerLens: record.partnerLens ?? "", theorySynthesis: record.theorySynthesis ?? "",
+      selectedArmaments: record.selectedArmaments ?? {}, notes: record.notes.flatMap((note) => (
+        note === LEGACY_RESULT_ARCHIVE_NOTE ? []
+          : [note.endsWith(`\n${LEGACY_RESULT_ARCHIVE_NOTE}`) ? note.slice(0, -LEGACY_RESULT_ARCHIVE_NOTE.length - 1) : note]
+      )) };
+  };
+  const matching = game.history.find((record) => jsonSemanticEqual(comparable(record), comparable(archived)));
+  if (matching) {
+    matching.legacyResultArchive = archived.legacyResultArchive;
+    matching.notes = annotateLegacyArchive(matching.notes);
+  } else {
+    if (game.history.length >= MAX_DECISION_HISTORY) {
+      throw new Error("The historical pre-umpire result cannot be archived because decision history is full.");
+    }
+    game.history.push(archived);
+  }
+}
+
 function parseRigidState(value: unknown): RigidGameState | null {
   if (value === null) return null;
   if (isRigidGameState(value)
@@ -1120,20 +1215,24 @@ export function parsePortableSave(text: string): PortableSave {
   if ((value.format !== "fog-of-the-sea-save" && value.format !== "fog-of-sea-save")
     || typeof incomingVersion !== "number"
     || !Number.isInteger(incomingVersion)
-    || ![1, 2, 3, 4].includes(incomingVersion)) throw new Error("Unsupported save format or version.");
+    || ![1, 2, 3, 4, 5].includes(incomingVersion)) throw new Error("Unsupported save format or version.");
   if (!isRecord(value.game)) throw new Error("The scenario is missing or invalid.");
   const game = value.game;
   const scenario = incomingVersion >= 3
     ? (isScenarioV3(game.scenario) ? game.scenario : null)
     : migrateLegacyScenario(game.scenario);
   if (!scenario) throw new Error("The scenario is missing or invalid.");
+  if (incomingVersion < 5 && scenario.matrix?.version === 2) {
+    throw new Error("The outer-draw resolver requires save format version 5.");
+  }
   if (!isNumberRecord(game.fleet, PLATFORM_IDS) || !isNumberRecord(game.airWing, AIRCRAFT_IDS)) throw new Error("The force roster is invalid.");
   if (game.selectedArmaments !== undefined && !isNumberRecord(game.selectedArmaments, ARMAMENT_IDS)) throw new Error("The armament roster is invalid.");
-  if (!isWarfareArray(game.selectedWarfare) || !Array.isArray(game.history) || game.history.length > MAX_DECISION_HISTORY) throw new Error("Decision data is invalid.");
+  if (!isWarfareArray(game.selectedWarfare) || !Array.isArray(game.history)
+    || game.history.length > MAX_DECISION_HISTORY) throw new Error("Decision data is invalid.");
   const selectedWarfare = game.selectedWarfare;
   const history: DecisionRecord[] = [];
   if (incomingVersion >= 3) {
-    if (!game.history.every((record) => isDecisionRecordV3(record, incomingVersion === 4))) {
+    if (!game.history.every((record) => isDecisionRecordV3(record, incomingVersion >= 4))) {
       throw new Error("Decision data is invalid.");
     }
     history.push(...game.history);
@@ -1142,6 +1241,18 @@ export function parsePortableSave(text: string): PortableSave {
       const migrated = migrateLegacyDecisionRecord(record, scenario);
       if (!migrated) throw new Error("Decision data is invalid.");
       history.push(migrated);
+    }
+  }
+  if (incomingVersion < 5 && history.some((record) => record.rigidTurns?.some((turn) => (
+    turn.matrixResolution?.version === 2 || turn.matrixInput?.componentWeights !== undefined
+  )))) {
+    throw new Error("Outer-draw decision history requires save format version 5.");
+  }
+  if (incomingVersion < 4) {
+    for (const record of history) {
+      if (record.rigidTurns?.some((turn, index) => !isRigidTurnReport(turn, index, 2))) {
+        record.transcriptVersion = 1;
+      }
     }
   }
   if (!isBoundedCleanText(game.rationale, INPUT_LIMITS.writtenDecision)
@@ -1178,12 +1289,17 @@ export function parsePortableSave(text: string): PortableSave {
     : value.preferences.guidance;
   if (!isRecord(guidance) || typeof guidance.checklistCollapsed !== "boolean") throw new Error("Guidance preference is invalid.");
   let result: SavedResult | null;
+  let detachedLegacyResult: LegacySavedResult | null = null;
   if (incomingVersion >= 3) {
     if (!isSavedResult(game.result)) throw new Error("Current decision fields are invalid.");
     result = game.result;
   } else {
-    if (!isLegacySavedResult(game.result)) throw new Error("Current decision fields are invalid.");
-    result = legacyResult(game.result, difficulty, scenario);
+    const detached = game.rigidState === undefined || game.rigidState === null;
+    if (!isLegacySavedResult(game.result, detached)) throw new Error("Current decision fields are invalid.");
+    if (detached) {
+      detachedLegacyResult = game.result;
+      result = null;
+    } else result = legacyResult(game.result, difficulty, scenario);
   }
   let rawRigidState: unknown = game.rigidState ?? null;
   if (incomingVersion < 3) {
@@ -1195,13 +1311,13 @@ export function parsePortableSave(text: string): PortableSave {
   const rawRigidOrders = game.rigidOrders ?? null;
   if (rawRigidOrders !== null && !isRigidOrders(rawRigidOrders)) throw new Error("Pending rigid orders are invalid.");
   const rigidOrders = rawRigidOrders;
-  if (incomingVersion === 4 && rigidState && rigidState.version !== 2) throw new Error("Current saves require the typed intelligence transcript.");
-  if (incomingVersion >= 3 && result && result.difficulty !== difficulty) throw new Error("Result difficulty does not match the saved preference.");
-  if (incomingVersion >= 3 && rigidState?.outcome && rigidState.outcome.difficulty !== difficulty) throw new Error("Umpire difficulty does not match the saved preference.");
-  if (incomingVersion >= 3 && result !== null && rigidState === null) {
+  if (incomingVersion >= 4 && rigidState && rigidState.version !== 2) throw new Error("Current saves require the typed intelligence transcript.");
+  if (result && result.difficulty !== difficulty) throw new Error("Result difficulty does not match the saved preference.");
+  if (rigidState?.outcome && rigidState.outcome.difficulty !== difficulty) throw new Error("Umpire difficulty does not match the saved preference.");
+  if (result !== null && rigidState === null) {
     throw new Error("A completed result requires its canonical umpire state.");
   }
-  if (incomingVersion >= 3 && rigidState) {
+  if (rigidState) {
     const expectedMatrix = scenario.matrix ? activateMatrixForDifficulty(scenario.matrix, difficulty) : undefined;
     if (!jsonSemanticEqual(rigidState.matrix, expectedMatrix)) throw new Error("Umpire matrix does not match the saved scenario and difficulty.");
     const { rigidReadiness } = deriveForceReadiness({
@@ -1220,18 +1336,23 @@ export function parsePortableSave(text: string): PortableSave {
       rigidState,
       { ...scenario, difficulty, selectedLens: selectedLens || undefined },
       rigidReadiness,
+      { legacyOutcome: incomingVersion < 3 },
     );
     if (!regeneratedState) {
       throw new Error("Umpire report chain or committed matrix result is invalid.");
     }
     if (rigidState.phase === "active" && result !== null) throw new Error("An active umpire state cannot contain a completed result.");
-    if (rigidState.phase === "complete" && !rigidOutcomeAdjudicationEqual(regeneratedState.outcome, result)) {
+    const resultMatches = incomingVersion < 3
+      ? regeneratedState.outcome?.won === result?.won && regeneratedState.outcome?.score === result?.score
+        && regeneratedState.outcome?.title === result?.title && regeneratedState.outcome?.difficulty === result?.difficulty
+      : rigidOutcomeAdjudicationEqual(regeneratedState.outcome, result);
+    if (rigidState.phase === "complete" && !resultMatches) {
       throw new Error("The completed result does not match the canonical umpire outcome.");
     }
     rigidState = regeneratedState;
     if (rigidState.phase === "complete") result = rigidState.outcome;
   }
-  if (incomingVersion === 4 && rigidState?.phase === "active"
+  if (rigidState?.phase === "active"
     && rigidOrders?.adversaryAssessment
     && !isPendingAdversaryAssessmentReasonable(rigidState, rigidOrders.adversaryAssessment)) {
     throw new Error("Pending adversary assumptions are not supported by the visible picture.");
@@ -1240,7 +1361,7 @@ export function parsePortableSave(text: string): PortableSave {
   if (!isStringArray(value.academyProgress, 100, INPUT_LIMITS.shortIdentifier) || !value.academyProgress.every(isSafeIdentifier)) throw new Error("Study progress is invalid.");
   const parsed: PortableSave = {
     format: "fog-of-sea-save",
-    version: 4,
+    version: 5,
     savedAt: value.savedAt,
     game: {
       scenario,
@@ -1269,6 +1390,16 @@ export function parsePortableSave(text: string): PortableSave {
     },
     academyProgress: value.academyProgress,
   };
+  if (detachedLegacyResult) {
+    archiveDetachedLegacyResult(parsed, detachedLegacyResult, incomingVersion as 1 | 2);
+    // Migration adds archival context. Check the actual export representation
+    // before accepting a save that would exceed the import boundary on reload.
+    try {
+      parseUntrustedJson(JSON.stringify(parsed, null, 2));
+    } catch {
+      throw new Error("The archived pre-umpire result exceeds the portable-save limits.");
+    }
+  }
   return parsed;
 }
 

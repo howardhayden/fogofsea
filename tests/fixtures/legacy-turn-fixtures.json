@@ -1,0 +1,632 @@
+{
+  "readiness": {
+    "planningScore": 94,
+    "missionReady": true,
+    "requiredCoverage": 3,
+    "requiredCount": 3,
+    "forcePoints": 96,
+    "escortValue": 6,
+    "airDefenseValue": 6,
+    "underseaValue": 6,
+    "uncrewedCount": 14,
+    "uncrewedAirCount": 8,
+    "uncrewedSurfaceCount": 3,
+    "uncrewedUnderseaCount": 3,
+    "submarineCount": 2,
+    "supportedAircraftCount": 24,
+    "compatibleArmamentCount": 16,
+    "maxReachNm": 500,
+    "trackCapacity": 380,
+    "trackingMethods": [
+      "active radar",
+      "passive acoustic",
+      "cooperative network"
+    ],
+    "lowSignatureCount": 4,
+    "selectedUnitCount": 30,
+    "adaptationScore": 91
+  },
+  "orders": [
+    {
+      "formation": "distributed-barrier",
+      "sensors": "cooperative-fusion",
+      "tempo": "hold",
+      "engagement": "shadow",
+      "task": "surface-operations",
+      "uncrewed": "distributed-scouting",
+      "undersea": "independent-patrol",
+      "riskTreatment": "recover",
+      "coordination": "mutual-support",
+      "strategicPolicy": "conventional-restraint"
+    },
+    {
+      "formation": "concentrated-screen",
+      "sensors": "passive-search",
+      "tempo": "measured-advance",
+      "engagement": "contain",
+      "task": "surface-operations",
+      "uncrewed": "distributed-scouting",
+      "undersea": "independent-patrol",
+      "riskTreatment": "prepare",
+      "coordination": "federated",
+      "strategicPolicy": "conventional-restraint"
+    },
+    {
+      "formation": "protected-column",
+      "sensors": "cooperative-fusion",
+      "tempo": "measured-advance",
+      "engagement": "shadow",
+      "task": "surface-operations",
+      "uncrewed": "distributed-scouting",
+      "undersea": "independent-patrol",
+      "riskTreatment": "mitigate",
+      "coordination": "mutual-support",
+      "strategicPolicy": "conventional-restraint"
+    },
+    {
+      "formation": "distributed-barrier",
+      "sensors": "passive-search",
+      "tempo": "hold",
+      "engagement": "contain",
+      "task": "surface-operations",
+      "uncrewed": "distributed-scouting",
+      "undersea": "independent-patrol",
+      "riskTreatment": "recover",
+      "coordination": "federated",
+      "strategicPolicy": "conventional-restraint"
+    },
+    {
+      "formation": "concentrated-screen",
+      "sensors": "cooperative-fusion",
+      "tempo": "measured-advance",
+      "engagement": "shadow",
+      "task": "surface-operations",
+      "uncrewed": "distributed-scouting",
+      "undersea": "independent-patrol",
+      "riskTreatment": "prepare",
+      "coordination": "mutual-support",
+      "strategicPolicy": "conventional-restraint"
+    },
+    {
+      "formation": "protected-column",
+      "sensors": "passive-search",
+      "tempo": "measured-advance",
+      "engagement": "contain",
+      "task": "surface-operations",
+      "uncrewed": "distributed-scouting",
+      "undersea": "independent-patrol",
+      "riskTreatment": "mitigate",
+      "coordination": "federated",
+      "strategicPolicy": "conventional-restraint"
+    }
+  ],
+  "fixtures": [
+    {
+      "scenario": {
+        "id": 1,
+        "difficulty": "challenge",
+        "climate": "ocean",
+        "regionId": "temperate-strait",
+        "season": "autumn",
+        "time": "night",
+        "clouds": "scattered",
+        "precipitation": "none",
+        "seaState": 3,
+        "visibility": 8,
+        "required": [
+          "surface-operations",
+          "reconnaissance",
+          "air-defense"
+        ],
+        "recommended": [
+          "electromagnetic-operations"
+        ],
+        "guardrail": "escalation",
+        "minimumEscort": 3,
+        "minimumAirDefense": 2,
+        "minimumAsw": 1,
+        "minimumUncrewed": 4,
+        "adversaryCount": 2,
+        "matrix": {
+          "version": 1,
+          "seed": 1922248234,
+          "forceScale": "small",
+          "forceScaleLabel": "Small raiding or converted-merchant group",
+          "estimatedOpposingElements": [
+            4,
+            9
+          ],
+          "opponentCoordination": "selective",
+          "institutionalConstraint": "none",
+          "illicitNetworkType": "sanctions-evasion",
+          "secondaryObjective": {
+            "id": "secondary-744372d4",
+            "label": "Preserve recovery capacity",
+            "description": "Retain enough rescue, repair, and recovery capacity to sustain the transition after the primary movement.",
+            "revealTurn": 4,
+            "minimumDifficulty": "standard",
+            "weight": 22,
+            "method": "recovery-reserve"
+          },
+          "disruptions": [
+            {
+              "id": "weather-window",
+              "kind": "severe-weather",
+              "headline": "Severe ocean storm",
+              "description": "Severe ocean storm crosses the working area. Flight operations, exposed craft, sensing, and recovery are constrained for the stated window; the same environmental rule applies to both forces.",
+              "startsTurn": 4,
+              "endsTurn": 5,
+              "minimumDifficulty": "standard",
+              "severity": "major",
+              "affectedSide": "both",
+              "affectedDomains": [
+                "air",
+                "surface",
+                "communications"
+              ],
+              "availabilityMultiplier": 0.78,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 0.84
+            },
+            {
+              "id": "opposing-cooperation",
+              "kind": "opposing-coordination",
+              "headline": "Opposing cooperation window",
+              "description": "Selective coordination lets distinct opposing actors share timing and selected information without assuming identical political aims.",
+              "startsTurn": 3,
+              "endsTurn": 4,
+              "minimumDifficulty": "standard",
+              "severity": "watch",
+              "affectedSide": "opposing-force",
+              "affectedDomains": [
+                "communications",
+                "air",
+                "surface",
+                "subsurface"
+              ],
+              "availabilityMultiplier": 1,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 1.12
+            },
+            {
+              "id": "opportunist-salvage-seeking-group",
+              "kind": "opportunistic-actor",
+              "headline": "Independent salvage-seeking group",
+              "description": "Independent salvage-seeking group pressures the selected force. It acts for its own limited purpose and does not share command, information, or political aims with the primary opposition. Its identity remains abstract unless the contact picture supports further disclosure.",
+              "startsTurn": 4,
+              "endsTurn": 4,
+              "minimumDifficulty": "standard",
+              "severity": "watch",
+              "affectedSide": "selected-force",
+              "affectedDomains": [
+                "surface",
+                "mission-pack"
+              ],
+              "availabilityMultiplier": 1,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 1.1,
+              "opportunisticActorType": "salvage-seeking-group"
+            }
+          ],
+          "committedTurnDraws": [
+            22,
+            80,
+            35,
+            11,
+            78,
+            97
+          ]
+        }
+      },
+      "snapshots": [
+        "269950ed35313a1ed2494434a99b9ac8836a59f323946b76d582474dbff527cf",
+        "f8b21f530397d131199869f380b94534b0f10b945264e43ee72fac43c5551a75",
+        "3cc8c6f2a6043944bcf44c71c4fa14f1bd9846e10ee4856c0ff7a92beb124a29",
+        "b0c42a32276e25ff15028c85fa5597c65563a4a355bed60bcbe8b03a4412ea59",
+        "53a3c30ab065d39eda190453ed873e43d0c9154b0e870ed1809d6357a76a7ded",
+        "15bebfbe9108517b95dab735b770c63d25b271a0e8b5218afc03baaaf7a7efcc",
+        "9cfdfe87bd3c35df80857c20b4e73fda13d1b18fd58071ef8327b0bc84614cc7"
+      ]
+    },
+    {
+      "scenario": {
+        "id": 59,
+        "difficulty": "challenge",
+        "climate": "ocean",
+        "regionId": "temperate-strait",
+        "season": "autumn",
+        "time": "night",
+        "clouds": "scattered",
+        "precipitation": "none",
+        "seaState": 3,
+        "visibility": 8,
+        "required": [
+          "surface-operations",
+          "reconnaissance",
+          "air-defense"
+        ],
+        "recommended": [
+          "electromagnetic-operations"
+        ],
+        "guardrail": "escalation",
+        "minimumEscort": 3,
+        "minimumAirDefense": 2,
+        "minimumAsw": 1,
+        "minimumUncrewed": 4,
+        "adversaryCount": 2,
+        "matrix": {
+          "version": 1,
+          "seed": 2039682053,
+          "forceScale": "massive",
+          "forceScaleLabel": "Massive combined formation",
+          "estimatedOpposingElements": [
+            26,
+            48
+          ],
+          "opponentCoordination": "none",
+          "institutionalConstraint": "unsustainable-overfunding",
+          "illicitNetworkType": "trafficking-in-persons",
+          "secondaryObjective": {
+            "id": "secondary-64cd69f0",
+            "label": "Maintain an alternate route",
+            "description": "Keep one alternate passage usable so success does not depend on a single brittle corridor.",
+            "revealTurn": 3,
+            "minimumDifficulty": "standard",
+            "weight": 28,
+            "method": "alternate-route"
+          },
+          "disruptions": [
+            {
+              "id": "weather-window",
+              "kind": "severe-weather",
+              "headline": "Severe ocean storm",
+              "description": "Severe ocean storm crosses the working area. Flight operations, exposed craft, sensing, and recovery are constrained for the stated window; the same environmental rule applies to both forces.",
+              "startsTurn": 4,
+              "endsTurn": 4,
+              "minimumDifficulty": "standard",
+              "severity": "extreme",
+              "affectedSide": "both",
+              "affectedDomains": [
+                "air",
+                "surface",
+                "communications"
+              ],
+              "availabilityMultiplier": 0.64,
+              "permanentLossFraction": 0.08,
+              "opposingPressureMultiplier": 0.72
+            },
+            {
+              "id": "institution-unsustainable-overfunding",
+              "kind": "command-interference",
+              "headline": "Unsustainable opposing mobilization",
+              "description": "An opposing sponsor releases resources beyond a supportable plan. Pressure rises during the stated window, while immediate maintenance and integration failures create the recorded permanent loss.",
+              "startsTurn": 2,
+              "endsTurn": 4,
+              "minimumDifficulty": "challenge",
+              "severity": "watch",
+              "affectedSide": "opposing-force",
+              "affectedDomains": [
+                "surface",
+                "air",
+                "subsurface",
+                "mission-pack"
+              ],
+              "availabilityMultiplier": 1,
+              "permanentLossFraction": 0.06,
+              "opposingPressureMultiplier": 1.16
+            },
+            {
+              "id": "opportunist-route-exploitation-network",
+              "kind": "opportunistic-actor",
+              "headline": "Independent route-exploitation network",
+              "description": "Independent route-exploitation network seeks advantage from both principal forces. It acts for its own limited purpose and does not share command, information, or political aims with the primary opposition. Its identity remains abstract unless the contact picture supports further disclosure.",
+              "startsTurn": 5,
+              "endsTurn": 6,
+              "minimumDifficulty": "standard",
+              "severity": "watch",
+              "affectedSide": "both",
+              "affectedDomains": [
+                "air",
+                "communications"
+              ],
+              "availabilityMultiplier": 1,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 1,
+              "opportunisticActorType": "route-exploitation-network"
+            }
+          ],
+          "committedTurnDraws": [
+            99,
+            51,
+            27,
+            82,
+            69,
+            68
+          ]
+        }
+      },
+      "snapshots": [
+        "e8a07c8ceed5b6a11ea4325733a1efaab9c13151218f96528ae778464a453c7d",
+        "c44a0c212d90a291b117c01755cfb80f151e86731d0f256e2f864415518385b2",
+        "f82a8ea6e7f5a509e2b914628288a1da483dd4d1cf0dfc8c11c70f66f0ec87ae",
+        "f32367fb379ab8c60afffc09c04b0472f2f50b1ec5d0c7917322592b469b447a",
+        "d7e3c4b3a9141dd1a7e05f83f2b7f8cf681f19fafa066b385815b72d9b1f8532",
+        "4e672112802e0b8251cabc1650ef09f76ae9975724751633b0d17c030b3cf4f5",
+        "fd595e78e7eb14feefc0bfdd674903c21f5f71f1d9c2fef04c5ff5fcd420370b"
+      ]
+    },
+    {
+      "scenario": {
+        "id": 107,
+        "difficulty": "challenge",
+        "climate": "ocean",
+        "regionId": "temperate-strait",
+        "season": "autumn",
+        "time": "night",
+        "clouds": "scattered",
+        "precipitation": "none",
+        "seaState": 3,
+        "visibility": 8,
+        "required": [
+          "surface-operations",
+          "reconnaissance",
+          "air-defense"
+        ],
+        "recommended": [
+          "electromagnetic-operations"
+        ],
+        "guardrail": "escalation",
+        "minimumEscort": 3,
+        "minimumAirDefense": 2,
+        "minimumAsw": 1,
+        "minimumUncrewed": 4,
+        "adversaryCount": 2,
+        "matrix": {
+          "version": 1,
+          "seed": 1763736571,
+          "forceScale": "large",
+          "forceScaleLabel": "Distributed multi-domain formation",
+          "estimatedOpposingElements": [
+            15,
+            28
+          ],
+          "opponentCoordination": "none",
+          "institutionalConstraint": "risk-insensitive-sponsor",
+          "illicitNetworkType": "sanctions-evasion",
+          "secondaryObjective": {
+            "id": "secondary-64cd69f0",
+            "label": "Maintain an alternate route",
+            "description": "Keep one alternate passage usable so success does not depend on a single brittle corridor.",
+            "revealTurn": 4,
+            "minimumDifficulty": "standard",
+            "weight": 29,
+            "method": "alternate-route"
+          },
+          "disruptions": [
+            {
+              "id": "weather-window",
+              "kind": "severe-weather",
+              "headline": "Severe ocean storm",
+              "description": "Severe ocean storm crosses the working area. Flight operations, exposed craft, sensing, and recovery are constrained for the stated window; the same environmental rule applies to both forces.",
+              "startsTurn": 4,
+              "endsTurn": 5,
+              "minimumDifficulty": "challenge",
+              "severity": "major",
+              "affectedSide": "both",
+              "affectedDomains": [
+                "air",
+                "surface",
+                "communications"
+              ],
+              "availabilityMultiplier": 0.78,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 0.84
+            },
+            {
+              "id": "institution-risk-insensitive-sponsor",
+              "kind": "command-interference",
+              "headline": "Risk-insensitive opposing direction",
+              "description": "Opposing political direction accepts disproportionate cost and orders a short surge. Pressure increases for the stated window; the model does not assume that risk acceptance creates durable capacity.",
+              "startsTurn": 4,
+              "endsTurn": 6,
+              "minimumDifficulty": "challenge",
+              "severity": "watch",
+              "affectedSide": "opposing-force",
+              "affectedDomains": [
+                "surface",
+                "air",
+                "communications"
+              ],
+              "availabilityMultiplier": 1,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 1.2
+            },
+            {
+              "id": "opportunist-route-exploitation-network",
+              "kind": "opportunistic-actor",
+              "headline": "Independent route-exploitation network",
+              "description": "Independent route-exploitation network seeks advantage from both principal forces. It acts for its own limited purpose and does not share command, information, or political aims with the primary opposition. Its identity remains abstract unless the contact picture supports further disclosure.",
+              "startsTurn": 2,
+              "endsTurn": 3,
+              "minimumDifficulty": "standard",
+              "severity": "watch",
+              "affectedSide": "both",
+              "affectedDomains": [
+                "air",
+                "communications"
+              ],
+              "availabilityMultiplier": 1,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 1,
+              "opportunisticActorType": "route-exploitation-network"
+            }
+          ],
+          "committedTurnDraws": [
+            69,
+            100,
+            88,
+            79,
+            92,
+            43
+          ]
+        }
+      },
+      "snapshots": [
+        "c1c7c682625c8e663696c25789465e4187976162dd4d159bc545ed4ff7887ef2",
+        "92ba49c6f3bbf134dcc7cd0d08a574c8859231371b77d68f04aa7e003ea5c215",
+        "57071d8ef75b64f22f3166ebfce4e02788e6eb78582dee4a7e23c8874d31357a",
+        "362affb959dae8a5322ae89aa018923d542a20ebe56ef9f49929a7b7f5212bc1",
+        "f80b51cd27d64eac28dde51ff840ae34f4273b7bd737e11ff1a62da8ba6909ab",
+        "cb0d5e8d1a16e4b6b23ca7a32d3d4e618bab85a0913a180a4c9736b5a46ac40c",
+        "87c0d733f17454e8a1b21c6e09d21bacda83aca8e0d446285a5c93800c14aaa9"
+      ]
+    },
+    {
+      "scenario": {
+        "id": 318,
+        "difficulty": "challenge",
+        "climate": "ocean",
+        "regionId": "temperate-strait",
+        "season": "autumn",
+        "time": "night",
+        "clouds": "scattered",
+        "precipitation": "none",
+        "seaState": 3,
+        "visibility": 8,
+        "required": [
+          "surface-operations",
+          "reconnaissance",
+          "air-defense"
+        ],
+        "recommended": [
+          "electromagnetic-operations"
+        ],
+        "guardrail": "escalation",
+        "minimumEscort": 3,
+        "minimumAirDefense": 2,
+        "minimumAsw": 1,
+        "minimumUncrewed": 4,
+        "adversaryCount": 2,
+        "matrix": {
+          "version": 1,
+          "seed": 482878877,
+          "forceScale": "tiny",
+          "forceScaleLabel": "Tiny dispersed craft group",
+          "estimatedOpposingElements": [
+            2,
+            5
+          ],
+          "opponentCoordination": "selective",
+          "institutionalConstraint": "unsustainable-overfunding",
+          "illicitNetworkType": "trafficking-in-persons",
+          "secondaryObjective": {
+            "id": "secondary-b81c6cc2",
+            "label": "Secure an evidence handoff",
+            "description": "Preserve and transfer the evidence needed for legitimate follow-on action without exposing protected people or unrelated traffic.",
+            "revealTurn": 3,
+            "minimumDifficulty": "challenge",
+            "weight": 26,
+            "method": "evidence-handoff"
+          },
+          "disruptions": [
+            {
+              "id": "weather-window",
+              "kind": "severe-weather",
+              "headline": "Severe ocean storm",
+              "description": "Severe ocean storm crosses the working area. Flight operations, exposed craft, sensing, and recovery are constrained for the stated window; the same environmental rule applies to both forces.",
+              "startsTurn": 4,
+              "endsTurn": 5,
+              "minimumDifficulty": "challenge",
+              "severity": "major",
+              "affectedSide": "both",
+              "affectedDomains": [
+                "air",
+                "surface",
+                "communications"
+              ],
+              "availabilityMultiplier": 0.78,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 0.84
+            },
+            {
+              "id": "institution-unsustainable-overfunding",
+              "kind": "command-interference",
+              "headline": "Unsustainable opposing mobilization",
+              "description": "An opposing sponsor releases resources beyond a supportable plan. Pressure rises during the stated window, while immediate maintenance and integration failures create the recorded permanent loss.",
+              "startsTurn": 5,
+              "endsTurn": 6,
+              "minimumDifficulty": "challenge",
+              "severity": "watch",
+              "affectedSide": "opposing-force",
+              "affectedDomains": [
+                "surface",
+                "air",
+                "subsurface",
+                "mission-pack"
+              ],
+              "availabilityMultiplier": 1,
+              "permanentLossFraction": 0.06,
+              "opposingPressureMultiplier": 1.16
+            },
+            {
+              "id": "opposing-cooperation",
+              "kind": "opposing-coordination",
+              "headline": "Opposing cooperation window",
+              "description": "Selective coordination lets distinct opposing actors share timing and selected information without assuming identical political aims.",
+              "startsTurn": 2,
+              "endsTurn": 3,
+              "minimumDifficulty": "standard",
+              "severity": "watch",
+              "affectedSide": "opposing-force",
+              "affectedDomains": [
+                "communications",
+                "air",
+                "surface",
+                "subsurface"
+              ],
+              "availabilityMultiplier": 1,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 1.12
+            },
+            {
+              "id": "opportunist-route-exploitation-network",
+              "kind": "opportunistic-actor",
+              "headline": "Independent route-exploitation network",
+              "description": "Independent route-exploitation network seeks advantage from both principal forces. It acts for its own limited purpose and does not share command, information, or political aims with the primary opposition. Its identity remains abstract unless the contact picture supports further disclosure.",
+              "startsTurn": 4,
+              "endsTurn": 4,
+              "minimumDifficulty": "challenge",
+              "severity": "major",
+              "affectedSide": "both",
+              "affectedDomains": [
+                "surface",
+                "mission-pack"
+              ],
+              "availabilityMultiplier": 1,
+              "permanentLossFraction": 0,
+              "opposingPressureMultiplier": 1,
+              "opportunisticActorType": "route-exploitation-network"
+            }
+          ],
+          "committedTurnDraws": [
+            75,
+            68,
+            50,
+            39,
+            6,
+            2
+          ]
+        }
+      },
+      "snapshots": [
+        "66d7cdef2fe5f5a05f900e8c3f08d5579931b9a9ca7ca146d3eb41ba8fb48796",
+        "c0abc8e85c1668694c14f7b473733b537df70b8a9082fbdcfe3f00ffb83b718c",
+        "f6a14ca321579786e2ae3d94bbf1d75c9255954819ee765c6383777aaa7ee1f4",
+        "006cf94fea60ea9e9498cbbf66b79381523331602d968f0942240330c6b0a26b",
+        "a0cd77424ac918821eb1d5c1537edcfec4e219d99242757df77aa24991bc61da",
+        "136558cb7163823f48d9d37f0fc09c6fe927803f897eda636d658e24b448041b",
+        "8026a1c131075a37746b4f9f4231f12c8092c569b16205412131efa6f491caf6"
+      ]
+    }
+  ]
+}
