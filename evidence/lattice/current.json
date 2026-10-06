@@ -1,6 +1,6 @@
 {
   "schemaVersion": "fog-of-sea.lattice-copy.evidence.v2",
-  "snapshotId": "lattice-copy-e26a62a6ecdcf263649fe029",
+  "snapshotId": "lattice-copy-6bae02e4df7e11fcdb9d62d5",
   "lattice": {
     "engineName": "Lattice — Layered Register Engine",
     "engineVersion": "0.1.1",
@@ -15,7 +15,7 @@
     "files": [
       {
         "path": "package-lock.json",
-        "sha256": "be1766603eb2fbd5b9a34f3338d8e186b7b36c261fd165a71ebe23e6c6e98592"
+        "sha256": "8faf43983c6087ec291ade5d3086ae8c0ad5bed2d4afa22e667db1864e84ea42"
       },
       {
         "path": "package.json",
@@ -70,7 +70,7 @@
         "sha256": "ce11fe7f669e14fa1ea192ecdd2d733d5033f1ec4281be7dad5684763c90ccfd"
       }
     ],
-    "sha256": "93e529d8f2b995cd1e96932b16b377d7bee2eb17ecc1686ec761f9accd1dd8ff"
+    "sha256": "ae65d9cf0dfd6bbb4c712329b534cf1c6268b59a38a6b974abd8d06450c43a10"
   },
   "source": {
     "requestPath": "authoring/lattice-copy.requests.json",
@@ -975,11 +975,11 @@
   "copySha256": "b0f1f86c0d4c19c48ceeafc7f18e805987c7b311cdcda0519268522954d7149c",
   "generatedFile": {
     "path": "app/generated/lattice-copy.json",
-    "sha256": "eae2c57c268bdf8ba2a0e30352a79d297f4ded17a332dd58f8a309909469ee22"
+    "sha256": "18b71162f7133a2cdf9e65328e46216ec86a6f7d8233bb5a8a22c5a30ba7c0e3"
   },
   "runtimeFile": {
     "path": "app/generated/lattice-copy.runtime.json",
-    "sha256": "bb3f723af156fd028bc139fb5d4e8e81afab7a31900cc002f3f0431a88d74e62"
+    "sha256": "cd241c36162a71ccda05f1ef1da0fd97261d7409f7c31708370d7c6e50fbccb8"
   },
   "academyCorpus": {
     "schemaVersion": "fog-of-sea.lattice-copy.academy-corpus.v1",

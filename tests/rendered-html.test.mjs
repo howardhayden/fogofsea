@@ -246,7 +246,9 @@ test("visualization uses five rotatable views and fixed fictional environment da
   assert.match(battlefield, /import \{ advanceRenderDeadline \} from "\.\/visualPerformance"/);
   assert.match(battlefield, /nextFrameAt = advanceRenderDeadline\(nextFrameAt, Math\.max\(frameAt, nextFrameAt\), 30\)/);
   assert.match(battlefield, /if \(frameAt \+ 1 < nextFrameAt\) return/);
-  assert.match(battlefield, /baseX/);
+  // Environmental schools now share a bounded phase sampler instead of
+  // keeping independent circular-route coordinates in the React component.
+  assert.match(battlefield, /updateSeaLife\(seaCreatures, elapsed, reducedMotion\)/);
   assert.match(page, /windHeading=\{scenario\.windHeading\}/);
   assert.match(page, /currentHeading=\{scenario\.currentHeading\}/);
 });

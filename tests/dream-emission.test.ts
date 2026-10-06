@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import * as THREE from "three";
+import { sampleStarShimmer } from "../app/starPulse";
 import {
   attachDreamEmission, createDreamEmissionProfile, detachDreamEmission,
-  DREAM_EMISSION_LIMITS, dreamEmissionVisibilityLift, dreamSourceVisible,
-  sampleDreamEmission, updateDreamEmission, type DreamEmissionKind, type DreamEmissionRuntime,
+  DREAM_EMISSION_LIMITS, DREAM_MOVEMENT_PULSE, dreamEmissionVisibilityLift, dreamSourceVisible,
+  sampleDreamEmission, setDreamEmissionMovement, updateDreamEmission, type DreamEmissionKind, type DreamEmissionRuntime,
 } from "../app/dreamEmission";
 
 const kinds: readonly DreamEmissionKind[] = ["ship", "submarine", "aircraft", "creature"];
@@ -118,4 +119,72 @@ test("NDCG/R01: viewport/pose changes do not rewrite the authored reference size
   attachDreamEmission(group, createDreamEmissionProfile(3, "night", "creature"));
   assert.equal(group.children.length, 1, "re-registration leaked geometry");
   detachDreamEmission(group);
+});
+
+test("NDCG/M01: formation movement adds bounded smooth gain while resting sources remain exact", () => {
+  assert.ok(DREAM_MOVEMENT_PULSE.frequencyHz >= 0.22 && DREAM_MOVEMENT_PULSE.frequencyHz <= 0.3);
+  for (const kind of ["ship", "submarine", "aircraft"] as const) {
+    const profile = createDreamEmissionProfile(19, "night", kind);
+    let previous = sampleDreamEmission(profile, 0, false, 1).haloFactor;
+    let minimum = previous; let maximum = previous;
+    for (let frame = 0; frame <= 3600; frame++) {
+      const elapsed = frame / 60;
+      const resting = sampleDreamEmission(profile, elapsed, false).haloFactor;
+      const moving = sampleDreamEmission(profile, elapsed, false, 1).haloFactor;
+      assert.equal(sampleDreamEmission(profile, elapsed, false, 0).haloFactor, resting);
+      assert.ok(moving >= 0.87 && moving <= 1.13);
+      assert.ok(Math.abs(moving - previous) < 0.003, "formation pulse must remain continuous and non-flashing");
+      assert.ok(Math.abs(moving - resting) <= 0.100000000001);
+      assert.equal(moving, resting + sampleStarShimmer(elapsed, profile.primaryPhase, DREAM_MOVEMENT_PULSE.frequencyHz) * DREAM_MOVEMENT_PULSE.amplitude);
+      minimum = Math.min(minimum, moving); maximum = Math.max(maximum, moving); previous = moving;
+    }
+    assert.ok(minimum < 0.93 && maximum > 1.07, "moving glow should visibly pulse beyond resting breathing");
+    for (const intensity of [-1, NaN, Infinity]) {
+      assert.deepEqual(sampleDreamEmission(profile, 12, false, intensity), sampleDreamEmission(profile, 12, false));
+    }
+    assert.deepEqual(sampleDreamEmission(profile, 12, false, 99), sampleDreamEmission(profile, 12, false, 1));
+    assert.deepEqual(sampleDreamEmission(profile, Infinity, false, 1), { haloFactor: 1 });
+    assert.deepEqual(sampleDreamEmission(profile, 12, true, 1), { haloFactor: 1 });
+  }
+  for (const profile of [createDreamEmissionProfile(19, "night", "creature"), createDreamEmissionProfile(19, "day", "ship")]) {
+    assert.deepEqual(sampleDreamEmission(profile, 12, false, 1), sampleDreamEmission(profile, 12, false));
+  }
+});
+
+test("NDCG/M02: travel setter preserves native materials and bounds, resets at rest, and cannot enable day glow", () => {
+  const group = new THREE.Group();
+  const readRuntime = (): DreamEmissionRuntime | undefined => group.userData.dreamEmission;
+  const geometry = new THREE.BoxGeometry(3, 1, 1);
+  const material = new THREE.MeshStandardMaterial({ color: 0x547f91 });
+  const mesh = new THREE.Mesh(geometry, material);
+  group.add(mesh);
+  setDreamEmissionMovement(group, 1);
+  assert.equal(group.userData.dreamEmission, undefined);
+  attachDreamEmission(group, createDreamEmissionProfile(19, "night", "ship"));
+  const runtime = readRuntime();
+  assert.ok(runtime);
+  const reference = runtime.referenceBox.clone();
+  setDreamEmissionMovement(group, 10);
+  updateDreamEmission([group], 12, false);
+  assert.equal(runtime.movementIntensity, 1);
+  assert.equal(runtime.haloFactor, sampleDreamEmission(runtime.profile, 12, false, 1).haloFactor);
+  assert.equal(mesh.material, material);
+  assert.equal(mesh.geometry, geometry);
+  assert.equal(material.color.getHex(), 0x547f91);
+  assert.equal(material.emissive.getHex(), 0);
+  assert.ok(reference.equals(runtime.referenceBox));
+  assert.equal(group.children.length, 1);
+  setDreamEmissionMovement(group, 0);
+  updateDreamEmission([group], 12, false);
+  assert.equal(runtime.haloFactor, sampleDreamEmission(runtime.profile, 12, false).haloFactor);
+  setDreamEmissionMovement(group, NaN);
+  assert.equal(runtime.movementIntensity, 0);
+  attachDreamEmission(group, createDreamEmissionProfile(19, "day", "ship"));
+  setDreamEmissionMovement(group, 1);
+  updateDreamEmission([group], 12, false);
+  assert.equal(group.userData.dreamEmission, undefined);
+  attachDreamEmission(group, createDreamEmissionProfile(19, "night", "creature"));
+  setDreamEmissionMovement(group, 1);
+  assert.equal(readRuntime()?.movementIntensity, 0);
+  detachDreamEmission(group); geometry.dispose(); material.dispose();
 });

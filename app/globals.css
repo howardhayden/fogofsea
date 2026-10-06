@@ -303,6 +303,8 @@ button { font: inherit; }
 }
 .fallback-stars, .fallback-sea-life, .fallback-wildlife { display: none; position: absolute; inset: 0; overflow: hidden; }
 .fallback-stars { z-index: 0; isolation: isolate; }
+.fallback-warm-sky { position: absolute; inset: 0 0 63%; pointer-events: none; }
+.layer-stars .fallback-warm-sky { bottom: 0; }
 .layer-stars .fallback-scene { background: linear-gradient(148deg, transparent 0 43%, rgba(188,170,218,.12) 44% 47%, transparent 48%), linear-gradient(28deg, transparent 0 58%, rgba(121,200,198,.1) 59% 62%, transparent 63%), linear-gradient(155deg, #302d50 0%, #3d4364 42%, #604b62 69%, #31535e 100%); }
 .theme-light .layer-stars .fallback-scene { background: linear-gradient(148deg, transparent 0 43%, rgba(239,211,237,.22) 44% 47%, transparent 48%), linear-gradient(28deg, transparent 0 58%, rgba(184,229,217,.2) 59% 62%, transparent 63%), linear-gradient(155deg, #555b7d 0%, #6b7191 42%, #8b6e83 69%, #557b82 100%); }
 .layer-stars .fallback-stars,
@@ -518,6 +520,14 @@ button { font: inherit; }
 @keyframes fallback-swim { to { translate: 42px 5px; } }
 .fallback-wildlife { display: block; pointer-events: none; z-index: 2; }
 .layer-stars .fallback-wildlife { display: none; }
+.fallback-wildlife .wildlife-support {
+  position: absolute;
+  width: 64px;
+  height: 24px;
+  background: #b9d2d1;
+  opacity: .6;
+  clip-path: polygon(8% 24%, 30% 2%, 81% 9%, 100% 50%, 85% 93%, 25% 100%, 0 69%);
+}
 .fallback-wildlife i {
   --wildlife-scale: 1;
   --wildlife-duration: 22s;

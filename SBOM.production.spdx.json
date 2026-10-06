@@ -3,13 +3,13 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "fog-of-sea-production-dependency-sbom",
-  "documentNamespace": "https://fog-of-sea.invalid/sbom/production/be1766603eb2fbd5b9a34f3338d8e186b7b36c261fd165a71ebe23e6c6e98592",
+  "documentNamespace": "https://fog-of-sea.invalid/sbom/production/8faf43983c6087ec291ade5d3086ae8c0ad5bed2d4afa22e667db1864e84ea42",
   "creationInfo": {
-    "created": "2026-09-23T11:16:00.733Z",
+    "created": "2026-10-06T05:52:46.915Z",
     "creators": [
       "Tool: scripts/generate-sbom.mjs"
     ],
-    "comment": "Generated deterministically from package-lock.json SHA-256 be1766603eb2fbd5b9a34f3338d8e186b7b36c261fd165a71ebe23e6c6e98592."
+    "comment": "Generated deterministically from package-lock.json SHA-256 8faf43983c6087ec291ade5d3086ae8c0ad5bed2d4afa22e667db1864e84ea42."
   },
   "documentDescribes": [
     "SPDXRef-Package-root"

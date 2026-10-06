@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { StarfieldCulling } from "./starfieldCulling";
+import { STAR_SHIMMER_GLSL } from "./starPulse";
+import { createStarAtmosphereAdornments, normalizeStarAtmosphereConfig, type StarAtmosphereConfig } from "./starAtmosphere";
 import { refractSkyDirection, type SubsurfaceOpticsPlan } from "./environmentVisuals";
 import { seededRandom, type StarPlacement, type ViewLayer } from "./viewModel";
 
@@ -147,6 +149,12 @@ const STAR_PALETTES = {
     0xe98c5e,
   ],
 } as const;
+
+/** Native star hue lookup for separate decorative background light. */
+export function starfieldNativeColor(theme: StarfieldPlan["theme"], colorIndex: number): number {
+  const palette = STAR_PALETTES[theme];
+  return palette[colorIndex % palette.length];
+}
 
 const NEBULA_FAMILIES: readonly NebulaColorFamily[] = [
   "white", "pastel", "white", "white", "pastel", "white", "pastel", "white",
@@ -543,6 +551,12 @@ export type StarfieldVisibilityInput = {
  * are restricted to above-horizon light and refracted into Snell's window.
  */
 export function visibleStarfieldPlan(plan: StarfieldPlan, input: StarfieldVisibilityInput): StarfieldPlan {
+  // The dedicated Stars view presents the complete authored cosmos. Weather,
+  // daylight and nearby traffic still affect real sky sightlines in the other
+  // layers, but must not remove whole nebula fields or select a sparse lucky
+  // subset here. Keep the existing bounded population and native star values;
+  // scene geometry still provides spatial occlusion during rendering.
+  if (input.viewLayer === "stars") return plan;
   const timeThreshold = { night: 0.08, dusk: 0.5, dawn: 0.56, day: 0.93 }[input.time];
   const layerThreshold = { stars: 0, sky: 0.01, air: 0.03, surface: 0.02, subsurface: 0.82 }[input.viewLayer];
   const cloudPenalty = { clear: 0, scattered: 0.035, broken: 0.13, overcast: 0.31 }[input.clouds];
@@ -581,7 +595,7 @@ export function visibleStarfieldPlan(plan: StarfieldPlan, input: StarfieldVisibi
       ? plan.nebulae
       : [];
   const visibleNebulaIds = new Set(admittedNebulae.map((nebula) => nebula.id));
-  const aboveHorizonStars = input.viewLayer === "stars" ? plan.stars : plan.stars.filter((star) => star.y > 0);
+  const aboveHorizonStars = plan.stars.filter((star) => star.y > 0);
   const eligibleStars = input.viewLayer === "subsurface"
     && (!input.subsurfaceOptics?.surfaceApertureOpen || !input.subsurfaceOptics.activeBodyVisible)
     ? []
@@ -688,7 +702,7 @@ export function sampleStarWander(profile: StarWanderProfile, elapsed: number) {
   };
 }
 
-function starGeometry() {
+function starGeometry(atmosphere?: StarAtmosphereConfig) {
   const core = new THREE.OctahedronGeometry(0.82, 0);
   const halo = new THREE.OctahedronGeometry(STARFIELD_LIMITS.haloRadius, 0);
   const corePosition = core.getAttribute("position") as THREE.BufferAttribute;
@@ -706,14 +720,45 @@ function starGeometry() {
   geometry.computeVertexNormals();
   core.dispose();
   halo.dispose();
+  if (atmosphere) {
+    // Preserve the original 48 vertex positions, normals and layer markers
+    // byte-for-byte. Two appended quads carry only the optional soft fringe
+    // and diffuse outer glow, in the same instanced draw.
+    const originalNormals = geometry.getAttribute("normal");
+    const adornedPositions = new Float32Array(position.length + 36);
+    adornedPositions.set(position);
+    const adornedNormals = new Float32Array(adornedPositions.length);
+    adornedNormals.set(originalNormals.array);
+    const adornedLayers = new Float32Array(facetLayer.length + 12);
+    adornedLayers.set(facetLayer);
+    const quad = [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0];
+    for (let layer = 0; layer < 2; layer++) {
+      // Store the outer extent in geometry so the shared culling envelope
+      // covers the entire bloom, including stars outside the camera edge.
+      const radius = layer === 0 ? atmosphere.bloomRadius : atmosphere.diffuseRadius;
+      for (let index = 0; index < quad.length; index++) {
+        adornedPositions[position.length + layer * 18 + index] = quad[index] * radius;
+      }
+      for (let vertex = 0; vertex < 6; vertex++) adornedNormals[position.length + layer * 18 + vertex * 3 + 2] = 1;
+      adornedLayers.fill(layer + 2, facetLayer.length + layer * 6, facetLayer.length + (layer + 1) * 6);
+    }
+    geometry.setAttribute("position", new THREE.BufferAttribute(adornedPositions, 3));
+    geometry.setAttribute("normal", new THREE.BufferAttribute(adornedNormals, 3));
+    geometry.setAttribute("aFacetHalo", new THREE.BufferAttribute(adornedLayers, 1));
+  }
   return geometry;
 }
 
-function facetedPointMaterial() {
+function facetedPointMaterial(atmosphere?: StarAtmosphereConfig) {
   return new THREE.ShaderMaterial({
     uniforms: THREE.UniformsUtils.merge([
       THREE.UniformsLib.fog,
       { uTime: { value: 0 } },
+      ...(atmosphere ? [{
+        uAtmosphere: { value: new THREE.Vector4(atmosphere.intensity, atmosphere.bloomIntensity, atmosphere.bloomRadius, atmosphere.edgeSoftness) },
+        uDiffuseAtmosphere: { value: new THREE.Vector2(atmosphere.diffuseIntensity, atmosphere.diffuseRadius) },
+        uAtmosphereDetail: { value: new THREE.Vector3(atmosphere.irregularity, atmosphere.chromaticVariance, atmosphere.twinkleAmount) },
+      }] : []),
     ]),
     vertexShader: `
       attribute vec4 aTwinkleProfile;
@@ -725,7 +770,16 @@ function facetedPointMaterial() {
       varying float vAlpha;
       varying float vFacetHalo;
       uniform float uTime;
+      ${atmosphere ? `
+      attribute vec4 aAtmosphereProfile;
+      varying vec4 vAtmosphereProfile;
+      varying vec2 vAtmosphereUv;
+      uniform vec4 uAtmosphere;
+      uniform vec2 uDiffuseAtmosphere;
+      uniform vec3 uAtmosphereDetail;
+      ` : ""}
       #include <fog_pars_vertex>
+      ${STAR_SHIMMER_GLSL}
 
       float wanderHash(float value) {
         float hashed = fract(value * 0.1031);
@@ -752,10 +806,7 @@ function facetedPointMaterial() {
       void main() {
         float phase = aTwinkleProfile.x;
         float frequency = aTwinkleProfile.y;
-        float primary = sin(uTime * 6.28318530718 * frequency + phase);
-        float irregular = sin(uTime * 6.28318530718 * frequency * 0.613 + phase * 1.71);
-        float crystalline = sin(uTime * 6.28318530718 * frequency * 1.731 + phase * 0.47);
-        float shimmer = primary * 0.55 + irregular * 0.28 + crystalline * 0.17;
+        float shimmer = sampleStarShimmer(uTime, phase, frequency);
         float pulse = 1.0 + shimmer * aTwinkleProfile.w;
         vec4 instancePosition = instanceMatrix * vec4(position * pulse, 1.0);
         // Independently hashed targets create a bounded, non-periodic pocket
@@ -768,6 +819,25 @@ function facetedPointMaterial() {
         ) * (aShiftProfile.w * 0.5);
         instancePosition.xyz += shift;
         vec4 mvPosition = modelViewMatrix * instancePosition;
+        ${atmosphere ? `
+        vAtmosphereProfile = aAtmosphereProfile;
+        vAtmosphereUv = position.xy / (aFacetHalo > 2.5 ? uDiffuseAtmosphere.y : uAtmosphere.z);
+        if (aFacetHalo > 1.5) {
+          // The very same pulse and wander locate each decoration. Added
+          // surfaces have no independent position, orbital path or clock.
+          vec4 center = instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+          center.xyz += shift;
+          mvPosition = modelViewMatrix * center;
+          float radiusFactor = aFacetHalo < 2.5 ? 0.34 : 1.0;
+          // Collapse unused quads before rasterization: micro stars receive
+          // neither layer, and standard stars receive only the small fringe.
+          bool adornmentVisible = aAtmosphereProfile.x > 0.5
+            && (aFacetHalo < 2.5 || aAtmosphereProfile.x > 1.5);
+          if (adornmentVisible) {
+            mvPosition.xy += position.xy * length(instanceMatrix[0].xyz) * pulse * radiusFactor;
+          }
+        }
+        ` : ""}
         gl_Position = projectionMatrix * mvPosition;
         vPointColor = instanceColor;
         vViewNormal = normalize(normalMatrix * mat3(instanceMatrix) * normal);
@@ -781,6 +851,14 @@ function facetedPointMaterial() {
       varying vec3 vViewNormal;
       varying float vAlpha;
       varying float vFacetHalo;
+      ${atmosphere ? `
+      varying vec4 vAtmosphereProfile;
+      varying vec2 vAtmosphereUv;
+      uniform vec4 uAtmosphere;
+      uniform vec2 uDiffuseAtmosphere;
+      uniform vec3 uAtmosphereDetail;
+      uniform float uTime;
+      ` : ""}
       #include <fog_pars_fragment>
 
       void main() {
@@ -796,6 +874,40 @@ function facetedPointMaterial() {
           shell
         );
         gl_FragColor = vec4(vPointColor * layerLight, layerAlpha);
+        ${atmosphere ? `
+        if (vFacetHalo > 1.5) {
+          float starClass = vAtmosphereProfile.x;
+          bool outer = vFacetHalo > 2.5;
+          if (starClass < 0.5 || (outer && starClass < 1.5)) discard;
+          float variation = vAtmosphereProfile.w;
+          float angle = variation * 6.28318530718;
+          mat2 turn = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+          vec2 p = turn * vAtmosphereUv;
+          p *= vec2(1.0 + (variation - 0.5) * uAtmosphereDetail.x, 1.0 - (variation - 0.5) * uAtmosphereDetail.x);
+          float radial = length(p);
+          float decorativeMask;
+          if (outer) {
+            decorativeMask = exp(-radial * radial * 5.8) * (1.0 - smoothstep(0.76, 0.98, radial));
+          } else {
+            float shape = vAtmosphereProfile.z;
+            float edge = radial;
+            if (shape > 0.5 && shape < 1.5) edge = (abs(p.x) + abs(p.y)) * 0.8;
+            else if (shape < 2.5 && shape > 1.5) edge = (abs(p.x + p.y * uAtmosphereDetail.x) + abs(p.y)) * 0.8;
+            else if (shape < 3.5 && shape > 2.5) edge = pow(pow(abs(p.x), 0.72) + pow(abs(p.y), 0.72), 1.0 / 0.72) * 0.65;
+            else if (shape < 4.5 && shape > 3.5) edge = pow(pow(abs(p.x), 4.0) + pow(abs(p.y), 4.0), 0.25);
+            else if (shape > 4.5) edge = length(p + vec2(p.y * p.y * uAtmosphereDetail.x, 0.0));
+            decorativeMask = (1.0 - smoothstep(0.25, 0.5 + uAtmosphere.w * 0.5, edge)) * 0.48;
+          }
+          float classGain = starClass > 2.5 ? 1.0 : starClass > 1.5 ? 0.52 : 0.12;
+          float drift = ${atmosphere.twinkleAmount > 0 ? "1.0 + sin(uTime * 0.11 + variation * 6.28318530718) * uAtmosphereDetail.z" : "1.0"};
+          float decorativeIntensity = outer ? uDiffuseAtmosphere.x : uAtmosphere.y;
+          float decorativeAlpha = uAtmosphere.x * decorativeIntensity * vAtmosphereProfile.y * classGain * vAlpha * drift;
+          decorativeAlpha *= decorativeMask;
+          float luminance = dot(vPointColor, vec3(0.2126, 0.7152, 0.0722));
+          vec3 glowColor = mix(vPointColor, vec3(luminance), uAtmosphereDetail.y);
+          gl_FragColor = vec4(glowColor, decorativeAlpha);
+        }
+        ` : ""}
         #include <fog_fragment>
       }
     `,
@@ -809,9 +921,9 @@ function facetedPointMaterial() {
   });
 }
 
-function createStarBatches(plan: StarfieldPlan, root: THREE.Group) {
+function createStarBatches(plan: StarfieldPlan, root: THREE.Group, atmosphere?: StarAtmosphereConfig) {
   if (plan.stars.length === 0) return [];
-  const geometry = starGeometry();
+  const geometry = starGeometry(atmosphere);
   const twinkleProfiles = new Float32Array(plan.stars.length * 4);
   const shiftProfiles = new Float32Array(plan.stars.length * 4);
   const baseAlphas = new Float32Array(plan.stars.length);
@@ -819,7 +931,15 @@ function createStarBatches(plan: StarfieldPlan, root: THREE.Group) {
   geometry.setAttribute("aShiftProfile", new THREE.InstancedBufferAttribute(shiftProfiles, 4));
   geometry.setAttribute("aBaseAlpha", new THREE.InstancedBufferAttribute(baseAlphas, 1));
 
-  const material = facetedPointMaterial();
+  if (atmosphere) {
+    const adornments = createStarAtmosphereAdornments(plan, atmosphere);
+    const profiles = new Float32Array(plan.stars.length * 4);
+    adornments.forEach((adornment, index) => profiles.set([
+      adornment.classIndex, adornment.strength, adornment.shape, adornment.variation,
+    ], index * 4));
+    geometry.setAttribute("aAtmosphereProfile", new THREE.InstancedBufferAttribute(profiles, 4));
+  }
+  const material = facetedPointMaterial(atmosphere);
   const mesh = new THREE.InstancedMesh(geometry, material, plan.stars.length);
   mesh.name = "distant-faceted-star-points";
   mesh.frustumCulled = false;
@@ -869,11 +989,17 @@ function createStarBatches(plan: StarfieldPlan, root: THREE.Group) {
   return [{ mesh, material, culling: new StarfieldCulling(mesh) }];
 }
 
-export function createStarfield(scene: THREE.Scene, plan: StarfieldPlan): StarfieldRuntime {
+export function createStarfield(
+  scene: THREE.Scene,
+  plan: StarfieldPlan,
+  atmosphere?: StarAtmosphereConfig,
+): StarfieldRuntime {
   const root = new THREE.Group();
   root.name = "procedural-starfield";
   scene.add(root);
-  const starBatches = createStarBatches(plan, root);
+  const resolved = atmosphere ? normalizeStarAtmosphereConfig(atmosphere) : undefined;
+  const admittedAtmosphere = resolved?.enabled && resolved.intensity > 0 && plan.appearance === "direct sky" ? resolved : undefined;
+  const starBatches = createStarBatches(plan, root, admittedAtmosphere);
   const nebulae = plan.nebulae;
   return { root, plan, starBatches, nebulae };
 }

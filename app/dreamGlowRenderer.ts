@@ -61,6 +61,7 @@ const GLOW_FRAGMENT = `
   uniform vec4 uCaptureRect;
   uniform float uReference;
   uniform float uGain;
+  uniform float uSourceNear;
   uniform vec4 uSourceBounds;
   uniform vec3 uSigmaRatios;
   uniform vec3 uWeights;
@@ -69,6 +70,12 @@ const GLOW_FRAGMENT = `
   vec4 sourceAt(vec2 uv) {
     vec2 limit = uCaptureRect.zw / uSourceSize;
     if (any(lessThan(uv, vec2(0.0))) || any(greaterThanEqual(uv, limit))) return vec4(0.0);
+    // These bounds enclose every source part with a two-pixel raster/filter
+    // margin. Outside them the capture is exactly clear; avoid a texture read
+    // for each of the 327 taps as the projected halo grows during close zoom.
+    vec2 sourcePixel = uCaptureRect.xy + uv * uSourceSize;
+    if (any(lessThan(sourcePixel, uSourceBounds.xy)) ||
+        any(greaterThan(sourcePixel, uSourceBounds.zw))) return vec4(0.0);
     return texture2D(uEmission, uv);
   }
   void main() {
@@ -78,18 +85,29 @@ const GLOW_FRAGMENT = `
     float coverage = sourceAt(centerUv).a;
     // The final composite discards every halo contribution at an opaque core.
     // Preserve that mask but do not evaluate 327 samples that cannot be shown.
-    if (coverage >= 1.0) {
+    // If even the nearest conservative source bound lies behind this scene
+    // pixel, every tap would fail the unchanged depth test. A generous margin
+    // accounts for projected-depth storage and floating-point interpolation.
+    float nearestSource = max(uNearFar.x, uSourceNear - max(0.001, uSourceNear * 0.0001));
+    bool entirelyBlocked = nearestSource > viewDepth(destinationDepth, uNearFar)
+      + max(0.0001, nearestSource * 0.00001);
+    if (coverage >= 1.0 || entirelyBlocked) {
       gl_FragColor = vec4(0.0, 0.0, 0.0, coverage);
       return;
     }
     vec3 spread = vec3(0.0);
+    vec2 boundsDistance = max(max(uSourceBounds.xy - gl_FragCoord.xy,
+      gl_FragCoord.xy - uSourceBounds.zw), vec2(0.0));
+    float boundsDistanceSquared = dot(boundsDistance, boundsDistance);
     for (int scaleIndex = 0; scaleIndex < 3; scaleIndex++) {
       float radius = uReference * uSigmaRatios[scaleIndex];
       // A conservative projected source rectangle plus the exact finite
       // kernel support. The two-pixel source margin includes raster/filter edges.
       float support = 3.0 * radius;
-      if (any(lessThan(gl_FragCoord.xy, uSourceBounds.xy - support)) ||
-          any(greaterThan(gl_FragCoord.xy, uSourceBounds.zw + support))) continue;
+      // The kernel support is radial, including near the rectangle corners.
+      // Do not run its samples where even the closest source bound is farther
+      // away than that support. The kernel itself and its weights are unchanged.
+      if (boundsDistanceSquared > support * support) continue;
       vec2 sigma = radius / uSourceSize;
       for (int tapIndex = 0; tapIndex < ${DREAM_GLOW_TAPS.length}; tapIndex++) {
         vec3 tap = uTaps[tapIndex];
@@ -144,13 +162,14 @@ const COMPOSITE_FRAGMENT = `
 `;
 
 type CapturedPart = { source: DreamSourcePart; proxy: THREE.Mesh; material: THREE.MeshBasicMaterial };
+type CaptureMaterial = { material: THREE.MeshBasicMaterial; uniforms?: Record<string, THREE.IUniform> };
 type Subject = {
   root: THREE.Group; runtime: DreamEmissionRuntime; scene: THREE.Scene; parts: CapturedPart[];
-  captureRect: THREE.Vector4; sourceBounds: THREE.Vector4;
+  captureRect: THREE.Vector4; sourceBounds: THREE.Vector4; nearestDepth: number;
 };
 type SourceTarget = {
   target: THREE.WebGLRenderTarget; captureRect: THREE.Vector4; sourceBounds: THREE.Vector4;
-  reference: number; gain: number; used: boolean; lastUsed: number;
+  reference: number; gain: number; nearestDepth: number; used: boolean; lastUsed: number;
 };
 export type DreamGlowStatus = "off" | "sampled-radial-native-color" | "core-only-capability" | "core-only-budget" | "partial-core-only-budget";
 
@@ -186,6 +205,8 @@ export class DreamGlowRenderer {
   renderedSubjects = 0;
   skippedForBudget = 0;
   private readonly subjects: Subject[];
+  private readonly captureMaterials: CaptureMaterial[] = [];
+  private captureMaterialCount = 0;
   private readonly base: THREE.WebGLRenderTarget;
   private readonly emission: THREE.WebGLRenderTarget;
   private readonly accumulation: THREE.WebGLRenderTarget;
@@ -244,6 +265,7 @@ export class DreamGlowRenderer {
         uSourceSize: { value: this.sourceSize }, uNearFar: { value: this.nearFar },
         uSourceBounds: { value: this.sourceBounds },
         uCaptureRect: { value: this.captureRect }, uReference: { value: 0 }, uGain: { value: 0 },
+        uSourceNear: { value: 0 },
         uSigmaRatios: { value: new THREE.Vector3().fromArray(DREAM_GLOW_MODEL.sigmaRatios) },
         uWeights: { value: new THREE.Vector3().fromArray(DREAM_GLOW_MODEL.weights) },
         uTaps: { value: DREAM_GLOW_TAPS.map((tap) => new THREE.Vector3(tap.x, tap.y, tap.weight)) },
@@ -280,33 +302,55 @@ export class DreamGlowRenderer {
       if (!runtime?.profile.enabled) continue;
       const sourceScene = new THREE.Scene();
       const parts: CapturedPart[] = runtime.parts.map((source) => {
-        const native = source.material;
-        const material = new THREE.MeshBasicMaterial({
-          color: native.color, map: native.map, alphaMap: native.alphaMap,
-          alphaTest: native.alphaTest, opacity: native.opacity,
-          vertexColors: native.vertexColors, side: native.side,
-          transparent: true, blending: THREE.NoBlending, depthWrite: true,
-          fog: native.fog, toneMapped: false,
-        });
-        material.onBeforeCompile = (shader) => {
-          shader.uniforms.uSceneDepth = { value: this.base.depthTexture };
-          shader.uniforms.uFullSize = { value: this.fullSize };
-          shader.uniforms.uCaptureRect = { value: this.captureRect };
-          shader.uniforms.uNearFar = { value: this.nearFar };
-          shader.fragmentShader = shader.fragmentShader
-            .replace("#include <common>", `#include <common>\n${CAPTURE_DECLARATIONS}`)
-            .replace("#include <fog_fragment>", CAPTURE_FOG)
-            .replace("#include <opaque_fragment>", `#include <opaque_fragment>\n${CAPTURE_OUTPUT}`);
-        };
-        material.customProgramCacheKey = () => "ndcg-native-visible-source-v1";
+        const material = this.acquireCaptureMaterial(source);
         const proxy = new THREE.Mesh(source.mesh.geometry, material);
         proxy.matrixAutoUpdate = false;
         proxy.frustumCulled = false;
         sourceScene.add(proxy);
         return { source, proxy, material };
       });
-      this.subjects.push({ root, runtime, scene: sourceScene, parts, captureRect: new THREE.Vector4(), sourceBounds: new THREE.Vector4() });
+      this.subjects.push({ root, runtime, scene: sourceScene, parts, captureRect: new THREE.Vector4(), sourceBounds: new THREE.Vector4(), nearestDepth: 0 });
     }
+  }
+
+  private acquireCaptureMaterial(source: DreamSourcePart): THREE.MeshBasicMaterial {
+    let entry = this.captureMaterials[this.captureMaterialCount++];
+    if (!entry) {
+      const material = new THREE.MeshBasicMaterial({
+        transparent: true, blending: THREE.NoBlending, depthWrite: true, toneMapped: false,
+      });
+      entry = { material };
+      this.captureMaterials.push(entry);
+      const retained = entry;
+      material.onBeforeCompile = (shader) => {
+        retained.uniforms = shader.uniforms;
+        shader.uniforms.uSceneDepth = { value: this.base.depthTexture };
+        shader.uniforms.uFullSize = { value: this.fullSize };
+        shader.uniforms.uCaptureRect = { value: this.captureRect };
+        shader.uniforms.uNearFar = { value: this.nearFar };
+        shader.fragmentShader = shader.fragmentShader
+          .replace("#include <common>", `#include <common>\n${CAPTURE_DECLARATIONS}`)
+          .replace("#include <fog_fragment>", CAPTURE_FOG)
+          .replace("#include <opaque_fragment>", `#include <opaque_fragment>\n${CAPTURE_OUTPUT}`);
+      };
+      material.customProgramCacheKey = () => "ndcg-native-visible-source-v1";
+    }
+    const { material } = entry;
+    const native = source.material;
+    material.color.copy(native.color);
+    material.map = native.map;
+    material.alphaMap = native.alphaMap;
+    material.alphaTest = native.alphaTest;
+    material.opacity = native.opacity;
+    material.vertexColors = native.vertexColors;
+    material.side = native.side;
+    material.fog = native.fog;
+    // Re-evaluate feature defines for the incoming source. Three retains the
+    // compiled programs owned by this material, including recurring variants.
+    // Disposing every capture material on a view change instead released their
+    // last program references and forced synchronous driver recompilation.
+    material.needsUpdate = true;
+    return material;
   }
 
   private projectedReference(subject: Subject, camera: THREE.PerspectiveCamera): number {
@@ -370,12 +414,14 @@ export class DreamGlowRenderer {
     const reference = this.projectedReference(subject, camera);
     if (!Number.isFinite(reference) || reference <= 0) return 0;
     let left = Infinity; let right = -Infinity; let bottom = Infinity; let top = -Infinity;
+    let nearestDepth = Infinity;
     for (let corner = 0; corner < 8; corner++) {
       this.point.set(corner & 1 ? this.worldBox.max.x : this.worldBox.min.x,
         corner & 2 ? this.worldBox.max.y : this.worldBox.min.y,
         corner & 4 ? this.worldBox.max.z : this.worldBox.min.z).applyMatrix4(camera.matrixWorldInverse);
       // A near-plane intersection cannot be safely projected to a finite crop.
       if (-this.point.z <= camera.near) { this.skippedForBudget++; return 0; }
+      nearestDepth = Math.min(nearestDepth, -this.point.z);
       this.point.applyMatrix4(camera.projectionMatrix);
       const x = (this.point.x * 0.5 + 0.5) * this.fullSize.x;
       const y = (this.point.y * 0.5 + 0.5) * this.fullSize.y;
@@ -393,6 +439,7 @@ export class DreamGlowRenderer {
     this.captureRect.set(left, bottom, width, height);
     subject.captureRect.copy(this.captureRect);
     subject.sourceBounds.copy(this.sourceBounds);
+    subject.nearestDepth = nearestDepth;
     return reference;
   }
 
@@ -427,7 +474,7 @@ export class DreamGlowRenderer {
     target.setSize(width, height);
     const entry: SourceTarget = {
       target, captureRect: new THREE.Vector4(), sourceBounds: new THREE.Vector4(),
-      reference: 0, gain: 0, used: true, lastUsed: ++this.sourceUseSerial,
+      reference: 0, gain: 0, nearestDepth: 0, used: true, lastUsed: ++this.sourceUseSerial,
     };
     this.sourceTargets.push(entry);
     this.sourceTargetPixels += pixels;
@@ -451,6 +498,7 @@ export class DreamGlowRenderer {
       this.glowMaterial.uniforms.uSourceDepth.value = entry.target.depthTexture;
       this.glowMaterial.uniforms.uReference.value = entry.reference;
       this.glowMaterial.uniforms.uGain.value = entry.gain;
+      this.glowMaterial.uniforms.uSourceNear.value = entry.nearestDepth;
       const x = Math.max(0, this.captureRect.x); const y = Math.max(0, this.captureRect.y);
       const width = Math.min(this.fullSize.x, this.captureRect.x + this.captureRect.z) - x;
       const height = Math.min(this.fullSize.y, this.captureRect.y + this.captureRect.w) - y;
@@ -535,6 +583,7 @@ export class DreamGlowRenderer {
         entry.captureRect.copy(subject.captureRect);
         entry.sourceBounds.copy(subject.sourceBounds);
         entry.reference = reference;
+        entry.nearestDepth = subject.nearestDepth;
         entry.gain = subject.runtime.profile.haloStrength * subject.runtime.haloFactor;
         this.captureRect.copy(entry.captureRect);
         this.sourceBounds.copy(entry.sourceBounds);
@@ -607,9 +656,18 @@ export class DreamGlowRenderer {
   /** Release old scene references without dropping renderer-owned programs. */
   clearSubjects(): void {
     for (const subject of this.subjects) {
-      for (const part of subject.parts) part.material.dispose();
       subject.scene.clear();
     }
+    for (let index = 0; index < this.captureMaterialCount; index++) {
+      const entry = this.captureMaterials[index];
+      entry.material.map = null;
+      entry.material.alphaMap = null;
+      // Standard-material uniform refresh occurs at the next draw. Clear its
+      // old texture references now so an empty view cannot retain old assets.
+      if (entry.uniforms?.map) entry.uniforms.map.value = null;
+      if (entry.uniforms?.alphaMap) entry.uniforms.alphaMap.value = null;
+    }
+    this.captureMaterialCount = 0;
     this.subjects.length = 0;
     this.renderedSubjects = 0;
     this.skippedForBudget = 0;
@@ -626,6 +684,8 @@ export class DreamGlowRenderer {
     this.pendingSources.length = 0;
     this.sourceTargetPixels = 0;
     this.clearSubjects();
+    for (const { material } of this.captureMaterials) material.dispose();
+    this.captureMaterials.length = 0;
     this.screenScene.clear();
     // Original scene geometry/material ownership remains with Battlefield.
   }

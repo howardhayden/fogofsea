@@ -21,10 +21,73 @@ export type StarfieldPixelMetrics = {
 export type StarfieldPixelCapture = {
   base64: string;
   metrics: StarfieldPixelMetrics;
+  /** Pixel indices of components over 180 pixels, for independent shape checks. */
+  largeComponents: number[][];
 };
 
+/** Positive local contrast isolates visible facets on both dark and daylight
+ * backdrops. A uniform bright sky cannot satisfy a star-density floor merely
+ * by crossing an absolute RGB threshold. */
+export async function measureStarfieldContrast(page: Page, base64: string) {
+  return page.evaluate(async (capture) => {
+    const image = new Image();
+    image.src = `data:image/png;base64,${capture}`;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    if (!context) throw new Error("Star contrast analysis requires a 2D context");
+    context.drawImage(image, 0, 0);
+    const { width, height } = canvas;
+    const { data } = context.getImageData(0, 0, width, height);
+    const intensity = new Uint8Array(width * height);
+    const mask = new Uint8Array(width * height);
+    const horizontalBins = [0, 0, 0, 0];
+    for (let index = 0; index < intensity.length; index++) {
+      intensity[index] = Math.max(data[index * 4], data[index * 4 + 1], data[index * 4 + 2]);
+    }
+    const neighbors = new Array<number>(8);
+    let contrastedPixels = 0;
+    for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+      let sampled = 0;
+      for (const dy of [-6, 0, 6]) for (const dx of [-6, 0, 6]) {
+        if (!dx && !dy) continue;
+        neighbors[sampled++] = intensity[Math.max(0, Math.min(height - 1, y + dy)) * width + Math.max(0, Math.min(width - 1, x + dx))];
+      }
+      neighbors.sort((left, right) => left - right);
+      const index = y * width + x;
+      if (intensity[index] >= 100 && intensity[index] - (neighbors[3] + neighbors[4]) * 0.5 >= 24) {
+        mask[index] = 1;
+        contrastedPixels++;
+        horizontalBins[Math.min(3, Math.floor(x / width * 4))]++;
+      }
+    }
+    const queue = new Uint32Array(width * height);
+    let components = 0;
+    for (let start = 0; start < mask.length; start++) {
+      if (!mask[start]) continue;
+      components++;
+      let head = 0; let tail = 1;
+      queue[0] = start; mask[start] = 0;
+      while (head < tail) {
+        const current = queue[head++];
+        const x = current % width; const y = Math.floor(current / width);
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+          if ((!dx && !dy) || x + dx < 0 || x + dx >= width || y + dy < 0 || y + dy >= height) continue;
+          const neighbor = current + dy * width + dx;
+          if (!mask[neighbor]) continue;
+          mask[neighbor] = 0; queue[tail++] = neighbor;
+        }
+      }
+    }
+    return { width, height, components, contrastedPixels, horizontalBins };
+  }, base64);
+}
+
 /** Captures and measures the presented WebGL pixels from one real PNG. */
-export async function captureStarfieldPixels(page: Page, canvas: Locator): Promise<StarfieldPixelCapture> {
+export async function captureStarfieldPixels(
+  page: Page, canvas: Locator, { retainLargeComponents = false } = {},
+): Promise<StarfieldPixelCapture> {
   // Element captures include overlapping higher-z-index siblings. Playwright's
   // temporary screenshot stylesheet is intentionally rejected by the app CSP,
   // so hide those panels through reversible DOM properties for one frame.
@@ -54,7 +117,7 @@ export async function captureStarfieldPixels(page: Page, canvas: Locator): Promi
     }), previousVisibility);
   }
   const base64 = capture.toString("base64");
-  const metrics = await page.evaluate(async (base64Capture) => {
+  const analysis = await page.evaluate(async ({ base64Capture, retainLargeComponents }) => {
     const image = new Image();
     image.src = `data:image/png;base64,${base64Capture}`;
     await image.decode();
@@ -108,6 +171,7 @@ export async function captureStarfieldPixels(page: Page, canvas: Locator): Promi
     }
 
     const componentAreas: number[] = [];
+    const largeComponents: number[][] = [];
     const queue = new Int32Array(width * height);
     for (let start = 0; start < coreMask.length; start++) {
       if (!coreMask[start]) continue;
@@ -132,9 +196,10 @@ export async function captureStarfieldPixels(page: Page, canvas: Locator): Promi
         }
       }
       componentAreas.push(area);
+      if (retainLargeComponents && area > 180) largeComponents.push(Array.from(queue.subarray(0, tail)));
     }
 
-    return {
+    return { largeComponents, metrics: {
       width,
       height,
       bright,
@@ -150,9 +215,9 @@ export async function captureStarfieldPixels(page: Page, canvas: Locator): Promi
       near: componentAreas.filter((area) => area >= 25 && area <= 180).length,
       fields: componentAreas.filter((area) => area > 180).length,
       largest: Math.max(0, ...componentAreas),
-    };
-  }, base64);
-  return { base64, metrics };
+    } };
+  }, { base64Capture: base64, retainLargeComponents });
+  return { base64, ...analysis };
 }
 
 /** Measures the presented WebGL pixels while discarding the PNG payload. */

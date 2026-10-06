@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { sampleWaveField, type WaveFieldPlan } from "./environmentVisuals";
-import type { VisibleWildlife, WildlifeKind, WildlifeMedium } from "./wildlife";
+import type { VisibleWildlife, WildlifeKind, WildlifeMedium, WildlifeSupport } from "./wildlife";
+import { createPenguinDrillSample, samplePenguinDrill, type PenguinDrillSample } from "./wildlifeBehavior";
 
 export type WildlifeAvatarTheme = "light" | "dark";
 
@@ -42,6 +43,51 @@ export type WildlifeAvatarRig = Partial<Record<AvatarJointName, THREE.Group>> & 
   modelRoot: THREE.Group;
   torso: THREE.Group;
 };
+
+type ContactGeometry = { mesh: THREE.Mesh; vertices: THREE.BufferAttribute | THREE.InterleavedBufferAttribute };
+
+function validSupport(value: WildlifeSupport | undefined): value is WildlifeSupport {
+  return !!value && Number.isFinite(value.x) && Number.isFinite(value.z)
+    && Number.isFinite(value.topY) && Number.isFinite(value.radius) && value.radius > 0;
+}
+
+/** Cache visible rig vertices once. Hit targets and greeting particles must
+ * never determine where an animal's feet or body touch its support. */
+function contactGeometry(modelRoot: THREE.Group): ContactGeometry[] {
+  const parts: ContactGeometry[] = [];
+  modelRoot.traverse((object) => {
+    if (object instanceof THREE.Mesh) {
+      const vertices = object.geometry.getAttribute("position");
+      if (vertices) parts.push({ mesh: object, vertices });
+    }
+  });
+  return parts;
+}
+
+function groundOnSupport(animal: THREE.Group, support: WildlifeSupport, lift: number) {
+  animal.updateMatrixWorld(true);
+  let lowest = Number.POSITIVE_INFINITY;
+  let extentSquared = 0;
+  for (const { mesh, vertices } of animal.userData.contactGeometry as ContactGeometry[]) {
+    const m = mesh.matrixWorld.elements;
+    for (let index = 0; index < vertices.count; index++) {
+      const x = vertices.getX(index), y = vertices.getY(index), z = vertices.getZ(index);
+      const worldX = m[0] * x + m[4] * y + m[8] * z + m[12] - animal.position.x;
+      const worldZ = m[2] * x + m[6] * y + m[10] * z + m[14] - animal.position.z;
+      lowest = Math.min(lowest, m[1] * x + m[5] * y + m[9] * z + m[13]);
+      extentSquared = Math.max(extentSquared, worldX * worldX + worldZ * worldZ);
+    }
+  }
+  const allowed = Math.max(0, support.radius - Math.sqrt(extentSquared) - 0.025);
+  const dx = animal.position.x - support.x, dz = animal.position.z - support.z;
+  const distance = Math.hypot(dx, dz);
+  if (distance > allowed && distance > 0) {
+    animal.position.x = support.x + dx * allowed / distance;
+    animal.position.z = support.z + dz * allowed / distance;
+  }
+  animal.position.y += support.topY - lowest + lift;
+  animal.userData.supportClearance = lift;
+}
 
 export const RESTING_PENGUIN_SEQUENCE = [
   { stage: "recover", fromSeconds: 0, toSeconds: 0.96, joints: ["modelRoot", "leftFlipper", "rightFlipper", "leftLeg", "rightLeg"] },
@@ -250,7 +296,7 @@ export function createWildlifeAvatar(plan: VisibleWildlife, theme: WildlifeAvata
   const marine = plan.kind === "shark" || plan.kind === "dolphin" || plan.kind === "whale";
   const medium: WildlifeMedium = marine && plan.medium === "ice" ? "surface" : plan.medium;
   const behavior = marine && plan.behavior === "resting" ? "swimming" : plan.behavior;
-  const restingPose = marine ? false : plan.restingPose;
+  const restingPose = !marine && medium === "ice" && plan.restingPose;
   const dark = theme === "dark";
   const bodyColor = plan.kind === "penguin" ? (dark ? 0x263a45 : 0x314b52)
     : plan.kind === "seal" ? (dark ? 0x78949b : 0x718e91)
@@ -290,9 +336,9 @@ export function createWildlifeAvatar(plan: VisibleWildlife, theme: WildlifeAvata
   group.userData.label = plan.label;
   group.userData.medium = medium;
   group.userData.behavior = behavior;
-  group.userData.baseX = plan.x;
-  group.userData.baseY = medium === "subsurface" ? -plan.depth : plan.y;
-  group.userData.baseZ = plan.z;
+  group.userData.baseX = plan.groupX;
+  group.userData.baseY = medium === "subsurface" ? -plan.depth : plan.groupY;
+  group.userData.baseZ = plan.groupZ;
   group.userData.phase = plan.phase;
   group.userData.speed = plan.speed;
   group.userData.radius = plan.radius;
@@ -300,6 +346,15 @@ export function createWildlifeAvatar(plan: VisibleWildlife, theme: WildlifeAvata
   group.userData.routeEccentricity = plan.routeEccentricity;
   group.userData.routeDirection = plan.routeDirection;
   group.userData.baseHeading = plan.heading;
+  group.userData.memberIndex = plan.memberIndex;
+  group.userData.groupSize = plan.groupSize;
+  group.userData.groupSeed = plan.groupSeed;
+  group.userData.routePhase = plan.routePhase;
+  group.userData.formationX = plan.formationX;
+  group.userData.formationZ = plan.formationZ;
+  group.userData.drill = createPenguinDrillSample();
+  group.userData.routeDestination = { x: plan.x, z: plan.z };
+  group.userData.contactGeometry = contactGeometry(modelRoot);
   group.userData.restingPose = restingPose;
   group.userData.rig = rig;
   group.userData.reactionRoot = reactionRoot;
@@ -331,9 +386,12 @@ function animateJoints(
   const reactionBeat = reactionActive ? Math.sin(reactionProgress * Math.PI * (reducedMotion ? 1 : 6)) : 0;
   const reactionLift = reactionActive ? Math.sin(reactionProgress * Math.PI) : 0;
   rig.modelRoot.rotation.set(0, 0, 0);
+  rig.modelRoot.position.y = 0;
   rig.torso.rotation.set(0, 0, 0);
   rig.torso.scale.set(1, 1, 1);
   if (rig.head) rig.head.rotation.set(0, 0, 0);
+  if (rig.leftFlipper) rig.leftFlipper.rotation.z = 0;
+  if (rig.rightFlipper) rig.rightFlipper.rotation.z = 0;
 
   if (kind === "seabird" || kind === "shorebird") {
     const flap = 0.16 + locomotion * 0.62 + reactionBeat * 0.52;
@@ -419,53 +477,28 @@ function applyRestingPenguinPose(
     return;
   }
 
-  if (stage === "recover") {
-    const local = smootherStep(progress / 0.2);
-    // Brace, tuck the legs, and rotate through the shortest path toward an
-    // upright body. Never accumulate a full turn around the model root.
-    rig.modelRoot.position.y = local * 0.09;
-    rig.modelRoot.rotation.z = restingAngle * (1 - local * 0.54);
-    if (rig.leftFlipper) {
-      rig.leftFlipper.rotation.x = -0.2 - Math.sin(local * Math.PI) * 0.42;
-      rig.leftFlipper.rotation.z = -Math.sin(local * Math.PI) * 0.38;
-    }
-    if (rig.rightFlipper) {
-      rig.rightFlipper.rotation.x = 0.16 + Math.sin(local * Math.PI) * 0.36;
-      rig.rightFlipper.rotation.z = Math.sin(local * Math.PI) * 0.32;
-    }
-    if (rig.leftLeg) rig.leftLeg.rotation.z = 0.08 + local * 0.22;
-    if (rig.rightLeg) rig.rightLeg.rotation.z = -0.08 - local * 0.22;
-    return;
+  // One continuous pose curve spans all named stages. The scratch starts
+  // and ends at the standing pose; no joint is reset at a stage boundary.
+  const upright = progress < 0.42 ? smootherStep(progress / 0.42)
+    : progress <= 0.78 ? 1 : 1 - smootherStep((progress - 0.78) / 0.22);
+  const bracing = progress < 0.42 ? Math.sin(progress / 0.42 * Math.PI) ** 2
+    : progress > 0.78 ? Math.sin((progress - 0.78) / 0.22 * Math.PI) ** 2 : 0;
+  const scratchLocal = Math.max(0, Math.min(1, (progress - 0.42) / 0.36));
+  const scratch = Math.sin(scratchLocal * Math.PI) ** 2;
+  const puzzled = Math.sin(scratchLocal * Math.PI * 4);
+  rig.modelRoot.position.y = upright * 0.12;
+  rig.modelRoot.rotation.z = restingAngle * (1 - upright);
+  if (rig.head) rig.head.rotation.z = 0.17 * (1 - upright) + scratch * (-0.2 + puzzled * 0.12);
+  if (rig.leftFlipper) {
+    rig.leftFlipper.rotation.x = -0.16 * (1 - upright) - bracing * 0.42 + scratch * (-0.58 + puzzled * 0.12);
+    rig.leftFlipper.rotation.z = -bracing * 0.38 + scratch * (-1.08 + puzzled * 0.18);
   }
-  if (stage === "stand") {
-    const local = smootherStep((progress - 0.2) / 0.22);
-    const bracedAngle = restingAngle * 0.46;
-    rig.modelRoot.position.y = 0.09 + local * 0.03;
-    rig.modelRoot.rotation.z = bracedAngle * (1 - local);
-    if (rig.leftFlipper) rig.leftFlipper.rotation.x = -Math.sin(local * Math.PI) * 0.62;
-    if (rig.rightFlipper) rig.rightFlipper.rotation.x = Math.sin(local * Math.PI) * 0.62;
-    if (rig.leftLeg) rig.leftLeg.rotation.z = 0.3 * (1 - local);
-    if (rig.rightLeg) rig.rightLeg.rotation.z = -0.3 * (1 - local);
-    return;
+  if (rig.rightFlipper) {
+    rig.rightFlipper.rotation.x = 0.11 * (1 - upright) + bracing * 0.36 + scratch * (0.16 - puzzled * 0.08);
+    rig.rightFlipper.rotation.z = bracing * 0.32;
   }
-  if (stage === "scratch") {
-    const local = (progress - 0.42) / 0.36;
-    const puzzled = Math.sin(local * Math.PI * 4);
-    rig.modelRoot.position.y = 0.12;
-    rig.modelRoot.rotation.z = 0;
-    if (rig.head) rig.head.rotation.z = -0.2 + puzzled * 0.12;
-    if (rig.leftFlipper) {
-      rig.leftFlipper.rotation.x = -0.58 + puzzled * 0.12;
-      rig.leftFlipper.rotation.z = -1.08 + puzzled * 0.18;
-    }
-    if (rig.rightFlipper) rig.rightFlipper.rotation.x = 0.16 - puzzled * 0.08;
-    return;
-  }
-  const local = smootherStep((progress - 0.78) / 0.22);
-  rig.modelRoot.position.y = 0.12 * (1 - local);
-  rig.modelRoot.rotation.z = local * restingAngle;
-  if (rig.leftFlipper) rig.leftFlipper.rotation.x = -0.52 + local * 0.36;
-  if (rig.rightFlipper) rig.rightFlipper.rotation.x = 0.18 - local * 0.07;
+  if (rig.leftLeg) rig.leftLeg.rotation.z = 0.08 * (1 - upright) + bracing * 0.22;
+  if (rig.rightLeg) rig.rightLeg.rotation.z = -0.08 * (1 - upright) - bracing * 0.22;
 }
 
 function routeHeading(dx: number, dz: number, fallback: number) {
@@ -503,14 +536,23 @@ export function updateWildlifeAvatars(wildlife: readonly THREE.Group[], wavePlan
     const baseX = Number(animal.userData.baseX);
     const baseY = Number(animal.userData.baseY);
     const baseZ = Number(animal.userData.baseZ);
-    const medium = animal.userData.medium as WildlifeMedium;
+    const requestedMedium = animal.userData.medium as WildlifeMedium;
+    const support = animal.userData.support as WildlifeSupport | undefined;
+    const supported = requestedMedium === "ice" && validSupport(support);
+    // Ice is a placement request, never evidence of a floor. Unsupported
+    // imported records swim instead of lying sideways above open water.
+    const medium: WildlifeMedium = requestedMedium === "ice" && !supported ? "surface" : requestedMedium;
     const behavior = String(animal.userData.behavior);
     const kind = animal.userData.kind as WildlifeKind;
     const restingPenguin = kind === "penguin" && medium === "ice" && Boolean(animal.userData.restingPose);
     const rig = animal.userData.rig as WildlifeAvatarRig;
     const time = reducedMotion ? 0 : Math.max(0, elapsed);
-    const locomotion = Math.sin(time * (2.2 + speed * 4.5) + phase);
-    const routeAngle = time * speed * routeDirection + phase;
+    const memberIndex = Number(animal.userData.memberIndex);
+    const bird = kind === "seabird" || kind === "shorebird";
+    const groupPhase = Number(animal.userData.routePhase);
+    const wingEnvelope = bird ? 0.12 + 0.88 * Math.max(0, Math.sin(time * 0.42 + groupPhase)) ** 2 : 1;
+    const locomotion = Math.sin(time * (bird ? 4.6 : 2.2 + speed * 4.5) + phase) * wingEnvelope;
+    const routeAngle = time * speed * routeDirection + groupPhase;
     const primary = Math.cos(routeAngle);
     const secondary = Math.sin(routeAngle);
     const routeX = primary * radius;
@@ -525,29 +567,38 @@ export function updateWildlifeAvatars(wildlife: readonly THREE.Group[], wavePlan
     const progress = reducedMotion ? 0.6 : Math.min(1, age / reactionSeconds);
     const penguinStage = restingPenguin && active ? restingPenguinReactionStage(progress) : "resting";
     const energy = active ? Math.sin(progress * Math.PI) : 0;
-    animal.rotation.set(0, routeHeading(routeDx, routeDz, Number(animal.userData.baseHeading)), 0);
+    const heading = routeHeading(routeDx, routeDz, Number(animal.userData.baseHeading));
+    const slotX = Number(animal.userData.formationX);
+    const slotZ = Number(animal.userData.formationZ);
+    const offsetX = Math.cos(heading) * slotX + Math.sin(heading) * slotZ;
+    const offsetZ = -Math.sin(heading) * slotX + Math.cos(heading) * slotZ;
+    const headingRate = -eccentricity * speed * routeDirection / (secondary * secondary + eccentricity * eccentricity * primary * primary);
+    animal.rotation.set(0, routeHeading(routeDx + headingRate * offsetZ, routeDz - headingRate * offsetX, heading), 0);
+    animal.userData.supported = supported;
+    animal.userData.groupActivity = bird ? (wingEnvelope > 0.4 ? "flapping" : "gliding") : "cruising";
     animal.userData.motionState = reducedMotion ? "active-pose-frozen" : "active";
     animal.userData.routeProgress = ((routeAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) / (Math.PI * 2);
-    animal.userData.routeDestination = {
-      x: baseX + Math.cos(routeAngle + 0.34 * routeDirection) * radius,
-      z: baseZ + Math.sin(routeAngle + 0.34 * routeDirection) * radius * eccentricity,
-    };
+    const destination = animal.userData.routeDestination as { x: number; z: number };
+    const nextAngle = routeAngle + 0.34 * routeDirection;
+    const nextHeading = routeHeading(-Math.sin(nextAngle) * routeDirection, Math.cos(nextAngle) * eccentricity * routeDirection, heading);
+    destination.x = baseX + Math.cos(nextAngle) * radius + Math.cos(nextHeading) * slotX + Math.sin(nextHeading) * slotZ;
+    destination.z = baseZ + Math.sin(nextAngle) * radius * eccentricity - Math.sin(nextHeading) * slotX + Math.cos(nextHeading) * slotZ;
     animal.userData.reactionStage = restingPenguin ? penguinStage : active ? "greeting" : "traveling";
     if (medium === "air") {
       animal.position.set(
-        baseX + routeX,
+        baseX + routeX + offsetX,
         baseY + Math.sin(routeAngle * 1.7) * 0.36 + Math.cos(routeAngle * 0.83) * 0.18 + fixedActiveLift,
-        baseZ + routeZ,
+        baseZ + routeZ + offsetZ,
       );
     } else if (medium === "subsurface") {
       animal.position.set(
-        baseX + routeX,
+        baseX + routeX + offsetX,
         baseY + Math.sin(routeAngle * 1.43) * 0.22 + fixedActiveLift,
-        baseZ + routeZ,
+        baseZ + routeZ + offsetZ,
       );
     } else if (medium === "surface") {
-      animal.position.x = baseX + routeX;
-      animal.position.z = baseZ + routeZ;
+      animal.position.x = baseX + routeX + offsetX;
+      animal.position.z = baseZ + routeZ + offsetZ;
       const waveY = sampleWaveField(wavePlan, animal.position.x, -animal.position.z, time);
       if (kind === "shark") {
         const dorsalPass = behavior === "surfacing" ? Math.max(0, Math.sin(routeAngle * 0.73)) * 0.045 : 0;
@@ -562,23 +613,54 @@ export function updateWildlifeAvatars(wildlife: readonly THREE.Group[], wavePlan
         animal.position.y = waveY - 0.08 + porpoiseLift + fixedActiveLift;
         animal.userData.surfaceOffset = animal.position.y - waveY;
         animal.userData.porpoisePhase = porpoiseWave;
+      } else if (kind === "penguin" || kind === "seal") {
+        animal.position.y = waveY - animal.scale.x * 0.24;
       } else {
         const surfacing = behavior === "surfacing" ? Math.max(0, Math.sin(routeAngle * 0.73)) * 0.22
           : behavior === "porpoising" ? Math.max(0, Math.sin(routeAngle * 1.19)) * 0.38 : 0;
         animal.position.y = baseY + waveY * 0.72 + surfacing + fixedActiveLift;
       }
     } else {
-      const hop = kind === "penguin" ? Math.pow(Math.max(0, Math.sin(time * 1.25 + phase)), 8) * 0.11 : 0;
-      const scoot = kind === "seal" ? Math.pow(Math.max(0, locomotion), 4) * 0.045 : 0;
-      animal.position.set(
-        restingPenguin ? baseX : baseX + routeX,
-        baseY + (restingPenguin ? 0 : hop + scoot) + fixedActiveLift,
-        restingPenguin ? baseZ : baseZ + routeZ,
-      );
-      if (restingPenguin) animal.rotation.y = Number(animal.userData.baseHeading);
+      const drill = animal.userData.drill as PenguinDrillSample;
+      if (kind === "penguin" && !restingPenguin) {
+        samplePenguinDrill(drill, Number(animal.userData.groupSeed), memberIndex, Number(animal.userData.groupSize), time);
+        animal.position.set(baseX + drill.x, baseY, baseZ + drill.z);
+        animal.rotation.y = drill.heading;
+        destination.x = baseX + drill.to.x;
+        destination.z = baseZ + drill.to.z;
+        animal.userData.groupActivity = drill.routine;
+        animal.userData.drillCycle = drill.cycle;
+      } else if (restingPenguin) {
+        // Rest stops occupy the outer supported margin, leaving the center
+        // clear for the upright squad's formations and marching files.
+        const angle = memberIndex * 2.3999632297;
+        animal.position.set(baseX + Math.cos(angle) * 2.15, baseY, baseZ + Math.sin(angle) * 2.15);
+        animal.rotation.y = -angle;
+        animal.userData.groupActivity = "supported-rest";
+      } else {
+        const columns = 3;
+        const rows = Math.ceil(Number(animal.userData.groupSize) / columns);
+        animal.position.set(
+          baseX + ((rows - 1) / 2 - Math.floor(memberIndex / columns)) * 0.9 + primary * 0.2,
+          baseY,
+          baseZ + ((memberIndex % columns) - 1) * 0.56 + secondary * 0.16,
+        );
+        animal.rotation.y = routeHeading(-secondary * 0.2 * speed * routeDirection, primary * 0.16 * speed * routeDirection, heading);
+        animal.userData.groupActivity = "scooting";
+      }
     }
 
-    animateJoints(rig, kind, medium, locomotion, secondary, active, progress, reducedMotion);
+    const drill = animal.userData.drill as PenguinDrillSample;
+    const jointGait = kind === "penguin" && supported && !restingPenguin ? locomotion * drill.gait : locomotion;
+    animateJoints(rig, kind, medium, jointGait, secondary, active, progress, reducedMotion);
+    if (kind === "penguin" && supported && !restingPenguin) {
+      if (rig.leftFlipper) rig.leftFlipper.rotation.z -= drill.salute * 1.05;
+      if (rig.head) {
+        rig.head.rotation.y = Math.sin(time * 0.8 + phase) * 0.13;
+        rig.head.rotation.z -= drill.forage * (0.24 + Math.sin(time * 3 + phase) * 0.08);
+      }
+      rig.torso.rotation.z -= drill.forage * 0.16;
+    }
     if (kind === "dolphin" && medium === "surface" && !reducedMotion) {
       // Pitch follows the rise and fall of the surface arc while the scene
       // root continues to face the route tangent.
@@ -603,6 +685,10 @@ export function updateWildlifeAvatars(wildlife: readonly THREE.Group[], wavePlan
         else if (medium === "air") rig.modelRoot.rotation.z += Math.sin(progress * Math.PI * 4) * 0.18;
         else rig.modelRoot.rotation.z += Math.sin(progress * Math.PI * 2) * (kind === "whale" ? 0.08 : 0.18);
       }
+    }
+    if (supported && support) {
+      const greetingHop = active && !restingPenguin && kind === "penguin" ? energy * 0.38 : 0;
+      groundOnSupport(animal, support, greetingHop);
     }
     updateReactionMotes(animal, active, progress, energy, reducedMotion);
   });

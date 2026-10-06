@@ -3,9 +3,11 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import * as THREE from "three";
 import { createWildlifeAvatar, restingPenguinReactionStage, RESTING_PENGUIN_SEQUENCE, triggerWildlifeAvatarReaction, updateWildlifeAvatars, WILDLIFE_AVATAR_ENGINE } from "../app/wildlifeAvatar";
-import { TACTICAL_GRID_PRESENTATION } from "../app/battlefieldScene";
+import { createWildlifeIceSupports, TACTICAL_GRID_PRESENTATION } from "../app/battlefieldScene";
 import { createWaveFieldPlan, sampleWaveField } from "../app/environmentVisuals";
-import { createWildlifePlan, describeWildlifeForView, wildlifeForView, wildlifeReactionMessage, WILDLIFE_LIMITS, type WildlifeKind } from "../app/wildlife";
+import { createWildlifePlan, describeWildlifeForView, wildlifeForView, wildlifeReactionMessage, WILDLIFE_LIMITS, type WildlifeKind, type VisibleWildlife, type WildlifeSupport } from "../app/wildlife";
+
+import { createPenguinDrillSample, PENGUIN_DRILL_SECONDS, samplePenguinDrill } from "../app/wildlifeBehavior";
 
 const clearDay = {
   seed: 719,
@@ -20,6 +22,37 @@ const clearDay = {
   seaState: 2,
   visibility: 11,
 };
+
+function supportedAvatar(plan: VisibleWildlife) {
+  const scene = new THREE.Scene();
+  const support = createWildlifeIceSupports(scene, [plan], "dark").get(plan.groupId);
+  assert.ok(support);
+  const avatar = createWildlifeAvatar(plan, "dark");
+  avatar.userData.support = support;
+  avatar.userData.baseX = support.x;
+  avatar.userData.baseY = support.topY;
+  avatar.userData.baseZ = support.z;
+  scene.add(avatar);
+  return avatar;
+}
+
+function bodyBounds(avatar: THREE.Group) {
+  avatar.updateMatrixWorld(true);
+  let lowest = Infinity;
+  let supportDistance = 0;
+  const support = avatar.userData.support as WildlifeSupport | undefined;
+  const point = new THREE.Vector3();
+  avatar.getObjectByName("wildlife-joint-modelRoot")!.traverse((mesh) => {
+    if (!(mesh instanceof THREE.Mesh)) return;
+    const vertices = mesh.geometry.getAttribute("position");
+    for (let index = 0; index < vertices.count; index++) {
+      point.fromBufferAttribute(vertices, index).applyMatrix4(mesh.matrixWorld);
+      lowest = Math.min(lowest, point.y);
+      if (support) supportDistance = Math.max(supportDistance, Math.hypot(point.x - support.x, point.z - support.z));
+    }
+  });
+  return { lowest, supportDistance };
+}
 
 function countKind(plan: ReturnType<typeof createWildlifePlan>, kind: WildlifeKind) {
   return plan.groups.find((group) => group.kind === kind)?.count ?? 0;
@@ -226,19 +259,19 @@ test("active wildlife follows a continuously advancing bounded route and faces i
   const plans = [
     ...wildlifeForView(createWildlifePlan(clearDay), "surface"),
     ...wildlifeForView(createWildlifePlan({ ...clearDay, climate: "ocean" as const, season: "wet", regionId: "western-tropical-passage" }), "surface"),
-  ].filter((animal) => !animal.restingPose);
+  ].filter((animal) => animal.medium !== "ice");
   const wave = createWaveFieldPlan({ seed: 91, climate: "ocean", precipitation: "none", seaState: 3, windHeading: 90, windSpeed: 12, currentHeading: 74, currentSpeed: 1.1, waveHeading: 82, storming: false });
   plans.filter((animal, index) => index === plans.findIndex((candidate) => candidate.kind === animal.kind)).forEach((plan) => {
     const avatar = createWildlifeAvatar(plan, "dark");
     updateWildlifeAvatars([avatar], wave, 11, false);
     const firstProgress = Number(avatar.userData.routeProgress);
-    const firstDestination = avatar.userData.routeDestination as { x: number; z: number };
+    const firstDestination = { ...avatar.userData.routeDestination as { x: number; z: number } };
     const firstPosition = avatar.position.clone();
     updateWildlifeAvatars([avatar], wave, 15, false);
     assert.notEqual(avatar.userData.routeProgress, firstProgress, `${plan.kind} needs an advancing destination`);
     assert.notDeepEqual(avatar.userData.routeDestination, firstDestination, `${plan.kind} needs a moving ecological waypoint`);
     assert.ok(avatar.position.distanceTo(firstPosition) > 0.001, `${plan.kind} must travel rather than animate in place`);
-    assert.ok(Math.hypot(avatar.position.x - Number(avatar.userData.baseX), avatar.position.z - Number(avatar.userData.baseZ)) <= Number(avatar.userData.routeRadius) + 1e-6);
+    assert.ok(Math.hypot(avatar.position.x - Number(avatar.userData.baseX), avatar.position.z - Number(avatar.userData.baseZ)) <= Number(avatar.userData.routeRadius) + Math.hypot(plan.formationX, plan.formationZ) + 1e-6);
   });
 });
 
@@ -252,7 +285,7 @@ test("a lying penguin normally recovers, stands, scratches, and lies down withou
   const restingPlan = wildlifeForView(createWildlifePlan(clearDay), "surface").find((animal) => animal.kind === "penguin" && animal.restingPose);
   assert.ok(restingPlan);
   assert.match(wildlifeReactionMessage(restingPlan), /braces.*pushes itself upright.*scratch.*back down/i);
-  const penguin = createWildlifeAvatar(restingPlan, "dark");
+  const penguin = supportedAvatar(restingPlan);
   const wave = createWaveFieldPlan({ seed: 93, climate: "antarctic", precipitation: "none", seaState: 2, windHeading: 90, windSpeed: 9, currentHeading: 74, currentSpeed: 1.1, waveHeading: 82, storming: false });
   updateWildlifeAvatars([penguin], wave, 10, false);
   assert.equal(penguin.userData.reactionStage, "resting");
@@ -272,7 +305,8 @@ test("a lying penguin normally recovers, stands, scratches, and lies down withou
   }
   updateWildlifeAvatars([penguin], wave, 15, false);
   assert.equal(penguin.userData.reactionStage, "resting");
-  assert.ok(penguin.position.distanceTo(restingPosition) < 0.001, "the penguin returns to its safe floe waypoint");
+  assert.ok(Math.hypot(penguin.position.x - restingPosition.x, penguin.position.z - restingPosition.z) < 0.001, "the penguin returns to its safe floe waypoint");
+  assert.ok(Math.abs(bodyBounds(penguin).lowest - penguin.userData.support.topY) < 1e-8);
   triggerWildlifeAvatarReaction(penguin, 20);
   updateWildlifeAvatars([penguin], wave, 22, true);
   assert.equal(penguin.userData.reactionStage, "scratch");
@@ -380,4 +414,182 @@ test("a requested greeting produces a habitat-specific happy pose without tactic
   updateWildlifeAvatars([penguin], wave, 20, true);
   assert.ok(penguin.position.distanceTo(reducedPose) < 1e-9);
   assert.equal(penguin.getObjectByName("wildlife-happy-reaction")?.visible, true);
+});
+
+test("bird squadrons retain separated V stations while autonomously alternating glides and flaps", () => {
+  const plans = wildlifeForView(createWildlifePlan(clearDay), "surface").filter((animal) => animal.kind === "seabird");
+  assert.ok(plans.length >= 3);
+  const birds = plans.map((plan) => createWildlifeAvatar(plan, "dark"));
+  const wave = createWaveFieldPlan({ seed: 94, climate: "antarctic", precipitation: "none", seaState: 2, windHeading: 90, windSpeed: 9, currentHeading: 74, currentSpeed: 1.1, waveHeading: 82, storming: false });
+  const activities = new Set<string>();
+  const phases = new Set<number>();
+  let initialSpacing = 0;
+  for (let time = 0; time <= 45; time += 0.25) {
+    updateWildlifeAvatars(birds, wave, time, false);
+    const leader = birds[0];
+    activities.add(leader.userData.groupActivity);
+    const spacing = leader.position.distanceTo(birds[1].position);
+    if (time === 0) initialSpacing = spacing;
+    assert.ok(Math.abs(spacing - initialSpacing) < 1e-8, "squad members must share a leader path instead of dispersing into unrelated circles");
+    for (const bird of birds) {
+      assert.equal(bird.userData.groupActivity, leader.userData.groupActivity);
+      assert.ok(bird.position.y > 4, "flight must remain above the water");
+    }
+    phases.add(birds[1].getObjectByName("wildlife-joint-leftWing")!.rotation.x);
+  }
+  assert.ok(initialSpacing > 0.4, "compact birds still have distinct flight stations");
+  assert.deepEqual([...activities].sort(), ["flapping", "gliding"]);
+  assert.ok(phases.size > 20, "wings must articulate within the group phases");
+});
+
+test("penguin squads change drills without interaction, with continuous phase boundaries and varied formations", () => {
+  const sample = createPenguinDrillSample();
+  const phases = new Set<string>();
+  const seed = 719;
+  let previous = { x: 0, z: 0, heading: 0 };
+  for (let frame = 0; frame < PENGUIN_DRILL_SECONDS * 3 * 60; frame++) {
+    samplePenguinDrill(sample, seed, 8, 14, frame / 60);
+    phases.add(sample.routine);
+    assert.ok(Math.hypot(sample.x, sample.z) < 2.1);
+    if (frame > 0) {
+      assert.ok(Math.hypot(sample.x - previous.x, sample.z - previous.z) < 0.025, `position jumped at frame ${frame}`);
+      const turn = Math.atan2(Math.sin(sample.heading - previous.heading), Math.cos(sample.heading - previous.heading));
+      assert.ok(Math.abs(turn) < 0.1, `heading jumped at frame ${frame}`);
+    }
+    previous = { x: sample.x, z: sample.z, heading: sample.heading };
+  }
+  assert.deepEqual([...phases].sort(), ["about-face", "disperse", "forage", "form-ranks", "inspection", "left-face", "march", "rest", "right-face", "salute"]);
+  samplePenguinDrill(sample, seed, 8, 14, 6);
+  const firstRanks = { x: sample.x, z: sample.z, heading: sample.heading };
+  samplePenguinDrill(sample, seed, 8, 14, PENGUIN_DRILL_SECONDS + 6);
+  assert.notDeepEqual({ x: sample.x, z: sample.z, heading: sample.heading }, firstRanks, "the next autonomous cycle should change the formation or facing");
+});
+
+test("supported penguins walk, inspect, salute and forage upright while every posed body remains on its real floe", () => {
+  const plans = wildlifeForView(createWildlifePlan(clearDay), "surface").filter((animal) => animal.kind === "penguin");
+  const animals = plans.map(supportedAvatar);
+  const wave = createWaveFieldPlan({ seed: 95, climate: "antarctic", precipitation: "none", seaState: 2, windHeading: 90, windSpeed: 9, currentHeading: 74, currentSpeed: 1.1, waveHeading: 82, storming: false });
+  const jointPoses = new Set<string>();
+  const resting = animals.find((animal) => animal.userData.restingPose)!;
+  const active = animals.find((animal) => !animal.userData.restingPose)!;
+  const destination = active.userData.routeDestination;
+  const drill = active.userData.drill;
+  const contactParts = active.userData.contactGeometry;
+  for (let time = 0; time < PENGUIN_DRILL_SECONDS * 3; time += 0.5) {
+    if (time === 40) triggerWildlifeAvatarReaction(resting, time);
+    updateWildlifeAvatars(animals, wave, time, false);
+    for (const animal of animals) {
+      const support = animal.userData.support as WildlifeSupport;
+      const bounds = bodyBounds(animal);
+      assert.ok(Math.abs(bounds.lowest - support.topY) < 1e-7, `${animal.userData.memberId} floats or penetrates its support at ${time}`);
+      assert.ok(bounds.supportDistance <= support.radius, "the whole posed body must fit the real support footprint");
+      if (!animal.userData.restingPose) {
+        assert.ok(Math.abs(animal.getObjectByName("wildlife-joint-modelRoot")!.rotation.z) < 0.1, "drilling and resting upright must never become lying poses");
+        jointPoses.add(JSON.stringify([
+          animal.getObjectByName("wildlife-joint-leftLeg")!.rotation.z,
+          animal.getObjectByName("wildlife-joint-leftFlipper")!.rotation.z,
+          animal.getObjectByName("wildlife-joint-head")!.rotation.z,
+        ]));
+      }
+    }
+  }
+  assert.ok(jointPoses.size > 100, "the routine needs visible walking, flipper and head articulation");
+  assert.equal(active.userData.routeDestination, destination, "frame updates must reuse waypoint storage");
+  assert.equal(active.userData.drill, drill, "frame updates must reuse choreography storage");
+  assert.equal(active.userData.contactGeometry, contactParts, "support geometry is cached once");
+  updateWildlifeAvatars(animals, wave, 200, true);
+  const frozen = animals.map((animal) => ({ position: animal.position.toArray(), rotation: animal.rotation.toArray(), activity: animal.userData.groupActivity }));
+  updateWildlifeAvatars(animals, wave, 10000, true);
+  assert.deepEqual(animals.map((animal) => ({ position: animal.position.toArray(), rotation: animal.rotation.toArray(), activity: animal.userData.groupActivity })), frozen);
+});
+
+test("an ice label without visible support cannot authorize a lying pose over open water", () => {
+  const resting = wildlifeForView(createWildlifePlan(clearDay), "surface").find((animal) => animal.kind === "penguin" && animal.restingPose)!;
+  const animal = createWildlifeAvatar(resting, "dark");
+  const wave = createWaveFieldPlan({ seed: 96, climate: "antarctic", precipitation: "none", seaState: 2, windHeading: 90, windSpeed: 9, currentHeading: 74, currentSpeed: 1.1, waveHeading: 82, storming: false });
+  updateWildlifeAvatars([animal], wave, 9, false);
+  assert.equal(animal.userData.supported, false);
+  assert.equal(animal.userData.reactionStage, "traveling");
+  const localWater = sampleWaveField(wave, animal.position.x, -animal.position.z, 9);
+  assert.ok(animal.position.y < localWater, "unsupported ice fauna must swim in the actual water surface");
+  assert.ok(wildlifeForView(createWildlifePlan(clearDay), "subsurface").every((plan) => !plan.restingPose));
+});
+
+
+test("flock and pod members face their true curved path without an inner-slot cusp or reversal", () => {
+  const wave = createWaveFieldPlan({ seed: 97, climate: "ocean", precipitation: "none", seaState: 2, windHeading: 90, windSpeed: 9, currentHeading: 74, currentSpeed: 1.1, waveHeading: 82, storming: false });
+  for (let seed = 1; seed <= 8; seed++) {
+    const plans = wildlifeForView(createWildlifePlan({ ...clearDay, seed, climate: "ocean", season: "wet", regionId: "western-tropical-passage" }), "surface");
+    for (const kind of ["seabird", "shorebird", "whale", "dolphin", "shark"] as const) {
+      const members = plans.filter((plan) => plan.kind === kind);
+      for (const plan of members.filter((_, index) => index === 0 || index === members.length - 1)) {
+        const avatar = createWildlifeAvatar(plan, "dark");
+        for (let step = 1; step <= 64; step++) {
+          const time = step / 64 * Math.PI * 2 / plan.speed;
+          updateWildlifeAvatars([avatar], wave, time - 0.001, false);
+          const beforeX = avatar.position.x, beforeZ = avatar.position.z;
+          updateWildlifeAvatars([avatar], wave, time, false);
+          const heading = avatar.rotation.y;
+          updateWildlifeAvatars([avatar], wave, time + 0.001, false);
+          const dx = avatar.position.x - beforeX, dz = avatar.position.z - beforeZ;
+          const distance = Math.hypot(dx, dz);
+          assert.ok(distance > 1e-6, `${kind} seed${seed} stalled at an inner cusp`);
+          const facingDot = (Math.cos(heading) * dx - Math.sin(heading) * dz) / distance;
+          assert.ok(facingDot > 0.999, `${kind} seed${seed} member${plan.memberIndex} faces away from travel: ${facingDot}`);
+          const angle = time * plan.speed * plan.routeDirection + plan.routePhase;
+          const leaderX = -Math.sin(angle) * plan.speed * plan.routeDirection;
+          const leaderZ = Math.cos(angle) * plan.routeEccentricity * plan.speed * plan.routeDirection;
+          const groupDot = (leaderX * dx + leaderZ * dz) / (Math.hypot(leaderX, leaderZ) * distance);
+          assert.ok(groupDot > 0.05, `${kind} seed${seed} reverses against the squad at a tight turn`);
+        }
+      }
+    }
+  }
+});
+
+
+test("penguins turn in place before marching and keep every resting-greeting joint continuous", () => {
+  const sample = createPenguinDrillSample();
+  for (let seed = 0; seed < 3; seed++) {
+    for (let time = 0.1; time < PENGUIN_DRILL_SECONDS * 2; time += 0.1) {
+      samplePenguinDrill(sample, seed, 8, 14, time - 0.0001);
+      const beforeX = sample.x, beforeZ = sample.z;
+      samplePenguinDrill(sample, seed, 8, 14, time);
+      const heading = sample.heading;
+      samplePenguinDrill(sample, seed, 8, 14, time + 0.0001);
+      const dx = sample.x - beforeX, dz = sample.z - beforeZ;
+      const distance = Math.hypot(dx, dz);
+      if (distance > 1e-7) assert.ok((Math.cos(heading) * dx - Math.sin(heading) * dz) / distance > 0.999, "a marching penguin must walk forward after its turn");
+    }
+  }
+  const plan = wildlifeForView(createWildlifePlan(clearDay), "surface").find((animal) => animal.kind === "penguin" && animal.restingPose)!;
+  const avatar = supportedAvatar(plan);
+  const joints = avatar.getObjectByName("wildlife-joint-modelRoot")!.getObjectsByProperty("isGroup", true);
+  const wave = createWaveFieldPlan({ seed: 98, climate: "antarctic", precipitation: "none", seaState: 2, windHeading: 90, windSpeed: 9, currentHeading: 74, currentSpeed: 1.1, waveHeading: 82, storming: false });
+  triggerWildlifeAvatarReaction(avatar, 10);
+  for (const boundary of [0, ...RESTING_PENGUIN_SEQUENCE.map((stage) => stage.toSeconds)]) {
+    updateWildlifeAvatars([avatar], wave, 10 + boundary - 0.00001, false);
+    const before = joints.map((joint) => joint.quaternion.clone());
+    updateWildlifeAvatars([avatar], wave, 10 + boundary + 0.00001, false);
+    joints.forEach((joint, index) => assert.ok(joint.quaternion.angleTo(before[index]) < 0.001, `${joint.name} snapped at ${boundary}s`));
+  }
+});
+
+test("supported seals face their actual floe scoot rather than a water-pod tangent", () => {
+  const plans = wildlifeForView(createWildlifePlan(clearDay), "surface").filter((animal) => animal.kind === "seal" && animal.medium === "ice");
+  assert.equal(plans.length, 8);
+  const wave = createWaveFieldPlan({ seed: 99, climate: "antarctic", precipitation: "none", seaState: 2, windHeading: 90, windSpeed: 9, currentHeading: 74, currentSpeed: 1.1, waveHeading: 82, storming: false });
+  for (const plan of plans) {
+    const avatar = supportedAvatar(plan);
+    for (let step = 1; step <= 64; step++) {
+      const time = step / 64 * Math.PI * 2 / plan.speed;
+      updateWildlifeAvatars([avatar], wave, time - 0.001, false);
+      const beforeX = avatar.position.x, beforeZ = avatar.position.z;
+      updateWildlifeAvatars([avatar], wave, time, false);
+      const heading = avatar.rotation.y;
+      updateWildlifeAvatars([avatar], wave, time + 0.001, false);
+      const dx = avatar.position.x - beforeX, dz = avatar.position.z - beforeZ;
+      assert.ok((Math.cos(heading) * dx - Math.sin(heading) * dz) / Math.hypot(dx, dz) > 0.999);
+    }
+  }
 });

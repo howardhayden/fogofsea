@@ -81,8 +81,8 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 
 - @webgpu/types@0.1.71 — development
 - esquery@1.7.0 — development
-- fast-uri@3.1.7 — development
-- source-map-js@1.2.1 — development
+- fast-uri@3.1.8 — development
+- source-map-js@1.2.2 — development
 
 ### CC-BY-4.0
 
@@ -214,8 +214,8 @@ Installed license and notice texts are reproduced in `THIRD_PARTY_LICENSES.txt`.
 - astronomy-engine@2.1.19 — runtime
 - balanced-match@1.0.2 — development
 - balanced-match@4.0.4 — development
-- brace-expansion@1.1.18 — development
-- brace-expansion@5.0.9 — development
+- brace-expansion@1.1.21 — development
+- brace-expansion@5.0.12 — development
 - browserslist@4.28.8 — development
 - callsites@3.1.0 — development
 - chalk@4.1.2 — development

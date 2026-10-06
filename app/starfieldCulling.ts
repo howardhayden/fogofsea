@@ -28,7 +28,8 @@ export class StarfieldCulling {
     const shift = mesh.geometry.getAttribute("aShiftProfile") as THREE.InstancedBufferAttribute;
     const alpha = mesh.geometry.getAttribute("aBaseAlpha") as THREE.InstancedBufferAttribute;
     if (!mesh.instanceColor) throw new Error("Starfield requires native instance colors");
-    this.snapshots = [mesh.instanceMatrix, mesh.instanceColor, twinkle, shift, alpha].map((attribute) => {
+    const atmosphere = mesh.geometry.getAttribute("aAtmosphereProfile") as THREE.InstancedBufferAttribute | undefined;
+    this.snapshots = [mesh.instanceMatrix, mesh.instanceColor, twinkle, shift, alpha, ...(atmosphere ? [atmosphere] : [])].map((attribute) => {
       attribute.setUsage(THREE.DynamicDrawUsage);
       return { attribute, source: new Float32Array(attribute.array) };
     });

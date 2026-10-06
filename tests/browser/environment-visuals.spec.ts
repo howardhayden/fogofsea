@@ -10,6 +10,9 @@ async function openSession(page: Page) {
     await page.locator(".mobile-disclosure summary").click();
     await page.getByRole("button", { name: "VISUALIZATION", exact: true }).click();
   }
+  // The lazy scene and its first software-WebGL frame may finish after the
+  // privacy dialog closes. Await that rendered state before changing it.
+  await expect(page.locator(".battlefield-canvas")).toHaveAttribute("data-webgl", "ready", { timeout: 15_000 });
 }
 
 test("scenario weather uses natural cloud-cover labels", async ({ page }) => {
@@ -31,11 +34,18 @@ async function openForceDesignOnDesktop(page: Page) {
   await page.getByRole("button", { name: "CONTINUE TO FORCE DESIGN", exact: true }).click();
 }
 
+async function expectOneRenderedVessel(page: Page) {
+  const plot = page.locator(".battlefield-canvas.layer-surface");
+  await expect(plot).toHaveAttribute("data-formation-units", "1", { timeout: 15_000 });
+  await expect(plot).toHaveAttribute("data-formation-visible", "1", { timeout: 15_000 });
+  await expect(plot.locator(".fallback-ship")).toHaveCount(1);
+}
+
 async function addOneVisibleVesselOnDesktop(page: Page) {
   if ((page.viewportSize()?.width ?? 1_000) <= 760) return;
   await openForceDesignOnDesktop(page);
   await page.getByRole("button", { name: "Add one Fleet aviation ship" }).click();
-  await expect.poll(async () => page.locator(".battlefield-canvas .fallback-ship").count()).toBeGreaterThan(0);
+  await expectOneRenderedVessel(page);
 }
 
 async function canvasDifferenceMetrics(page: Page, first: string, second: string) {
@@ -411,7 +421,7 @@ test("regional wildlife is bounded environmental scenery and never a tactical co
   await expect(plot.locator(".fallback-wildlife i")).toHaveCount(surface.individuals);
   if (surface.individuals > 0) {
     await expect(plot).toHaveAttribute("data-wildlife-interaction", "click-or-keyboard-greeting");
-    await expect(plot).toHaveAttribute("data-wildlife-route", "closed-ecological-waypoints");
+    await expect(plot).toHaveAttribute("data-wildlife-route", "coordinated-ecological-groups");
     expect(surface.describedBy).toContain("wildlife-visual-note");
     await expect(page.locator("#wildlife-visual-note")).toContainText("fits the accepted region");
     await expect(page.locator("#wildlife-visual-note")).toContainText("non-tactical scenery");
@@ -496,7 +506,7 @@ test("night dream emission produces a real, bounded, native-color WebGL aura", a
   const emptyNight = await cleanCanvasCapture(canvas);
 
   await page.getByRole("button", { name: "Add one Fleet aviation ship" }).click();
-  await expect.poll(async () => plot.locator(".fallback-ship").count()).toBeGreaterThan(0);
+  await expectOneRenderedVessel(page);
   await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-max-halo-meshes"))).toBe(0);
   await expect.poll(async () => Number(await plot.getAttribute("data-dream-emission-halo-meshes"))).toBe(0);
   await expect.poll(async () => Number(await plot.getAttribute("data-dream-glow-sources"))).toBeGreaterThan(0);

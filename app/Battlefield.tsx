@@ -9,12 +9,13 @@ import {
   createCelestialWaterReflection,
   createLowPolyMoon,
   createLowPolySun,
-  listedUnits,
   ROTORCRAFT,
+  SKY_CANOPY_COLORS,
   updateAtmosphere,
   viewLayerSupportsFallingPrecipitation,
 } from "./battlefieldScene";
 import { triggerWildlifeAvatarReaction, updateWildlifeAvatars } from "./wildlifeAvatar";
+import { updateSeaLife } from "./seaLifeBehavior";
 import CelestialHud from "./CelestialHud";
 import { getCelestialState, horizontalVector } from "./celestial";
 import {
@@ -29,7 +30,11 @@ import {
 } from "./environmentVisuals";
 import { cloudCoverPhrase } from "./weatherPresentation";
 import { createWildlifePlan, describeWildlifeForView, wildlifeForView, wildlifeReactionMessage, type VisibleWildlife } from "./wildlife";
-import { attachDreamEmission, createDreamEmissionProfile, detachDreamEmission, DREAM_EMISSION_LIMITS, updateDreamEmission } from "./dreamEmission";
+import { attachDreamEmission, createDreamEmissionProfile, detachDreamEmission, DREAM_EMISSION_LIMITS, setDreamEmissionMovement, updateDreamEmission } from "./dreamEmission";
+import { createFormationPlan, reconcileFormationMotion, sampleFormationMotion, type FormationMotionState, type FormationSample, type FormationUnit } from "./formation";
+import { applyFormationPose, formationFrameDistance, formationUnitForView } from "./formationScene";
+import { createFormationEffects, updateFormationEffects } from "./formationEffects";
+import { formationMotionProfile } from "./propulsion";
 import { DreamGlowRenderer } from "./dreamGlowRenderer";
 import { advanceRenderDeadline } from "./visualPerformance";
 import {
@@ -42,6 +47,7 @@ import {
   type StarfieldStar,
 } from "./starfield";
 import { updateAuroraEngine } from "./auroraEngine";
+import { skyCanopyColors, twilightWarmth } from "./skyAtmosphere";
 import {
   contactDomainForView,
   contactsForView,
@@ -104,6 +110,7 @@ type ViewPose = {
 
 type HudDisclosure = "plot" | "celestial" | "environment" | "contacts";
 type HudDisclosureState = { identity: string; disclosure: HudDisclosure | null };
+const NO_DISCLOSED_CONTACTS: readonly DisclosedContactEstimate[] = Object.freeze([]);
 
 function describeContactState(domain: ContactDomain | null, count: number) {
   if (!domain) return "No contact markers are shown in this view.";
@@ -111,21 +118,28 @@ function describeContactState(domain: ContactDomain | null, count: number) {
   return `${count} unidentified ${domain} contact marker${count === 1 ? " is" : "s are"} shown because the selected force has credited ${domain}-detection capability. Markers communicate uncertainty, not exact identity or opposing composition.`;
 }
 
-function useDebouncedRecord(value: Record<string, number>, delay = 500) {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const timer = window.setTimeout(() => setDebounced(value), delay);
-    return () => window.clearTimeout(timer);
-  }, [delay, value]);
-  return debounced;
+type VisualRoster = Pick<Props, "fleet" | "airWing" | "lowSignatureFleet" | "lowSignatureAircraft">;
+
+function sameCounts(current: Record<string, number>, next: Record<string, number>) {
+  return Object.keys(current).length === Object.keys(next).length
+    && Object.entries(next).every(([key, count]) => current[key] === count);
 }
 
-function useBoundedVisualRecord(value: Record<string, number>, eachLimit: number, totalLimit: number) {
-  const serialized = JSON.stringify(listedUnits(value, eachLimit, totalLimit).reduce<Record<string, number>>((counts, id) => {
-    counts[id] = (counts[id] ?? 0) + 1;
-    return counts;
-  }, {}));
-  return useMemo(() => JSON.parse(serialized) as Record<string, number>, [serialized]);
+function useDebouncedVisualRoster({ fleet, airWing, lowSignatureFleet, lowSignatureAircraft }: VisualRoster, delay = 500) {
+  const [displayed, setDisplayed] = useState<VisualRoster>(() => ({ fleet, airWing, lowSignatureFleet, lowSignatureAircraft }));
+  useEffect(() => {
+    // The sky and formation must use the same roster revision. Updating raw
+    // signature totals ahead of these counts would rebuild the whole scene
+    // on each low-signature increment, bypassing the roster debounce.
+    const timer = window.setTimeout(() => setDisplayed((current) => (
+      sameCounts(current.fleet, fleet) && sameCounts(current.airWing, airWing)
+        && current.lowSignatureFleet === lowSignatureFleet
+        && current.lowSignatureAircraft === lowSignatureAircraft
+        ? current : { fleet, airWing, lowSignatureFleet, lowSignatureAircraft }
+    )), delay);
+    return () => window.clearTimeout(timer);
+  }, [airWing, delay, fleet, lowSignatureAircraft, lowSignatureFleet]);
+  return displayed;
 }
 
 function usePrefersReducedMotion() {
@@ -167,7 +181,7 @@ function setDatasetIfChanged(element: HTMLElement, key: string, value: string) {
   if (element.dataset[key] !== value) element.dataset[key] = value;
 }
 
-function Battlefield({ climate, time, clouds, precipitation, seaState, visibility, season, scenarioDate, observerLatitude, observerLongitude, storming, lightningCapable, windHeading, windSpeed, currentHeading, currentSpeed, waveHeading, region, regionId, fleet, airWing, lowSignatureFleet, lowSignatureAircraft, exerciseId, result, theme, contactVisibility, disclosedContacts = [], visualActive = true, currentPhaseContentActive = false }: Props) {
+function Battlefield({ climate, time, clouds, precipitation, seaState, visibility, season, scenarioDate, observerLatitude, observerLongitude, storming, lightningCapable, windHeading, windSpeed, currentHeading, currentSpeed, waveHeading, region, regionId, fleet, airWing, lowSignatureFleet, lowSignatureAircraft, exerciseId, result, theme, contactVisibility, disclosedContacts, visualActive = true, currentPhaseContentActive = false }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const wildlifeReactRef = useRef<(memberId: string) => void>(() => {});
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -178,6 +192,9 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
   const rendererContextRestoredHandler = useRef<(() => void) | null>(null);
   const rendererUnavailable = useRef(false);
   const viewPoses = useRef<Partial<Record<ViewLayer, ViewPose>>>({});
+  const formationMotion = useRef<{ exerciseId: number; state: FormationMotionState } | null>(null);
+  const presentationElapsed = useRef(0);
+  const framedFormation = useRef<Partial<Record<ViewLayer, string>>>({});
   const [viewLayer, setViewLayer] = useState<ViewLayer>("surface");
   const [viewTelemetry, setViewTelemetry] = useState({ heading: 0, elevation: 0, direction: "N", distance: 0 });
   const [keyboardTelemetry, setKeyboardTelemetry] = useState("");
@@ -190,12 +207,13 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     return stableSeed(exerciseId, region, climate, entropy[0]);
   });
   const reducedMotion = usePrefersReducedMotion();
-  const displayedFleet = useDebouncedRecord(fleet);
-  const displayedAirWing = useDebouncedRecord(airWing);
-  const visualFleet = useBoundedVisualRecord(displayedFleet, 8, 22);
-  const visualAirWing = useBoundedVisualRecord(displayedAirWing, 5, 20);
-  const fallbackFleet = useMemo(() => listedUnits(visualFleet, 8, 16), [visualFleet]);
-  const fallbackAircraft = useMemo(() => listedUnits(visualAirWing, 4, 12), [visualAirWing]);
+  const {
+    fleet: displayedFleet, airWing: displayedAirWing,
+    lowSignatureFleet: displayedLowSignatureFleet, lowSignatureAircraft: displayedLowSignatureAircraft,
+  } = useDebouncedVisualRoster({ fleet, airWing, lowSignatureFleet, lowSignatureAircraft });
+  const formationPlan = useMemo(() => createFormationPlan(displayedFleet, displayedAirWing), [displayedFleet, displayedAirWing]);
+  const fallbackFleet = formationPlan.filter((unit) => unit.domain !== "air" && viewLayer !== "stars" && (viewLayer !== "subsurface" || unit.domain === "subsurface"));
+  const fallbackAircraft = formationPlan.filter((unit) => unit.domain === "air" && viewLayer !== "subsurface" && viewLayer !== "stars");
   const vesselCount = useMemo(() => Object.values(displayedFleet).reduce((sum, count) => sum + count, 0), [displayedFleet]);
   const aircraftCount = useMemo(() => Object.values(displayedAirWing).reduce((sum, count) => sum + count, 0), [displayedAirWing]);
   const celestial = useMemo(() => getCelestialState(scenarioDate, time, observerLatitude, observerLongitude), [scenarioDate, time, observerLatitude, observerLongitude]);
@@ -212,7 +230,10 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     visibility,
     seaState,
   }), [activeBody.aboveHorizon, activeBody.altitude, activeBodyKind, celestial.moon.illumination, clouds, precipitation, seaState, time, visibility]);
-  const skyVisibility = useMemo(() => getSkyVisibility({ time, clouds, precipitation, visibility, aircraftCount, lowSignatureAircraft, vesselCount, lowSignatureVessels: lowSignatureFleet }), [time, clouds, precipitation, visibility, aircraftCount, lowSignatureAircraft, vesselCount, lowSignatureFleet]);
+  const skyVisibility = useMemo(() => getSkyVisibility({
+    time, clouds, precipitation, visibility, aircraftCount, vesselCount,
+    lowSignatureAircraft: displayedLowSignatureAircraft, lowSignatureVessels: displayedLowSignatureFleet,
+  }), [time, clouds, precipitation, visibility, aircraftCount, vesselCount, displayedLowSignatureAircraft, displayedLowSignatureFleet]);
   const starPlacements = useMemo(() => createStarPlacements(starfieldSeed, STARFIELD_LIMITS.fieldStars), [starfieldSeed]);
   const completeStarfieldPlan = useMemo(() => createStarfieldPlan({
     seed: starfieldSeed,
@@ -313,11 +334,15 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     />;
   }), [fallbackStars]);
   const starfieldDescription = useMemo(() => describeStarfield(starfieldPlan), [starfieldPlan]);
+  // Empty disclosure lists and unchanged sensing capabilities are common on
+  // unrelated UI updates. Their object identities must not rebuild the scene.
+  const contactEstimates = disclosedContacts?.length ? disclosedContacts : NO_DISCLOSED_CONTACTS;
+  const { air: airContactsVisible, surface: surfaceContactsVisible, subsurface: subsurfaceContactsVisible } = contactVisibility;
   const contactPlan = useMemo(() => createContactVisualizationPlan(
     stableSeed(exerciseId, region, climate, "unknown-contacts"),
-    contactVisibility,
-    disclosedContacts,
-  ), [climate, contactVisibility, disclosedContacts, exerciseId, region]);
+    { air: airContactsVisible, surface: surfaceContactsVisible, subsurface: subsurfaceContactsVisible },
+    contactEstimates,
+  ), [airContactsVisible, climate, contactEstimates, exerciseId, region, subsurfaceContactsVisible, surfaceContactsVisible]);
   const contactDomain = useMemo(() => contactDomainForView(viewLayer), [viewLayer]);
   const visibleUnknownContacts = useMemo(() => contactsForView(contactPlan, viewLayer), [contactPlan, viewLayer]);
   const contactDescription = useMemo(() => describeContactState(contactDomain, visibleUnknownContacts.length), [contactDomain, visibleUnknownContacts.length]);
@@ -350,6 +375,11 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     const colors = BATTLEFIELD_PALETTES[theme][time];
     const viewConfig = VIEW_CONFIG[viewLayer];
     const poses = viewPoses.current;
+    let lastPresentationFrame: number | null = null;
+    const previousFormation = formationMotion.current?.exerciseId === exerciseId ? formationMotion.current.state : undefined;
+    const motionState = reconcileFormationMotion(previousFormation, formationPlan, presentationElapsed.current, reducedMotion);
+    formationMotion.current = { exerciseId, state: motionState };
+    const rosterIdentity = `${exerciseId}:${formationPlan.map((unit) => unit.key).join("|")}`;
     const scene = new THREE.Scene();
     const sceneColor = viewLayer === "stars"
       ? (theme === "dark" ? 0x292b4b : 0x515878)
@@ -415,10 +445,14 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       container.appendChild(renderer.domElement);
       rendererRef.current = renderer;
     }
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    const renderSize = renderer.getSize(new THREE.Vector2());
+    if (renderSize.x !== container.clientWidth || renderSize.y !== container.clientHeight) {
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
     let contextLost = renderer.getContext().isContextLost();
     let renderAfterContextRestore = () => {};
     const markContextUnavailable = () => {
+      lastPresentationFrame = null;
       contextLost = true;
       setDatasetIfChanged(container, "webgl", "unavailable");
       delete container.dataset.renderedLayer;
@@ -443,12 +477,22 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     controls.enableDamping = !reducedMotion;
     controls.enablePan = false;
     controls.minDistance = viewConfig.minDistance;
-    controls.maxDistance = viewConfig.maxDistance;
+    controls.maxDistance = Math.max(viewConfig.maxDistance, camera.position.distanceTo(initialTarget) * 1.2);
     controls.minPolarAngle = viewConfig.minPolarAngle;
     controls.maxPolarAngle = viewConfig.maxPolarAngle;
     controls.minAzimuthAngle = -Math.PI * 0.99;
     controls.maxAzimuthAngle = Math.PI * 0.99;
     controls.target.copy(initialTarget);
+    const fitFormation = () => {
+      const distance = formationFrameDistance(camera, controls.target, motionState, presentationElapsed.current, viewLayer);
+      controls.maxDistance = Math.max(viewConfig.maxDistance, distance * 1.2);
+      camera.position.sub(controls.target).setLength(distance).add(controls.target);
+      camera.lookAt(controls.target);
+    };
+    if (framedFormation.current[viewLayer] !== rosterIdentity) {
+      fitFormation();
+      framedFormation.current[viewLayer] = rosterIdentity;
+    }
 
     let renderReducedFrame = () => {};
     const updateViewTelemetry = () => {
@@ -571,8 +615,9 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       exerciseId,
       lifeProfile,
       wildlifePlan,
-      displayedFleet: visualFleet,
-      displayedAirWing: visualAirWing,
+      displayedFleet,
+      displayedAirWing,
+      formationPlan,
       result,
     });
     // These arrays contain only entities already authorized for this view.
@@ -583,6 +628,12 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       ));
     });
     const dreamSubjects = [...ships, ...aircraft, ...seaCreatures, ...wildlife];
+    const formationSubjects = [...ships, ...aircraft];
+    const formationEffects = createFormationEffects(scene, formationSubjects.map((group) => {
+      const unit = group.userData.formationUnit as FormationUnit;
+      return { key: unit.key, type: unit.type, domain: unit.domain, group };
+    }), { waterVisible: water.visible, surfaceWakeOpacity: 0.2 + wavePlan.whitecapFraction * 0.24,
+      sampleSurfaceHeight: (x, z, elapsed) => sampleWaveField(wavePlan, x, -z, elapsed) });
     // Scene changes must not repeatedly allocate the glow buffers or discard
     // the expensive convolution programs. The renderer owns their lifetime.
     const retainedDreamGlow = dreamGlowRef.current;
@@ -596,7 +647,6 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     };
     syncDreamGlowContext();
     dreamGlow.setSubjects(dreamSubjects);
-    const clock3d = new THREE.Clock();
     const wildlifeRaycaster = new THREE.Raycaster();
     const wildlifePointer = new THREE.Vector2();
     const pointerStart = { id: -1, x: 0, y: 0 };
@@ -614,7 +664,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       return target instanceof THREE.Group ? target : null;
     };
     const announceWildlifeReaction = (animal: THREE.Group) => {
-      triggerWildlifeAvatarReaction(animal, clock3d.getElapsedTime());
+      triggerWildlifeAvatarReaction(animal, presentationElapsed.current);
       const reactionAnimal = {
         kind: animal.userData.kind,
         medium: animal.userData.medium,
@@ -656,21 +706,36 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
     const foamScale = new THREE.Vector3();
     const fogViewDirection = new THREE.Vector3();
     const waveBaseColor = new THREE.Color(colors[2]);
+    const projectedFormationPoint = new THREE.Vector3();
+    const formationSamples = new Map<string, FormationSample>();
     const renderFrame = (frameAt: number, force = false) => {
-      if (contextLost) return;
+      if (contextLost) { lastPresentationFrame = null; return; }
       if (renderer.getContext().isContextLost()) {
         markContextUnavailable();
         return;
       }
-      if (document.hidden || !container.clientWidth || !container.clientHeight) return;
+      if (document.hidden || !container.clientWidth || !container.clientHeight) { lastPresentationFrame = null; return; }
       if (!reducedMotion && !force) {
         // Browser timestamps may be quantized to whole milliseconds. Keep the
         // 30 Hz phase instead of repeatedly turning 33 ms into a skipped frame.
         if (frameAt + 1 < nextFrameAt) return;
         nextFrameAt = advanceRenderDeadline(nextFrameAt, Math.max(frameAt, nextFrameAt), 30);
       }
-      const elapsed = clock3d.getElapsedTime();
+      if (!reducedMotion && lastPresentationFrame !== null) presentationElapsed.current += Math.min(0.25, Math.max(0, frameAt - lastPresentationFrame) / 1000);
+      lastPresentationFrame = reducedMotion ? null : frameAt;
+      const elapsed = presentationElapsed.current;
       const motionTime = reducedMotion ? 0 : elapsed;
+      let movingFormationCount = 0;
+      for (const group of formationSubjects) {
+        const unit = group.userData.formationUnit as FormationUnit;
+        const sample = sampleFormationMotion(motionState.get(unit.key)!, elapsed, reducedMotion);
+        formationSamples.set(unit.key, sample);
+        if (sample.moving) movingFormationCount += 1;
+        applyFormationPose(group, sample);
+        setDreamEmissionMovement(group, sample.motionStrength);
+      }
+      setDatasetIfChanged(container, "formationUnits", String(formationSubjects.length));
+      setDatasetIfChanged(container, "formationMoving", String(movingFormationCount));
       ships.forEach((ship, index) => {
         if (ship.userData.baseY >= 0 && water.visible) {
           const localY = -ship.position.z;
@@ -690,22 +755,17 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         if (ring) ring.scale.setScalar(reducedMotion ? 1 : 1 + Math.sin(elapsed * 1.5 + index) * 0.07);
       });
       aircraft.forEach((craft, index) => {
-        craft.position.y = craft.userData.baseY + (reducedMotion ? 0 : Math.sin(elapsed * 0.82 + index) * 0.08);
-        craft.position.x = craft.userData.baseX + (reducedMotion ? 0 : Math.sin(elapsed * 0.22 + index) * 0.12);
+        const profile = formationMotionProfile((craft.userData.formationUnit as FormationUnit).type);
         const rotor = craft.userData.rotor as THREE.Mesh | undefined;
-        if (rotor) rotor.rotation.y = reducedMotion ? 0 : elapsed * 8.5;
+        // Heading, pitch and bank come from the flight path. Only hovering
+        // rotorcraft receive small residual heave; fixed-wing never hovers.
+        if (rotor) {
+          craft.position.y = craft.userData.baseY + (reducedMotion ? 0 : Math.sin(elapsed * 0.82 + index) * 0.03);
+          rotor.rotation.y = reducedMotion ? 0 : elapsed * 8.5 * profile.propulsorRate;
+        }
       });
-      seaCreatures.forEach((creature) => {
-        if (reducedMotion) return;
-        const phase = creature.userData.phase as number;
-        const speed = creature.userData.speed as number;
-        const radius = creature.userData.radius as number;
-        const angle = elapsed * speed + phase;
-        creature.position.x = creature.userData.baseX + Math.sin(angle) * radius;
-        creature.position.y = creature.userData.baseY + Math.sin(angle * 1.7) * 0.16;
-        creature.position.z = creature.userData.baseZ + Math.cos(angle) * radius * 0.55;
-        creature.rotation.y = -angle + Math.PI / 2;
-      });
+      updateFormationEffects(formationEffects, elapsed, reducedMotion, formationSamples);
+      updateSeaLife(seaCreatures, elapsed, reducedMotion);
       updateWildlifeAvatars(wildlife, wavePlan, elapsed, reducedMotion);
       updateAtmosphere(atmosphere, atmospherePlan, elapsed, reducedMotion);
       updateDreamEmission(dreamSubjects, elapsed, reducedMotion);
@@ -764,6 +824,15 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       if (sunDisk) sunDisk.position.copy(camera.position).addScaledVector(sunDirection, celestialProminence.distance);
       if (moonDisk) moonDisk.position.copy(camera.position).addScaledVector(moonDirection, celestialProminence.distance);
       if (!reducedMotion) controls.update();
+      camera.updateMatrixWorld();
+      let framedCount = 0;
+      for (const group of formationSubjects) {
+        if (!formationUnitForView(group.userData.formationUnit as FormationUnit, viewLayer)) continue;
+        projectedFormationPoint.copy(group.position).project(camera);
+        if (Math.abs(projectedFormationPoint.x) <= 1 && Math.abs(projectedFormationPoint.y) <= 1
+          && projectedFormationPoint.z >= -1 && projectedFormationPoint.z <= 1) framedCount += 1;
+      }
+      setDatasetIfChanged(container, "formationVisible", String(framedCount));
       prepareStarfieldForCamera(starfield, camera);
       dreamGlow.render(scene, camera, starfield?.root);
       if (renderer.getContext().isContextLost()) {
@@ -783,6 +852,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       renderFrame(performance.now(), true);
     };
     const onVisibilityChange = () => {
+      lastPresentationFrame = null;
       if (!document.hidden && !contextLost && container.dataset.webgl !== "ready") {
         renderFrame(performance.now(), true);
       }
@@ -799,11 +869,21 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       frame = requestAnimationFrame(animate);
     }
 
+    let sizedWidth = container.clientWidth;
+    let sizedHeight = container.clientHeight;
     const resize = () => {
       if (!container.clientWidth || !container.clientHeight) return;
+      // ResizeObserver also delivers an initial, unchanged-size notification.
+      // Reassigning canvas width/height here clears and reallocates its buffer.
+      if (sizedWidth === container.clientWidth && sizedHeight === container.clientHeight) return;
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
+      fitFormation();
+      sizedWidth = container.clientWidth;
+      sizedHeight = container.clientHeight;
+      controls.update();
+      updateViewTelemetry();
       renderReducedFrame();
     };
     const observer = new ResizeObserver(resize);
@@ -835,8 +915,13 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       dreamSubjects.forEach(detachDreamEmission);
       delete container.dataset.dreamGlowProfile;
       delete container.dataset.dreamGlowSources;
-      starfield?.starBatches.forEach(({ mesh }) => mesh.dispose());
+      delete container.dataset.formationUnits;
+      delete container.dataset.formationMoving;
+      delete container.dataset.formationVisible;
       scene.traverse((object) => {
+        // Instance matrices/colors belong to the mesh, not its geometry.
+        // Release both star and foam buffers once when their scene leaves.
+        if (object instanceof THREE.InstancedMesh) object.dispose();
         if (object instanceof THREE.Mesh || object instanceof THREE.Points || object instanceof THREE.Line || object instanceof THREE.LineSegments) {
           object.geometry?.dispose();
           const material = object.material;
@@ -846,7 +931,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       });
       renderer.renderLists.dispose();
     };
-  }, [climate, time, region, regionId, visualFleet, visualAirWing, exerciseId, result, theme, viewLayer, celestial, activeBody, activeBodyKind, activeBodyBrightness, celestialProminence, celestialReflectionVisible, reducedMotion, starfieldPlan, contactPlan, lifeProfile, wildlifePlan, wavePlan, auroraPlan, atmospherePlan, visualActive]);
+  }, [climate, time, region, regionId, displayedFleet, displayedAirWing, formationPlan, exerciseId, result, theme, viewLayer, celestial, activeBody, activeBodyKind, activeBodyBrightness, celestialProminence, celestialReflectionVisible, reducedMotion, starfieldPlan, contactPlan, lifeProfile, wildlifePlan, wavePlan, auroraPlan, atmospherePlan, visualActive]);
 
   useEffect(() => () => {
     const renderer = rendererRef.current;
@@ -917,6 +1002,12 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       ? `The ${activeBodyKind} is direct; the broken facets on the water are its reflection`
       : `The ${activeBodyKind} is a direct sky sightline, not a reflection`;
 
+  const warmSky = viewLayer !== "subsurface" && twilightWarmth(time, atmospherePlan.fog.horizonDensity) > 0;
+  const fallbackSkyColors = warmSky
+    ? skyCanopyColors(SKY_CANOPY_COLORS[theme][time], theme, time, atmospherePlan.fog.horizonDensity)
+      .map((color) => `#${color.toString(16).padStart(6, "0")}`)
+    : null;
+
   return (
     <div
       className={`battlefield-canvas layer-${viewLayer}`}
@@ -935,6 +1026,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       data-starfield-appearance={starfieldPlan.appearance}
       data-starfield-animation={reducedMotion ? "still" : "alive-bounded-wander"}
       data-sky-canopy={viewLayer === "subsurface" ? "subsurface" : "faceted-pastel-gradient"}
+      data-sky-twilight-warmth={viewLayer === "subsurface" ? "0" : twilightWarmth(time, atmospherePlan.fog.horizonDensity).toFixed(3)}
       data-time={time}
       data-dream-emission={time === "day" ? "off" : reducedMotion ? "still" : "breathing"}
       data-dream-emission-halo={time === "day" ? "none" : "shape-derived-radial-convolution"}
@@ -986,7 +1078,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       data-wildlife-status="environmental-nontactical"
       data-wildlife-engine={visibleWildlife.length ? "articulated-low-poly-wildlife" : "none"}
       data-wildlife-motion={visibleWildlife.length ? (reducedMotion ? "active-pose-frozen" : "bounded-route-active") : "none"}
-      data-wildlife-route={visibleWildlife.length ? "closed-ecological-waypoints" : "none"}
+      data-wildlife-route={visibleWildlife.length ? "coordinated-ecological-groups" : "none"}
       data-wildlife-resting-penguins={visibleWildlife.filter((animal) => animal.kind === "penguin" && animal.restingPose).length}
       data-wildlife-interaction={visibleWildlife.length ? "click-or-keyboard-greeting" : "none"}
       data-wildlife-last-reaction={wildlifeReaction.memberId || "none"}
@@ -999,6 +1091,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       onKeyDown={onLayerKeyDown}
     >
       <div className="fallback-scene" aria-hidden="true">
+        {fallbackSkyColors && <div className="fallback-warm-sky" style={{ background: `linear-gradient(180deg, ${fallbackSkyColors.join(", ")})` }} />}
         <div className="fallback-stars">
           {fallbackStarNodes}
         </div>
@@ -1046,16 +1139,25 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         {storming && lightningCapable && <i className="fallback-lightning" />}
         <div className="fallback-grid" style={{ transform: `rotateX(64deg) rotateZ(${-viewTelemetry.heading}deg)` }} />
         {climate !== "ocean" && Array.from({ length: 9 }, (_, index) => <i className={`ice-floe ice-${index + 1}`} key={index} />)}
-        {fallbackFleet.map((type, index) => (
-          <i key={`${type}-${index}`} className={`fallback-ship fallback-${type}`} style={{ left: `${30 + ((index * 19) % 47)}%`, top: `${39 + ((index * 23) % 42)}%` }}><span /></i>
+        {fallbackFleet.map((unit) => (
+          <i key={unit.key} data-unit-id={unit.key} className={`fallback-ship fallback-${unit.type}`} style={{ left: `${50 + unit.position[0] * 3.8}%`, top: `${61 + unit.position[2] * 2.4}%`, transform: `translate(-50%, -50%) rotate(${-unit.heading}rad) scale(${unit.visualScale})` }}><span /></i>
         ))}
-        {fallbackAircraft.map((type, index) => (
-          <i key={`${type}-${index}`} className={`fallback-aircraft ${ROTORCRAFT.includes(type) ? "rotor" : "wing"}`} style={{ left: `${19 + ((index * 17) % 66)}%`, top: `${14 + ((index * 11) % 17)}%` }} />
+        {fallbackAircraft.map((unit) => (
+          <i key={unit.key} data-unit-id={unit.key} className={`fallback-aircraft ${ROTORCRAFT.includes(unit.type) ? "rotor" : "wing"}`} style={{ left: `${50 + unit.position[0] * 3.8}%`, top: `${49 - unit.position[1] * 3.6 + unit.position[2] * 1.1}%`, transform: `translate(-50%, -50%) rotate(${-unit.heading}rad) scale(${unit.visualScale})` }} />
         ))}
         <div className="fallback-sea-life">
           {Array.from({ length: lifeProfile.solitaryCount + lifeProfile.schoolCount }, (_, index) => <i className={index < lifeProfile.solitaryCount ? "solitary" : "schooling"} key={index} style={{ left: `${12 + ((index * 23) % 76)}%`, top: `${24 + ((index * 17) % 57)}%`, animationDelay: `${-(index % 9) * 0.7}s` }} />)}
         </div>
         <div className="fallback-wildlife">
+          {visibleWildlife.map((animal, index) => animal.medium === "ice" && <b
+            key={`support-${animal.id}`}
+            className="wildlife-support"
+            style={{
+              left: `${Math.max(4, Math.min(94, 50 + animal.x * 2.1))}%`,
+              top: `${59 + ((index * 7) % 20)}%`,
+              transform: `translate(-24px, ${animal.kind === "seal" ? 5 : 10}px)`,
+            }}
+          />)}
           {visibleWildlife.map((animal, index) => <i
             className={`wildlife-creature wildlife-${animal.kind} wildlife-${animal.medium}${animal.restingPose ? " wildlife-resting" : ""}${wildlifeReaction.memberId === animal.id ? " reacting" : ""}`}
             key={`${animal.groupId}-${animal.id}-${wildlifeReaction.memberId === animal.id ? wildlifeReaction.nonce : 0}`}
@@ -1154,7 +1256,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         >
           <summary onClick={(event) => { event.preventDefault(); toggleHudDisclosure("environment", openHudDisclosure !== "environment"); }}><strong className="hud-label-long">SKY LIGHTS</strong><strong className="hud-label-short">STARS</strong><b aria-hidden="true" /></summary>
           <div className="environment-readout-details">
-            <span>{starfieldPlan.stars.length} VISIBLE LIGHTS · {skyVisibility.clarity.toUpperCase()}</span>
+            <span>{starfieldPlan.stars.length} VISIBLE LIGHTS · FULL STARFIELD</span>
             <small>Crystalline canopy · tactical contacts are omitted</small>
           </div>
         </details>
@@ -1172,7 +1274,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
         </details>
       )}
       <span id="battlefield-state-note" className="visually-hidden">
-        {`Viewing ${viewLayer}. Heading ${viewTelemetry.heading} degrees ${viewTelemetry.direction}; elevation ${viewTelemetry.elevation} degrees. ${region}, ${climate}, ${season}, ${time}. Weather: ${storming ? "storming with " : ""}${precipitation === "none" ? cloudCoverPhrase(clouds) : `${atmospherePlan.precipitation.presentation} ${precipitation}`}. Wind travels toward ${windHeading} degrees at ${windSpeed} knots; current travels toward ${currentHeading} degrees at ${currentSpeed} knots; resulting waves travel toward ${wavePlan.travelHeading} degrees.${atmospherePlan.stormLight.visible ? " Static low-poly lightning geometry remains visible with localized, eased, non-flashing cloud-interior light." : ""}${time === "day" ? "" : " Visible selected vessels, submarines, aircraft, and creatures retain crisp native-color silhouettes; supported WebGL rendering spreads their own colors softly into nearby darkness. Decorative modulation is disabled with reduced motion."}${auroraVisibleInLayer ? " Aurora is visible and described separately." : ""}${viewLayer === "stars" ? ` Visibility: ${skyVisibility.clarity}.` : ""}${viewLayer === "subsurface" ? ` ${lifeProfile.solitaryCount} vague solitary environmental forms and ${lifeProfile.schoolCount} small schooling forms appear at ${lifeProfile.depthLabel}.` : ""}`}
+        {`Viewing ${viewLayer}. Heading ${viewTelemetry.heading} degrees ${viewTelemetry.direction}; elevation ${viewTelemetry.elevation} degrees. ${region}, ${climate}, ${season}, ${time}. Weather: ${storming ? "storming with " : ""}${precipitation === "none" ? cloudCoverPhrase(clouds) : `${atmospherePlan.precipitation.presentation} ${precipitation}`}. Wind travels toward ${windHeading} degrees at ${windSpeed} knots; current travels toward ${currentHeading} degrees at ${currentSpeed} knots; resulting waves travel toward ${wavePlan.travelHeading} degrees.${atmospherePlan.stormLight.visible ? " Static low-poly lightning geometry remains visible with localized, eased, non-flashing cloud-interior light." : ""}${time === "day" ? "" : " Visible selected vessels, submarines, aircraft, and creatures retain crisp native-color silhouettes; supported WebGL rendering spreads their own colors softly into nearby darkness. Decorative modulation is disabled with reduced motion."}${auroraVisibleInLayer ? " Aurora is visible and described separately." : ""}${viewLayer === "stars" ? ` Sky conditions: ${skyVisibility.clarity}. The complete crystalline canopy remains present in every Stars view.` : ""}${viewLayer === "subsurface" ? ` ${lifeProfile.solitaryCount} vague solitary environmental forms and ${lifeProfile.schoolCount} small schooling forms appear at ${lifeProfile.depthLabel}.` : ""}`}
       </span>
       <span id="environment-visual-note" className="visually-hidden">View layers change only through the labelled buttons or Page Up and Page Down keys. Dragging and arrow keys rotate the current view without changing layers.</span>
       <span id="weather-visual-note" className="visually-hidden">{atmospherePlan.description} {time === "day" ? "Dream emission is inactive in daylight." : "Visible vessels, submarines, aircraft, and creatures keep their native faceted cores. Supported WebGL rendering adds shape-derived, short-range colored light with depth and fog attenuation; reduced motion holds the light steady. The non-WebGL fallback preserves readable cores without decorative halos."}</span>
@@ -1180,7 +1282,7 @@ function Battlefield({ climate, time, clouds, precipitation, seaState, visibilit
       <span id="wave-visual-note" className="visually-hidden">{wavePlan.description}</span>
       {visibleWildlife.length > 0 && <>
         <button type="button" className="wildlife-keyboard-greet" onClick={greetNextWildlife}>Greet a visible animal</button>
-        <span id="wildlife-visual-note" className="visually-hidden">{wildlifeDescription} Non-resting animals continuously travel toward the next point on a bounded ecological route while performing species-appropriate activity. A deterministic minority of visible penguins may pause lying down; never the whole group. Clicking a resting penguin, or reaching it with the keyboard greeting control, prompts a grounded recovery to its feet, confused head scratch, and return to rest without spinning. Every response is habitat-appropriate and changes no gameplay state.</span>
+        <span id="wildlife-visual-note" className="visually-hidden">{wildlifeDescription} Each moving detail follows a bounded ecological route. Birds coordinate flapping and gliding in squadrons, and marine pods travel together. Upright penguin details autonomously cycle through forming ranks, marching, left and right turns, inspection, about-face, saluting, foraging, and standing rest. Animals lie down only on supporting ice; never the whole group of penguins. Greeting a resting penguin prompts a grounded recovery, confused head scratch, and return to rest without spinning. Reduced motion holds a stable articulated pose. Every response is habitat-appropriate and changes no gameplay state.</span>
       </>}
       <span id="wildlife-reaction-status" className="visually-hidden" role="status" aria-live="polite" aria-atomic="true">{wildlifeReaction.message}</span>
       {viewLayer === "subsurface" && <span id="subsurface-optics-note" className="visually-hidden">{subsurfaceOptics.description}</span>}

@@ -8,6 +8,9 @@ async function openSession(page: Page) {
   await expect(sessionButton).toBeFocused();
   await sessionButton.press("Enter");
   await expect(privacyDialog).toBeHidden();
+  // Session startup queues its focus handoff after the privacy gate closes.
+  // Begin the next keyboard interaction from that intended initial focus.
+  await expect(page.locator("#mission-workflow")).toBeFocused();
 }
 
 async function completeAdversaryAssessmentWithKeyboard(page: Page) {
@@ -18,7 +21,10 @@ async function completeAdversaryAssessmentWithKeyboard(page: Page) {
   ]) {
     const select = page.locator(selector);
     await select.focus();
-    await select.press("End");
+    // Native menu navigation differs across platforms, while closed-select
+    // type-ahead sends real keyboard input without relying on a popup menu.
+    const label = await select.locator('option[value="insufficient-evidence"]').innerText();
+    await select.pressSequentially(label);
     await expect(select).toHaveValue("insufficient-evidence");
   }
 }
@@ -90,16 +96,20 @@ async function completeStrategyWithKeyboard(page: Page) {
   await warfare.focus();
   await warfare.press("Space");
 
-  for (const selector of [
-    "#strategic-end-state",
-    "#strategic-primary-theory",
-    "#strategic-partner-theory",
-    "#strategic-guardrail",
+  for (const [selector, key, label] of [
+    ["#strategic-end-state", "p", "Preserve reliable access"],
+    ["#strategic-primary-theory", "s", "Sun Tzu · shape choices"],
+    ["#strategic-partner-theory", "c", "Clausewitz · political purpose"],
+    ["#strategic-guardrail", "l", "Limit escalation"],
   ]) {
     const select = page.locator(selector);
     await expect(select).toBeVisible();
     await select.focus();
-    await select.press("ArrowDown");
+    // A single type-ahead key commits the intended option before progressive
+    // disclosure replaces this select. ArrowDown alone does not commit a
+    // native-select value in headless Chromium on macOS.
+    await select.press(key);
+    await expect(page.locator(".decision-step-summary strong").filter({ hasText: label })).toBeVisible();
   }
   await expect(page.locator("#strategic-guardrail")).toHaveCount(0);
 }
@@ -170,6 +180,51 @@ async function expectSemanticDom(page: Page, phase: string) {
 async function expectAriaSnapshotContains(locator: Locator, words: string[]) {
   const snapshot = await locator.ariaSnapshot();
   for (const word of words) expect(snapshot).toContain(word);
+}
+
+for (const startup of ["PLAY WITHOUT BROWSER SAVING", "ENABLE SAVING & BEGIN"]) {
+  test(`startup focus preserves an explicit keyboard choice after ${startup}`, async ({ page }) => {
+    await page.clock.install({ time: new Date("2026-10-06T12:00:00Z") });
+    await page.goto("/");
+    const privacy = page.getByRole("dialog", { name: "HOW SHOULD THIS GAME REMEMBER YOU?" });
+    await expect(privacy.getByRole("button", { name: "PLAY WITHOUT BROWSER SAVING" })).toBeFocused();
+    await page.clock.pauseAt(new Date("2026-10-06T12:05:00Z"));
+    await privacy.getByRole("button", { name: startup, exact: true }).press("Enter");
+    await expect(privacy).toBeHidden();
+
+    // Keep the startup timer queued until the user has chosen another control.
+    // Running it explicitly makes the regression independent of machine speed.
+    const compact = await page.locator(".mobile-gamebar").isVisible();
+    const opener = compact ? page.locator(".mobile-disclosure summary") : page.locator(".topbar .academy-button");
+    await opener.focus();
+    await page.clock.runFor(1);
+    await expect(opener).toBeFocused();
+    // Send Enter to actual focus, without locator.press silently refocusing.
+    await page.keyboard.press("Enter");
+    if (compact) {
+      const academyButton = page.locator(".mobile-disclosure").getByRole("button", { name: "ACADEMY", exact: true });
+      await academyButton.focus();
+      await page.keyboard.press("Enter");
+    }
+    await page.clock.runFor(1);
+    const academy = page.getByRole("dialog", { name: "THE ACADEMY" });
+    await expect(academy).toHaveAttribute("aria-describedby", "academy-independence academy-summary");
+    await expect.poll(() => academy.evaluate((dialog) => dialog.contains(document.activeElement))).toBe(true);
+    await page.clock.runFor(100);
+    await expect.poll(() => academy.evaluate((dialog) => dialog.contains(document.activeElement))).toBe(true);
+  });
+
+  test(`startup focus reaches the mission when no later control is chosen after ${startup}`, async ({ page }) => {
+    await page.clock.install({ time: new Date("2026-10-06T12:00:00Z") });
+    await page.goto("/");
+    const privacy = page.getByRole("dialog", { name: "HOW SHOULD THIS GAME REMEMBER YOU?" });
+    await expect(privacy.getByRole("button", { name: "PLAY WITHOUT BROWSER SAVING" })).toBeFocused();
+    await page.clock.pauseAt(new Date("2026-10-06T12:05:00Z"));
+    await privacy.getByRole("button", { name: startup, exact: true }).press("Enter");
+    await expect(privacy).toBeHidden();
+    await page.clock.runFor(1);
+    await expect(page.locator("#mission-workflow")).toBeFocused();
+  });
 }
 
 test("privacy gate, dynamic skip target, and modal focus work from the keyboard", async ({ page }) => {

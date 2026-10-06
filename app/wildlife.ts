@@ -6,8 +6,21 @@ export type WildlifeMedium = "air" | "ice" | "surface" | "subsurface";
 export type WildlifeBehavior = "gliding" | "circling" | "resting" | "commuting" | "surfacing" | "porpoising" | "swimming";
 export type LandProximity = "near-land" | "coastal" | "offshore";
 
+/** Horizontal, visible scene geometry that can actually carry an animal.
+ * Radius is the safe inscribed footprint, not a polygon's corner radius. */
+export type WildlifeSupport = { id: string; x: number; z: number; topY: number; radius: number };
+
 export type WildlifeMemberPlan = {
   id: string;
+  memberIndex: number;
+  groupSize: number;
+  groupSeed: number;
+  groupX: number;
+  groupY: number;
+  groupZ: number;
+  routePhase: number;
+  formationX: number;
+  formationZ: number;
   x: number;
   y: number;
   z: number;
@@ -155,7 +168,7 @@ function proximityFactor(kind: WildlifeKind, proximity: LandProximity, iceEdge: 
 
 function behaviorFor(kind: WildlifeKind, random: () => number): WildlifeBehavior {
   if (kind === "seabird" || kind === "shorebird") return random() < 0.56 ? "gliding" : "circling";
-  if (kind === "penguin") return random() < 0.72 ? "commuting" : "swimming";
+  if (kind === "penguin") return "commuting";
   if (kind === "seal") return random() < 0.58 ? "commuting" : "swimming";
   if (kind === "whale") return "surfacing";
   // Sharks are always traveling through the water. Surface-view dorsal
@@ -180,6 +193,28 @@ function memberScale(kind: WildlifeKind, random: () => number) {
 
 function createMembers(seed: number, kind: WildlifeKind, count: number): WildlifeMemberPlan[] {
   const random = seededRandom(stableSeed(seed, kind, "members"));
+  const groupSeed = stableSeed(seed, kind, "group-route");
+  const routeRandom = seededRandom(groupSeed);
+  const bird = kind === "seabird" || kind === "shorebird";
+  const angle = routeRandom() * Math.PI * 2;
+  const spread = 7 + routeRandom() * 7;
+  const groupX = Math.cos(angle) * spread;
+  const groupY = bird ? 5.5 + routeRandom() * 5 : 0.08;
+  const groupZ = Math.sin(angle) * spread;
+  const routePhase = routeRandom() * Math.PI * 2;
+  const speed = kind === "shark" ? 0.12 + routeRandom() * 0.06
+    : kind === "dolphin" ? 0.11 + routeRandom() * 0.05
+      : (bird ? 0.09 : 0.035) + routeRandom() * (bird ? 0.1 : 0.075);
+  const baseRadius = kind === "shark" ? 2.2 + routeRandom() * 1.6
+    : kind === "dolphin" ? 1.8 + routeRandom() * 1.4
+      : (bird ? 1.5 : 0.6) + routeRandom() * (bird ? 3.8 : 1.6);
+  const routeEccentricity = 0.72 + routeRandom() * 0.14;
+  const podLateralSpacing = kind === "whale" ? 0.8 : 0.56;
+  const widestSlot = bird ? Math.ceil((count - 1) / 2) * 0.34 : (Math.min(3, count) - 1) / 2 * podLateralSpacing;
+  // The inner parallel curve must stay outside the ellipse's smallest
+  // curvature radius; otherwise a flank member stalls and reverses at turns.
+  const radius = Math.max(baseRadius, widestSlot * 1.35 / (routeEccentricity * routeEccentricity));
+  const routeDirection = routeRandom() < 0.5 ? -1 : 1;
   const restRandom = seededRandom(stableSeed(seed, kind, "resting-waypoints"));
   const restCount = kind === "penguin" && count > 1
     ? Math.min(count - 1, Math.max(1, Math.floor(count * 0.28)))
@@ -189,31 +224,28 @@ function createMembers(seed: number, kind: WildlifeKind, count: number): Wildlif
     .slice(0, restCount)
     .map(({ index }) => index));
   return Array.from({ length: count }, (_, index) => {
-    const bird = kind === "seabird" || kind === "shorebird";
-    const shark = kind === "shark";
-    const dolphin = kind === "dolphin";
-    const angle = random() * Math.PI * 2;
-    const spread = bird ? 5 + random() * 12 : 5 + random() * 9;
+    // One leader path carries a recognizable V flight or compact pod. Wing
+    // beats and body strokes retain a small individual phase offset.
+    const row = Math.ceil(index / 2);
+    const side = index === 0 ? 0 : index % 2 ? -1 : 1;
+    const podSpacing = kind === "whale" ? 1.5 : kind === "seal" ? 0.95 : 0.62;
+    const formationX = bird ? -row * 0.3 : -Math.floor(index / 3) * podSpacing;
+    const formationZ = bird ? side * row * 0.34 : ((index % 3) - (Math.min(count, 3) - 1) / 2) * podLateralSpacing;
     return {
       id: `${kind}-${index}`,
-      x: Math.cos(angle) * spread + (random() - 0.5) * 3,
-      y: bird ? 4.6 + random() * 7.8 : 0.08,
-      z: Math.sin(angle) * spread + (random() - 0.5) * 3,
+      memberIndex: index, groupSize: count, groupSeed,
+      groupX, groupY, groupZ, routePhase, formationX, formationZ,
+      x: groupX + formationX,
+      y: groupY,
+      z: groupZ + formationZ,
       depth: 1.2 + random() * (kind === "whale" || kind === "shark" ? 3.5 : 2.2),
       scale: memberScale(kind, random),
-      heading: random() * Math.PI * 2,
-      phase: random() * Math.PI * 2,
+      heading: angle,
+      phase: routePhase + index * 0.38 + random() * 0.15,
       // Sharks and dolphins cross a legible span of water instead of idling
       // beside one wave. Their circuits remain deterministic, closed, and
       // habitat-bounded, with dolphins just below the shark travel envelope.
-      speed: shark ? 0.12 + random() * 0.06
-        : dolphin ? 0.11 + random() * 0.05
-          : (bird ? 0.09 : 0.035) + random() * (bird ? 0.1 : 0.075),
-      radius: shark ? 2.2 + random() * 1.6
-        : dolphin ? 1.8 + random() * 1.4
-          : (bird ? 1.5 : 0.6) + random() * (bird ? 3.8 : 1.6),
-      routeEccentricity: 0.34 + random() * 0.42,
-      routeDirection: random() < 0.5 ? -1 : 1,
+      speed, radius, routeEccentricity, routeDirection,
       restingPose: restingIndices.has(index),
     };
   });
@@ -280,11 +312,12 @@ function mediumFor(kind: WildlifeKind, behavior: WildlifeBehavior, viewLayer: Vi
 export function wildlifeForView(plan: WildlifePlan, viewLayer: ViewLayer): VisibleWildlife[] {
   return plan.groups.flatMap((group) => {
     return group.members.flatMap((member) => {
-      const memberBehavior = member.restingPose ? "resting" : group.behavior;
+      const memberBehavior = member.restingPose && plan.iceEdge ? "resting" : group.behavior;
       const medium = mediumFor(group.kind, memberBehavior, viewLayer, plan.iceEdge);
       if (!medium) return [];
       return [{
         ...member,
+        restingPose: member.restingPose && medium === "ice",
         groupId: group.id,
         kind: group.kind,
         label: group.label,

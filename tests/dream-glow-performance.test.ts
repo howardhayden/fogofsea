@@ -152,7 +152,7 @@ test("PERF-GLOW-07: covered fallbacks return on context loss and steady frames a
   assert.match(battlefield, /function setDatasetIfChanged[\s\S]*element\.dataset\[key\] !== value/);
   assert.match(battlefield, /let contextLost = renderer\.getContext\(\)\.isContextLost\(\);[\s\S]*markContextUnavailable[\s\S]*"webgl", "unavailable"[\s\S]*delete container\.dataset\.renderedLayer/);
   assert.match(battlefield, /onWebGLContextRestored[\s\S]*contextLost = false[\s\S]*"webgl", "initializing"[\s\S]*renderAfterContextRestore\(\)/);
-  assert.match(battlefield, /if \(contextLost\) return;[\s\S]*renderer\.getContext\(\)\.isContextLost\(\)[\s\S]*markContextUnavailable\(\)[\s\S]*if \(document\.hidden \|\| !container\.clientWidth \|\| !container\.clientHeight\) return;/);
+  assert.match(battlefield, /if \(contextLost\) \{ lastPresentationFrame = null; return; \}[\s\S]*renderer\.getContext\(\)\.isContextLost\(\)[\s\S]*markContextUnavailable\(\)[\s\S]*if \(document\.hidden \|\| !container\.clientWidth \|\| !container\.clientHeight\) \{ lastPresentationFrame = null; return; \}/);
   assert.match(battlefield, /trackRestoredContext[\s\S]*rendererContextGeneration\.current \+= 1/);
   assert.match(battlefield, /syncDreamGlowContext[\s\S]*handleContextRestored\(\)[\s\S]*dreamGlowContextGeneration\.current = rendererContextGeneration\.current/);
   assert.match(battlefield, /renderAfterContextRestore = \(\) => \{[\s\S]*syncDreamGlowContext\(\)[\s\S]*renderFrame\(performance\.now\(\), true\)/);
@@ -173,4 +173,112 @@ test("PERF-GLOW-08: context restoration clears only transient framebuffer-copy f
   assert.equal(Reflect.get(renderer, "displayCopyFailed"), false);
   assert.equal(renderer.status, "off");
   renderer.dispose();
+});
+
+test("PERF-GLOW-09: early rejection bounds enclose all transformed native source vertices", () => {
+  const nativeRenderer = stubRenderer();
+  nativeRenderer.capabilities.maxTextureSize = 4096;
+  const group = new THREE.Group();
+  const hull = new THREE.BoxGeometry(3.2, 0.3, 0.55);
+  const wing = new THREE.BoxGeometry(0.45, 0.06, 2.3);
+  const material = new THREE.MeshStandardMaterial({ color: 0x70b3ae });
+  group.add(new THREE.Mesh(hull, material));
+  const articulated = new THREE.Mesh(wing, material);
+  articulated.position.set(-0.1, 0.2, 0);
+  group.add(articulated);
+  attachDreamEmission(group, createDreamEmissionProfile(41, "night", "aircraft"));
+  const pipeline = new DreamGlowRenderer(nativeRenderer, [group]);
+  Reflect.get(pipeline, "fullSize").set(640, 480);
+  const subject = Reflect.get(pipeline, "subjects")[0];
+  const prepare = Reflect.get(pipeline, "prepareSubject").bind(pipeline);
+  const camera = new THREE.PerspectiveCamera(42, 4 / 3, 0.1, 100);
+  for (const distance of [4.5, 10]) for (const yaw of [0, 0.8, 1.6]) {
+    camera.position.set(0, distance * 0.3, distance);
+    camera.lookAt(0, 0, 0);
+    camera.updateMatrixWorld();
+    group.position.x = 0.3;
+    group.rotation.y = yaw;
+    articulated.rotation.x = yaw * 0.2;
+    group.updateMatrixWorld(true);
+    assert.ok(prepare(subject, camera) > 0);
+    assert.ok(subject.nearestDepth > camera.near);
+    for (const mesh of [group.children[0] as THREE.Mesh, articulated]) {
+      const positions = mesh.geometry.getAttribute("position");
+      for (let i = 0; i < positions.count; i++) {
+        const vertex = new THREE.Vector3().fromBufferAttribute(positions, i)
+          .applyMatrix4(mesh.matrixWorld).applyMatrix4(camera.matrixWorldInverse);
+        assert.ok(-vertex.z >= subject.nearestDepth - 1e-9, "no emitted source may be closer than the conservative depth bound");
+        vertex.applyMatrix4(camera.projectionMatrix);
+        const x = (vertex.x * 0.5 + 0.5) * 640;
+        const y = (vertex.y * 0.5 + 0.5) * 480;
+        assert.ok(x >= subject.sourceBounds.x + 1 && x <= subject.sourceBounds.z - 1);
+        assert.ok(y >= subject.sourceBounds.y + 1 && y <= subject.sourceBounds.w - 1);
+      }
+    }
+  }
+  pipeline.dispose(); detachDreamEmission(group);
+  hull.dispose(); wing.dispose(); material.dispose();
+});
+
+test("PERF-GLOW-10: replacing scenes reuses capture programs and releases prior source texture references", () => {
+  const nativeRenderer = stubRenderer();
+  const pipeline = new DreamGlowRenderer(nativeRenderer, []);
+  const geometry = new THREE.BoxGeometry(1, 0.2, 3);
+  const texture = new THREE.Texture();
+  const alphaMap = new THREE.Texture();
+  const firstMaterial = new THREE.MeshBasicMaterial({
+    color: 0x538781, map: texture, alphaMap, alphaTest: 0.25,
+    opacity: 0.8, vertexColors: true, side: THREE.DoubleSide, fog: false,
+  });
+  const nextMaterial = new THREE.MeshBasicMaterial({ color: 0x8276ac, opacity: 0.6 });
+  const makeGroup = (material: THREE.MeshBasicMaterial, count: number) => {
+    const group = new THREE.Group();
+    for (let i = 0; i < count; i++) group.add(new THREE.Mesh(geometry, material));
+    attachDreamEmission(group, createDreamEmissionProfile(count, "night", "ship"));
+    return group;
+  };
+  const first = makeGroup(firstMaterial, 3);
+  const next = makeGroup(nextMaterial, 1);
+  pipeline.setSubjects([first]);
+  const materials = Reflect.get(pipeline, "subjects")[0].parts.map((part: { material: THREE.MeshBasicMaterial }) => part.material) as THREE.MeshBasicMaterial[];
+  const disposal = materials.map(() => 0);
+  materials.forEach((material, index) => material.addEventListener("dispose", () => { disposal[index]++; }));
+  const uniforms = { map: { value: texture as THREE.Texture | null }, alphaMap: { value: alphaMap as THREE.Texture | null } };
+  materials[0].onBeforeCompile({
+    uniforms, fragmentShader: "#include <common>\n#include <fog_fragment>\n#include <opaque_fragment>",
+  } as unknown as Parameters<THREE.Material["onBeforeCompile"]>[0], nativeRenderer);
+  for (let i = 0; i < 20; i++) {
+    pipeline.setSubjects([next]);
+    const replacement = Reflect.get(pipeline, "subjects")[0].parts[0].material as THREE.MeshBasicMaterial;
+    assert.equal(replacement, materials[0], "capture material keeps its renderer-owned program cache");
+    assert.equal(replacement.color.getHex(), nextMaterial.color.getHex());
+    assert.equal(replacement.opacity, nextMaterial.opacity);
+    assert.equal(replacement.map, null);
+    assert.equal(replacement.alphaMap, null);
+    assert.equal(replacement.alphaTest, 0);
+    assert.equal(replacement.vertexColors, false);
+    assert.equal(replacement.side, THREE.FrontSide);
+    assert.equal(replacement.fog, true);
+    assert.equal(uniforms.map.value, null);
+    assert.equal(uniforms.alphaMap.value, null);
+    pipeline.setSubjects([first]);
+    const restored = Reflect.get(pipeline, "subjects")[0].parts;
+    assert.deepEqual(restored.map((part: { material: THREE.MeshBasicMaterial }) => part.material), materials);
+    assert.equal(materials[0].map, texture);
+    assert.equal(materials[0].alphaMap, alphaMap);
+    assert.equal(materials[0].alphaTest, 0.25);
+    assert.equal(materials[0].vertexColors, true);
+    assert.equal(materials[0].side, THREE.DoubleSide);
+    assert.equal(materials[0].fog, false);
+    assert.equal(Reflect.get(pipeline, "captureMaterials").length, 3, "pool is bounded by the peak simultaneous source count");
+  }
+  pipeline.clearSubjects();
+  assert.deepEqual(disposal, [0, 0, 0]);
+  assert.ok(materials.every((material) => material.map === null && material.alphaMap === null));
+  pipeline.dispose(); pipeline.dispose();
+  assert.deepEqual(disposal, [1, 1, 1]);
+  assert.equal(first.children.length, 3);
+  assert.equal(firstMaterial.map, texture, "capture cleanup does not change native source materials");
+  detachDreamEmission(first); detachDreamEmission(next);
+  geometry.dispose(); firstMaterial.dispose(); nextMaterial.dispose(); texture.dispose(); alphaMap.dispose();
 });
