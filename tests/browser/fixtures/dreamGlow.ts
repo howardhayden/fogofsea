@@ -2,10 +2,87 @@ import * as THREE from "three";
 import { attachDreamEmission, createDreamEmissionProfile, detachDreamEmission, updateDreamEmission, type DreamEmissionKind, type DreamEmissionRuntime } from "../../../app/dreamEmission";
 import { DreamGlowRenderer } from "../../../app/dreamGlowRenderer";
 import { projectedGlowReference } from "../../../app/dreamGlowMath";
+import { UNOPTIMIZED_GLOW_FRAGMENT } from "./glowReference";
 
 function decode(byte: number): number {
   const c = byte / 255;
   return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+}
+
+/** Compare the retained pre-optimization shader against the production path
+ * at fixed poses. Includes narrow/rotated parts, partial occlusion and sources
+ * crossing viewport edges; no animation or sampling noise may mask a change. */
+export function runGlowSupportEquivalenceFixture(pixelRatio: number) {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("webgl2", { alpha: true, antialias: true });
+  if (!context) throw new Error("WebGL2 is required for glow parity");
+  const renderer = new THREE.WebGLRenderer({ canvas, context, antialias: true });
+  renderer.setPixelRatio(pixelRatio);
+  renderer.setSize(256, 192, false);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x112936);
+  scene.fog = new THREE.FogExp2(0x112936, 0.025);
+  scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+  const camera = new THREE.PerspectiveCamera(42, 4 / 3, 0.1, 100);
+  const group = new THREE.Group();
+  const geometry = new THREE.BoxGeometry(3.2, 0.3, 0.55);
+  const material = new THREE.MeshStandardMaterial({ color: 0x70b3ae });
+  group.add(new THREE.Mesh(geometry, material));
+  const wingGeometry = new THREE.BoxGeometry(0.45, 0.06, 2.3);
+  const wing = new THREE.Mesh(wingGeometry, material);
+  wing.position.set(-0.1, 0.2, 0);
+  group.add(wing);
+  scene.add(group);
+  attachDreamEmission(group, createDreamEmissionProfile(41, "night", "aircraft"));
+  const blockerGeometry = new THREE.BoxGeometry(1.1, 3, 0.25);
+  const blockerMaterial = new THREE.MeshBasicMaterial({ color: 0x234552 });
+  const blocker = new THREE.Mesh(blockerGeometry, blockerMaterial);
+  blocker.position.set(-0.6, 0, 0.9);
+  scene.add(blocker);
+  const pipeline = new DreamGlowRenderer(renderer, [group]);
+  const shader = Reflect.get(pipeline, "glowMaterial") as THREE.ShaderMaterial;
+  const optimized = shader.fragmentShader;
+  const size = renderer.getDrawingBufferSize(new THREE.Vector2());
+  const read = () => {
+    const pixels = new Uint8Array(size.x * size.y * 4);
+    context.readPixels(0, 0, size.x, size.y, context.RGBA, context.UNSIGNED_BYTE, pixels);
+    return pixels;
+  };
+  const records = [];
+  for (const [distance, offset, yaw, blocked] of [
+    [10, 0, 0.4, 0], [4.5, 0, 0.8, 0], [4.5, 1.4, 0.8, 0],
+    [4.5, 0, 0.8, 1], [4.5, 1.4, 0.8, 1],
+  ]) {
+    camera.position.set(0, distance * 0.3, distance);
+    camera.lookAt(0, 0, 0);
+    group.position.x = offset;
+    group.rotation.y = yaw;
+    blocker.visible = blocked === 1;
+    shader.fragmentShader = UNOPTIMIZED_GLOW_FRAGMENT;
+    shader.needsUpdate = true;
+    pipeline.render(scene, camera);
+    const before = read();
+    shader.fragmentShader = optimized;
+    shader.needsUpdate = true;
+    pipeline.render(scene, camera);
+    const after = read();
+    let changedChannels = 0;
+    let maximumDifference = 0;
+    for (let i = 0; i < before.length; i++) {
+      const difference = Math.abs(before[i] - after[i]);
+      if (difference > 0) changedChannels++;
+      maximumDifference = Math.max(maximumDifference, difference);
+    }
+    records.push({ distance, offset, yaw, blocked: blocker.visible, changedChannels, maximumDifference,
+      status: pipeline.status, sources: pipeline.renderedSubjects, error: context.getError() });
+  }
+  pipeline.dispose();
+  detachDreamEmission(group);
+  geometry.dispose(); wingGeometry.dispose(); material.dispose();
+  blockerGeometry.dispose(); blockerMaterial.dispose();
+  renderer.dispose(); renderer.forceContextLoss();
+  return { pixelRatio, records };
 }
 
 /** Browser-only fixture. Not imported by the application or production build. */

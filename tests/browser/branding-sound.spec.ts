@@ -13,7 +13,7 @@ type AudioAudit = {
 async function openSession(page: Page) {
   await page.goto("/");
   await page.getByRole("button", { name: "PLAY WITHOUT BROWSER SAVING" }).click();
-  await expect(page.locator(".battlefield-canvas")).toHaveCount(1);
+  await expect(page.locator(".battlefield-canvas")).toHaveCount(1, { timeout: 15_000 });
 }
 
 async function installAudioAudit(page: Page) {

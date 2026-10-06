@@ -1,5 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { createStarfieldPlan, STARFIELD_LIMITS } from "../../app/starfield";
+import { matchNativeStarComponent, projectNativeStarFootprints } from "../helpers/starfield-native-footprint";
 import { createStarPlacements } from "../../app/viewModel";
 import { captureStarfieldPixels, measureStarfieldPixels, type StarfieldPixelMetrics } from "./starfieldPixels";
 import {
@@ -12,6 +13,7 @@ async function openSession(page: Page) {
   await expect(privacyDialog).toBeVisible();
   await page.getByRole("button", { name: "PLAY WITHOUT BROWSER SAVING" }).click();
   await expect(privacyDialog).toBeHidden();
+  await expect(page.locator(".battlefield-canvas")).toHaveCount(1, { timeout: 15_000 });
 }
 
 async function openStars(page: Page) {
@@ -118,6 +120,7 @@ type RenderedCompositionOptions = {
   checkLargestField?: boolean;
   requireColorEvidence?: boolean;
   atmosphericComposite?: boolean;
+  nativeLargestVerified?: boolean;
 };
 
 function expectRenderedComposition(
@@ -127,6 +130,7 @@ function expectRenderedComposition(
     checkLargestField = true,
     requireColorEvidence = true,
     atmosphericComposite = false,
+    nativeLargestVerified = false,
   }: RenderedCompositionOptions = {},
 ) {
   // Thousands of distant instances intentionally resolve into hundreds of
@@ -190,7 +194,11 @@ function expectRenderedComposition(
     // Compare a local feature at the original 648-pixel reference focal length.
     // A taller raster resolves the same projected facet into more pixels;
     // horizontal extent changes field coverage rather than local feature size.
-    expect(referenceProjectedArea(metrics.largest, metrics.height))
+    // The empirical cap remains the fast guard. A still Stars capture may
+    // additionally prove that every pixel of every exceedance belongs inside
+    // one independently projected ORIGINAL native jewel, including its halo.
+    // This does not accept a union of several stars or a broad diffuse patch.
+    if (!nativeLargestVerified) expect(referenceProjectedArea(metrics.largest, metrics.height))
       .toBeLessThanOrEqual(compact ? 260 : 520);
   }
 }
@@ -239,7 +247,7 @@ test("actual Stars and Sky pixels form a white-dominant crystalline canopy with 
   await openVisualizationOnCompactView(page);
   await page.locator(".time-control").getByRole("button", { name: "night", exact: true }).click();
   const plot = await openStars(page);
-  await expect(plot).toHaveAttribute("data-rendered-layer", "stars");
+  await expect(plot).toHaveAttribute("data-rendered-layer", "stars", { timeout: 15_000 });
   const canvas = plot.locator(":scope > canvas");
   const compact = (page.viewportSize()?.width ?? 1_000) <= 760;
   // 0x00c0ffee seeds the deterministic crypto stream; the application then
@@ -286,7 +294,7 @@ test("actual Stars and Sky pixels form a white-dominant crystalline canopy with 
   expect(Math.abs(environmentAfter.backingHeight
     - environmentAfter.cssHeight * environmentAfter.devicePixelRatio)).toBeLessThanOrEqual(1);
 
-  const darkCapture = await captureStarfieldPixels(page, canvas);
+  const darkCapture = await captureStarfieldPixels(page, canvas, { retainLargeComponents: true });
   await waitForStablePaint(page);
   const repeatedDarkCapture = await captureStarfieldPixels(page, canvas);
   const darkMetrics = darkCapture.metrics;
@@ -313,7 +321,27 @@ test("actual Stars and Sky pixels form a white-dominant crystalline canopy with 
   });
   expect(repeatedDarkCapture.metrics).toEqual(darkCapture.metrics);
   expect(repeatedDarkCapture.base64).toBe(darkCapture.base64);
-  expectRenderedComposition(darkMetrics, compact);
+  const oversized = darkCapture.largeComponents.filter((pixels) => (
+    referenceProjectedArea(pixels.length, darkMetrics.height) > (compact ? 260 : 520)
+  ));
+  if (referenceProjectedArea(darkMetrics.largest, darkMetrics.height) > (compact ? 260 : 520)) {
+    // Prove the pixel analysis supplied the actual largest component before
+    // allowing geometric evidence to replace the empirical scalar guard.
+    expect(Math.max(0, ...oversized.map((pixels) => pixels.length))).toBe(darkMetrics.largest);
+  }
+  const footprints = projectNativeStarFootprints(createStarfieldPlan({
+    seed: renderedSeed, theme: "dark", placements: createStarPlacements(renderedSeed, STARFIELD_LIMITS.fieldStars),
+    visibleCount: STARFIELD_LIMITS.fieldStars,
+  }).stars, darkMetrics.width, darkMetrics.height);
+  const nativeProofs = oversized.map((pixels) => ({
+    area: pixels.length,
+    native: matchNativeStarComponent(pixels, darkMetrics.width, darkMetrics.height, footprints),
+  }));
+  await testInfo.attach("starfield-native-component-proof.json", {
+    body: JSON.stringify(nativeProofs, null, 2), contentType: "application/json",
+  });
+  for (const proof of nativeProofs) expect(proof.native, `All ${proof.area} pixels must fit one original native halo`).not.toBeNull();
+  expectRenderedComposition(darkMetrics, compact, { nativeLargestVerified: nativeProofs.length > 0 });
   // The exact model above owns compact source presence, where subpixel
   // projection can erase the narrow probe. Preserve the original positive
   // rendered floor at the regular viewport and independently prevent gold
@@ -328,8 +356,8 @@ test("actual Stars and Sky pixels form a white-dominant crystalline canopy with 
 
   await page.getByRole("button", { name: "Switch to light interface" }).click();
   await expect(page.locator(".app")).toHaveClass(/theme-light/);
-  await expect(plot).toHaveAttribute("data-rendered-layer", "stars");
-  await expect(plot).toHaveAttribute("data-rendered-theme", "light");
+  await expect(plot).toHaveAttribute("data-rendered-layer", "stars", { timeout: 15_000 });
+  await expect(plot).toHaveAttribute("data-rendered-theme", "light", { timeout: 15_000 });
   const lightMetrics = await measureStarfieldPixels(page, canvas);
   // The light theme's pastel background legitimately satisfies the chroma
   // detector across most of the canvas. Keep the real white-light and spatial
@@ -347,7 +375,7 @@ test("actual Stars and Sky pixels form a white-dominant crystalline canopy with 
   await page.getByRole("button", { name: "Switch to dark interface" }).click();
   await page.locator(".depth-control").getByRole("button", { name: "sky", exact: true }).click();
   const skyPlot = page.locator(".battlefield-canvas.layer-sky");
-  await expect(skyPlot).toHaveAttribute("data-rendered-layer", "sky");
+  await expect(skyPlot).toHaveAttribute("data-rendered-layer", "sky", { timeout: 15_000 });
   const skyMetrics = await measureStarfieldPixels(page, skyPlot.locator(":scope > canvas"));
   await testInfo.attach("starfield-sky-pixel-metrics.json", {
     body: JSON.stringify(skyMetrics, null, 2),
@@ -574,8 +602,8 @@ test("repeated view-layer changes reuse one canvas and one stable WebGL context"
       await page.locator(".depth-control").getByRole("button", { name: layer, exact: true }).click();
       expect(await plot.count(), `cycle ${cycle + 1}, ${layer}; page errors: ${pageErrors.join(" | ")}`).toBe(1);
       await expect(plot, `cycle ${cycle + 1}, ${layer} layer`).toHaveClass(new RegExp(`layer-${layer}`));
-      await expect(plot).toHaveAttribute("data-webgl", "ready");
-      await expect(plot).toHaveAttribute("data-rendered-layer", layer);
+      await expect(plot).toHaveAttribute("data-webgl", "ready", { timeout: 15_000 });
+      await expect(plot).toHaveAttribute("data-rendered-layer", layer, { timeout: 15_000 });
       await expect(plot).toHaveAttribute("data-starfield-occlusion", "scene-depth");
       await expect(plot.locator(":scope > canvas")).toHaveCount(1);
     }

@@ -1067,7 +1067,6 @@ export default function Home() {
               result={null}
               theme={theme}
               contactVisibility={contactVisibility}
-              disclosedContacts={[]}
               visualActive={!overlayOpen}
               currentPhaseContentActive={Boolean(rigidState)}
             />

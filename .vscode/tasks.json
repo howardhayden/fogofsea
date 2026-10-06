@@ -1,4 +1,26 @@
 {
   "version": "2.0.0",
-  "tasks": []
+  "tasks": [
+    {
+      "label": "Fog of Sea: play bundled local release",
+      "type": "shell",
+      "command": "npm run play",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Fog of Sea: edit source",
+      "type": "shell",
+      "command": "npm run dev",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Fog of Sea: build local preview",
+      "type": "shell",
+      "command": "npm run build",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
 }

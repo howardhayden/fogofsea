@@ -3,13 +3,13 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "fog-of-sea-full-dependency-sbom",
-  "documentNamespace": "https://fog-of-sea.invalid/sbom/full/be1766603eb2fbd5b9a34f3338d8e186b7b36c261fd165a71ebe23e6c6e98592",
+  "documentNamespace": "https://fog-of-sea.invalid/sbom/full/8faf43983c6087ec291ade5d3086ae8c0ad5bed2d4afa22e667db1864e84ea42",
   "creationInfo": {
-    "created": "2026-09-23T11:16:00.719Z",
+    "created": "2026-10-06T05:52:46.898Z",
     "creators": [
       "Tool: scripts/generate-sbom.mjs"
     ],
-    "comment": "Generated deterministically from package-lock.json SHA-256 be1766603eb2fbd5b9a34f3338d8e186b7b36c261fd165a71ebe23e6c6e98592."
+    "comment": "Generated deterministically from package-lock.json SHA-256 8faf43983c6087ec291ade5d3086ae8c0ad5bed2d4afa22e667db1864e84ea42."
   },
   "documentDescribes": [
     "SPDXRef-Package-root"
@@ -2892,8 +2892,8 @@
     {
       "name": "brace-expansion",
       "SPDXID": "SPDXRef-Package-0526240db6543d517027",
-      "versionInfo": "5.0.9",
-      "downloadLocation": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.9.tgz",
+      "versionInfo": "5.0.12",
+      "downloadLocation": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.12.tgz",
       "filesAnalyzed": false,
       "licenseConcluded": "MIT",
       "licenseDeclared": "MIT",
@@ -2902,14 +2902,14 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "49c43822ebc8105d533253fb66dfaf8c9ffff7394f6f64837315b13376e4f2ceade8619d27b28ed5d09c4e274e3c929e3d6df42c4ff6713ef00b23e1a3dfd6c6"
+          "checksumValue": "628bd0debce168b308ac38cd0cc90d4b4d6d79af77aa11211b9c72f1febe47497e770dca8bee6c0a822823de368ae2d94c75a881692d830543854d3d88d12299"
         }
       ],
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:npm/brace-expansion@5.0.9"
+          "referenceLocator": "pkg:npm/brace-expansion@5.0.12"
         }
       ]
     },
@@ -3228,8 +3228,8 @@
     {
       "name": "brace-expansion",
       "SPDXID": "SPDXRef-Package-416f0dd3db142aba781b",
-      "versionInfo": "1.1.18",
-      "downloadLocation": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.18.tgz",
+      "versionInfo": "1.1.21",
+      "downloadLocation": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.21.tgz",
       "filesAnalyzed": false,
       "licenseConcluded": "MIT",
       "licenseDeclared": "MIT",
@@ -3238,14 +3238,14 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "11d7a9fd7f5f1aa54d9b328156c0d820eb43fb3d6db9ecd5ef42c18dd0acb7d4eabbbea5b27bd1899ea84e27359fefc12305fa4031803bde0f3783764800efb7"
+          "checksumValue": "f73780f8a2d934dce0945d933ca450103cb1e986f2edd68092ecbc3223f3a573ec6035a2fc344cf239b0503c689108d8a81a6fe4380f8b00f88786594b2d548f"
         }
       ],
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:npm/brace-expansion@1.1.18"
+          "referenceLocator": "pkg:npm/brace-expansion@1.1.21"
         }
       ]
     },
@@ -3972,8 +3972,8 @@
     {
       "name": "fast-uri",
       "SPDXID": "SPDXRef-Package-5852b277bec49b249da4",
-      "versionInfo": "3.1.7",
-      "downloadLocation": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.7.tgz",
+      "versionInfo": "3.1.8",
+      "downloadLocation": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.8.tgz",
       "filesAnalyzed": false,
       "licenseConcluded": "BSD-3-Clause",
       "licenseDeclared": "BSD-3-Clause",
@@ -3982,14 +3982,14 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "74ebd95738dd65dcfba6177dbfa8c26f0c6b056ddf2ba9fc45cd02b5d98ce1bba6ccc9f1cb005886ea61e89f35f51470fe4bbeacb6de9707ccba792dbb35551e"
+          "checksumValue": "19932d6544cd4693952040a85f02cd652e7150613e99535b4c1f21ffb4708764c559c05088fcd3832662d39045f543192a42c9bfc5c14494e553bce0f3e65f32"
         }
       ],
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:npm/fast-uri@3.1.7"
+          "referenceLocator": "pkg:npm/fast-uri@3.1.8"
         }
       ]
     },
@@ -5388,8 +5388,8 @@
     {
       "name": "source-map-js",
       "SPDXID": "SPDXRef-Package-c447b62b9ea487cf9647",
-      "versionInfo": "1.2.1",
-      "downloadLocation": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
+      "versionInfo": "1.2.2",
+      "downloadLocation": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz",
       "filesAnalyzed": false,
       "licenseConcluded": "BSD-3-Clause",
       "licenseDeclared": "BSD-3-Clause",
@@ -5398,14 +5398,14 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "51758c2a12cec1529bef6f0852d40f5f17d853ebac7726ed52b2bff2e184f0240cbeb84ea70bf30c1c23d108522fb31073bbc8b084811bc550f3e203431a5f40"
+          "checksumValue": "2868fff18e37c77e5a6550edb7e27898ad61a0b18750b3187d290e0c93508cd0c2de85b53ea3e8c4cc28d292d4b1633f5041b338dfcdc5e1f2c047cd5cd3f757"
         }
       ],
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:npm/source-map-js@1.2.1"
+          "referenceLocator": "pkg:npm/source-map-js@1.2.2"
         }
       ]
     },

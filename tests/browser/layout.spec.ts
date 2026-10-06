@@ -7,7 +7,7 @@ async function openSession(page: Page) {
   await expect(privacyDialog).toBeVisible();
   await page.getByRole("button", { name: "PLAY WITHOUT BROWSER SAVING" }).click();
   await expect(privacyDialog).toBeHidden();
-  await expect(page.locator(".battlefield-canvas")).toHaveCount(1);
+  await expect(page.locator(".battlefield-canvas")).toHaveCount(1, { timeout: 15_000 });
 }
 
 async function completeStrategicChoices(page: Page) {

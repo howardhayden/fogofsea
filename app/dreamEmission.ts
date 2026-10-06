@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { seededRandom, stableSeed } from "./viewModel";
 import { DREAM_GLOW_MODEL, dreamGlowBreathing } from "./dreamGlowMath";
+import { sampleStarShimmer } from "./starPulse";
 
 export type DreamEmissionTime = "dawn" | "day" | "dusk" | "night";
 export type DreamEmissionKind = "ship" | "aircraft" | "submarine" | "creature";
@@ -22,7 +23,12 @@ export type DreamEmissionRuntime = {
   referenceBox: THREE.Box3;
   referenceSphere: THREE.Sphere;
   haloFactor: number;
+  movementIntensity: number;
 };
+
+/** Formation travel adds gentle gain variation to the existing native-color
+ * glow. It does not resize the source, change its color, or create a clock. */
+export const DREAM_MOVEMENT_PULSE = Object.freeze({ frequencyHz: 0.24, amplitude: 0.1 });
 
 /** No per-entity shell geometry. Sources include environmental creatures, so
  * the former 42-subject cap must not silently exclude the additional families.
@@ -61,8 +67,29 @@ export function createDreamEmissionProfile(
   });
 }
 
-export function sampleDreamEmission(profile: DreamEmissionProfile, elapsed: number, reducedMotion: boolean): DreamEmissionSample {
-  return { haloFactor: dreamGlowBreathing(elapsed, profile.primaryPhase, profile.secondaryPhase, reducedMotion) };
+function boundedMovementIntensity(value: number): number {
+  return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0;
+}
+
+export function sampleDreamEmission(
+  profile: DreamEmissionProfile,
+  elapsed: number,
+  reducedMotion: boolean,
+  movementIntensity = 0,
+): DreamEmissionSample {
+  const resting = dreamGlowBreathing(elapsed, profile.primaryPhase, profile.secondaryPhase, reducedMotion);
+  const movement = boundedMovementIntensity(movementIntensity);
+  if (reducedMotion || !profile.enabled || profile.kind === "creature" || movement === 0
+    || ![elapsed, profile.primaryPhase, profile.secondaryPhase].every(Number.isFinite)) return { haloFactor: resting };
+  const shimmer = sampleStarShimmer(Math.max(0, elapsed), profile.primaryPhase, DREAM_MOVEMENT_PULSE.frequencyHz);
+  return { haloFactor: resting + shimmer * DREAM_MOVEMENT_PULSE.amplitude * movement };
+}
+
+/** Call with normalized formation travel, not wave bob, wing articulation, or
+ * camera motion. A resting target must receive zero on its next update. */
+export function setDreamEmissionMovement(target: THREE.Group, intensity: number): void {
+  const runtime = target.userData.dreamEmission as DreamEmissionRuntime | undefined;
+  if (runtime) runtime.movementIntensity = runtime.profile.kind === "creature" ? 0 : boundedMovementIntensity(intensity);
 }
 
 export function dreamSourceVisible(object: THREE.Object3D): boolean {
@@ -124,6 +151,7 @@ export function attachDreamEmission(group: THREE.Group, profile: DreamEmissionPr
     referenceBox,
     referenceSphere: referenceBox.getBoundingSphere(new THREE.Sphere()),
     haloFactor: 1,
+    movementIntensity: 0,
   } satisfies DreamEmissionRuntime;
   group.userData.dreamEmissionHaloMeshes = 0;
 }
@@ -138,6 +166,6 @@ export function detachDreamEmission(group: THREE.Group): void {
 export function updateDreamEmission(targets: readonly THREE.Group[], elapsed: number, reducedMotion: boolean): void {
   for (const target of targets) {
     const runtime = target.userData.dreamEmission as DreamEmissionRuntime | undefined;
-    if (runtime) runtime.haloFactor = sampleDreamEmission(runtime.profile, elapsed, reducedMotion).haloFactor;
+    if (runtime) runtime.haloFactor = sampleDreamEmission(runtime.profile, elapsed, reducedMotion, runtime.movementIntensity).haloFactor;
   }
 }

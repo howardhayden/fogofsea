@@ -18,7 +18,10 @@ async function completeAdversaryAssessmentWithKeyboard(page: Page) {
   ]) {
     const select = page.locator(selector);
     await select.focus();
-    await select.press("End");
+    // Native menu navigation differs across platforms, while closed-select
+    // type-ahead sends real keyboard input without relying on a popup menu.
+    const label = await select.locator('option[value="insufficient-evidence"]').innerText();
+    await select.pressSequentially(label);
     await expect(select).toHaveValue("insufficient-evidence");
   }
 }
@@ -90,16 +93,20 @@ async function completeStrategyWithKeyboard(page: Page) {
   await warfare.focus();
   await warfare.press("Space");
 
-  for (const selector of [
-    "#strategic-end-state",
-    "#strategic-primary-theory",
-    "#strategic-partner-theory",
-    "#strategic-guardrail",
+  for (const [selector, key, label] of [
+    ["#strategic-end-state", "p", "Preserve reliable access"],
+    ["#strategic-primary-theory", "s", "Sun Tzu · shape choices"],
+    ["#strategic-partner-theory", "c", "Clausewitz · political purpose"],
+    ["#strategic-guardrail", "l", "Limit escalation"],
   ]) {
     const select = page.locator(selector);
     await expect(select).toBeVisible();
     await select.focus();
-    await select.press("ArrowDown");
+    // A single type-ahead key commits the intended option before progressive
+    // disclosure replaces this select. ArrowDown alone does not commit a
+    // native-select value in headless Chromium on macOS.
+    await select.press(key);
+    await expect(page.locator(".decision-step-summary strong").filter({ hasText: label })).toBeVisible();
   }
   await expect(page.locator("#strategic-guardrail")).toHaveCount(0);
 }

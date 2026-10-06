@@ -1,6 +1,27 @@
 import { writeFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 
+test("close-zoom empty-work rejection preserves the exact unoptimized glow pixels", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "The pixel-density matrix needs one desktop execution.");
+  test.setTimeout(120_000);
+  await page.goto("/");
+  const results = await page.evaluate(async () => {
+    const fixturePath = "/tests/browser/fixtures/dreamGlow.ts";
+    const { runGlowSupportEquivalenceFixture } = await import(/* @vite-ignore */ fixturePath) as typeof import("./fixtures/dreamGlow");
+    return [1, 1.8].map(runGlowSupportEquivalenceFixture);
+  });
+  const metricPath = testInfo.outputPath("close-zoom-glow-pixel-equivalence.json");
+  await writeFile(metricPath, JSON.stringify(results, null, 2));
+  await testInfo.attach("close-zoom-glow-pixel-equivalence", { path: metricPath, contentType: "application/json" });
+  for (const result of results) for (const record of result.records) {
+    expect(record.status).toBe("sampled-radial-native-color");
+    expect(record.sources).toBe(1);
+    expect(record.error).toBe(0);
+    expect(record.changedChannels).toBe(0);
+    expect(record.maximumDifference).toBe(0);
+  }
+});
+
 test("all entity glow profiles produce exterior light without core washout or hidden-source leakage", async ({ page }, testInfo) => {
   test.setTimeout(120_000);
   await page.goto("/");

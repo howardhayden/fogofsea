@@ -26,8 +26,12 @@ import {
   type ContactVisualizationPlan,
   type UnknownContact,
 } from "./contactVisualization";
-import { wildlifeForView, type VisibleWildlife, type WildlifePlan } from "./wildlife";
+import { wildlifeForView, type VisibleWildlife, type WildlifePlan, type WildlifeSupport } from "./wildlife";
+import { createSeaLife } from "./seaLifeBehavior";
 import { createWildlifeAvatar } from "./wildlifeAvatar";
+import { addSkyTexture, skyCanopyColors } from "./skyAtmosphere";
+import { STAR_ATMOSPHERE_DEFAULTS } from "./starAtmosphere";
+import { createFormationPlan, type FormationUnit } from "./formation";
 
 export type BattlefieldTheme = "light" | "dark";
 export type BattlefieldTime = "dawn" | "day" | "dusk" | "night";
@@ -56,12 +60,6 @@ export const ROTORCRAFT = ["rotary-surveillance-aircraft", "maritime-mission-hel
  * waterline. Subsurface weather still affects the surface aperture and sea. */
 export function viewLayerSupportsFallingPrecipitation(viewLayer: ViewLayer) {
   return viewLayer !== "subsurface" && viewLayer !== "stars";
-}
-
-export function listedUnits(values: Record<string, number>, eachLimit: number, totalLimit: number) {
-  return Object.entries(values)
-    .flatMap(([id, count]) => Array.from({ length: Math.min(count, eachLimit) }, () => id))
-    .slice(0, totalLimit);
 }
 
 function createShip(type: string, color: number) {
@@ -168,28 +166,46 @@ function createAircraft(type: string, color: number) {
   return group;
 }
 
-function createSeaCreature(scale: number, color: number, variant: number) {
-  const group = new THREE.Group();
-  const material = new THREE.MeshStandardMaterial({ color, roughness: 0.92, flatShading: true, transparent: true, opacity: 0.58 });
-  const bodyGeometry = variant % 3 === 0
-    ? new THREE.OctahedronGeometry(0.32 * scale, 0)
-    : variant % 3 === 1
-      ? new THREE.DodecahedronGeometry(0.25 * scale, 0)
-      : new THREE.TetrahedronGeometry(0.34 * scale, 0);
-  const body = new THREE.Mesh(bodyGeometry, material);
-  body.scale.set(1.75, variant % 3 === 1 ? 0.42 : 0.68, variant % 3 === 0 ? 0.48 : 0.72);
-  group.add(body);
-  const tail = new THREE.Mesh(new THREE.ConeGeometry(0.23 * scale, 0.48 * scale, 3), material);
-  tail.rotation.z = -Math.PI / 2;
-  tail.position.x = -0.48 * scale;
-  group.add(tail);
-  if (variant % 3 === 1) {
-    const wing = new THREE.Mesh(new THREE.CircleGeometry(0.42 * scale, 5), material);
-    wing.rotation.x = -Math.PI / 2;
-    wing.scale.y = 0.45;
-    group.add(wing);
+/** Real polygonal support shared by each small ice detail. The exposed radius
+ * is the polygon's inscribed circle, so a clamped animal cannot overhang a
+ * corner even when the floe is rotated. */
+export function createWildlifeIceSupports(
+  scene: THREE.Scene,
+  members: readonly VisibleWildlife[],
+  theme: BattlefieldTheme,
+): Map<string, WildlifeSupport> {
+  const groups = new Map<string, VisibleWildlife[]>();
+  for (const member of members) {
+    if (member.medium !== "ice" || (member.kind !== "penguin" && member.kind !== "seal")) continue;
+    const group = groups.get(member.groupId) ?? [];
+    group.push(member);
+    groups.set(member.groupId, group);
   }
-  return group;
+  const supports = new Map<string, WildlifeSupport>();
+  if (groups.size === 0) return supports;
+  const material = new THREE.MeshStandardMaterial({ color: theme === "dark" ? 0xb7ced0 : 0xebf5f1, roughness: 0.88, flatShading: true });
+  let index = 0;
+  for (const [groupId, group] of groups) {
+    const safeRadius = group[0].kind === "penguin" ? Math.max(2.6, Math.sqrt(group.length) * 0.7) : Math.max(2.1, Math.sqrt(group.length) * 0.8);
+    const topRadius = safeRadius / Math.cos(Math.PI / 8);
+    const angle = 0.2 * Math.PI + index / groups.size * Math.PI * 2;
+    const support: WildlifeSupport = {
+      id: `wildlife-floe-${groupId}`,
+      x: Math.cos(angle) * 10,
+      z: Math.sin(angle) * 10,
+      topY: 0.16,
+      radius: safeRadius,
+    };
+    const floe = new THREE.Mesh(new THREE.CylinderGeometry(topRadius, topRadius * 1.04, 0.24, 8), material);
+    floe.name = support.id;
+    floe.position.set(support.x, support.topY - 0.12, support.z);
+    floe.rotation.y = index * 0.37;
+    floe.userData.wildlifeSupport = support;
+    scene.add(floe);
+    supports.set(groupId, support);
+    index += 1;
+  }
+  return supports;
 }
 
 /** @deprecated Use createWildlifeAvatar from wildlifeAvatar.ts directly. */
@@ -429,7 +445,7 @@ export function createCelestialWaterReflection(
   return group;
 }
 
-const SKY_CANOPY_COLORS = {
+export const SKY_CANOPY_COLORS = {
   light: {
     dawn: [0x71819b, 0xc09faa, 0xf0c7a9],
     day: [0x89b9c2, 0xb9d7d3, 0xe6ddc5],
@@ -444,13 +460,13 @@ const SKY_CANOPY_COLORS = {
   },
 } satisfies Record<BattlefieldTheme, Record<BattlefieldTime, readonly [number, number, number]>>;
 
-function createSkyCanopy(theme: BattlefieldTheme, time: BattlefieldTime) {
+export function createSkyCanopy(theme: BattlefieldTheme, time: BattlefieldTime, horizonDensity = 0.056) {
   const indexed = new THREE.IcosahedronGeometry(330, 3);
   const geometry = indexed.index ? indexed.toNonIndexed() : indexed;
   if (geometry !== indexed) indexed.dispose();
   const positions = geometry.getAttribute("position");
   const colors = new Float32Array(positions.count * 3);
-  const [topHex, middleHex, horizonHex] = SKY_CANOPY_COLORS[theme][time];
+  const [topHex, middleHex, horizonHex] = skyCanopyColors(SKY_CANOPY_COLORS[theme][time], theme, time, horizonDensity);
   const top = new THREE.Color(topHex);
   const middle = new THREE.Color(middleHex);
   const horizon = new THREE.Color(horizonHex);
@@ -480,6 +496,7 @@ function createSkyCanopy(theme: BattlefieldTheme, time: BattlefieldTime) {
       toneMapped: false,
     }),
   );
+  addSkyTexture(geometry, time);
   canopy.name = "faceted-pastel-sky-canopy";
   canopy.renderOrder = -30;
   canopy.frustumCulled = false;
@@ -989,6 +1006,7 @@ type SceneContentsInput = {
   wildlifePlan: WildlifePlan;
   displayedFleet: Record<string, number>;
   displayedAirWing: Record<string, number>;
+  formationPlan?: readonly FormationUnit[];
   result: boolean | null;
 };
 
@@ -1047,9 +1065,14 @@ export function buildSceneContents(input: SceneContentsInput): SceneContents {
     result,
   } = input;
 
-  const skyCanopy = viewLayer === "subsurface" ? null : createSkyCanopy(theme, time);
+  const skyCanopy = viewLayer === "subsurface" ? null : createSkyCanopy(theme, time, atmospherePlan.fog.horizonDensity);
   if (skyCanopy) scene.add(skyCanopy);
-  const starfield = starfieldPlan.stars.length || starfieldPlan.nebulae.length ? createStarfield(scene, starfieldPlan) : null;
+  const starfield = starfieldPlan.stars.length || starfieldPlan.nebulae.length
+    ? createStarfield(scene, starfieldPlan, {
+      ...STAR_ATMOSPHERE_DEFAULTS,
+      intensity: STAR_ATMOSPHERE_DEFAULTS.intensity * { night: 1, dusk: 0.35, dawn: 0.3, day: 0.06 }[time],
+    })
+    : null;
 
   const waterGeometry = new THREE.PlaneGeometry(85, 85, wavePlan.gridSegments, wavePlan.gridSegments);
   const positions = waterGeometry.attributes.position as THREE.BufferAttribute;
@@ -1124,9 +1147,8 @@ export function buildSceneContents(input: SceneContentsInput): SceneContents {
   }
 
   let underseaSilt: THREE.Points | null = null;
-  const seaCreatures: THREE.Group[] = [];
+  let seaCreatures: THREE.Group[] = [];
   if (viewLayer === "subsurface") {
-    const faunaRandom = seededRandom(stableSeed(exerciseId, region, climate, "fauna"));
     const siltRandom = seededRandom(stableSeed(exerciseId, region, climate, "silt"));
     const rockRandom = seededRandom(stableSeed(exerciseId, region, climate, "rocks"));
     if (lifeProfile.seabedY !== null) {
@@ -1168,56 +1190,36 @@ export function buildSceneContents(input: SceneContentsInput): SceneContents {
     const lifeColor = climate === "ocean"
       ? (theme === "dark" ? 0x7da8aa : 0xb7d0c8)
       : (theme === "dark" ? 0x91aebc : 0xc5d8d8);
-    const totalForms = lifeProfile.solitaryCount + lifeProfile.schoolCount;
-    for (let index = 0; index < totalForms; index++) {
-      const inSchool = index >= lifeProfile.solitaryCount;
-      const scale = inSchool ? 0.22 + faunaRandom() * 0.13 : 0.55 + faunaRandom() * 0.8;
-      const creature = createSeaCreature(scale, lifeColor, index);
-      const schoolIndex = Math.max(0, index - lifeProfile.solitaryCount);
-      const baseX = inSchool ? -4 + (schoolIndex % 7) * 0.72 + faunaRandom() * 0.3 : (faunaRandom() - 0.5) * 22;
-      const baseY = inSchool ? -2.3 - Math.floor(schoolIndex / 7) * 0.38 : -1.4 - faunaRandom() * 4.1;
-      const baseZ = inSchool ? -3 + Math.floor(schoolIndex / 7) * 0.9 + faunaRandom() * 0.4 : (faunaRandom() - 0.5) * 20;
-      creature.position.set(baseX, baseY, baseZ);
-      creature.rotation.y = faunaRandom() * Math.PI * 2;
-      creature.userData.baseX = baseX;
-      creature.userData.baseY = baseY;
-      creature.userData.baseZ = baseZ;
-      creature.userData.phase = faunaRandom() * Math.PI * 2;
-      creature.userData.speed = (inSchool ? 0.18 : 0.07) + faunaRandom() * 0.12;
-      creature.userData.radius = inSchool ? 1.4 : 2.4 + faunaRandom() * 2.2;
-      scene.add(creature);
-      seaCreatures.push(creature);
-    }
+    seaCreatures = createSeaLife(lifeProfile, stableSeed(exerciseId, region, climate, "fauna"), lifeColor);
+    scene.add(...seaCreatures);
   }
 
+  const visibleWildlife = wildlifeForView(wildlifePlan, viewLayer);
+  const iceSupports = createWildlifeIceSupports(scene, visibleWildlife, theme);
   if (climate !== "ocean" && viewLayer !== "subsurface" && viewLayer !== "stars") {
     const iceRandom = seededRandom(stableSeed(exerciseId, region, climate, "ice"));
     const iceMaterial = new THREE.MeshStandardMaterial({ color: theme === "dark" ? 0xb7ced0 : 0xebf5f1, roughness: 0.88, transparent: true, opacity: 0.88 });
-    for (let index = 0; index < 15; index++) {
+    for (let index = 0; index < 15 - iceSupports.size; index++) {
       const ice = new THREE.Mesh(new THREE.CylinderGeometry(0.8 + iceRandom() * 1.7, 1 + iceRandom() * 1.8, 0.16, 7), iceMaterial);
       const angle = (index / 15) * Math.PI * 2;
-      const radius = 9 + (index % 4) * 2.2;
+      // Unoccupied scenery is outside the shared animal supports, never
+      // substituted for a support that the animation merely claims exists.
+      const radius = 16 + (index % 3) * 2.2;
       ice.position.set(Math.cos(angle) * radius, 0.02, Math.sin(angle) * radius);
       ice.rotation.y = iceRandom() * Math.PI;
       scene.add(ice);
     }
   }
 
-  const wildlife = wildlifeForView(wildlifePlan, viewLayer).map((member, index) => {
+  const wildlife = visibleWildlife.map((member) => {
     const animal = createWildlifeAvatar(member, theme);
-    if (member.medium === "ice") {
-      const floeIndex = index % 15;
-      const floeAngle = floeIndex / 15 * Math.PI * 2;
-      const floeRadius = 9 + (floeIndex % 4) * 2.2;
-      animal.userData.baseX = Math.cos(floeAngle) * floeRadius;
-      animal.userData.baseY = 0.24;
-      animal.userData.baseZ = Math.sin(floeAngle) * floeRadius;
-      // Ice animals travel only inside their assigned floe footprint. A
-      // resting penguin occupies a route waypoint rather than drifting over
-      // water; commuting penguins and seals use a small closed floe route.
-      animal.userData.routeRadius = member.restingPose ? 0 : Math.min(member.radius, 0.34 + (floeIndex % 4) * 0.08);
-      animal.userData.routeEccentricity = 0.46;
-      animal.position.set(animal.userData.baseX, animal.userData.baseY, animal.userData.baseZ);
+    const support = iceSupports.get(member.groupId);
+    if (member.medium === "ice" && support) {
+      animal.userData.support = support;
+      animal.userData.baseX = support.x;
+      animal.userData.baseY = support.topY;
+      animal.userData.baseZ = support.z;
+      animal.position.set(support.x, support.topY, support.z);
     }
     scene.add(animal);
     return animal;
@@ -1245,43 +1247,45 @@ export function buildSceneContents(input: SceneContentsInput): SceneContents {
   (depthGrid.material as THREE.LineBasicMaterial).depthWrite = false;
   scene.add(depthGrid);
 
-  const formations: [number, number][] = [[0, 0], [-5, 3.2], [4.7, 3.7], [-4.8, -3.8], [5.2, -3.1], [0.2, 6], [0, -7.3], [8.5, 0.5], [-8.5, -0.5], [7.8, 6], [-7.5, -6]];
+  const formation = input.formationPlan ?? createFormationPlan(displayedFleet, displayedAirWing);
   const dreamVisibilityLift = dreamEmissionVisibilityLift(
     atmospherePlan.fog.horizonDensity,
     atmospherePlan.precipitation.tier,
   );
   const ships: THREE.Group[] = [];
-  listedUnits(displayedFleet, 8, 22).forEach((type, index) => {
+  formation.filter((unit) => unit.domain !== "air").forEach((unit) => {
+    const { type } = unit;
     if (viewLayer === "stars") return;
     const submarine = SUBMARINE_TYPES.includes(type);
     if (viewLayer === "subsurface" && !submarine) return;
     const ship = createShip(type, result === true ? 0x78b9aa : 0x83aaa3);
     attachDreamEmission(
       ship,
-      createDreamEmissionProfile(stableSeed(exerciseId, type, index), time, submarine ? "submarine" : "ship", dreamVisibilityLift),
+      createDreamEmissionProfile(stableSeed(exerciseId, unit.key), time, submarine ? "submarine" : "ship", dreamVisibilityLift),
     );
-    const position = formations[index % formations.length];
-    const baseY = submarine ? -4.25 - (index % 2) * 0.42 : 0.16;
-    ship.position.set(position[0], baseY, position[1]);
-    ship.rotation.y = -0.18 + (index % 3) * 0.08;
-    ship.userData.baseY = baseY;
+    ship.position.fromArray(unit.position);
+    ship.rotation.y = unit.heading;
+    ship.scale.setScalar(unit.visualScale);
+    ship.userData.baseY = unit.position[1];
+    ship.userData.formationUnit = unit;
     scene.add(ship);
     ships.push(ship);
   });
 
   const aircraft: THREE.Group[] = [];
-  if (viewLayer !== "subsurface" && viewLayer !== "stars") listedUnits(displayedAirWing, 5, 20).forEach((type, index) => {
+  if (viewLayer !== "subsurface" && viewLayer !== "stars") formation.filter((unit) => unit.domain === "air").forEach((unit) => {
+    const { type } = unit;
     const craft = createAircraft(type, result === true ? 0x83c2b6 : 0x91b6af);
     attachDreamEmission(
       craft,
-      createDreamEmissionProfile(stableSeed(exerciseId, type, index), time, "aircraft", dreamVisibilityLift),
+      createDreamEmissionProfile(stableSeed(exerciseId, unit.key), time, "aircraft", dreamVisibilityLift),
     );
-    const row = Math.floor(index / 7);
-    const baseY = 4.8 + row * 1.55 + (index % 3) * 0.22;
-    craft.position.set(-9 + (index % 7) * 3, baseY, -4.5 + row * 5.4 + ((index * 3) % 4));
-    craft.rotation.y = -0.22 + (index % 4) * 0.13;
-    craft.userData.baseY = baseY;
+    craft.position.fromArray(unit.position);
+    craft.rotation.y = unit.heading;
+    craft.scale.setScalar(unit.visualScale);
+    craft.userData.baseY = unit.position[1];
     craft.userData.baseX = craft.position.x;
+    craft.userData.formationUnit = unit;
     scene.add(craft);
     aircraft.push(craft);
   });
