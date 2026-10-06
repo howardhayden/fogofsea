@@ -363,17 +363,30 @@ export default function Home() {
     setForceStatus("Identify a warfare area to unlock affiliated force items.");
   };
 
+  const focusMissionAfterStartup = (opener: Element | null) => {
+    window.setTimeout(() => {
+      const active = document.activeElement;
+      // Startup may finish after the player has already chosen a control.
+      // Hand off focus only while it still belongs to the closing surface.
+      if (!active || active === document.body || active === document.documentElement || active === opener || !active.isConnected) {
+        missionViewRef.current?.focus();
+      }
+    }, 0);
+  };
+
   const beginWithoutSaving = () => {
+    const opener = document.activeElement;
     resetGameState(scenarioForDifficulty(0, difficulty));
     saveManager.beginSessionOnly();
-    window.setTimeout(() => missionViewRef.current?.focus(), 0);
+    focusMissionAfterStartup(opener);
   };
 
   const beginSavedGame = (fresh = false, nameOverride?: string) => {
+    const opener = document.activeElement;
     if (fresh || storageMode === "undecided") resetGameState(scenarioForDifficulty(fresh ? scenario.id : 0, difficulty));
     saveManager.enableNewSlot(nameOverride);
     setDataOpen(false);
-    window.setTimeout(() => missionViewRef.current?.focus(), 0);
+    focusMissionAfterStartup(opener);
   };
 
   const startFreshGame = () => {
