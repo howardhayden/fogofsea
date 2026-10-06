@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
 import test from "node:test";
 import { AIRCRAFT, PLATFORMS } from "../app/catalog";
 import { createFormationPlan, FORMATION_BOUNDS, reconcileFormationMotion, sampleFormationMotion } from "../app/formation";
+import { createExhaustiveFormationReference } from "./helpers/formation-exhaustive-reference";
 
 test("every selected instance is represented without the old per-type and overall display caps", () => {
   const fleet = { "stealth-littoral-corvette": 15 };
@@ -78,22 +78,25 @@ test("the complete save-format maximum represents all 3,069 instances without a 
   assert.ok(plan.every((unit) => unit.position.every(Number.isFinite) && unit.visualScale > 0 && unit.visualScale <= 1));
 });
 
-test("clearance optimization preserves complete prior outputs byte-for-byte", () => {
-  // Captured from the exhaustive planner before the spatial lookup change.
-  // These bind order, IDs, coordinates, headings, scales and all other fields.
-  const ordinary = createFormationPlan({ "fleet-aviation-ship": 1, "multirole-frigate": 4, "long-endurance-submarine": 2 }, { "maritime-mission-helicopter": 2, "deck-multirole-aircraft": 6 });
-  const digest = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-  assert.equal(digest(ordinary), "40c33e6689c9afd2e123d2f518c12774b3d78d541a1c34cf7126740f790687bb");
-  const fixtures = [
-    [1, "79c360fec148617e04d5c6e06c49e19a71d9b209d003a3ee99486a4732504cd7"],
-    [5, "456024e8631346b84877d77691836637e5b8a2e5ca39a712b8c968891022eb0c"],
-    [20, "5d0815c247cceead3a8d60921f66c62c3f48601104be98cad236f9c45354925f"],
-    [99, "52a82370fcc79a70c6be4f41b9498d1ac6eea7bbe78644383dad64d38416cd19"],
-  ] as const;
-  for (const [count, expected] of fixtures) {
+test("clearance optimization exactly preserves the frozen exhaustive planner on this runtime", () => {
+  // A JSON hash captured on one JS engine can change when another engine's
+  // Math implementation rounds a result differently. Evaluate the frozen
+  // original on this runtime instead: every field must still match exactly,
+  // with no rounding, numeric tolerance, or list of accepted output hashes.
+  const compare = (fleet: Record<string, number>, air: Record<string, number>, label: string) => {
+    const actual = createFormationPlan(fleet, air);
+    const expected = createExhaustiveFormationReference(fleet, air);
+    assert.equal(actual.length, expected.length, `${label}: instance count`);
+    for (let index = 0; index < expected.length; index++) {
+      assert.deepEqual(actual[index], expected[index], `${label}: instance ${index} (${expected[index].key})`);
+    }
+  };
+  compare({ "fleet-aviation-ship": 1, "multirole-frigate": 4, "long-endurance-submarine": 2 },
+    { "maritime-mission-helicopter": 2, "deck-multirole-aircraft": 6 }, "ordinary mixed roster");
+  for (const count of [1, 5, 20, 99]) {
     const fleet = Object.fromEntries(PLATFORMS.map((unit) => [unit.id, count]));
     const air = Object.fromEntries(AIRCRAFT.map((unit) => [unit.id, count]));
-    assert.equal(digest(createFormationPlan(fleet, air)), expected, `all types at ${count}`);
+    compare(fleet, air, `all types at ${count}`);
   }
 });
 
