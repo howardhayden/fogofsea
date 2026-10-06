@@ -37,7 +37,7 @@
       "symbol": "ARMAMENTS",
       "kind": "variable",
       "exported": true,
-      "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+      "sha256": "19f5406402d7d809fc850ef7f4da16e1e6a1035832bd496ec41f047d9b680999"
     },
     {
       "id": "src.model.mission-credit",
@@ -45,7 +45,7 @@
       "symbol": "calculateMissionCreditedForcePoints",
       "kind": "function",
       "exported": true,
-      "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+      "sha256": "19f5406402d7d809fc850ef7f4da16e1e6a1035832bd496ec41f047d9b680999"
     },
     {
       "id": "src.model.scenario-coexistence",
@@ -53,7 +53,7 @@
       "symbol": "validateScenarioCoexistence",
       "kind": "function",
       "exported": true,
-      "sha256": "8adc4681ec6d7f1803aae812415852543ed99a35bd82829434dbfea887b85c4b"
+      "sha256": "19f5406402d7d809fc850ef7f4da16e1e6a1035832bd496ec41f047d9b680999"
     },
     {
       "id": "src.planning.readiness-gaps",
@@ -69,7 +69,7 @@
       "symbol": "turnLearningNote",
       "kind": "function",
       "exported": true,
-      "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+      "sha256": "01d90ce8efe42e43157afe5cbb97db0411ba0aff48afc5013b486640220a91a2"
     },
     {
       "id": "src.game.outcome-learning",
@@ -77,7 +77,7 @@
       "symbol": "outcomeLearningAssessment",
       "kind": "function",
       "exported": true,
-      "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+      "sha256": "01d90ce8efe42e43157afe5cbb97db0411ba0aff48afc5013b486640220a91a2"
     },
     {
       "id": "src.game.final-outcome",
@@ -85,7 +85,7 @@
       "symbol": "finalOutcome",
       "kind": "function",
       "exported": false,
-      "sha256": "86484649cb8994cd14dcc87a3106ba5d318f4617867aefc8ffc7e0a9b47bc13f"
+      "sha256": "01d90ce8efe42e43157afe5cbb97db0411ba0aff48afc5013b486640220a91a2"
     },
     {
       "id": "src.academy.modules",
@@ -93,7 +93,7 @@
       "symbol": "ACADEMY_MODULE_DEFINITIONS",
       "kind": "variable",
       "exported": false,
-      "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+      "sha256": "e83d5bdacaa201fe5d544de91943a7dd114a7f45d0808599aa2455d2de9c6ccb"
     },
     {
       "id": "src.academy.comparison",
@@ -101,7 +101,7 @@
       "symbol": "THINKER_COMPARISON",
       "kind": "variable",
       "exported": true,
-      "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+      "sha256": "e83d5bdacaa201fe5d544de91943a7dd114a7f45d0808599aa2455d2de9c6ccb"
     },
     {
       "id": "src.academy.sources",
@@ -109,7 +109,7 @@
       "symbol": "SOURCE_GROUPS",
       "kind": "variable",
       "exported": true,
-      "sha256": "8eacd0a3595d5164721f9a4d5efcd82a1f977d5aed9f8523db4649558ff65a41"
+      "sha256": "e83d5bdacaa201fe5d544de91943a7dd114a7f45d0808599aa2455d2de9c6ccb"
     }
   ],
   "requests": [

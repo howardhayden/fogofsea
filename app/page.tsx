@@ -216,7 +216,7 @@ export default function Home() {
 
   const buildSave = useCallback((): PortableSave => ({
     format: "fog-of-sea-save",
-    version: 4,
+    version: 5,
     savedAt: new Date().toISOString(),
     game: { scenario, fleet, airWing, selectedArmaments, selectedWarfare, selectedEndState, selectedLens, selectedPartnerLens, selectedGuardrail, theorySynthesis, rationale, assumptions, termination, result, rigidState, rigidOrders, history },
     preferences: { theme, difficulty, planningStage, guidance: { checklistCollapsed: guidedChecklistCollapsed } },

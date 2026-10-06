@@ -2160,6 +2160,7 @@ export function validateScenarioCoexistence(scenario: Scenario): ScenarioCoexist
       regionId: scenario.regionId,
       season: scenario.season,
       adversaryCount,
+      version: scenario.matrix.version,
     });
     if (!jsonSemanticEqual(scenario.matrix, canonicalMatrix)) issue("difficulty-matrix", "matrix-replay", "Difficulty branches and committed draws must replay exactly from the accepted scenario identity.");
     if (adversaryCount === 1 && scenario.matrix.opponentCoordination !== "none") issue("difficulty-matrix", "single-actor-coordination", "One opposing actor cannot create an inter-actor cooperation frame.");

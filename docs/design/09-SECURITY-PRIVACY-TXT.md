@@ -176,13 +176,30 @@ An import is accepted atomically only after:
 
 For current-format saves, replay rejects altered committed draws, ranges,
 inputs, reports, deltas, typed intelligence, state, and outcomes even when the
-altered values look internally consistent. A version-4 current command must
+altered values look internally consistent. A version-4 or version-5 current command must
 use rigid-state version 2 and retain the intelligence arrays on every resolved
 turn. Pending partial staff judgments are accepted only when each value belongs
 to the candidate set derived from the restored public state. Supported
-version-3 transcripts replay and migrate before becoming version 4. Older
-archived history lacks all modern commitments; it is sanitized, bounded,
+older transcripts replay and migrate before becoming version 5. Migration may
+add typed presentation data or missing outcome detail only after the original
+adjudication has been reproduced; noncanonical command states are rejected.
+
+The save wrapper and scenario adjudicator have separate versions. Wrapper 5
+supports both original matrix version 1 and the outer-draw matrix version 2;
+older wrappers cannot claim the new adjudicator. Scenario recreation and turn
+replay use the stored matrix version. A legacy campaign therefore retains its
+recorded outcomes and future rules through import, export, and continuation.
+For version 2, validation recomputes normalized component rows, group mixtures,
+the outer distribution, its sole committed draw, and the resulting state.
+
+Older archived history lacks all modern commitments; it is sanitized, bounded,
 non-authoritative review content and never controls restored current state.
+An explicit legacy transcript marker preserves old archived records without
+relaxing validation of a live command chain.
+Pre-umpire version-1/2 saves with a result but no command state retain that
+result as a visibly labeled archival record, including its original score.
+Their scenario and planning selections remain available, but the detached
+result cannot become a current adjudicated outcome or invent a turn history.
 
 ## 9. Privacy interaction requirements
 

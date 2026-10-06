@@ -15,11 +15,17 @@ import {
   type RigidGameState,
   type RigidOrders,
 } from "../../app/kriegsspiel";
+import { createScenarioMatrix } from "../../app/scenarioMatrix";
 import { formatPortableSave, parsePortableSave, type PortableSave } from "../../app/saveGame";
 import { deterministicScenario, minimalPortableSave } from "./fixtures";
 
-function currentSave(resolvedTurns: 1 | 2) {
+function currentSave(resolvedTurns: 1 | 2, matrixVersion: 1 | 2 = 2) {
   const save = minimalPortableSave(deterministicScenario(20));
+  if (matrixVersion === 1) {
+    const scenario = save.game.scenario;
+    scenario.matrix = createScenarioMatrix({ exerciseId: scenario.id, climate: scenario.climate,
+      regionId: scenario.regionId, season: scenario.season, adversaryCount: scenario.adversaryCount, version: 1 });
+  }
   const { rigidReadiness } = deriveForceReadiness({
     scenario: save.game.scenario,
     difficulty: save.preferences.difficulty,
@@ -68,7 +74,7 @@ function cloneSave(save: PortableSave) {
   return structuredClone(save);
 }
 
-test("RT-TI-SAVE-001: v4 states require all typed intelligence arrays on every resolved turn", () => {
+test("RT-TI-SAVE-001: v5 states require all typed intelligence arrays on every resolved turn", () => {
   const { save } = currentSave(2);
   for (const reportIndex of [0, 1]) {
     for (const field of ["adversaryActions", "inflictions", "observationDomains"] as const) {
@@ -168,7 +174,7 @@ test("RT-TI-SAVE-004: canonical replay detects structurally valid action and inf
 });
 
 test("RT-TI-SAVE-005: a v3 state-version-1 transcript imports and upgrades to state version 2", () => {
-  const { save } = currentSave(2);
+  const { save } = currentSave(2, 1);
   const legacy = cloneSave(save);
   (legacy as unknown as { version: number }).version = 3;
   (legacy.game.rigidState as unknown as { version: number }).version = 1;
@@ -182,7 +188,7 @@ test("RT-TI-SAVE-005: a v3 state-version-1 transcript imports and upgrades to st
   assert.equal(isRigidGameState(legacy.game.rigidState), true);
   const parsed = parsePortableSave(JSON.stringify(legacy));
 
-  assert.equal(parsed.version, 4);
+  assert.equal(parsed.version, 5);
   assert.equal(parsed.game.rigidState?.version, 2);
   assert.equal(parsed.game.rigidState?.reports.length, 2);
   for (const report of parsed.game.rigidState!.reports) {
@@ -197,7 +203,7 @@ test("RT-TI-SAVE-005: a v3 state-version-1 transcript imports and upgrades to st
   });
 });
 
-test("RT-TI-SAVE-006: v4 pending partial assessments round-trip only within current bounded options", () => {
+test("RT-TI-SAVE-006: v5 pending partial assessments round-trip only within current bounded options", () => {
   const { save, state, orders } = currentSave(1);
   const options = adversaryAssessmentOptions(state);
   const allowedPartial: RigidOrders = {
@@ -247,7 +253,7 @@ test("RT-TI-SAVE-006: v4 pending partial assessments round-trip only within curr
   }
 });
 
-test("RT-TI-SAVE-007: v4 rejects legacy rigid-state version 1 instead of silently widening it", () => {
+test("RT-TI-SAVE-007: v5 rejects legacy rigid-state version 1 instead of silently widening it", () => {
   const { save } = currentSave(1);
   (save.game.rigidState as unknown as { version: number }).version = 1;
   for (const report of save.game.rigidState!.reports) {

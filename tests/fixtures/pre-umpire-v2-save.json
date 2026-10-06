@@ -1,0 +1,186 @@
+{
+  "format": "fog-of-sea-save",
+  "version": 2,
+  "savedAt": "2026-08-30T00:00:00.000Z",
+  "game": {
+    "scenario": {
+      "id": 49,
+      "operation": "WESTERN ORBIT",
+      "region": "Southern Ice Margin · fictional sector",
+      "climate": "antarctic",
+      "time": "dawn",
+      "clouds": "overcast",
+      "precipitation": "snow",
+      "seaState": 2,
+      "visibility": 4,
+      "regionId": "southern-ice-margin",
+      "hemisphere": "south",
+      "observerLatitude": -67,
+      "observerLongitude": -34,
+      "scenarioDate": "2032-04-16",
+      "season": "autumn",
+      "storming": false,
+      "lightningCapable": false,
+      "windHeading": 121,
+      "windSpeed": 10,
+      "currentHeading": 44,
+      "currentSpeed": 1,
+      "waveHeading": 101,
+      "soundProfile": "southern-ice",
+      "budget": 100,
+      "brief": "Across 490 nautical miles of coastal traffic, 4 craft or transfer points require corroboration after reports of coercion and unsafe movement. False concentration in the electromagnetic picture may conceal a smaller physical movement elsewhere in the sector. The current assessment concerns trafficking in persons; the plan must protect people from coercion and exploitation without treating irregular movement as culpability. Success requires only the local advantage needed for the stated aim, followed by an observable reduction in force.",
+      "geography": "Mobile pack ice borders a deep ocean trench, and the nearest sheltered anchorage lies beyond a wide exposed recovery box. The shortest lead crosses the ice drift, while the reliable route remains in rougher water along the outer margin. The decisive working area extends roughly 490 nautical miles and compresses to 5 nautical miles at its narrowest usable point.",
+      "friendlySituation": "The route spans 490 nautical miles and crosses several reporting jurisdictions. A protected handoff is required whenever a person or record leaves the maritime force’s custody.",
+      "opposingSituation": "One opposing actor is assessed. The opposing network can corrupt timing, duplicate tracks, and force repeated authentication without attempting continuous denial. Its physical centre remains uncertain. The assessed network may move trafficking in persons; that category changes the relevant harms and authority, and no single indicator establishes it.",
+      "adversaryCount": 1,
+      "matrix": {
+        "version": 1,
+        "seed": 1704078987,
+        "forceScale": "tiny",
+        "forceScaleLabel": "Tiny dispersed craft group",
+        "estimatedOpposingElements": [
+          2,
+          5
+        ],
+        "opponentCoordination": "none",
+        "institutionalConstraint": "unsustainable-overfunding",
+        "illicitNetworkType": "trafficking-in-persons",
+        "secondaryObjective": {
+          "id": "secondary-d45d9fe3",
+          "label": "Protect a second civil movement",
+          "description": "A second civil movement enters the working area and must reach the handoff without displacing the primary objective.",
+          "revealTurn": 2,
+          "minimumDifficulty": "guided",
+          "weight": 25,
+          "method": "protective-escort"
+        },
+        "disruptions": [
+          {
+            "id": "weather-window",
+            "kind": "severe-weather",
+            "headline": "Severe polar low",
+            "description": "Severe polar low crosses the working area. Flight operations, exposed craft, sensing, and recovery are constrained for the stated window; the same environmental rule applies to both forces.",
+            "startsTurn": 4,
+            "endsTurn": 6,
+            "minimumDifficulty": "challenge",
+            "severity": "major",
+            "affectedSide": "both",
+            "affectedDomains": [
+              "air",
+              "surface",
+              "subsurface",
+              "communications"
+            ],
+            "availabilityMultiplier": 0.78,
+            "permanentLossFraction": 0,
+            "opposingPressureMultiplier": 0.84
+          },
+          {
+            "id": "institution-unsustainable-overfunding",
+            "kind": "command-interference",
+            "headline": "Unsustainable opposing mobilization",
+            "description": "An opposing sponsor releases resources beyond a supportable plan. Pressure rises during the stated window, while immediate maintenance and integration failures create the recorded permanent loss.",
+            "startsTurn": 4,
+            "endsTurn": 6,
+            "minimumDifficulty": "challenge",
+            "severity": "watch",
+            "affectedSide": "opposing-force",
+            "affectedDomains": [
+              "surface",
+              "air",
+              "subsurface",
+              "mission-pack"
+            ],
+            "availabilityMultiplier": 1,
+            "permanentLossFraction": 0.06,
+            "opposingPressureMultiplier": 1.16
+          }
+        ],
+        "committedTurnDraws": [
+          11,
+          63,
+          83,
+          24,
+          12,
+          96
+        ]
+      },
+      "illicitNetworkType": "trafficking-in-persons",
+      "civilianContext": "Several communities rely on small fuel and food deliveries that cannot wait for complete certainty. Delay, route closure, and false warning each impose a different civilian cost. Category-specific protection requires protected survivor care and an accountable civil investigation.",
+      "constraints": "Use the least intrusive effective response, preserve neutral traffic, keep legal and civil authorities visible, and reassess when the network changes routes. Preserve rescue capacity and treat communication failure as uncertainty rather than hostile intent. Decisions must distinguish trafficking in persons from other illicit activity and rely on survivor accounts, control indicators, manifests, financial links, and corroborated transfer patterns.",
+      "timing": "There are 3 hours to shape the operating picture and no reliable pause during the following 8-hour task window. Weather will matter because overcast skies and a snow band will interrupt visual classification and remote-system recovery; 10-knot winds and a 1-knot current drive waves toward 101°.",
+      "successConditions": "Safeguarding, rescue, evidence, and partner coordination remain coherent; no person is treated as culpable solely because of their movement or status; and pressure shifts from vulnerable passengers toward the network. The result also preserves protected survivor care and an accountable civil investigation and does not displace the network without reducing the identified harm.",
+      "navalProblem": "Set Till’s cooperative maritime security against Corbett’s local control. Design a handoff in which distributed drones widen awareness but human and civil authorities retain classification, safeguarding, and legal decisions.",
+      "objective": "Distinguish rescue, safeguarding, and suspected facilitation needs; maintain custody of relevant observations; and prevent route displacement from becoming the only result. The end state requires safety through the declared window and no permanent protective presence afterward.",
+      "intelligence": "The network picture changes whenever the force alters its own emission pattern. This may reveal responsive deception, ordinary propagation, or both operating together. Source confidence varies, so the commander must separate confirmed facts, working assessments, and explicit assumptions.",
+      "history": "Coastal surveillance, lawful interception, rescue, evidence custody, and coordinated action against adaptive illicit networks; southern ice access, long recovery distances, and weather-limited endurance",
+      "required": [
+        "maritime-interdiction",
+        "reconnaissance",
+        "surface-operations",
+        "electromagnetic-operations"
+      ],
+      "recommended": [
+        "air-defense"
+      ],
+      "minimumEscort": 2,
+      "minimumAirDefense": 0,
+      "minimumAsw": 0,
+      "minimumUncrewed": 8,
+      "politicalAim": "Protect people at sea and disrupt an adaptive trafficking network while preserving lawful movement, evidence integrity, and trusted civil handoff.",
+      "endState": "protection",
+      "lenses": [
+        "till",
+        "corbett",
+        "galula",
+        "sun-tzu"
+      ],
+      "guardrail": "civilian"
+    },
+    "fleet": {
+      "fleet-aviation-ship": 1,
+      "multirole-frigate": 2
+    },
+    "airWing": {
+      "deck-multirole-aircraft": 12,
+      "fixed-wing-surveillance-aircraft": 2,
+      "uncrewed-surveillance-rotorcraft": 4
+    },
+    "selectedArmaments": {
+      "air-to-air-mission-pack": 8,
+      "airborne-acoustic-pack": 4
+    },
+    "selectedWarfare": [
+      "maritime-interdiction",
+      "reconnaissance",
+      "surface-operations",
+      "electromagnetic-operations"
+    ],
+    "selectedEndState": "protection",
+    "selectedLens": "till",
+    "selectedPartnerLens": "corbett",
+    "selectedGuardrail": "civilian",
+    "theorySynthesis": "",
+    "rationale": "",
+    "assumptions": "",
+    "termination": "",
+    "result": {
+      "won": true,
+      "score": 102,
+      "title": "LEGACY RESULT",
+      "notes": [
+        "Preserve the original pre-umpire outcome and written analysis."
+      ]
+    },
+    "history": []
+  },
+  "preferences": {
+    "theme": "dark",
+    "difficulty": "standard",
+    "planningStage": "strategy",
+    "guidance": {
+      "checklistCollapsed": false
+    }
+  },
+  "academyProgress": []
+}
