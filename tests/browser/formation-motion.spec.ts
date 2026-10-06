@@ -154,6 +154,18 @@ async function expectObservedMovement(page: Page, units: number, after: number) 
   })).toBeGreaterThan(0);
 }
 
+async function retainTransitionEvidence(page: Page, testInfo: TestInfo, domain: string, details: Record<string, unknown>, errors: string[]) {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const draws = await expectSettledDraws(page);
+  await retain(testInfo, `${domain}-formation-transition.json`, JSON.stringify({
+    ...details,
+    observedTransitions: await page.evaluate(() => (window as typeof window & { __formationProbe: FormationBrowserProbe }).__formationProbe.transitions),
+    draws, errors,
+    evidenceBoundary: "Browser verifies retained identities, actual rendered/moving counters, and changing scene pixels. Exact per-unit position/velocity continuity is covered by model/scene integration tests, not inferred from aggregate telemetry or water animation.",
+  }, null, 2), "application/json");
+  expect(errors).toEqual([]);
+}
+
 for (const domain of ["surface", "air"] as const) {
   test(`every one of 99 UI-selected ${domain} units renders without the former visual caps`, async ({ page }, testInfo) => {
     test.setTimeout(180_000);
@@ -188,7 +200,10 @@ for (const domain of ["surface", "air"] as const) {
   });
 }
 
-test("adding again during a maneuver retains unit identities and settles without reduced-motion rendering", async ({ page }, testInfo) => {
+// Each independent domain starts from the same settled roster as the original
+// combined workflow. Separate budgets keep software-rendering work in earlier
+// domains from exhausting the final domain's deadline; assertions stay intact.
+test("surface additions during a maneuver retain identities and settle in the rendered view", async ({ page }, testInfo) => {
   test.setTimeout(180_000);
   const errors = await prepareBrowser(page);
   await openForceDesign(page);
@@ -247,16 +262,24 @@ test("adding again during a maneuver retains unit identities and settles without
   await expect(third.plot).toHaveAttribute("data-formation-moving", "0", { timeout: 15_000 });
   const settled = await captureStarfieldPixels(page, third.canvas);
   await retain(testInfo, "fleet-settled.png", Buffer.from(settled.base64, "base64"), "image/png");
+  await retainTransitionEvidence(page, testInfo, "surface", {
+    initialIds, afterFirstAdd: interruptedAt.ids, beforeNavigation, interruptedAt, afterInterruptedAdd: third.ids,
+  }, errors);
+});
 
+test("aircraft additions retain identities while rotorcraft settle and fixed wings keep patrolling", async ({ page }, testInfo) => {
+  test.setTimeout(180_000);
+  const errors = await prepareBrowser(page);
+  await openForceDesign(page);
+  await addUnits(page, "Fleet aviation ship", 3);
   // Cover rotor wash and fixed-wing slipstream on the actual Air path as
   // well as surface wakes. Roster selection remains ordinary user input.
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await mobileDestination(page, "FORCE DESIGN");
   await page.getByRole("button", { name: "EMBARKED AVIATION", exact: true }).click();
   await addUnits(page, "Maritime mission helicopter", 1);
   await addUnits(page, "Deck-launched multirole aircraft", 1);
   await mobileDestination(page, "VISUALIZATION");
   await page.locator(".depth-control").getByRole("button", { name: "air", exact: true }).click();
+  await page.locator(".time-control").getByRole("button", { name: "night", exact: true }).click();
   const firstAir = await expectRenderedCount(page, 5);
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await expect(firstAir.plot).toHaveAttribute("data-render-scheduling", "animated");
@@ -274,15 +297,26 @@ test("adding again during a maneuver retains unit identities and settles without
   await expect(expandedAir.plot).toHaveAttribute("data-formation-moving", "2", { timeout: 25_000 });
   const airSettled = await captureStarfieldPixels(page, expandedAir.canvas);
   await retain(testInfo, "air-patrol-and-hover.png", Buffer.from(airSettled.base64, "base64"), "image/png");
+  await retainTransitionEvidence(page, testInfo, "air", { firstAir: firstAir.ids, expandedAir: expandedAir.ids }, errors);
+});
 
+test("submarine additions retain identities and settle in the rendered subsurface view", async ({ page }, testInfo) => {
+  test.setTimeout(180_000);
+  const errors = await prepareBrowser(page);
+  await openForceDesign(page);
+  // Recreate the completed surface and air rosters without spending this
+  // test's movement budget exercising those independently covered domains.
+  await addUnits(page, "Fleet aviation ship", 3);
+  await page.getByRole("button", { name: "EMBARKED AVIATION", exact: true }).click();
+  await addUnits(page, "Maritime mission helicopter", 2);
+  await addUnits(page, "Deck-launched multirole aircraft", 2);
   // Two-to-three makes the retained second submarine change its ring slot;
   // the first stays at the same angle when the second is initially added.
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await mobileDestination(page, "FORCE DESIGN");
   await page.getByRole("button", { name: "FLEET", exact: true }).click();
   await addUnits(page, "Air-independent patrol submarine", 2);
   await mobileDestination(page, "VISUALIZATION");
   await page.locator(".depth-control").getByRole("button", { name: "subsurface", exact: true }).click();
+  await page.locator(".time-control").getByRole("button", { name: "night", exact: true }).click();
   const firstSubsurface = await expectRenderedCount(page, 2);
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await expect(firstSubsurface.plot).toHaveAttribute("data-render-scheduling", "animated");
@@ -298,17 +332,9 @@ test("adding again during a maneuver retains unit identities and settles without
   await expect(expandedSubsurface.plot).toHaveAttribute("data-formation-moving", "0", { timeout: 15_000 });
   const subsurfaceSettled = await captureStarfieldPixels(page, expandedSubsurface.canvas);
   await retain(testInfo, "subsurface-settled.png", Buffer.from(subsurfaceSettled.base64, "base64"), "image/png");
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  const draws = await expectSettledDraws(page);
-  await retain(testInfo, "formation-transition.json", JSON.stringify({
-    initialIds, afterFirstAdd: interruptedAt.ids, beforeNavigation, interruptedAt, afterInterruptedAdd: third.ids,
-    firstAir: firstAir.ids, expandedAir: expandedAir.ids,
+  await retainTransitionEvidence(page, testInfo, "subsurface", {
     firstSubsurface: firstSubsurface.ids, expandedSubsurface: expandedSubsurface.ids,
-    observedTransitions: await page.evaluate(() => (window as typeof window & { __formationProbe: FormationBrowserProbe }).__formationProbe.transitions),
-    draws, errors,
-    evidenceBoundary: "Browser verifies retained identities, actual rendered/moving counters, and changing scene pixels. Exact per-unit position/velocity continuity is covered by model/scene integration tests, not inferred from aggregate telemetry or water animation.",
-  }, null, 2), "application/json");
-  expect(errors).toEqual([]);
+  }, errors);
 });
 
 test("fixed-wing patrol resumes after reduced-motion changes while rotorcraft can hover", async ({ page }, testInfo) => {
